@@ -132,38 +132,42 @@ input[type=file]{display:none}
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script>
-    const _fbConfig = {
-      apiKey: "AIzaSyBlZP6K55T1Mos8NzvOJtffXUDOOz_xR8o",
-      authDomain: "skincare-by-polly.firebaseapp.com",
-      projectId: "skincare-by-polly",
-      storageBucket: "skincare-by-polly.firebasestorage.app",
-      messagingSenderId: "423592521435",
-      appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
-    window._fbAuth = firebase.auth();
-    window._fbDb = firebase.firestore();
-    
-    // Verificar se já está logado
-    window._fbAuth.onAuthStateChanged(async function(user) {
-      if (user) {
-        window._currentUser = user;
-        var hasLocal = localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo');
-        if (!hasLocal) {
-          try {
-            var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
-            if (snap.exists) {
-              var dados = snap.data();
-              localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
-              localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
-              localStorage.setItem('sbp_ativo', 'true');
-              localStorage.setItem('sbp_auth', user.uid);
-              window.location.href = 'protocolo.html';
+    try {
+      if (typeof firebase !== 'undefined') {
+        const _fbConfig = {
+          apiKey: "AIzaSyBlZP6K55T1Mos8NzvOJtffXUDOOz_xR8o",
+          authDomain: "skincare-by-polly.firebaseapp.com",
+          projectId: "skincare-by-polly",
+          storageBucket: "skincare-by-polly.firebasestorage.app",
+          messagingSenderId: "423592521435",
+          appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+        window._fbAuth = firebase.auth();
+        window._fbDb = firebase.firestore();
+        window._fbAuth.onAuthStateChanged(async function(user) {
+          if (user) {
+            window._currentUser = user;
+            var hasLocal = localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo');
+            if (!hasLocal) {
+              try {
+                var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+                if (snap.exists) {
+                  var dados = snap.data();
+                  localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+                  localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+                  localStorage.setItem('sbp_ativo', 'true');
+                  localStorage.setItem('sbp_auth', user.uid);
+                  window.location.href = 'protocolo.html';
+                }
+              } catch(e) { console.error('Firebase fetch error:', e); }
             }
-          } catch(e) { console.error('Firebase fetch error:', e); }
-        }
+          }
+        });
+      } else {
+        console.warn('Firebase SDK nao carregado — modo offline ativo.');
       }
-    });
+    } catch(e) { console.warn('Firebase init error:', e.message); }
   </script>
 
 </head>
@@ -1752,10 +1756,7 @@ async function gerarProtocolo() {
   var mi = 0;
   var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
 
-  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.
-10. TOM DO DIAGNÓSTICO: O campo "diagnostico" é a mensagem de boas-vindas. Use um tom CALOROSO, AMOROSO e ENCORAJADOR — como uma amiga especialista que vê o melhor na pele dela. NUNCA liste problemas de forma clínica ou fria. Em vez de "pele mista oleosa desidratada", diga algo como "Sua pele tem um potencial lindo! Ela só está pedindo um cuidado extra de hidratação — e com a rotina certa, você vai ver uma transformação incrível." Sempre termine com uma promessa positiva do que vai melhorar.
-11. SCORE DA PELE (score_pele): Avalie a saúde geral da pele de 0 a 100 com base na foto e no perfil. 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente. Seja honesta mas gentil.
-12. SUGESTÕES (sugestoes): Liste os produtos que FALTAM na prateleira da cliente (ou que ela precisa começar do zero). Para cada item, dê 3 opções reais de mercado: econômica (dentro do orçamento declarado), intermediária (um pouco mais), premium (o melhor para o perfil dela). Use marcas REAIS disponíveis no Brasil com preços aproximados em R$.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"score_pele\":65,\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"sugestoes\":[{\"falta\":\"CATEGORIA QUE FALTA\",\"motivo\":\"por que é essencial para seu tipo de pele\",\"economica\":{\"produto\":\"nome produto\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta sobre o produto\"},\"intermediaria\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"},\"premium\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"}}],\"produtos_identificados\":[]}';
+  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.\n10. TOM DO DIAGNÓSTICO: O campo "diagnostico" é a mensagem de boas-vindas. Use um tom CALOROSO, AMOROSO e ENCORAJADOR — como uma amiga especialista que vê o melhor na pele dela. NUNCA liste problemas de forma clínica ou fria. Em vez de "pele mista oleosa desidratada", diga algo como "Sua pele tem um potencial lindo! Ela só está pedindo um cuidado extra de hidratação — e com a rotina certa, você vai ver uma transformação incrível." Sempre termine com uma promessa positiva do que vai melhorar.\n11. SCORE DA PELE (score_pele): Avalie a saúde geral da pele de 0 a 100 com base na foto e no perfil. 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente. Seja honesta mas gentil.\n12. SUGESTÕES (sugestoes): Liste os produtos que FALTAM na prateleira da cliente (ou que ela precisa começar do zero). Para cada item, dê 3 opções reais de mercado: econômica (dentro do orçamento declarado), intermediária (um pouco mais), premium (o melhor para o perfil dela). Use marcas REAIS disponíveis no Brasil com preços aproximados em R$.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"score_pele\":65,\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"sugestoes\":[{\"falta\":\"CATEGORIA QUE FALTA\",\"motivo\":\"por que é essencial para seu tipo de pele\",\"economica\":{\"produto\":\"nome produto\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta sobre o produto\"},\"intermediaria\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"},\"premium\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"}}],\"produtos_identificados\":[]}';
 
   try {
     // Claude API
@@ -1912,20 +1913,17 @@ function installPWA() {
     if (b) b.style.display = 'none';
   });
 }
-if ('serviceWorker' in navigator) {
-  // Unregister old SW that may be serving cached files
+if ('serviceWorker' in navigator && location.protocol !== 'blob:' && !location.hostname.includes('claudeusercontent')) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for (var r of registrations) { r.unregister(); }
   });
-  // Register fresh SW
   navigator.serviceWorker.register('./sw.js', {
     scope: './',
     updateViaCache: 'none'
   }).then(function(reg) {
     reg.update();
-    console.log('SW v3 registered');
   }).catch(function(e) {
-    console.log('SW error:', e);
+    console.log('SW not available:', e.message);
   });
 }
 </script>

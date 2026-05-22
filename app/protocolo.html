@@ -285,12 +285,15 @@ input[type="file"] { display:none; }
       messagingSenderId: "423592521435",
       appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
     };
-    if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
-    window._fbAuth = firebase.auth();
-    window._fbDb = firebase.firestore();
-    
+    if (typeof firebase !== 'undefined') {
+      if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+      window._fbAuth = firebase.auth();
+      window._fbDb = firebase.firestore();
+    } else {
+      console.warn('Firebase SDK nao carregado — modo offline ativo.');
+    }
     // Carregar protocolo do Firebase se não estiver local
-    window._fbAuth.onAuthStateChanged(async function(user) {
+    if (window._fbAuth) window._fbAuth.onAuthStateChanged(async function(user) {
       if (user) {
         window._currentUser = user;
         try {
