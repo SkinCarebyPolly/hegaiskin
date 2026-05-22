@@ -7,35 +7,37 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0D0804">
+<meta name="theme-color" content="#F2E8D9">
 <title>Skincare by Polly · Meu Protocolo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #D0B48C;
-  --gold-amber: #A27540;
-  --espresso: #643F22;
-  --mahogany: #64300A;
-  --gold-light: #E9D9BF;
-  --gold-dim: rgba(208,180,140,0.12);
-  --dark: #0D0804;
-  --dark-2: #1C0E08;
-  --dark-3: #2A1408;
-  --cream: #F5EADA;
-  --cream-dim: rgba(245,234,218,0.65);
-  --muted: #7a6e68;
-  --green: #8aab96;
-  --green-dim: rgba(138,171,150,0.12);
-  --red: #c4857a;
-  --blue: #7b9cbf;
+  --gold: #A07040;
+  --gold-amber: #7A5020;
+  --espresso: #5C3518;
+  --mahogany: #4A2208;
+  --gold-light: #C9A97A;
+  --gold-dim: rgba(160,112,64,0.10);
+  --dark: #2B1206;
+  --dark-2: #3D1A08;
+  --dark-3: #4F2510;
+  --cream: #F2E8D9;
+  --cream-dim: rgba(43,18,6,0.55);
+  --surface: #FFFAF5;
+  --surface2: #FAF3E8;
+  --muted: #9a8878;
+  --green: #5a8a6e;
+  --green-dim: rgba(90,138,110,0.10);
+  --red: #b85a50;
+  --blue: #5a7a9f;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream); min-height:100vh; overflow-x:hidden; }
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark); min-height:100vh; overflow-x:hidden; }
 
 /* -- HERO -- */
 .hero {
-  background: linear-gradient(160deg, #0A0503, #180A05 60%, #261408);
+  background: linear-gradient(160deg, var(--dark), var(--dark-2) 60%, var(--dark-3));
   padding: 56px 24px 32px;
   position: relative;
   overflow: hidden;
@@ -44,15 +46,15 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   content:'';
   position:absolute; top:-60px; right:-60px;
   width:240px; height:240px; border-radius:50%;
-  background: radial-gradient(circle, rgba(208,180,140,0.08), transparent 70%);
+  background: radial-gradient(circle, rgba(160,112,64,0.12), transparent 70%);
 }
-.hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
-.hero-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; margin-bottom:4px; }
+.hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-light); margin-bottom:12px; }
+.hero-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; margin-bottom:4px; color:#F2E8D9; }
 .hero-name em { font-style:italic; color:var(--gold-light); }
-.hero-sub { font-size:12px; color:var(--muted); letter-spacing:1px; margin-bottom:20px; }
+.hero-sub { font-size:12px; color:rgba(242,232,217,0.6); letter-spacing:1px; margin-bottom:20px; }
 .hero-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
 .hero-tag {
-  padding:4px 12px; border:1px solid rgba(208,180,140,0.20);
+  padding:4px 12px; border:1px solid rgba(201,169,122,0.25);
   border-radius:20px; font-size:10px; color:var(--gold-light); letter-spacing:1px;
 }
 
@@ -60,12 +62,13 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 .tabs {
   display: flex;
   overflow-x: auto;
-  background: var(--dark-2);
-  border-bottom: 1px solid rgba(208,180,140,0.08);
+  background: var(--surface);
+  border-bottom: 1px solid rgba(160,112,64,0.12);
   position: sticky;
   top: 0;
   z-index: 50;
   scrollbar-width: none;
+  box-shadow: 0 2px 8px rgba(43,18,6,0.06);
 }
 .tabs::-webkit-scrollbar { display:none; }
 .tab {
@@ -82,7 +85,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   font-family: 'Jost', sans-serif;
 }
 .tab.active { color:var(--gold); border-bottom-color:var(--gold); }
-.tab:hover { color:var(--cream-dim); }
+.tab:hover { color:var(--dark); }
 
 /* -- SECTIONS -- */
 .section { display:none; padding:24px; }
@@ -90,11 +93,12 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 
 /* -- CARDS -- */
 .card {
-  background: var(--dark-2);
-  border: 1px solid rgba(208,180,140,0.10);
+  background: var(--surface);
+  border: 1px solid rgba(160,112,64,0.12);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(43,18,6,0.05);
 }
 .card-title {
   font-size:10px; letter-spacing:3px; text-transform:uppercase;
@@ -108,19 +112,19 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 .step-item {
   display:flex; align-items:flex-start; gap:14px;
   padding:18px 16px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(208,180,140,0.08);
+  background: #fff;
+  border: 1px solid rgba(160,112,64,0.10);
   border-radius:10px;
 }
 .step-num {
   width:28px; height:28px; border-radius:50%;
-  background: var(--gold-dim); border:1px solid rgba(208,180,140,0.20);
+  background: var(--gold-dim); border:1px solid rgba(160,112,64,0.25);
   display:flex; align-items:center; justify-content:center;
   font-size:11px; color:var(--gold); flex-shrink:0;
   font-weight:600;
 }
 .step-content { flex:1; }
-.step-product { font-size:16px; font-weight:600; color:var(--cream); margin-bottom:6px; }
+.step-product { font-size:16px; font-weight:600; color:var(--dark); margin-bottom:6px; }
 .step-how { font-size:14px; color:var(--cream-dim); line-height:1.8; white-space:pre-line; }
 .step-time {
   font-size:10px; color:var(--gold); letter-spacing:1px;
@@ -132,8 +136,8 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 .week-item {
   display:flex; align-items:flex-start; gap:14px;
   padding:14px 16px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(208,180,140,0.08);
+  background: #fff;
+  border: 1px solid rgba(160,112,64,0.10);
   border-radius:10px;
 }
 .week-day {
@@ -144,8 +148,8 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 
 /* -- CALENDAR -- */
 .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.cal-month { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; color:var(--gold-light); }
-.cal-nav { background:none; border:1px solid rgba(208,180,140,0.20); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
+.cal-month { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; color:var(--gold); }
+.cal-nav { background:none; border:1px solid rgba(160,112,64,0.25); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
 .cal-dow { text-align:center; font-size:9px; letter-spacing:2px; color:var(--muted); padding:6px 0; text-transform:uppercase; }
 .cal-day {
@@ -155,7 +159,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   transition: all 0.2s;
   flex-direction: column; gap:2px;
 }
-.cal-day:hover { background:var(--gold-dim); border-color:rgba(208,180,140,0.20); }
+.cal-day:hover { background:var(--gold-dim); border-color:rgba(160,112,64,0.20); }
 .cal-day.today { border-color:var(--gold); color:var(--gold); }
 .cal-day.has-event::after { content:''; width:4px; height:4px; border-radius:50%; background:var(--gold); }
 .cal-day.empty { cursor:default; }
@@ -176,20 +180,20 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- SUGGESTIONS -- */
 .suggestion-item {
   display:flex; gap:12px; align-items:flex-start;
-  padding:12px 0; border-bottom:1px solid rgba(208,180,140,0.06);
+  padding:12px 0; border-bottom:1px solid rgba(160,112,64,0.08);
 }
 .suggestion-item:last-child { border:none; }
 .suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
 .suggestion-text { font-size:13px; color:var(--cream-dim); line-height:1.6; }
-.suggestion-text strong { color:var(--cream); }
+.suggestion-text strong { color:var(--dark); }
 
 /* -- EVOLUÇÃO -- */
 .evo-photo-area {
-  border:1px dashed rgba(208,180,140,0.20); border-radius:12px;
+  border:1px dashed rgba(160,112,64,0.25); border-radius:12px;
   padding:36px 20px; text-align:center; cursor:pointer; margin-bottom:16px;
-  transition:all 0.2s; background:rgba(208,180,140,0.02);
+  transition:all 0.2s; background:rgba(160,112,64,0.04);
 }
-.evo-photo-area:hover { border-color:rgba(208,180,140,0.4); background:rgba(208,180,140,0.04); }
+.evo-photo-area:hover { border-color:rgba(160,112,64,0.5); background:rgba(160,112,64,0.07); }
 .evo-photo-area.has-photo { padding:0; border-style:solid; }
 .evo-photo-area img { width:100%; max-height:280px; object-fit:cover; border-radius:11px; display:block; }
 .evo-icon { font-size:32px; margin-bottom:10px; }
@@ -199,34 +203,35 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- CONFIG -- */
 .config-item {
   display:flex; justify-content:space-between; align-items:center;
-  padding:16px 0; border-bottom:1px solid rgba(208,180,140,0.06);
+  padding:16px 0; border-bottom:1px solid rgba(160,112,64,0.08);
 }
 .config-item:last-child { border:none; }
 .config-label { font-size:13px; color:var(--cream-dim); }
 .config-value { font-size:12px; color:var(--gold); letter-spacing:1px; }
 
 .btn-danger {
-  width:100%; background:transparent; border:1px solid rgba(196,133,122,0.3);
+  width:100%; background:transparent; border:1px solid rgba(184,90,80,0.3);
   border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
   font-size:11px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
   color:var(--red); cursor:pointer; margin-top:8px; transition:all 0.2s;
 }
-.btn-danger:hover { background:rgba(196,133,122,0.08); }
+.btn-danger:hover { background:rgba(184,90,80,0.08); }
 
 .btn-gold {
   width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light));
   border:none; border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
   font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
-  color:var(--dark); cursor:pointer; margin-top:8px; transition:all 0.2s;
+  color:#fff; cursor:pointer; margin-top:8px; transition:all 0.2s;
 }
 
 /* -- LOADING -- */
 #app-loading {
   display:flex; align-items:center; justify-content:center;
   min-height:100vh; flex-direction:column; gap:20px;
+  background:var(--cream);
 }
 .loading-spinner {
-  width:48px; height:48px; border:2px solid rgba(208,180,140,0.10);
+  width:48px; height:48px; border:2px solid rgba(160,112,64,0.15);
   border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
 }
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -235,25 +240,25 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- MODAL -- */
 .modal-overlay {
   display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,0.85); z-index:200;
+  background:rgba(43,18,6,0.6); z-index:200;
   align-items:flex-end; backdrop-filter:blur(4px);
 }
 .modal-overlay.open { display:flex; }
 .modal {
-  background:var(--dark-2); border:1px solid rgba(208,180,140,0.18);
+  background:var(--surface); border:1px solid rgba(160,112,64,0.18);
   border-radius:20px 20px 0 0; width:100%; padding:24px 20px 48px;
   animation:slideUp 0.3s ease;
 }
 @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.modal-handle { width:40px; height:3px; background:#3d3028; border-radius:2px; margin:0 auto 16px; }
-.modal-title { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--gold-light); margin-bottom:4px; }
+.modal-handle { width:40px; height:3px; background:rgba(160,112,64,0.2); border-radius:2px; margin:0 auto 16px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--gold); margin-bottom:4px; }
 .modal-sub { font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:1px; }
 .modal-body { font-size:13px; color:var(--cream-dim); line-height:1.8; }
-.modal-close { position:absolute; top:16px; right:16px; background:#201a17; border:1px solid #3d3028; border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(160,112,64,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
 
 /* -- AI ANALYSIS -- */
 .ai-loading-bar { display:flex; align-items:center; gap:12px; padding:16px; background:var(--gold-dim); border-radius:10px; margin-top:12px; }
-.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(208,180,140,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(160,112,64,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
 .ai-loading-text { font-size:12px; color:var(--gold); }
 
 input[type="file"] { display:none; }
@@ -308,13 +313,13 @@ input[type="file"] { display:none; }
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #D0B48C;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FFFAF5;border:1px solid #C9A97A;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
-    <div style="font-size:13px;color:#F5EADA;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:13px;color:var(--dark);font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#D0B48C,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0D0804;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#C9A97A,#E8D5B0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 
@@ -362,8 +367,8 @@ input[type="file"] { display:none; }
       <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
       <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
       <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
-      <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:linear-gradient(90deg,#e07a7a 0%,#D0B48C 40%,#6aab8a 70%,#4a9b6f 91%);width:0%;transition:width 1.2s ease;position:relative">
-        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #D0B48C;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
+      <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:linear-gradient(90deg,#e07a7a 0%,#C9A97A 40%,#6aab8a 70%,#4a9b6f 91%);width:0%;transition:width 1.2s ease;position:relative">
+        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #C9A97A;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
       </div>
     </div>
     <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
@@ -456,17 +461,17 @@ input[type="file"] { display:none; }
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
           <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Antes</div>
-          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(208,180,140,.2);background:rgba(255,255,255,.03)">
+          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(201,169,122,.2);background:rgba(255,255,255,.03)">
             <img id="evo-foto-antes" style="width:100%;height:100%;object-fit:cover" src="">
           </div>
           <div id="evo-data-antes" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
         </div>
         <div>
           <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Agora</div>
-          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(208,180,140,.2);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center" id="evo-agora-placeholder">
+          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(201,169,122,.2);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center" id="evo-agora-placeholder">
             <span style="font-size:28px">📸</span>
           </div>
-          <img id="evo-foto-agora" style="width:100%;border-radius:10px;border:1px solid rgba(208,180,140,.2);display:none;aspect-ratio:1;object-fit:cover" src="">
+          <img id="evo-foto-agora" style="width:100%;border-radius:10px;border:1px solid rgba(201,169,122,.2);display:none;aspect-ratio:1;object-fit:cover" src="">
           <div id="evo-data-agora" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px">Tire agora 👇</div>
         </div>
       </div>
@@ -522,20 +527,20 @@ input[type="file"] { display:none; }
   <div class="card">
     <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
     <div style="margin-bottom:16px">
-      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Como atualizar meu protocolo?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
       </div>
-      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">A IA pode errar?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">As sugestões são baseadas em boas práticas de skincare e K-Beauty. Em caso de irritação, interrompa o produto e consulte um dermatologista.</div>
       </div>
-      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Meus dados são salvos?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
       </div>
     </div>
-    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(208,180,140,0.08);border:1px solid rgba(208,180,140,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
+    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
       <span style="font-size:18px">✉️</span>
       <div>
         <div style="font-size:13px;font-weight:600;color:var(--gold);letter-spacing:1px">FALAR COM O SUPORTE</div>
@@ -719,11 +724,11 @@ function renderApp() {
   if (sugestoes.length > 0) {
     sugestoes.forEach(function(s) {
       const card = document.createElement('div');
-      card.style.cssText = 'margin-bottom:20px;border-radius:14px;overflow:hidden;border:1px solid rgba(208,180,140,.2)';
+      card.style.cssText = 'margin-bottom:20px;border-radius:14px;overflow:hidden;border:1px solid rgba(201,169,122,.2)';
 
       // Header: o que falta
       const hdr = document.createElement('div');
-      hdr.style.cssText = 'padding:14px 16px;background:rgba(208,180,140,.08);border-bottom:1px solid rgba(208,180,140,.15)';
+      hdr.style.cssText = 'padding:14px 16px;background:rgba(201,169,122,.08);border-bottom:1px solid rgba(201,169,122,.15)';
       hdr.innerHTML = '<div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">FALTA NA SUA PRATELEIRA</div>' +
         '<div style="font-size:15px;font-weight:600;color:var(--cream)">' + (s.falta || '') + '</div>' +
         '<div style="font-size:12px;color:var(--cream-dim);margin-top:4px;line-height:1.4">' + (s.motivo || '') + '</div>';
@@ -752,7 +757,7 @@ function renderApp() {
           '</div>' +
           '<div style="font-size:14px;font-weight:500;color:var(--cream);margin-bottom:4px">' + (t.produto || '') + ' <span style="font-size:12px;color:var(--cream-dim);font-weight:400">· ' + (t.marca || '') + '</span></div>' +
           (t.descricao ? '<div style="font-size:12px;color:var(--cream-dim);font-style:italic;line-height:1.5;margin-bottom:10px">"' + t.descricao + '"</div>' : '') +
-          '<a href="https://www.mercadolivre.com.br/busca?q=' + query + '" target="_blank" style="display:inline-block;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid rgba(208,180,140,.3);border-radius:20px;padding:4px 12px">Ver no ML →</a>';
+          '<a href="https://www.mercadolivre.com.br/busca?q=' + query + '" target="_blank" style="display:inline-block;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,169,122,.3);border-radius:20px;padding:4px 12px">Ver no ML →</a>';
         card.appendChild(row);
       });
       sugEl.appendChild(card);
@@ -762,7 +767,7 @@ function renderApp() {
     // Fallback: lista simples
     listaCompras.forEach(function(s) {
       const div = document.createElement('div');
-      div.style.cssText = 'padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(208,180,140,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
+      div.style.cssText = 'padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(201,169,122,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
       div.textContent = s;
       sugEl.appendChild(div);
     });
@@ -910,9 +915,6 @@ function initEvolucao() {
   }
 
   // Estado normal
-  const mesAtual = getMesAtual();
-  const fotoMes = historico.find(h => h.mes === mesAtual);
-
   const statusEl = document.getElementById('evo-mes-status');
   if (fotoMes) {
     // Já tem foto este mês
@@ -940,7 +942,7 @@ function renderHistorico(historico, mesAtual) {
 
   card.style.display = 'block';
   el.innerHTML = passados.map(h => `
-    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(208,180,140,0.08)">
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(201,169,122,0.08)">
       <img src="${h.foto}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0">
       <div style="flex:1">
         <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:4px">${getMesLabel(h.mes)}</div>
@@ -1198,7 +1200,7 @@ function renderRotinaDia() {
   var header = document.getElementById('rotina-hoje-header');
   if (header) {
     header.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:12px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:12px;margin-bottom:12px">
         <div>
           <div style="font-size:11px;color:var(--cream-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Hoje</div>
           <div style="font-size:20px;font-weight:600;color:var(--cream)">${diaSemana}</div>
@@ -1223,7 +1225,7 @@ function renderRotinaDia() {
   if (tratDiv && tratamento) {
     tratDiv.style.display = 'block';
     tratDiv.innerHTML = `
-      <div class="card" style="border-color:rgba(208,180,140,0.3);background:rgba(208,180,140,0.06)">
+      <div class="card" style="border-color:rgba(201,169,122,0.3);background:rgba(201,169,122,0.06)">
         <div class="card-title"><span class="card-title-icon">✨</span> Tratamento de Hoje</div>
         <div style="font-size:13px;color:var(--cream-dim);line-height:1.7">${tratamento}</div>
       </div>`;
@@ -1276,7 +1278,7 @@ async function buscarImagensSugestoes() {
 function renderSteps(steps) {
   if (!steps || !steps.length) return '';
   return steps.map(function(s,i) {
-    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#D0B48C">💡 '+s.dica+'</div>':'')+'</div></div>';
+    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#C9A97A">💡 '+s.dica+'</div>':'')+'</div></div>';
   }).join('');
 }
 
@@ -1313,7 +1315,7 @@ function renderEspinha(p) {
   if (e.proibidos && e.proibidos.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">🚫</span> Proibido nos dias de espinha</div>
-      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(208,180,140,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
+      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
     </div>`;
   }
 
@@ -1366,7 +1368,7 @@ function renderPraia(p) {
 
   if (e.na_praia && e.na_praia.length) {
     html += `<div class="card">
-      <div class="card-title" style="color:#D0B48C"><span class="card-title-icon">🏖</span> Na Praia</div>
+      <div class="card-title" style="color:#C9A97A"><span class="card-title-icon">🏖</span> Na Praia</div>
       <div class="step-list">${renderSteps(e.na_praia)}</div>
     </div>`;
   }
@@ -1422,7 +1424,7 @@ function renderMake(p) {
   if (e.dicas_extras && e.dicas_extras.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💡</span> Dicas Extras</div>
-      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(208,180,140,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
+      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
     </div>`;
   }
 
@@ -1443,18 +1445,22 @@ function fazerLogout() {
 }
 
 // -- INIT --
-if (protocolo && protocolo.rotina_manha) {
-  // Tem dados locais - renderizar imediatamente
+if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
+  // Tem dados locais suficientes - renderizar imediatamente
   renderApp();
   setTimeout(buscarImagensSugestoes, 500);
-} else {
-  // Sem dados locais - aguardar Firebase (máx 5s) senão redirecionar
+} else if (auth) {
+  // Tem sessão mas sem dados locais - aguardar Firebase (máx 10s)
   var _initTimeout = setTimeout(function() {
+    // Limpar localStorage corrompido e redirecionar
+    localStorage.removeItem('sbp_protocolo');
+    localStorage.removeItem('sbp_ativo');
     window.location.href = 'onboarding.html';
-  }, 5000);
-  // O onAuthStateChanged vai carregar e fazer location.reload()
-  // Se não carregar em 5s, vai para onboarding
+  }, 10000);
   window._initTimeout = _initTimeout;
+} else {
+  // Sem sessão - ir para onboarding
+  window.location.href = 'onboarding.html';
 }
 
 // -- PWA --

@@ -4,15 +4,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0D0804">
+<meta name="theme-color" content="#F2E8D9">
 <title>Skincare by Polly</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#D0B48C;--gold-light:#e8cfa0;--gold-dim:rgba(208,180,140,0.12);--dark:#0D0804;--dark2:#1C0E08;--cream:#F5EADA;--cdim:rgba(245,240,232,0.65);--muted:#7a6e68;--green:#8aab96;--red:#c4857a}
+:root{--gold:#A07040;--gold-light:#C9A97A;--gold-dim:rgba(160,112,64,0.10);--dark:#2B1206;--dark2:#3D1A08;--cream:#F2E8D9;--surface:#FFFAF5;--surface2:#FAF3E8;--cdim:rgba(43,18,6,0.55);--muted:#9a8878;--green:#5a8a6e;--red:#b85a50}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Jost',sans-serif;background:var(--dark);color:var(--cream);min-height:100vh;overflow-x:hidden;font-size:16px}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;font-size:16px}
 .pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width .4s;z-index:100}
-.hdr{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50;background:linear-gradient(180deg,rgba(14,12,11,.96),transparent)}
+.hdr{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50;background:linear-gradient(180deg,rgba(242,232,217,.98),rgba(242,232,217,.0))}
 .hdr-brand{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold)}
 .hdr-step{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
 .scr{display:none;min-height:100vh;padding:96px 24px 60px;flex-direction:column;align-items:center;justify-content:center}
@@ -22,43 +22,43 @@ body{font-family:'Jost',sans-serif;background:var(--dark);color:var(--cream);min
 .badge{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .badge::before{content:'';width:24px;height:1px;background:var(--gold)}
 h1{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,38px);font-weight:400;line-height:1.15;margin-bottom:10px}
-h1 em{font-style:italic;color:var(--gold-light)}
+h1 em{font-style:italic;color:var(--gold)}
 .sub{font-size:15px;color:var(--cdim);line-height:1.7;margin-bottom:28px}
 .igrp{margin-bottom:14px}
 .ilbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block}
-.ifield{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,169,110,.15);border-radius:8px;padding:14px 16px;font-family:'Jost',sans-serif;font-size:16px;color:var(--cream);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.ifield{width:100%;background:#fff;border:1px solid rgba(160,112,64,.2);border-radius:8px;padding:14px 16px;font-family:'Jost',sans-serif;font-size:16px;color:var(--dark);outline:none;transition:border-color .2s;-webkit-appearance:none}
 .ifield:focus{border-color:var(--gold)}
-.ifield::placeholder{color:#3a3028}
+.ifield::placeholder{color:#b8a898}
 .pwrap{position:relative}
 .pwrap .ifield{padding-right:46px}
 .peye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px}
-.btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:8px;padding:16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--dark);cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:8px;padding:16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
 .btn:active{opacity:.85}
 .btn.dim{opacity:.45}
-.btn2{width:100%;background:transparent;border:1px solid rgba(201,169,110,.25);border-radius:8px;padding:14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;margin-top:8px;transition:all .2s}
+.btn2{width:100%;background:transparent;border:1px solid rgba(160,112,64,.25);border-radius:8px;padding:14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;margin-top:8px;transition:all .2s}
 .btn2:active{border-color:var(--gold);color:var(--gold)}
 /* LGPD */
 .chk-wrap{margin-bottom:12px}
-.chk-wrap label{display:flex;align-items:flex-start;gap:14px;padding:16px;border:1px solid rgba(201,169,110,.15);border-radius:10px;cursor:pointer;background:rgba(255,255,255,.02);transition:background .2s}
+.chk-wrap label{display:flex;align-items:flex-start;gap:14px;padding:16px;border:1px solid rgba(160,112,64,.15);border-radius:10px;cursor:pointer;background:#fff;transition:background .2s}
 .chk-wrap label:active{background:var(--gold-dim)}
 .chk-wrap input[type=checkbox]{width:24px;height:24px;min-width:24px;accent-color:var(--gold);cursor:pointer;margin-top:1px}
 .chk-wrap span{font-size:15px;color:var(--cdim);line-height:1.65}
-.chk-wrap span strong{color:var(--cream)}
+.chk-wrap span strong{color:var(--dark)}
 /* QUIZ */
 .qopts{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
-.qopt{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid rgba(201,169,110,.12);border-radius:10px;cursor:pointer;background:rgba(255,255,255,.02);transition:all .2s;user-select:none}
+.qopt{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid rgba(160,112,64,.15);border-radius:10px;cursor:pointer;background:#fff;transition:all .2s;user-select:none}
 .qopt.on{border-color:var(--gold);background:var(--gold-dim)}
 .qopt:active{background:var(--gold-dim)}
-.qcirc{width:20px;height:20px;border:1.5px solid rgba(201,169,110,.35);border-radius:50%;flex-shrink:0;transition:all .2s;position:relative}
+.qcirc{width:20px;height:20px;border:1.5px solid rgba(160,112,64,.35);border-radius:50%;flex-shrink:0;transition:all .2s;position:relative}
 .qopt.on .qcirc{background:var(--gold);border-color:var(--gold)}
-.qcirc::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:var(--dark);opacity:0;transition:opacity .2s}
+.qcirc::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s}
 .qopt.on .qcirc::after{opacity:1}
 .qopt.multi .qcirc{border-radius:4px}
 .qopt-icon{font-size:20px;flex-shrink:0}
-.qopt-lbl{font-size:15px;font-weight:500;color:var(--cream)}
+.qopt-lbl{font-size:15px;font-weight:500;color:var(--dark)}
 .qopt-sub{font-size:13px;color:var(--muted);margin-top:2px}
 /* PHOTO */
-.photo{border:1px dashed rgba(201,169,110,.25);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:14px;background:rgba(201,169,110,.02);position:relative;overflow:hidden}
+.photo{border:1px dashed rgba(160,112,64,.3);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:14px;background:rgba(160,112,64,.04);position:relative;overflow:hidden}
 .photo.full{padding:0;border-style:solid}
 .photo img{width:100%;max-height:260px;object-fit:cover;border-radius:11px;display:block}
 .photo-icon{font-size:32px;margin-bottom:10px}
@@ -66,45 +66,45 @@ h1 em{font-style:italic;color:var(--gold-light)}
 .photo-s{font-size:12px;color:var(--muted)}
 input[type=file]{display:none}
 /* LIGHT METER */
-#lmeter{display:flex;align-items:center;gap:10px;padding:12px 15px;border-radius:10px;margin-bottom:12px;font-size:13px;font-weight:500;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:all .3s}
-#lmeter.dark{background:rgba(196,133,122,.12);border-color:var(--red);color:var(--red)}
-#lmeter.good{background:rgba(138,171,150,.12);border-color:var(--green);color:var(--green)}
+#lmeter{display:flex;align-items:center;gap:10px;padding:12px 15px;border-radius:10px;margin-bottom:12px;font-size:13px;font-weight:500;background:#fff;border:1px solid rgba(160,112,64,.15);transition:all .3s}
+#lmeter.dark{background:rgba(184,90,80,.08);border-color:var(--red);color:var(--red)}
+#lmeter.good{background:rgba(90,138,110,.08);border-color:var(--green);color:var(--green)}
 #lmeter .dot{width:10px;height:10px;border-radius:50%;background:currentColor;flex-shrink:0}
 #cambox{position:relative;margin-bottom:14px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:3/4;display:none}
 #camprev{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-#camsnap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:var(--cream);border:3px solid var(--gold);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center}
+#camsnap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:#fff;border:3px solid var(--gold);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center}
 /* PRODUCTS */
-.popt{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid rgba(201,169,110,.15);border-radius:12px;background:rgba(255,255,255,.02);cursor:pointer;width:100%;font-family:'Jost',sans-serif;margin-bottom:9px;transition:all .2s;text-align:left}
+.popt{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid rgba(160,112,64,.15);border-radius:12px;background:#fff;cursor:pointer;width:100%;font-family:'Jost',sans-serif;margin-bottom:9px;transition:all .2s;text-align:left}
 .popt:active{border-color:var(--gold);background:var(--gold-dim)}
 .popt-icon{font-size:26px;flex-shrink:0}
-.popt-t{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:2px}
+.popt-t{font-size:15px;font-weight:500;color:var(--dark);margin-bottom:2px}
 .popt-s{font-size:13px;color:var(--muted)}
 /* SPINNER */
 .spin-wrap{text-align:center;padding:40px 0}
-.spinner{width:56px;height:56px;border:2px solid rgba(201,169,110,.1);border-top-color:var(--gold);border-radius:50%;margin:0 auto 22px;animation:sp 1s linear infinite}
+.spinner{width:56px;height:56px;border:2px solid rgba(160,112,64,.15);border-top-color:var(--gold);border-radius:50%;margin:0 auto 22px;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold-light);margin-bottom:7px}
+.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:7px}
 .spin-s{font-size:13px;color:var(--muted)}
 .dots::after{content:'';animation:dt 1.5s infinite}
 @keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
 /* CONFIRM */
-.cbox{background:var(--dark2);border:1px solid rgba(201,169,110,.2);border-radius:12px;padding:20px;margin-bottom:20px}
+.cbox{background:#fff;border:1px solid rgba(160,112,64,.2);border-radius:12px;padding:20px;margin-bottom:20px}
 .cbox-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
 .cbox-b{font-size:14px;color:var(--cdim);line-height:1.8}
 /* SUCCESS */
 .sicon{width:70px;height:70px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 22px;animation:pop .5s ease}
 @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 /* LOCATION */
-.locbtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid rgba(201,169,110,.15);border-radius:10px;background:rgba(255,255,255,.02);cursor:pointer;width:100%;font-family:'Jost',sans-serif;font-size:14px;color:var(--muted);margin-bottom:14px;text-align:left;transition:all .2s}
-.locbtn.ok{border-color:var(--green);color:var(--green);background:rgba(138,171,150,.08)}
+.locbtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid rgba(160,112,64,.15);border-radius:10px;background:#fff;cursor:pointer;width:100%;font-family:'Jost',sans-serif;font-size:14px;color:var(--muted);margin-bottom:14px;text-align:left;transition:all .2s}
+.locbtn.ok{border-color:var(--green);color:var(--green);background:rgba(90,138,110,.08)}
 .locbtn.no{border-color:var(--red);color:var(--red)}
 .errmsg{font-size:13px;color:var(--red);margin-top:6px;display:none}
 .errmsg.on{display:block}
 /* AUTH TABS */
-.atabs{display:flex;margin-bottom:28px;border:1px solid rgba(201,169,110,.15);border-radius:10px;overflow:hidden}
+.atabs{display:flex;margin-bottom:28px;border:1px solid rgba(201,169,122,.15);border-radius:10px;overflow:hidden}
 .atab{flex:1;padding:12px;border:none;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .atab.on{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark)}
-.atab.off{background:transparent;color:var(--muted);font-weight:500}
+.atab.off{background:rgba(160,112,64,.06);color:var(--muted);font-weight:500}
 
 @keyframes shake {
   0%,100%{transform:translateX(0)}
@@ -140,7 +140,7 @@ input[type=file]{display:none}
       messagingSenderId: "423592521435",
       appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
     };
-    firebase.initializeApp(_fbConfig);
+    if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
     window._fbAuth = firebase.auth();
     window._fbDb = firebase.firestore();
     
@@ -169,13 +169,13 @@ input[type=file]{display:none}
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #D0B48C;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#F2E8D9;border:1px solid #C9A97A;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
-    <div style="font-size:13px;color:#F5EADA;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:13px;color:#F2E8D9;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#D0B48C,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0D0804;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#C9A97A,#E8D5B0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#2B1206;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 <div class="pbar" id="pbar" style="width:0%"></div>
@@ -217,9 +217,9 @@ input[type=file]{display:none}
       Continuar com Google
     </button>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <div style="flex:1;height:1px;background:rgba(201,169,110,0.2)"></div>
+      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
       <span style="font-size:11px;color:var(--muted)">ou</span>
-      <div style="flex:1;height:1px;background:rgba(201,169,110,0.2)"></div>
+      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
     </div>
 
     <div id="form-new">
@@ -379,7 +379,7 @@ input[type=file]{display:none}
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">🤱</span><div><div class="qopt-lbl">Estou amamentando</div><div class="qopt-sub">O protocolo priorizará ativos seguros e naturais</div></div></div>
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">📅</span><div><div class="qopt-lbl">Acabei de ter bebê (pós-parto)</div><div class="qopt-sub">Pele em reequilíbrio hormonal — protocolo adaptado</div></div></div>
     </div>
-    <div style="background:rgba(208,180,140,0.08);border:1px solid rgba(201,169,110,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
+    <div style="background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
       ⚠️ <strong style="color:var(--cream)">Importante:</strong> Em caso de dúvidas sobre produtos durante a gestação ou amamentação, consulte sempre seu médico ou ginecologista.
     </div>
     <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
@@ -526,8 +526,8 @@ input[type=file]{display:none}
 <div class="scr" id="s-dicas">
   <div class="inner" style="padding:0;overflow:hidden">
     <!-- Header escuro com ícone -->
-    <div style="background:linear-gradient(160deg,#0D0804,#1a1208);padding:40px 24px 32px;text-align:center">
-      <div style="width:80px;height:80px;border-radius:50%;background:rgba(201,169,110,0.1);border:2px solid rgba(201,169,110,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px">📸</div>
+    <div style="background:linear-gradient(160deg,#2B1206,#1a1208);padding:40px 24px 32px;text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:rgba(201,169,122,0.1);border:2px solid rgba(201,169,122,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px">📸</div>
       <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Análise de pele</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.3">Para resultados<br>perfeitos</h1>
     </div>
@@ -570,11 +570,11 @@ input[type=file]{display:none}
       </div>
 
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
-        <input type="checkbox" id="nao-mostrar-dicas" style="width:18px;height:18px;accent-color:#D0B48C">
+        <input type="checkbox" id="nao-mostrar-dicas" style="width:18px;height:18px;accent-color:#C9A97A">
         <label for="nao-mostrar-dicas" style="font-size:13px;color:#666;font-family:'Jost',sans-serif">Não mostrar isto novamente</label>
       </div>
 
-      <button class="btn" onclick="irParaFoto()" style="background:#0D0804;border:none;border-radius:10px;padding:16px;width:100%;font-size:13px;font-weight:600;letter-spacing:2px;color:#fff;cursor:pointer;text-transform:uppercase">
+      <button class="btn" onclick="irParaFoto()" style="background:var(--gold);border:none;border-radius:10px;padding:16px;width:100%;font-size:13px;font-weight:600;letter-spacing:2px;color:#fff;cursor:pointer;text-transform:uppercase">
         Continuar →
       </button>
     </div>
@@ -597,7 +597,7 @@ input[type=file]{display:none}
     <!-- Texto de análise -->
     <div id="face-analysis-text" style="position:absolute;top:15%;left:50%;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none">
       <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:6px">ANÁLISE DA PELE</div>
-      <div id="face-status" style="font-size:13px;color:#D0B48C;font-weight:600">Carregando detector...</div>
+      <div id="face-status" style="font-size:13px;color:#C9A97A;font-weight:600">Carregando detector...</div>
     </div>
 
     <!-- Indicadores em tempo real -->
@@ -633,7 +633,7 @@ input[type=file]{display:none}
       <img id="foto-preview-img" style="width:100%;height:100%;object-fit:cover">
       <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);display:flex;gap:12px">
         <button onclick="refazerFoto()" style="flex:1;padding:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:10px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Refazer</button>
-        <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#0D0804;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
+        <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#2B1206;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
       </div>
     </div>
   </div>
@@ -660,13 +660,13 @@ input[type=file]{display:none}
     <!-- Modo FOTO -->
     <div id="prod-foto" style="display:none;margin-top:8px">
       <label for="fp-prod-real" style="display:block;margin-bottom:12px" id="btn-add-foto">
-        <div onclick="if(!_ocrRodando){document.getElementById('fp-prod-real').value='';document.getElementById('fp-prod-real').click();}" style="padding:15px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.3);border-radius:10px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px">
+        <div onclick="if(!_ocrRodando){document.getElementById('fp-prod-real').value='';document.getElementById('fp-prod-real').click();}" style="padding:15px;background:rgba(201,169,122,.12);color:var(--gold);border:1px solid rgba(201,169,122,.3);border-radius:10px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px">
           📷 Adicionar foto de produto
         </div>
       </label>
       <input type="file" id="fp-prod-real" accept="image/*" style="display:none" onchange="addFotoProd(this)">
 
-      <div id="ocr-status" style="display:none;text-align:center;padding:14px;background:rgba(201,169,110,.08);border-radius:8px;margin-bottom:12px;font-size:14px;color:var(--gold)">
+      <div id="ocr-status" style="display:none;text-align:center;padding:14px;background:rgba(201,169,122,.08);border-radius:8px;margin-bottom:12px;font-size:14px;color:var(--gold)">
         🔍 Lendo rótulos...
       </div>
 
@@ -716,9 +716,9 @@ input[type=file]{display:none}
   <div class="inner" style="padding:0;overflow:hidden;border-radius:0">
 
     <!-- Header sem foto - novo visual -->
-    <div style="position:relative;width:100%;padding:52px 24px 36px;background:linear-gradient(135deg,#0D0804 0%,#1C0E08 55%,#2A1208 100%);overflow:hidden">
+    <div style="position:relative;width:100%;padding:52px 24px 36px;background:linear-gradient(135deg,#2B1206 0%,#3D1A08 55%,#2A1208 100%);overflow:hidden">
       <!-- Círculos decorativos com as novas cores -->
-      <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(208,180,140,0.10),transparent 70%)"></div>
+      <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(201,169,122,0.10),transparent 70%)"></div>
       <div style="position:absolute;bottom:-70px;left:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(100,48,10,0.35),transparent 70%)"></div>
       <div style="position:absolute;top:50%;right:20px;transform:translateY(-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(162,117,64,0.08),transparent 70%)"></div>
       <!-- Texto -->
@@ -726,8 +726,8 @@ input[type=file]{display:none}
         <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@skincarebypolly</div>
         <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">seu protocolo 🌸</em></div>
         <div style="display:flex;gap:6px;align-items:center">
-          <div style="width:32px;height:2px;background:linear-gradient(90deg,#D0B48C,#A27540);border-radius:1px"></div>
-          <div style="font-size:11px;color:rgba(245,234,218,.5);letter-spacing:1px">protocolo exclusivo</div>
+          <div style="width:32px;height:2px;background:linear-gradient(90deg,#C9A97A,#A27540);border-radius:1px"></div>
+          <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
         </div>
       </div>
     </div>
@@ -735,7 +735,7 @@ input[type=file]{display:none}
     <!-- Conteúdo -->
     <div style="padding:20px">
       <!-- Diagnóstico da IA -->
-      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
         <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Diagnóstico da sua pele</div>
         <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);margin-bottom:12px"></div>
         <div id="conf-txt" style="font-size:13px;color:var(--cream-dim);line-height:1.8"></div>
@@ -966,10 +966,10 @@ function authTab(t) {
 }
 
 async function doAuth() {
+  var isLog = document.getElementById('form-log').style.display !== 'none';
   var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
   var email = isLog ? (document.getElementById('log-email')||{value:''}).value.trim() : (document.getElementById('inp-email')||{value:''}).value.trim();
   var pw = isLog ? (document.getElementById('log-pw')||{value:''}).value : (document.getElementById('inp-pw')||{value:''}).value;
-  var isLog = document.getElementById('form-log').style.display !== 'none';
   var err = isLog ? document.getElementById("auth-err-log") : document.getElementById("auth-err");
 
   if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.style.display='block';} return; }
@@ -1243,13 +1243,13 @@ async function analyzeFace(vid, canvas) {
 
         ctx.beginPath();
         ctx.arc(x, y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = 'rgba(201,169,110,0.9)';
+        ctx.fillStyle = 'rgba(201,169,122,0.9)';
         ctx.fill();
 
         // Anel externo
         ctx.beginPath();
         ctx.arc(x, y, 7, 0, 2 * Math.PI);
-        ctx.strokeStyle = 'rgba(201,169,110,0.4)';
+        ctx.strokeStyle = 'rgba(201,169,122,0.4)';
         ctx.lineWidth = 1.5;
         ctx.stroke();
       });
@@ -1334,14 +1334,14 @@ function updateFaceAnnotations(ctx, kps, vw, vh, dw, dh, skinData) {
     ctx.beginPath();
     ctx.moveTo(lb.x + (lb.x < dw/2 ? 60 : -10), lb.y);
     ctx.lineTo(lb.x + (lb.x < dw/2 ? 70 : -20), lb.y);
-    ctx.strokeStyle = 'rgba(201,169,110,0.8)';
+    ctx.strokeStyle = 'rgba(201,169,122,0.8)';
     ctx.lineWidth = 1;
     ctx.stroke();
 
     // Ponto
     ctx.beginPath();
     ctx.arc(lb.x + (lb.x < dw/2 ? 60 : -10), lb.y, 3, 0, 2*Math.PI);
-    ctx.fillStyle = '#D0B48C';
+    ctx.fillStyle = '#C9A97A';
     ctx.fill();
 
     // Texto
@@ -1360,8 +1360,8 @@ function updateFaceIndicators(faceFound, skinData) {
     document.getElementById('face-status').textContent = 'Rosto detectado — pode fotografar!';
     var snap = document.getElementById('camsnap');
     if (snap) {
-      snap.querySelector('div').style.background = '#D0B48C';
-      snap.style.borderColor = 'rgba(201,169,110,0.8)';
+      snap.querySelector('div').style.background = '#C9A97A';
+      snap.style.borderColor = 'rgba(201,169,122,0.8)';
     }
   }
 }
@@ -1441,8 +1441,8 @@ function startLight() {
       var snap = document.getElementById('camsnap');
       if (snap) {
         var tudoOk = posOk && visOk && luzOk;
-        snap.querySelector('div').style.background = tudoOk ? '#D0B48C' : '#fff';
-        snap.style.borderColor = tudoOk ? 'rgba(201,169,110,0.8)' : 'rgba(255,255,255,0.5)';
+        snap.querySelector('div').style.background = tudoOk ? '#C9A97A' : '#fff';
+        snap.style.borderColor = tudoOk ? 'rgba(201,169,122,0.8)' : 'rgba(255,255,255,0.5)';
       }
 
     }, 700);
@@ -1653,7 +1653,7 @@ function renderProdList() {
   list.innerHTML = '';
   _produtosOCR.forEach(function(p, i) {
     var d = document.createElement('div');
-    d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.15);border-radius:8px;margin-bottom:6px';
+    d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,122,.06);border:1px solid rgba(201,169,122,.15);border-radius:8px;margin-bottom:6px';
     d.innerHTML =
       '<div style="flex:1">' +
         '<div style="font-size:13px;color:var(--cream);font-weight:500">' + p.nome + '</div>' +
