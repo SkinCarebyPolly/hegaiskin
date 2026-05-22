@@ -864,7 +864,13 @@ function chkUpdate() {
 
 
 function goLGPD() {
-  go('s-cad');
+  var c1=document.getElementById("c1"),c2=document.getElementById("c2"),c3=document.getElementById("c3");
+  if (!c1||!c2||!c3||!c1.checked||!c2.checked||!c3.checked) {
+    var btn=document.getElementById("btn-lgpd");
+    if(btn){btn.style.animation="none";btn.offsetHeight;btn.style.animation="shake 0.4s ease";setTimeout(function(){btn.style.animation="";},400);}
+    return;
+  }
+  go("s-cad");
 }
 
 
@@ -925,18 +931,21 @@ function authTab(t) {
   var isLog = t === 'log';
   document.getElementById('form-new').style.display = isLog ? 'none' : 'block';
   document.getElementById('form-log').style.display = isLog ? 'block' : 'none';
-  document.getElementById('auth-tab-new').classList.toggle('active', !isLog);
-  document.getElementById('auth-tab-log').classList.toggle('active', isLog);
+  var tabNew = document.getElementById('auth-tab-new');
+  var tabLog = document.getElementById('auth-tab-log');
+  if (tabNew) { tabNew.className = 'atab ' + (!isLog ? 'on' : 'off'); }
+  if (tabLog) { tabLog.className = 'atab ' + (isLog ? 'on' : 'off'); }
 }
 
 async function doAuth() {
   var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
-  var email = (document.getElementById('inp-email') || document.getElementById('log-email') || {value:''}).value.trim();
-  var pw = (document.getElementById('inp-pw') || document.getElementById('log-pw') || {value:''}).value.trim();
+  var email = isLog ? (document.getElementById('log-email')||{value:''}).value.trim() : (document.getElementById('inp-email')||{value:''}).value.trim();
+  var pw = isLog ? (document.getElementById('log-pw')||{value:''}).value : (document.getElementById('inp-pw')||{value:''}).value;
   var isLog = document.getElementById('form-log').style.display !== 'none';
-  var err = document.getElementById('auth-err');
+  var err = isLog ? document.getElementById("auth-err-log") : document.getElementById("auth-err");
 
-  if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.classList.add('on');} return; }
+  if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.style.display='block';} return; }
+  if (!isLog && pw.length < 6) { if(err){err.textContent='Senha mínimo 6 caracteres.';err.style.display='block';} return; }
 
   try {
     var user;
@@ -954,7 +963,7 @@ async function doAuth() {
         localStorage.setItem('sbp_ativo', 'true');
       }
     } else {
-      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.classList.add('on');} return; }
+      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.style.display='block';} return; }
       var cred = await window._fbAuth.createUserWithEmailAndPassword(email, pw);
       user = cred.user;
       // Salvar perfil no Firestore
@@ -983,7 +992,7 @@ async function doAuth() {
               e.code === 'auth/user-not-found' ? 'Conta não encontrada.' :
               e.code === 'auth/weak-password' ? 'Senha muito fraca (mínimo 6 caracteres).' :
               'Erro: ' + e.message;
-    if(err){err.textContent=msg;err.classList.add('on');}
+    if(err){err.textContent=msg;err.style.display='block';}
   }
 }
 
@@ -1041,9 +1050,9 @@ function doCadastro() {
   var err = document.getElementById('err-cad');
   if (!nome || !email || !email.includes('@') || pw.length < 6) {
     err.textContent = pw.length < 6 ? 'Senha: mínimo 6 caracteres.' : 'Preencha todos os campos.';
-    err.classList.add('on'); return;
+    err.style.display='block'; return;
   }
-  err.classList.remove('on');
+  err.style.display='none';
   S.nome = nome; S.email = email; S.senha = pw;
   localStorage.setItem('sbp_user', JSON.stringify({nome:nome, email:email, senha:pw}));
   localStorage.setItem('sbp_auth', nome);
@@ -1064,7 +1073,7 @@ function doLogin() {
     }
     go('s-q1');
   } else {
-    err.textContent = 'Email ou senha incorrectos.'; err.classList.add('on');
+    err.textContent = 'Email ou senha incorrectos.'; err.style.display='block';
   }
 }
 
@@ -1726,8 +1735,8 @@ if ('serviceWorker' in navigator) {
     for (var r of registrations) { r.unregister(); }
   });
   // Register fresh SW
-  navigator.serviceWorker.register('/skincare-polly/app/sw.js', {
-    scope: '/skincare-polly/app/',
+  navigator.serviceWorker.register('./sw.js', {
+    scope: './',
     updateViaCache: 'none'
   }).then(function(reg) {
     reg.update();

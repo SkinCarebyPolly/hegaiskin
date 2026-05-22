@@ -1,5 +1,4 @@
-const CACHE = 'sbp-app-v7';
-const BASE = '/skincare-pollyhtml/app';
+const CACHE = 'sbp-app-v8';
 
 self.addEventListener('install', function(e) {
   e.waitUntil(self.skipWaiting());
@@ -14,30 +13,32 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
-  // Nunca cachear nada - sempre buscar do servidor
-  // Isso garante que sempre pegamos a versão mais recente
   if (e.request.method !== 'GET') return;
   
   var url = e.request.url;
   
-  // Passar direto para o servidor sem cache
-  if (url.includes('onboarding2.html') || 
-      url.includes('protocolo.html') ||
+  // Nunca cachear páginas principais, API calls ou recursos externos
+  if (url.includes('onboarding') || 
+      url.includes('protocolo') ||
       url.includes('api.anthropic.com') ||
-      url.includes('googleapis.com')) {
-    return;
+      url.includes('googleapis.com') ||
+      url.includes('firestore') ||
+      url.includes('identitytoolkit') ||
+      url.includes('securetoken')) {
+    return; // passa direto ao servidor
   }
   
-  // Para outros recursos (icons, manifest) usar cache
+  // Para icons, manifest e fontes: cache
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      return cached || fetch(e.request).then(function(response) {
+      var fetchFresh = fetch(e.request).then(function(response) {
         if (response && response.status === 200) {
           var clone = response.clone();
           caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
         }
         return response;
       });
+      return cached || fetchFresh;
     })
   );
 });

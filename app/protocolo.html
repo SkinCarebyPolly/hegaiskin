@@ -1382,7 +1382,10 @@ function renderMake(p) {
 
 // -- LOGOUT --
 function fazerLogout() {
-  localStorage.removeItem('sbp_auth');
+  // Limpar localStorage
+  ['sbp_auth','sbp_user','sbp_protocolo','sbp_perfil','sbp_ativo','sbp_plano','sbp_atualizacoes'].forEach(function(k){ localStorage.removeItem(k); });
+  // Deslogar do Firebase
+  try { if(window._fbAuth) window._fbAuth.signOut(); } catch(e){}
   window.location.href = 'onboarding.html';
 }
 
@@ -1431,8 +1434,8 @@ if ('serviceWorker' in navigator) {
     for (var r of registrations) { r.unregister(); }
   });
   // Register fresh SW
-  navigator.serviceWorker.register('/skincare-polly/app/sw.js', {
-    scope: '/skincare-polly/app/',
+  navigator.serviceWorker.register('./sw.js', {
+    scope: './',
     updateViaCache: 'none'
   }).then(function(reg) {
     reg.update();
