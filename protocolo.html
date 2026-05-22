@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<!-- SBP v2.2 ts=1776350683 -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e0c0b">
+<title>Skincare by Polly · Meu Protocolo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a96e;
+  --gold-light: #e8cfa0;
+  --gold-dim: rgba(201,169,110,0.12);
+  --dark: #0e0c0b;
+  --dark-2: #1a1410;
+  --dark-3: #261a12;
+  --cream: #f5f0e8;
+  --cream-dim: rgba(245,240,232,0.65);
+  --muted: #7a6e68;
+  --green: #8aab96;
+  --green-dim: rgba(138,171,150,0.12);
+  --red: #c4857a;
+  --blue: #7b9cbf;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream); min-height:100vh; overflow-x:hidden; }
+
+/* -- HERO -- */
+.hero {
+  background: linear-gradient(160deg, #0a0806, #1a0e09 60%, #261408);
+  padding: 56px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; top:-60px; right:-60px;
+  width:240px; height:240px; border-radius:50%;
+  background: radial-gradient(circle, rgba(201,169,110,0.08), transparent 70%);
+}
+.hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+.hero-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; margin-bottom:4px; }
+.hero-name em { font-style:italic; color:var(--gold-light); }
+.hero-sub { font-size:12px; color:var(--muted); letter-spacing:1px; margin-bottom:20px; }
+.hero-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.hero-tag {
+  padding:4px 12px; border:1px solid rgba(201,169,110,0.2);
+  border-radius:20px; font-size:10px; color:var(--gold-light); letter-spacing:1px;
+}
+
+/* -- TABS -- */
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  background: var(--dark-2);
+  border-bottom: 1px solid rgba(201,169,110,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display:none; }
+.tab {
+  padding: 14px 18px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: 'Jost', sans-serif;
+}
+.tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+.tab:hover { color:var(--cream-dim); }
+
+/* -- SECTIONS -- */
+.section { display:none; padding:24px; }
+.section.active { display:block; }
+
+/* -- CARDS -- */
+.card {
+  background: var(--dark-2);
+  border: 1px solid rgba(201,169,110,0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--gold); margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.card-title-icon { font-size:14px; }
+
+/* -- ROUTINE STEPS -- */
+.step-list { display:flex; flex-direction:column; gap:12px; }
+.step-item {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:18px 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,169,110,0.08);
+  border-radius:10px;
+}
+.step-num {
+  width:28px; height:28px; border-radius:50%;
+  background: var(--gold-dim); border:1px solid rgba(201,169,110,0.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--gold); flex-shrink:0;
+  font-weight:600;
+}
+.step-content { flex:1; }
+.step-product { font-size:16px; font-weight:600; color:var(--cream); margin-bottom:6px; }
+.step-how { font-size:14px; color:var(--cream-dim); line-height:1.8; white-space:pre-line; }
+.step-time {
+  font-size:10px; color:var(--gold); letter-spacing:1px;
+  margin-top:6px; display:inline-block;
+}
+
+/* -- WEEK SCHEDULE -- */
+.week-grid { display:flex; flex-direction:column; gap:10px; }
+.week-item {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:14px 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,169,110,0.08);
+  border-radius:10px;
+}
+.week-day {
+  font-size:10px; letter-spacing:2px; color:var(--gold);
+  text-transform:uppercase; width:50px; flex-shrink:0; padding-top:2px;
+}
+.week-desc { font-size:13px; color:var(--cream-dim); line-height:1.6; }
+
+/* -- CALENDAR -- */
+.cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.cal-month { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; color:var(--gold-light); }
+.cal-nav { background:none; border:1px solid rgba(201,169,110,0.2); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal-dow { text-align:center; font-size:9px; letter-spacing:2px; color:var(--muted); padding:6px 0; text-transform:uppercase; }
+.cal-day {
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  font-size:12px; border-radius:8px; cursor:pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  flex-direction: column; gap:2px;
+}
+.cal-day:hover { background:var(--gold-dim); border-color:rgba(201,169,110,0.2); }
+.cal-day.today { border-color:var(--gold); color:var(--gold); }
+.cal-day.has-event::after { content:''; width:4px; height:4px; border-radius:50%; background:var(--gold); }
+.cal-day.empty { cursor:default; }
+.cal-day-num { font-size:11px; }
+
+/* -- ALERT BOXES -- */
+.alert {
+  border-radius:10px; padding:16px 18px; margin-bottom:14px;
+  border-left:3px solid;
+}
+.alert-gold { background:var(--gold-dim); border-color:var(--gold); }
+.alert-green { background:var(--green-dim); border-color:var(--green); }
+.alert-title { font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.alert-gold .alert-title { color:var(--gold); }
+.alert-green .alert-title { color:var(--green); }
+.alert-text { font-size:13px; color:var(--cream-dim); line-height:1.7; }
+
+/* -- SUGGESTIONS -- */
+.suggestion-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px 0; border-bottom:1px solid rgba(201,169,110,0.06);
+}
+.suggestion-item:last-child { border:none; }
+.suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
+.suggestion-text { font-size:13px; color:var(--cream-dim); line-height:1.6; }
+.suggestion-text strong { color:var(--cream); }
+
+/* -- EVOLUÇÃO -- */
+.evo-photo-area {
+  border:1px dashed rgba(201,169,110,0.2); border-radius:12px;
+  padding:36px 20px; text-align:center; cursor:pointer; margin-bottom:16px;
+  transition:all 0.2s; background:rgba(201,169,110,0.02);
+}
+.evo-photo-area:hover { border-color:rgba(201,169,110,0.4); background:rgba(201,169,110,0.04); }
+.evo-photo-area.has-photo { padding:0; border-style:solid; }
+.evo-photo-area img { width:100%; max-height:280px; object-fit:cover; border-radius:11px; display:block; }
+.evo-icon { font-size:32px; margin-bottom:10px; }
+.evo-title { font-size:14px; font-weight:500; margin-bottom:4px; }
+.evo-sub { font-size:12px; color:var(--muted); }
+
+/* -- CONFIG -- */
+.config-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 0; border-bottom:1px solid rgba(201,169,110,0.06);
+}
+.config-item:last-child { border:none; }
+.config-label { font-size:13px; color:var(--cream-dim); }
+.config-value { font-size:12px; color:var(--gold); letter-spacing:1px; }
+
+.btn-danger {
+  width:100%; background:transparent; border:1px solid rgba(196,133,122,0.3);
+  border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
+  font-size:11px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  color:var(--red); cursor:pointer; margin-top:8px; transition:all 0.2s;
+}
+.btn-danger:hover { background:rgba(196,133,122,0.08); }
+
+.btn-gold {
+  width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border:none; border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
+  font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--dark); cursor:pointer; margin-top:8px; transition:all 0.2s;
+}
+
+/* -- LOADING -- */
+#app-loading {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; flex-direction:column; gap:20px;
+}
+.loading-spinner {
+  width:48px; height:48px; border:2px solid rgba(201,169,110,0.1);
+  border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text { font-family:'Playfair Display',serif; font-style:italic; color:var(--gold); }
+
+/* -- MODAL -- */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.85); z-index:200;
+  align-items:flex-end; backdrop-filter:blur(4px);
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--dark-2); border:1px solid rgba(201,169,110,0.15);
+  border-radius:20px 20px 0 0; width:100%; padding:24px 20px 48px;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-handle { width:40px; height:3px; background:#3d3028; border-radius:2px; margin:0 auto 16px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--gold-light); margin-bottom:4px; }
+.modal-sub { font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:1px; }
+.modal-body { font-size:13px; color:var(--cream-dim); line-height:1.8; }
+.modal-close { position:absolute; top:16px; right:16px; background:#201a17; border:1px solid #3d3028; border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+
+/* -- AI ANALYSIS -- */
+.ai-loading-bar { display:flex; align-items:center; gap:12px; padding:16px; background:var(--gold-dim); border-radius:10px; margin-top:12px; }
+.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(201,169,110,0.2); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+.ai-loading-text { font-size:12px; color:var(--gold); }
+
+input[type="file"] { display:none; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skincare Polly">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    const _fbConfig = {
+      apiKey: "AIzaSyBlZP6K55T1Mos8NzvOJtffXUDOOz_xR8o",
+      authDomain: "skincare-by-polly.firebaseapp.com",
+      projectId: "skincare-by-polly",
+      storageBucket: "skincare-by-polly.firebasestorage.app",
+      messagingSenderId: "423592521435",
+      appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+    window._fbAuth = firebase.auth();
+    window._fbDb = firebase.firestore();
+    
+    // Carregar protocolo do Firebase se não estiver local
+    window._fbAuth.onAuthStateChanged(async function(user) {
+      if (user) {
+        window._currentUser = user;
+        try {
+          var localProto = localStorage.getItem('sbp_protocolo');
+          if (!localProto) {
+            var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+            if (snap.exists) {
+              var dados = snap.data();
+              localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+              localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+              localStorage.setItem('sbp_ativo', 'true');
+              clearTimeout(window._initTimeout);
+              location.reload();
+            }
+          }
+        } catch(e) { console.error('Firebase load error:', e); }
+      }
+    });
+  </script>
+</head>
+<body>
+<!-- PWA INSTALL BANNER -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #c9a96e;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <div style="font-size:24px;flex-shrink:0">📲</div>
+  <div style="flex:1">
+    <div style="font-size:13px;color:#f5f0e8;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
+  </div>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#c9a96e,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0e0c0b;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
+</div>
+
+<div id="app-loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Carregando seu protocolo...</div>
+</div>
+
+<div id="app-content" style="display:none">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">@skincarebypolly · Protocolo Exclusivo</div>
+  <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
+  <p class="hero-sub" id="hero-tipo"></p>
+  <div class="hero-tags" id="hero-tags"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" data-tab="adaptacao">🌱 Adaptação</button>
+  <button class="tab" data-tab="sugestoes">⭐ Sugestões</button>
+  <button class="tab" data-tab="rotina">✨ Rotina</button>
+  <button class="tab" data-tab="semana">🗓 Semana</button>
+  <button class="tab" data-tab="espinha">🔴 Espinha</button>
+  <button class="tab" data-tab="praia">🏖 Praia</button>
+  <button class="tab" data-tab="make">💄 Make</button>
+  <button class="tab" data-tab="evolucao">📸 Evolução</button>
+  <button class="tab" data-tab="config">⚙️ Config</button>
+</div>
+
+<!-- ══ ADAPTAÇÃO ══ -->
+<div class="section active" id="tab-adaptacao">
+
+  <!-- BARRA DE SAÚDE DA PELE -->
+  <div class="card" id="skin-score-card" style="display:none">
+    <div class="card-title"><span class="card-title-icon">✨</span> Saúde da sua pele</div>
+    <div id="skin-score-wrap">
+      <!-- Zonas -->
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:10px;color:var(--cream-dim);letter-spacing:.5px">Recuperação</span>
+        <span style="font-size:10px;color:var(--cream-dim);letter-spacing:.5px">Evolução</span>
+        <span style="font-size:10px;color:var(--cream-dim);letter-spacing:.5px">Saudável</span>
+        <span style="font-size:10px;color:var(--cream-dim);letter-spacing:.5px">Excelente</span>
+      </div>
+      <!-- Barra -->
+      <div style="position:relative;height:20px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;margin-bottom:8px">
+        <!-- Divisores de zona -->
+        <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.12)"></div>
+        <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.12)"></div>
+        <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.12)"></div>
+        <!-- Fill -->
+        <div id="skin-bar-fill" style="height:100%;border-radius:10px;background:linear-gradient(90deg,#e07a7a,#c9a96e,#6aab8a,#4a9b6f);transition:width 1.2s ease;width:0%"></div>
+        <!-- Marcador -->
+        <div id="skin-bar-marker" style="position:absolute;top:-4px;width:28px;height:28px;background:white;border-radius:50%;border:3px solid #c9a96e;transition:left 1.2s ease;left:0%;transform:translateX(-50%)">
+          <div style="width:10px;height:10px;background:#c9a96e;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+        </div>
+      </div>
+      <!-- Você está aqui -->
+      <div id="skin-score-label" style="text-align:center;font-size:13px;color:var(--gold);margin-bottom:6px;font-weight:600"></div>
+      <div style="text-align:center;font-size:12px;color:var(--cream-dim);margin-bottom:8px">💡 Isso é totalmente normal e ajustável com consistência</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">🌱</span> Fase de Adaptação</div>
+    <div id="content-adaptacao" class="alert alert-gold">
+      <div class="alert-title">Carregando...</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">📦</span> Produtos Identificados</div>
+    <div id="content-produtos" class="step-list"></div>
+  </div>
+</div>
+
+<!-- ══ ROTINA ══ -->
+<div class="section" id="tab-rotina">
+  <!-- Cabeçalho do dia -->
+  <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
+  <!-- Tratamento especial do dia -->
+  <div id="rotina-tratamento-dia" style="display:none"></div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
+    <div class="step-list" id="content-manha"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">🌙</span> Noite</div>
+    <div class="step-list" id="content-noite"></div>
+  </div>
+</div>
+
+<!-- ══ SEMANA ══ -->
+<div class="section" id="tab-semana">
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">🗓</span> Tratamentos Semanais</div>
+    <div class="week-grid" id="content-semana"></div>
+  </div>
+</div>
+
+<!-- calendário removido -->
+
+<!-- ══ ESPINHA ══ -->
+<div class="section" id="tab-espinha">
+  <div id="content-espinha-root"></div>
+</div>
+
+<!-- ══ PRAIA ══ -->
+<div class="section" id="tab-praia">
+  <div id="content-praia-root"></div>
+</div>
+
+<!-- ══ MAKE ══ -->
+<div class="section" id="tab-make">
+  <div id="content-make-root"></div>
+</div>
+
+<!-- ══ SUGESTÕES ══ -->
+<div class="section" id="tab-sugestoes">
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">⭐</span> O que vale a pena comprar</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Produtos sugeridos pela IA para o seu perfil — compare preços nas plataformas</p>
+    <div id="content-sugestoes"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
+    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
+    <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
+      <div class="evo-icon">📦</div>
+      <div class="evo-title">Fotografar produto novo</div>
+      <div class="evo-sub">A IA vai integrar ao seu protocolo</div>
+    </div>
+    <input type="file" id="new-product-input" accept="image/*" capture="environment" onchange="addNewProduct(event)">
+    <div id="new-product-loading" style="display:none" class="ai-loading-bar">
+      <div class="ai-mini-spinner"></div>
+      <div class="ai-loading-text">Analisando e integrando ao seu protocolo...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EVOLUÇÃO ══ -->
+<div class="section" id="tab-evolucao">
+  <!-- Foto do mês atual -->
+  <div class="card" id="evo-card-foto">
+    <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
+    <p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px;line-height:1.5">Tire uma nova foto e compare com o início. Rosto limpo, mesma luz, mesma expressão.</p>
+
+    <!-- Comparativo lado a lado -->
+    <div id="evo-comparativo" style="display:none;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Antes</div>
+          <img id="evo-foto-antes" style="width:100%;border-radius:10px;aspect-ratio:1;object-fit:cover;border:1px solid rgba(201,169,110,.2)" src="">
+          <div id="evo-data-antes" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Agora</div>
+          <img id="evo-foto-agora" style="width:100%;border-radius:10px;aspect-ratio:1;object-fit:cover;border:1px solid rgba(201,169,110,.2)" src="">
+          <div id="evo-data-agora" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de captura -->
+    <div class="evo-photo-area" id="evo-photo-area" onclick="document.getElementById('evo-photo-input').click()">
+      <div class="evo-icon">📸</div>
+      <div class="evo-title" id="evo-photo-title">Tirar foto agora</div>
+      <div class="evo-sub" id="evo-photo-sub">Rosto limpo, boa iluminação, frontal</div>
+    </div>
+    <input type="file" id="evo-photo-input" accept="image/*" capture="user" onchange="handleEvoPhoto(event)">
+    <div id="evo-loading" style="display:none" class="ai-loading-bar">
+      <div class="ai-mini-spinner"></div>
+      <div class="ai-loading-text">Analisando evolução da sua pele...</div>
+    </div>
+  </div>
+
+  <!-- Análise da IA -->
+  <div id="evo-analysis" style="display:none" class="card">
+    <div class="card-title"><span class="card-title-icon">✨</span> Análise do Mês</div>
+    <div id="evo-analysis-text"></div>
+  </div>
+
+  <!-- Histórico de fotos -->
+  <div class="card" id="evo-historico-card" style="display:none">
+    <div class="card-title"><span class="card-title-icon">🗓</span> Histórico</div>
+    <div id="evo-historico"></div>
+  </div>
+</div>
+
+<!-- cabelo removido -->
+<!-- ══ SUGESTÕES ══ -->
+<div class="section" id="tab-sugestoes">
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">⭐</span> O que vale a pena comprar</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Produtos sugeridos pela IA para o seu perfil — compare preços nas plataformas</p>
+    <div id="content-sugestoes"></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
+    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
+    <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
+      <div class="evo-icon">📦</div>
+      <div class="evo-title">Fotografar produto novo</div>
+      <div class="evo-sub">A IA vai integrar ao seu protocolo</div>
+    </div>
+    <input type="file" id="new-product-input" accept="image/*" capture="environment" onchange="addNewProduct(event)">
+    <div id="new-product-loading" style="display:none" class="ai-loading-bar">
+      <div class="ai-mini-spinner"></div>
+      <div class="ai-loading-text">Analisando e integrando ao seu protocolo...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EVOLUÇÃO ══ -->
+<div class="section" id="tab-evolucao">
+  <!-- Foto do mês atual -->
+  <div class="card" id="evo-card-foto">
+    <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
+    <p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px;line-height:1.5">Tire uma nova foto e compare com o início. Rosto limpo, mesma luz, mesma expressão.</p>
+
+    <!-- Comparativo lado a lado -->
+    <div id="evo-comparativo" style="display:none;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Antes</div>
+          <img id="evo-foto-antes" style="width:100%;border-radius:10px;aspect-ratio:1;object-fit:cover;border:1px solid rgba(201,169,110,.2)" src="">
+          <div id="evo-data-antes" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Agora</div>
+          <img id="evo-foto-agora" style="width:100%;border-radius:10px;aspect-ratio:1;object-fit:cover;border:1px solid rgba(201,169,110,.2)" src="">
+          <div id="evo-data-agora" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Área de captura -->
+    <div class="evo-photo-area" id="evo-photo-area" onclick="document.getElementById('evo-photo-input').click()">
+      <div class="evo-icon">📸</div>
+      <div class="evo-title" id="evo-photo-title">Tirar foto agora</div>
+      <div class="evo-sub" id="evo-photo-sub">Rosto limpo, boa iluminação, frontal</div>
+    </div>
+    <input type="file" id="evo-photo-input" accept="image/*" capture="user" onchange="handleEvoPhoto(event)">
+    <div id="evo-loading" style="display:none" class="ai-loading-bar">
+      <div class="ai-mini-spinner"></div>
+      <div class="ai-loading-text">Analisando evolução da sua pele...</div>
+    </div>
+  </div>
+
+  <!-- Análise da IA -->
+  <div id="evo-analysis" style="display:none" class="card">
+    <div class="card-title"><span class="card-title-icon">✨</span> Análise do Mês</div>
+    <div id="evo-analysis-text"></div>
+  </div>
+
+  <!-- Histórico de fotos -->
+  <div class="card" id="evo-historico-card" style="display:none">
+    <div class="card-title"><span class="card-title-icon">🗓</span> Histórico</div>
+    <div id="evo-historico"></div>
+  </div>
+</div>
+
+<!-- ══ CABELO K-BEAUTY ══ -->
+<!-- ══ CONFIG ══ -->
+<div class="section" id="tab-config">
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">👤</span> Minha Conta</div>
+    <div class="config-item">
+      <span class="config-label">Nome</span>
+      <span class="config-value" id="cfg-nome"></span>
+    </div>
+    <div class="config-item">
+      <span class="config-label">Email</span>
+      <span class="config-value" id="cfg-email"></span>
+    </div>
+    <div class="config-item">
+      <span class="config-label">Tipo de pele</span>
+      <span class="config-value" id="cfg-pele"></span>
+    </div>
+    <div class="config-item">
+      <span class="config-label">Investimento</span>
+      <span class="config-value" id="cfg-investimento"></span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
+    <div style="margin-bottom:16px">
+      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Como atualizar meu protocolo?</div>
+        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
+      </div>
+      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">A IA pode errar?</div>
+        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">As sugestões são baseadas em boas práticas de skincare e K-Beauty. Em caso de irritação, interrompa o produto e consulte um dermatologista.</div>
+      </div>
+      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Meus dados são salvos?</div>
+        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
+      </div>
+    </div>
+    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
+      <span style="font-size:18px">✉️</span>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--gold);letter-spacing:1px">FALAR COM O SUPORTE</div>
+        <div style="font-size:11px;color:var(--cream-dim)">skincarepolly@gmail.com</div>
+      </div>
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon">⚙️</span> Opções</div>
+    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
+    <button class="btn-gold" onclick="window.location.href='onboarding.html'">Atualizar meu protocolo</button>
+    <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
+  </div>
+</div>
+
+</div><!-- /app-content -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// -- API KEY --
+const _a = 'sk-ant-api03-V', _b = 'gU93q4z1crUe6TnHbP1j';
+const _c = '0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d = 'tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
+function getKey() { return _a+_b+_c+_d; }
+// -- GEMINI KEY --
+const _ga='AQ.Ab', _gb='8RN6K', _gc='4zZPA', _gd='PlXAz';
+const _ge='jwKbd', _gf='49cUw', _gg='d6W12', _gh='rnwc3', _gi='9qWhUJli8ZPvw';
+const GEMINI_KEY = _ga+_gb+_gc+_gd+_ge+_gf+_gg+_gh+_gi;
+
+// -- LOAD DATA --
+var perfil    = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
+var protocolo = JSON.parse(localStorage.getItem('sbp_protocolo') || '{}');
+var user      = JSON.parse(localStorage.getItem('sbp_user') || '{}');
+var auth      = localStorage.getItem('sbp_auth');
+
+// -- TABS --
+document.querySelectorAll('.tab[data-tab]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+    const tabId = this.getAttribute('data-tab');
+    document.getElementById('tab-' + tabId).classList.add('active');
+    if (tabId === 'evolucao') initEvolucao();
+    if (tabId === 'sugestoes') setTimeout(buscarImagensSugestoes, 300);
+  });
+});
+
+// -- RENDER --
+function renderApp() {
+  // Hero
+  document.getElementById('hero-nome').textContent = perfil.nome || user.nome || '';
+  document.getElementById('hero-tipo').textContent = perfil.tipoPele || '';
+  const tagsEl = document.getElementById('hero-tags');
+  (perfil.tags || []).forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'hero-tag';
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  // ── Score da pele ────────────────────────────────────────────────────
+  const score = parseInt(protocolo.score_pele) || 0;
+  if (score > 0) {
+    document.getElementById('skin-score-card').style.display = 'block';
+    const zonas = [
+      { max: 40,  label: 'Em Recuperação', color: '#e07a7a' },
+      { max: 70,  label: 'Em Evolução',    color: '#c9a96e' },
+      { max: 90,  label: 'Saudável',       color: '#6aab8a' },
+      { max: 100, label: 'Excelente',      color: '#4a9b6f' }
+    ];
+    const zona = zonas.find(z => score <= z.max) || zonas[3];
+    setTimeout(function() {
+      document.getElementById('skin-bar-fill').style.width = score + '%';
+      document.getElementById('skin-bar-marker').style.left = score + '%';
+    }, 300);
+    document.getElementById('skin-score-label').textContent = '↑ Você está aqui: ' + zona.label + ' (' + score + '/100)';
+  }
+
+  // Adaptação
+  if (protocolo.fase_adaptacao) {
+    document.getElementById('content-adaptacao').innerHTML = `
+      <div class="alert-title">⚠️ Leia antes de começar</div>
+      <div class="alert-text">${protocolo.fase_adaptacao.replace(/\n/g,'<br>')}</div>`;
+  }
+
+  // Produtos identificados
+  const prodEl = document.getElementById('content-produtos');
+  (protocolo.produtos_identificados || []).forEach((p, i) => {
+    prodEl.innerHTML += `
+      <div class="step-item">
+        <div class="step-num">${i+1}</div>
+        <div class="step-content">
+          <div class="step-product">${p}</div>
+        </div>
+      </div>`;
+  });
+
+  // Rotina do dia
+  renderRotinaDia();
+
+  // Rotina manhã
+  const manhaEl = document.getElementById('content-manha');
+  (protocolo.rotina_manha || []).forEach(s => {
+    manhaEl.innerHTML += `
+      <div class="step-item">
+        <div class="step-num">${s.passo}</div>
+        <div class="step-content">
+          <div class="step-product">${s.produto}</div>
+          <div class="step-how">${s.como}</div>
+          ${s.tempo ? `<span class="step-time">⏱ ${s.tempo}</span>` : ''}
+        </div>
+      </div>`;
+  });
+
+  // Rotina noite
+  const noiteEl = document.getElementById('content-noite');
+  (protocolo.rotina_noite || []).forEach(s => {
+    noiteEl.innerHTML += `
+      <div class="step-item">
+        <div class="step-num">${s.passo}</div>
+        <div class="step-content">
+          <div class="step-product">${s.produto}</div>
+          <div class="step-how">${s.como}</div>
+          ${s.tempo ? `<span class="step-time">⏱ ${s.tempo}</span>` : ''}
+        </div>
+      </div>`;
+  });
+
+  // Semana
+  const semEl = document.getElementById('content-semana');
+  const semana = protocolo.semana || {};
+  const dias = [
+    { key:'seg_qui', label:'Seg/Qui' },
+    { key:'ter_sex', label:'Ter/Sex' },
+    { key:'qua_sab', label:'Qua/Sáb' },
+    { key:'dom',     label:'Dom' }
+  ];
+  dias.forEach(d => {
+    if (semana[d.key]) {
+      semEl.innerHTML += `
+        <div class="week-item">
+          <div class="week-day">${d.label}</div>
+          <div class="week-desc">${semana[d.key]}</div>
+        </div>`;
+    }
+  });
+
+  // ══ ESPINHA ══
+  renderEspinha(protocolo);
+
+  // ══ PRAIA ══
+  renderPraia(protocolo);
+
+  // ══ MAKE ══
+  renderMake(protocolo);
+
+  // ── Sugestões em 3 tiers ──────────────────────────────────────────────
+  const sugEl = document.getElementById('content-sugestoes');
+  sugEl.innerHTML = '';
+
+  // Tentar sugestoes estruturadas primeiro, senão usar lista_compras
+  const sugestoes = protocolo.sugestoes || [];
+  const listaCompras = protocolo.lista_compras || [];
+
+  if (sugestoes.length > 0) {
+    sugestoes.forEach(function(s) {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid rgba(201,169,110,.15);border-radius:12px;padding:16px;margin-bottom:14px';
+
+      const faltaEl = document.createElement('div');
+      faltaEl.style.cssText = 'font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px';
+      faltaEl.textContent = 'FALTA: ' + (s.falta || '');
+      card.appendChild(faltaEl);
+
+      const motivoEl = document.createElement('div');
+      motivoEl.style.cssText = 'font-size:12px;color:var(--cream-dim);margin-bottom:14px;line-height:1.5';
+      motivoEl.textContent = s.motivo || '';
+      card.appendChild(motivoEl);
+
+      [
+        { key: 'economica',     emoji: '💚', label: 'Econômica',      sub: 'dentro do seu orçamento' },
+        { key: 'intermediaria', emoji: '💛', label: 'Intermediária',  sub: 'um pouco mais, entrega melhor' },
+        { key: 'premium',       emoji: '💎', label: 'Premium',        sub: 'o melhor para seu tipo de pele' }
+      ].forEach(function(tier) {
+        const t = s[tier.key];
+        if (!t || !t.produto) return;
+        const tierEl = document.createElement('div');
+        tierEl.style.cssText = 'background:rgba(255,255,255,.03);border-radius:8px;padding:12px;margin-bottom:8px';
+
+        const header = document.createElement('div');
+        header.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:6px';
+        header.innerHTML = '<span style="font-size:16px">' + tier.emoji + '</span>' +
+          '<div><div style="font-size:12px;font-weight:600;color:var(--cream)">' + tier.label + '</div>' +
+          '<div style="font-size:10px;color:var(--cream-dim)">' + tier.sub + '</div></div>' +
+          '<div style="margin-left:auto;font-size:13px;font-weight:700;color:var(--gold)">' + (t.preco || '') + '</div>';
+        tierEl.appendChild(header);
+
+        const prodEl = document.createElement('div');
+        prodEl.style.cssText = 'font-size:13px;color:var(--cream);font-weight:500;margin-bottom:3px';
+        prodEl.textContent = t.produto + (t.marca ? ' · ' + t.marca : '');
+        tierEl.appendChild(prodEl);
+
+        if (t.descricao) {
+          const descEl = document.createElement('div');
+          descEl.style.cssText = 'font-size:11px;color:var(--cream-dim);line-height:1.5;font-style:italic';
+          descEl.textContent = '"' + t.descricao + '"';
+          tierEl.appendChild(descEl);
+        }
+
+        // Link ML
+        const query = encodeURIComponent(t.produto + ' ' + (t.marca || ''));
+        const linkEl = document.createElement('a');
+        linkEl.href = 'https://www.mercadolivre.com.br/busca?q=' + query;
+        linkEl.target = '_blank';
+        linkEl.style.cssText = 'display:inline-block;margin-top:8px;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,169,110,.3);border-radius:4px;padding:3px 10px';
+        linkEl.textContent = 'Ver no Mercado Livre →';
+        tierEl.appendChild(linkEl);
+
+        card.appendChild(tierEl);
+      });
+      sugEl.appendChild(card);
+    });
+
+  } else if (listaCompras.length > 0) {
+    // Fallback: lista simples se não tem sugestoes estruturadas
+    listaCompras.forEach(function(s) {
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(201,169,110,.15);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
+      div.textContent = s;
+      sugEl.appendChild(div);
+    });
+  } else {
+    sugEl.innerHTML = '<p style="color:var(--cream-dim);font-size:13px">Nenhuma sugestão gerada.</p>';
+  }
+
+  // Config
+  document.getElementById('cfg-nome').textContent = user.nome || '';
+  document.getElementById('cfg-email').textContent = user.email || '';
+  document.getElementById('cfg-pele').textContent = perfil.tipoPele || '';
+  document.getElementById('cfg-investimento').textContent = perfil.investimento || '';
+
+  // Show app
+  document.getElementById('app-loading').style.display = 'none';
+  document.getElementById('app-content').style.display = 'block';
+}
+
+// -- CALENDAR --
+let calDate = new Date();
+
+function renderCalendar() {
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-label').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
+
+  const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1).getDay();
+  const daysInMonth = new Date(calDate.getFullYear(), calDate.getMonth()+1, 0).getDate();
+  const today = new Date();
+  const semana = protocolo.semana || {};
+
+  // Day-of-week events based on protocol
+  function getDayEvent(date) {
+    const dow = date.getDay(); // 0=sun,1=mon,...
+    if (dow === 1 || dow === 4) return semana.seg_qui || '';
+    if (dow === 2 || dow === 5) return semana.ter_sex || '';
+    if (dow === 3 || dow === 6) return semana.qua_sab || '';
+    if (dow === 0) return semana.dom || '';
+    return '';
+  }
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  // Day headers
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d => {
+    grid.innerHTML += `<div class="cal-dow">${d}</div>`;
+  });
+
+  // Empty cells
+  for (let i=0; i<firstDay; i++) {
+    grid.innerHTML += `<div class="cal-day empty"></div>`;
+  }
+
+  // Days
+  for (let d=1; d<=daysInMonth; d++) {
+    const date = new Date(calDate.getFullYear(), calDate.getMonth(), d);
+    const isToday = date.toDateString() === today.toDateString();
+    const event = getDayEvent(date);
+    const hasEvent = !!event;
+    grid.innerHTML += `
+      <div class="cal-day ${isToday?'today':''} ${hasEvent?'has-event':''}" 
+           onclick="openDayModal(${d})">
+        <div class="cal-day-num">${d}</div>
+      </div>`;
+  }
+}
+
+function changeMonth(dir) {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth()+dir, 1);
+  renderCalendar();
+}
+
+function openDayModal(day) {
+  const date = new Date(calDate.getFullYear(), calDate.getMonth(), day);
+  const dow = date.getDay();
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const semana = protocolo.semana || {};
+
+  let event = '';
+  if (dow===1||dow===4) event = semana.seg_qui;
+  else if (dow===2||dow===5) event = semana.ter_sex;
+  else if (dow===3||dow===6) event = semana.qua_sab;
+  else event = semana.dom;
+
+  document.getElementById('modal-title').textContent = days[dow] + ', ' + day + ' de ' + months[calDate.getMonth()];
+  document.getElementById('modal-sub').textContent = 'Tratamento do dia';
+  document.getElementById('modal-body').innerHTML = event
+    ? `<p style="margin-bottom:12px">${event}</p><div class="alert alert-green"><div class="alert-title">Rotina base</div><div class="alert-text">Não esqueça a rotina manhã e noite todos os dias!</div></div>`
+    : `<div class="alert alert-green"><div class="alert-title">Rotina base</div><div class="alert-text">Hoje é dia de rotina básica manhã e noite. Sem tratamentos adicionais.</div></div>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+// -- EVOLUÇÃO --
+// ══ EVOLUÇÃO COM HISTÓRICO ══
+const EVO_KEY = 'sbp_evo_historico';
+
+function getEvoHistorico() {
+  try { return JSON.parse(localStorage.getItem(EVO_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveEvoHistorico(arr) {
+  localStorage.setItem(EVO_KEY, JSON.stringify(arr));
+}
+
+function getMesAtual() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function getMesLabel(mesKey) {
+  const [y,m] = mesKey.split('-');
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return meses[parseInt(m)-1] + '/' + y;
+}
+
+function initEvolucao() {
+  const historico  = getEvoHistorico();
+  const mesAtual   = getMesAtual();
+  const fotoMes    = historico.find(h => h.mes === mesAtual);
+  const fotoInicio = historico.length > 0 ? historico[historico.length - 1] : null; // mais antiga = início
+
+  // Foto do onboarding guardada no perfil
+  const fotoOnboarding = localStorage.getItem('sbp_foto_rosto') || (perfil && perfil.fotoRosto) || null;
+
+  // ── Comparativo antes/depois ───────────────────────────────────────────
+  const compEl = document.getElementById('evo-comparativo');
+  const antesSrc = fotoOnboarding || (fotoInicio && fotoInicio.foto) || null;
+  const agoraSrc = fotoMes ? fotoMes.foto : null;
+
+  if (antesSrc) {
+    document.getElementById('evo-foto-antes').src = antesSrc;
+    const dataAntes = fotoInicio ? getMesLabel(fotoInicio.mes) : 'Início';
+    document.getElementById('evo-data-antes').textContent = dataAntes;
+    if (agoraSrc) {
+      document.getElementById('evo-foto-agora').src = agoraSrc;
+      document.getElementById('evo-data-agora').textContent = getMesLabel(mesAtual);
+      compEl.style.display = 'block';
+    } else {
+      // Mostrar só o antes, aguardando foto atual
+      compEl.style.display = 'block';
+      document.getElementById('evo-foto-agora').src = '';
+      document.getElementById('evo-foto-agora').style.background = 'rgba(255,255,255,.05)';
+      document.getElementById('evo-data-agora').textContent = 'Tire agora 👇';
+    }
+  }
+
+  // ── Status e área de captura ───────────────────────────────────────────
+  const statusEl = document.getElementById('evo-mes-status');
+  if (fotoMes) {
+    const area = document.getElementById('evo-photo-area');
+    area.innerHTML = `<img src="${fotoMes.foto}" style="width:100%;border-radius:8px">`;
+    area.classList.add('has-photo');
+    if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto do mês registada — ${getMesLabel(mesAtual)}</span>`;
+    if (fotoMes.analise) {
+      document.getElementById('evo-analysis').style.display = 'block';
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${fotoMes.analise.replace(/\n/g,'<br>')}</p>`;
+    }
+  } else {
+    if (statusEl) statusEl.innerHTML = `<span style="color:var(--cream-dim)">Adicione sua foto deste mês para comparar</span>`;
+  }
+
+  renderHistorico(historico, mesAtual);
+}
+
+function renderHistorico(historico, mesAtual) {
+  const passados = historico.filter(h => h.mes !== mesAtual).sort((a,b) => b.mes.localeCompare(a.mes));
+  const card = document.getElementById('evo-historico-card');
+  const el = document.getElementById('evo-historico');
+  if (!passados.length) { card.style.display = 'none'; return; }
+
+  card.style.display = 'block';
+  el.innerHTML = passados.map(h => `
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(201,169,110,0.08)">
+      <img src="${h.foto}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:4px">${getMesLabel(h.mes)}</div>
+        ${h.analise ? `<div style="font-size:12px;color:var(--cream-dim);line-height:1.6">${h.analise.substring(0,150)}...</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+async function handleEvoPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Verificar limite: 1 foto por mês
+  const historico = getEvoHistorico();
+  const mesAtual = getMesAtual();
+  const jaTemFoto = historico.find(h => h.mes === mesAtual);
+  if (jaTemFoto) {
+    alert('Você já registou uma foto este mês (' + getMesLabel(mesAtual) + '). A próxima foto poderá ser feita em ' + getMesLabel(getProxMes()) + '.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const b64 = ev.target.result.split(',')[1];
+    const dataUrl = ev.target.result;
+    const area = document.getElementById('evo-photo-area');
+    area.innerHTML = `<img src="${dataUrl}" style="width:100%;border-radius:8px">`;
+    area.classList.add('has-photo');
+    document.getElementById('evo-loading').style.display = 'flex';
+
+    // Buscar foto anterior para comparar
+    const fotoAnterior = historico.length > 0 ? historico[historico.length-1] : null;
+
+    try {
+      const claudeParts = [];
+
+      if (fotoAnterior) {
+        claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:fotoAnterior.foto.split(',')[1]}});
+        claudeParts.push({type:'text', text:'Esta é a foto do mês anterior (' + getMesLabel(fotoAnterior.mes) + ').'});
+      }
+
+      claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}});
+      claudeParts.push({type:'text', text:`Esta é a foto do mês atual (${getMesLabel(mesAtual)}).
+Perfil: ${perfil.tipoPele || 'não informado'}, preocupações: ${(perfil.incomodos||[]).join(', ') || 'não informadas'}.
+${fotoAnterior ? 'Compare as duas fotos e destaque as melhorias visíveis e o que ainda precisa de atenção.' : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.'}
+Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 600,
+          system: 'Você é especialista em skincare com visão clínica. Analisa fotos de pele e dá feedback motivador e profissional. Responde sempre em português brasileiro.',
+          messages: [{role:'user', content: claudeParts}]
+        })
+      });
+
+      const data = await res.json();
+      const texto = data.content && data.content[0] ? data.content[0].text : '';
+
+      // Salvar no histórico
+      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString() };
+      historico.push(novaEntrada);
+      saveEvoHistorico(historico);
+
+      document.getElementById('evo-analysis').style.display = 'block';
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${texto.replace(/\n/g,'<br>')}</p>`;
+
+      const statusEl = document.getElementById('evo-mes-status');
+      if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
+
+      renderHistorico(historico, mesAtual);
+
+    } catch(err) {
+      console.error('Evo error:', err);
+      // Salvar foto mesmo sem análise
+      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: '', data: new Date().toISOString() };
+      historico.push(novaEntrada);
+      saveEvoHistorico(historico);
+      document.getElementById('evo-analysis').style.display = 'block';
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim)">Foto registada com sucesso!</p>`;
+    }
+
+    document.getElementById('evo-loading').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function getProxMes() {
+  const d = new Date();
+  d.setMonth(d.getMonth()+1);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+// -- ADICIONAR PRODUTO NOVO --
+async function addNewProduct(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const b64 = ev.target.result.split(',')[1];
+    const area = document.getElementById('new-product-area');
+    area.innerHTML = `<img src="${ev.target.result}" style="max-height:180px">`;
+    area.classList.add('has-photo');
+    document.getElementById('new-product-loading').style.display = 'flex';
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key': getKey(),
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':'true'
+        },
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:600,
+          messages:[{
+            role:'user',
+            content:[
+              {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+              {type:'text',text:`Identifique este produto de skincare. 
+              Perfil da cliente: pele ${perfil.tipoPele}, preocupações ${(perfil.incomodos||[]).join(', ')}.
+              Protocolo atual inclui: ${(protocolo.produtos_identificados||[]).join(', ')}.
+              Diga: 1) O que é o produto, 2) Como integrá-lo na rotina existente (manhã ou noite, após qual passo), 3) Frequência recomendada para este perfil de pele.
+              Resposta em 3 parágrafos curtos e práticos.`}
+            ]
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = data.content[0].text;
+      document.getElementById('new-product-loading').style.display = 'none';
+      openModal('Produto Integrado! ✨', 'Como usar no seu protocolo', text.replace(/\n/g,'<br>'));
+    } catch(err) {
+      document.getElementById('new-product-loading').style.display = 'none';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function openModal(title, sub, body) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-sub').textContent = sub;
+  document.getElementById('modal-body').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${body}</p>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+// -- HAIRCARE --
+function initHaircare() {
+  var plano = localStorage.getItem('sbp_plano') || 'basico';
+  var temPlus = plano === 'premium' || plano === 'anual';
+  
+  // Check if has hair protocol
+  var hairProtocolo = JSON.parse(localStorage.getItem('sbp_cabelo') || 'null');
+  
+  if (!temPlus) {
+    document.getElementById('cabelo-locked').style.display = 'block';
+    document.getElementById('cabelo-content').style.display = 'none';
+    return;
+  }
+  
+  document.getElementById('cabelo-locked').style.display = 'none';
+  document.getElementById('cabelo-content').style.display = 'block';
+  
+  if (hairProtocolo) renderHairProtocolo(hairProtocolo);
+}
+
+function renderHairProtocolo(p) {
+  if (p.diagnostico) {
+    document.getElementById('hair-diagnostico').innerHTML =
+      '<div class="alert-title">🌿 Análise do seu cabelo</div><div class="alert-text">'+p.diagnostico+'</div>';
+  }
+  
+  var lavEl = document.getElementById('hair-lavagem');
+  (p.rotina_lavagem || []).forEach(function(s) {
+    lavEl.innerHTML += '<div class="step-item"><div class="step-num">'+s.passo+'</div><div class="step-content"><div class="step-product">'+(s.icone||'')+'  '+s.produto+'</div><div class="step-how">'+s.como+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+'</div></div>';
+  });
+  
+  var tratEl = document.getElementById('hair-tratamentos');
+  (p.tratamentos_semanais || []).forEach(function(t) {
+    tratEl.innerHTML += '<div class="step-item"><div class="step-num">'+t.dia+'</div><div class="step-content"><div class="step-product">'+t.tratamento+'</div><div class="step-how">'+t.como+'</div></div></div>';
+  });
+  
+  var prodEl = document.getElementById('hair-produtos');
+  (p.produtos_kbeauty || []).forEach(function(p) {
+    prodEl.innerHTML += '<div class="suggestion-item"><div class="suggestion-dot"></div><div class="suggestion-text">'+p+'</div></div>';
+  });
+}
+
+async function gerarProtocoloCapilar(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = async function(ev) {
+    var b64 = ev.target.result.split(',')[1];
+    var area = document.getElementById('hair-photo-area');
+    area.innerHTML = '<img src="'+ev.target.result+'" style="max-height:200px;width:100%;object-fit:cover;border-radius:11px">';
+    document.getElementById('hair-loading').style.display = 'flex';
+    
+    // Resize
+    var img = new Image();
+    img.onload = async function() {
+      var canvas = document.createElement('canvas');
+      var ratio = Math.min(800/img.width, 800/img.height, 1);
+      canvas.width = Math.round(img.width*ratio);
+      canvas.height = Math.round(img.height*ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var resized = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+      
+      var perfil = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
+      var prompt = 'Você é especialista em K-Beauty e cuidados capilares. Analise o cabelo nesta foto e crie um protocolo K-Beauty personalizado. Perfil: '+JSON.stringify(perfil)+'. Retorne APENAS JSON: {"diagnostico":"análise do cabelo","tipo_cabelo":"tipo identificado","rotina_lavagem":[{"passo":1,"produto":"nome","como":"instrução detalhada","icone":"emoji","tempo":"X min"}],"tratamentos_semanais":[{"dia":"Seg/Qui","tratamento":"nome","como":"instrução"}],"produtos_kbeauty":["produto coreano — benefício e como usar"]}';
+      
+      try {
+        var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+GEMINI_KEY, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({"contents":[{"parts":[{"inline_data":{"mime_type":"image/jpeg","data":resized}},{"text":prompt}]}],"generationConfig":{"responseMimeType":"application/json","maxOutputTokens":2000}})
+        });
+        var data = await resp.json();
+        var raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        var hairP = JSON.parse(raw.replace(/```json|```/g,'').trim());
+        localStorage.setItem('sbp_cabelo', JSON.stringify(hairP));
+        renderHairProtocolo(hairP);
+      } catch(err) {
+        console.error(err);
+        alert('Erro ao gerar protocolo capilar. Tente novamente.');
+      }
+      document.getElementById('hair-loading').style.display = 'none';
+    };
+    img.src = 'data:image/jpeg;base64,'+b64;
+  };
+  reader.readAsDataURL(file);
+}
+
+
+
+// ══ ROTINA DO DIA ══
+function renderRotinaDia() {
+  var hoje = new Date();
+  var diasSemana = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  var meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var diaSemana = diasSemana[hoje.getDay()];
+  var dia = hoje.getDate();
+  var mes = meses[hoje.getMonth()];
+
+  // Header com data
+  var header = document.getElementById('rotina-hoje-header');
+  if (header) {
+    header.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:12px;margin-bottom:12px">
+        <div>
+          <div style="font-size:11px;color:var(--cream-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Hoje</div>
+          <div style="font-size:20px;font-weight:600;color:var(--cream)">${diaSemana}</div>
+          <div style="font-size:13px;color:var(--cream-dim)">${dia} de ${mes}</div>
+        </div>
+        <div style="font-size:36px">${getTratamentoEmoji(hoje.getDay())}</div>
+      </div>`;
+  }
+
+  // Tratamento especial do dia
+  var semana = protocolo.semana || {};
+  var dow = hoje.getDay();
+  var tratamento = '';
+  var tratamentoLabel = '';
+
+  if (dow === 1 || dow === 4) { tratamento = semana.seg_qui || ''; tratamentoLabel = 'Seg/Qui'; }
+  else if (dow === 2 || dow === 5) { tratamento = semana.ter_sex || ''; tratamentoLabel = 'Ter/Sex'; }
+  else if (dow === 3 || dow === 6) { tratamento = semana.qua_sab || ''; tratamentoLabel = 'Qua/Sáb'; }
+  else { tratamento = semana.dom || ''; tratamentoLabel = 'Domingo'; }
+
+  var tratDiv = document.getElementById('rotina-tratamento-dia');
+  if (tratDiv && tratamento) {
+    tratDiv.style.display = 'block';
+    tratDiv.innerHTML = `
+      <div class="card" style="border-color:rgba(201,169,110,0.3);background:rgba(201,169,110,0.06)">
+        <div class="card-title"><span class="card-title-icon">✨</span> Tratamento de Hoje</div>
+        <div style="font-size:13px;color:var(--cream-dim);line-height:1.7">${tratamento}</div>
+      </div>`;
+  }
+}
+
+function getTratamentoEmoji(dow) {
+  if (dow === 0) return '😌'; // Dom - descanso
+  if (dow === 1 || dow === 4) return '⚗️'; // Seg/Qui - tratamento
+  if (dow === 2 || dow === 5) return '✨'; // Ter/Sex - brilho
+  if (dow === 3 || dow === 6) return '💆'; // Qua/Sab - nutrição
+  return '🌿';
+}
+
+
+// ══ BUSCAR IMAGEM PRODUTO ══
+async function buscarImagemProduto(nomeProduto, imgId) {
+  try {
+    const query = encodeURIComponent(nomeProduto);
+    const resp = await fetch('https://api.mercadolibre.com/sites/MLB/search?q='+query+'&limit=1');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const item = data.results && data.results[0];
+    if (item && item.thumbnail) {
+      const el = document.getElementById(imgId);
+      if (el) {
+        const imgUrl = item.thumbnail.replace('http:', 'https:').replace('-I.jpg', '-O.jpg');
+        el.innerHTML = '<img src="'+imgUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.innerHTML=\'<span style=\'font-size:28px\'>🧴</span>\'" alt="'+nomeProduto+'">';
+      }
+    }
+  } catch(e) {
+    // falha silenciosa — mantém placeholder
+  }
+}
+
+async function buscarImagensSugestoes() {
+  var items = document.querySelectorAll('[id^="prod-img-"]');
+  for (var i = 0; i < items.length; i++) {
+    var id = items[i].id;
+    var nome = items[i].getAttribute('data-nome');
+    if (nome) {
+      await buscarImagemProduto(nome, id);
+      await new Promise(r => setTimeout(r, 300));
+    }
+  }
+}
+
+
+// ══ RENDER STEPS (global) ══
+function renderSteps(steps) {
+  if (!steps || !steps.length) return '';
+  return steps.map(function(s,i) {
+    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#c9a96e">💡 '+s.dica+'</div>':'')+'</div></div>';
+  }).join('');
+}
+
+// ══ RENDER ESPINHA ══
+function renderEspinha(p) {
+  const root = document.getElementById('content-espinha-root');
+  if (!root) return;
+  const e = p.protocolo_espinha_detalhado || {};
+
+
+  let html = '';
+
+  if (e.regra_ouro) {
+    html += `<div class="card"><div class="alert alert-gold" style="margin:0">
+      <div class="alert-title">🚨 Regra de Ouro</div>
+      <div class="alert-text">${e.regra_ouro}</div>
+    </div></div>`;
+  }
+
+  if (e.manha && e.manha.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#f4a261"><span class="card-title-icon">☀️</span> Manhã com Espinha</div>
+      <div class="step-list">${renderSteps(e.manha)}</div>
+    </div>`;
+  }
+
+  if (e.noite && e.noite.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite com Espinha</div>
+      <div class="step-list">${renderSteps(e.noite)}</div>
+    </div>`;
+  }
+
+  if (e.proibidos && e.proibidos.length) {
+    html += `<div class="card">
+      <div class="card-title"><span class="card-title-icon">🚫</span> Proibido nos dias de espinha</div>
+      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,110,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
+    </div>`;
+  }
+
+  if (e.sos_tratamento) {
+    html += `<div class="card">
+      <div class="card-title"><span class="card-title-icon">⏱</span> SOS — Tratamento Pontual</div>
+      <div class="alert alert-gold" style="margin:0"><div class="alert-text">${e.sos_tratamento}</div></div>
+    </div>`;
+  }
+
+  if (!html && p.protocolo_espinha) {
+    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
+      <div class="alert-title">🚨 Protocolo de Emergência</div>
+      <div class="alert-text">${p.protocolo_espinha.replace(/\n/g,'<br>')}</div>
+    </div></div>`;
+  }
+
+  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Protocolo não disponível</div></div></div>';
+}
+
+// ══ RENDER PRAIA ══
+function renderPraia(p) {
+  const root = document.getElementById('content-praia-root');
+  if (!root) return;
+  const e = p.protocolo_praia_detalhado || {};
+
+
+  let html = '';
+
+  if (e.regra_ouro) {
+    html += `<div class="card"><div class="alert alert-gold" style="margin:0">
+      <div class="alert-title">☀️ Regra de Ouro</div>
+      <div class="alert-text">${e.regra_ouro}</div>
+    </div></div>`;
+  }
+
+  if (e.vespera && e.vespera.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Véspera à Noite</div>
+      <div class="step-list">${renderSteps(e.vespera)}</div>
+    </div>`;
+  }
+
+  if (e.manha && e.manha.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#f4a261"><span class="card-title-icon">☀️</span> Manhã — Antes de Sair</div>
+      <div class="step-list">${renderSteps(e.manha)}</div>
+    </div>`;
+  }
+
+  if (e.na_praia && e.na_praia.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#c9a96e"><span class="card-title-icon">🏖</span> Na Praia</div>
+      <div class="step-list">${renderSteps(e.na_praia)}</div>
+    </div>`;
+  }
+
+  if (e.pos_praia && e.pos_praia.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite Pós-Praia — SOS Recuperação</div>
+      <div class="step-list">${renderSteps(e.pos_praia)}</div>
+    </div>`;
+  }
+
+  if (!html && p.protocolo_praia) {
+    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
+      <div class="alert-title">☀️ Protocolo Praia</div>
+      <div class="alert-text">${p.protocolo_praia.replace(/\n/g,'<br>')}</div>
+    </div></div>`;
+  }
+
+  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Protocolo não disponível</div></div></div>';
+}
+
+// ══ RENDER MAKE ══
+function renderMake(p) {
+  const root = document.getElementById('content-make-root');
+  if (!root) return;
+  const e = p.dicas_maquiagem_detalhado || {};
+
+
+
+  let html = '';
+
+  if (e.preparo && e.preparo.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#f4a261"><span class="card-title-icon">✨</span> Preparo da Pele — 15 min antes</div>
+      <div class="step-list">${renderSteps(e.preparo)}</div>
+    </div>`;
+  }
+
+  if (e.aplicacao && e.aplicacao.length) {
+    html += `<div class="card">
+      <div class="card-title"><span class="card-title-icon">💄</span> Aplicação sem Pilling</div>
+      <div class="step-list">${renderSteps(e.aplicacao)}</div>
+    </div>`;
+  }
+
+  if (e.remocao && e.remocao.length) {
+    html += `<div class="card">
+      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Remoção — Dupla Limpeza</div>
+      <div class="step-list">${renderSteps(e.remocao)}</div>
+    </div>`;
+  }
+
+  if (e.dicas_extras && e.dicas_extras.length) {
+    html += `<div class="card">
+      <div class="card-title"><span class="card-title-icon">💡</span> Dicas Extras</div>
+      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,110,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
+    </div>`;
+  }
+
+  if (!html && p.dicas_maquiagem) {
+    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
+      <div class="alert-title">💄 Skincare + Maquiagem</div>
+      <div class="alert-text">${p.dicas_maquiagem.replace(/\n/g,'<br>')}</div>
+    </div></div>`;
+  }
+
+  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Dicas não disponíveis</div></div></div>';
+}
+
+// -- LOGOUT --
+function fazerLogout() {
+  localStorage.removeItem('sbp_auth');
+  window.location.href = 'onboarding.html';
+}
+
+// -- INIT --
+if (protocolo && protocolo.rotina_manha) {
+  // Tem dados locais - renderizar imediatamente
+  renderApp();
+  setTimeout(buscarImagensSugestoes, 500);
+} else {
+  // Sem dados locais - aguardar Firebase (máx 5s) senão redirecionar
+  var _initTimeout = setTimeout(function() {
+    window.location.href = 'onboarding.html';
+  }, 5000);
+  // O onAuthStateChanged vai carregar e fazer location.reload()
+  // Se não carregar em 5s, vai para onboarding
+  window._initTimeout = _initTimeout;
+}
+
+// -- PWA --
+var _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _deferredPrompt = e;
+  setTimeout(function() {
+    var b = document.getElementById('pwa-banner');
+    if (b) b.style.display = 'flex';
+  }, 4000);
+});
+window.addEventListener('appinstalled', function() {
+  var b = document.getElementById('pwa-banner');
+  if (b) b.style.display = 'none';
+  _deferredPrompt = null;
+});
+function installPWA() {
+  if (!_deferredPrompt) return;
+  _deferredPrompt.prompt();
+  _deferredPrompt.userChoice.then(function() {
+    _deferredPrompt = null;
+    var b = document.getElementById('pwa-banner');
+    if (b) b.style.display = 'none';
+  });
+}
+if ('serviceWorker' in navigator) {
+  // Unregister old SW that may be serving cached files
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (var r of registrations) { r.unregister(); }
+  });
+  // Register fresh SW
+  navigator.serviceWorker.register('/skincare-polly/app/sw.js', {
+    scope: '/skincare-polly/app/',
+    updateViaCache: 'none'
+  }).then(function(reg) {
+    reg.update();
+    console.log('SW v3 registered');
+  }).catch(function(e) {
+    console.log('SW error:', e);
+  });
+}
+</script>
+</body>
+</html>

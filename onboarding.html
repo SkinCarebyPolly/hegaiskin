@@ -649,57 +649,55 @@ input[type=file]{display:none}
     <div class="badge">Quase lá!</div>
     <h1>E os seus<br><em>produtos?</em></h1>
     <p class="sub">Como prefere informar seus produtos de skincare?</p>
-    <!-- Opções iniciais -->
-    <div id="prod-opts">
+
+    <!-- Escolha do modo -->
+    <div id="prod-modo">
       <button class="popt" onclick="pickProd('foto')"><span class="popt-icon">📷</span><div><div class="popt-t">Fotografar os rótulos</div><div class="popt-s">A IA lê os rótulos automaticamente</div></div></button>
       <button class="popt" onclick="pickProd('manual')"><span class="popt-icon">✍️</span><div><div class="popt-t">Digitar a lista</div><div class="popt-s">Liste o que você tem em casa</div></div></button>
-      <button class="popt" onclick="pickProd('zero')"><span class="popt-icon">🌱</span><div><div class="popt-t">Começar do zero</div><div class="popt-s">A IA monta tudo dentro do seu orçamento</div></div></button>
+      <button class="popt" onclick="pickProd('zero')"><span class="popt-icon">🌱</span><div><div class="popt-t">Não tenho produtos</div><div class="popt-s">A IA monta tudo dentro do seu orçamento</div></div></button>
     </div>
 
-    <!-- Modo FOTO: múltiplas fotos com OCR -->
-    <div id="area-foto-prod" style="display:none;margin-top:8px">
+    <!-- Modo FOTO -->
+    <div id="prod-foto" style="display:none;margin-top:8px">
+      <button class="btn" id="btn-add-foto" onclick="triggerFotoProd()" style="margin-bottom:12px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.3)">
+        📷 Adicionar foto de produto
+      </button>
 
-      <!-- Botões adicionar foto -->
-      <div style="display:flex;gap:8px;margin-bottom:14px">
-        <label for="fp-cam" style="flex:1;cursor:pointer">
-          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--cream)">📷 Câmera</div>
-        </label>
-        <label for="fp-gal" style="flex:1;cursor:pointer">
-          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--cream)">🖼 Galeria</div>
-        </label>
-      </div>
-      <input type="file" id="fp-cam" accept="image/*" capture="environment" onchange="addFotoProd(this)" style="display:none">
-      <input type="file" id="fp-gal" accept="image/*" onchange="addFotoProd(this)" style="display:none">
-
-      <!-- Status OCR -->
-      <div id="ocr-status" style="display:none;text-align:center;padding:12px;background:rgba(201,169,110,.08);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--gold)">
+      <div id="ocr-status" style="display:none;text-align:center;padding:14px;background:rgba(201,169,110,.08);border-radius:8px;margin-bottom:12px;font-size:14px;color:var(--gold)">
         🔍 Lendo rótulos...
       </div>
 
-      <!-- Lista de produtos identificados -->
       <div id="prod-list-wrap" style="display:none;margin-bottom:14px">
         <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">✦ Produtos identificados</div>
         <div id="prod-list"></div>
-        <button onclick="resetFotoProd()" style="background:none;border:none;color:var(--muted);font-size:11px;margin-top:4px;cursor:pointer;text-decoration:underline">Limpar e recomeçar</button>
+        <button onclick="resetFotoProd()" style="background:none;border:none;color:var(--muted);font-size:11px;margin-top:6px;cursor:pointer;text-decoration:underline;padding:0">
+          Limpar tudo e recomeçar
+        </button>
       </div>
 
-      <button class="btn" id="btn-prod-criar" onclick="gerarProtocolo()" style="display:none;margin-bottom:8px">Criar meu protocolo →</button>
-      <div id="btn-mais-foto" style="display:none;margin-bottom:8px">
-        <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:6px">Tem mais produtos? Adicione mais fotos</div>
+      <div id="prod-hint" style="display:none;text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px">
+        Tem mais produtos? Adicione mais fotos 👆
       </div>
+
+      <button class="btn" id="btn-prod-criar" onclick="gerarProtocolo()" style="display:none;margin-bottom:8px">
+        Criar meu protocolo →
+      </button>
+
+      <button class="btn2" onclick="voltarProd()" style="margin-top:4px">← Voltar</button>
     </div>
 
     <!-- Modo MANUAL -->
-    <div id="area-manual-prod" style="display:none;margin-top:8px">
+    <div id="prod-manual" style="display:none;margin-top:8px">
       <label class="ilbl">Liste seus produtos</label>
       <textarea id="txt-prod" class="ifield" style="resize:vertical;min-height:110px;padding:14px 16px;margin-bottom:10px" placeholder="Ex: Sabonete La Roche-Posay, Vitamina C, FPS 60..."></textarea>
       <button class="btn" onclick="gerarProtocolo()">Criar meu protocolo →</button>
+      <button class="btn2" onclick="voltarProd()" style="margin-top:8px">← Voltar</button>
     </div>
-    <button class="btn2" onclick="go('s-foto')" style="margin-top:8px">← Voltar</button>
+
+    <button class="btn2" id="btn-prod-voltar-foto" onclick="go('s-foto')" style="margin-top:8px">← Voltar</button>
   </div>
 </div>
 
-<!-- 10: GERANDO -->
 <div class="scr" id="s-gen">
   <div class="inner" style="text-align:center">
     <div class="spin-wrap">
@@ -845,6 +843,9 @@ function go(id) {
       el.classList.add('on');
     }
   } catch(e) {}
+
+  // Hooks por tela
+  if (id === 's-prod') { try { enterProd(); } catch(e){} }
 
   // Scroll to top
   try { window.scrollTo(0, 0); } catch(e) {}
@@ -1166,6 +1167,8 @@ function prevFoto(inputId, areaId, tipo) {
     resizeImg(raw, function(resized) {
       if (tipo === 'rosto') {
         S.fotoRosto = resized;
+        // Guardar para antes/depois na evolução
+        try { localStorage.setItem('sbp_foto_rosto', resized); } catch(e) {}
         document.getElementById('btn-foto').disabled = false;
       } else {
         S.fotoProd = resized;
@@ -1515,116 +1518,157 @@ function prevFotoGaleria(e) {
 }
 
 // -- PRODUTOS --
-// ── Produtos: múltiplas fotos com OCR ──────────────────────────────────
-var _produtosOCR = [];   // [{nome, categoria, ativo}]
-var _fotosBase64 = [];   // base64 de cada foto adicionada
+// ── Produtos: OCR múltiplas fotos ──────────────────────────────────────
+var _produtosOCR = [];
+var _fotosBase64 = [];
+var _ocrRodando  = false;
+
+function enterProd() {
+  // Chamada toda vez que a tela s-prod é exibida — reseta o estado visual
+  _produtosOCR = [];
+  _fotosBase64 = [];
+  _ocrRodando  = false;
+  document.getElementById('prod-modo').style.display   = 'block';
+  document.getElementById('prod-foto').style.display   = 'none';
+  document.getElementById('prod-manual').style.display = 'none';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'block';
+  var st = document.getElementById('ocr-status');
+  if (st) st.style.display = 'none';
+  renderProdList();
+}
 
 function pickProd(modo) {
   S.modoProd = modo;
-  document.getElementById('prod-opts').style.display = 'none';
-  document.getElementById('area-foto-prod').style.display = 'none';
-  document.getElementById('area-manual-prod').style.display = 'none';
+  document.getElementById('prod-modo').style.display   = 'none';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'none';
   if (modo === 'foto') {
-    document.getElementById('area-foto-prod').style.display = 'block';
+    document.getElementById('prod-foto').style.display = 'block';
   } else if (modo === 'manual') {
-    document.getElementById('area-manual-prod').style.display = 'block';
+    document.getElementById('prod-manual').style.display = 'block';
   } else {
-    S.prodTxt = 'Cliente não tem produtos. Monte rotina e lista de compras do zero com marcas REAIS disponíveis no Brasil dentro do orçamento informado.';
+    S.prodTxt    = 'Cliente não tem produtos. Monte rotina e lista de compras do zero com marcas REAIS disponíveis no Brasil dentro do orçamento informado.';
     S.fotosProds = [];
     gerarProtocolo();
   }
 }
 
+function voltarProd() {
+  // Volta para a escolha de modo sem sair da tela
+  document.getElementById('prod-foto').style.display   = 'none';
+  document.getElementById('prod-manual').style.display = 'none';
+  document.getElementById('prod-modo').style.display   = 'block';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'block';
+}
+
+function triggerFotoProd() {
+  if (_ocrRodando) return;
+  // Cria um input novo a cada clique — evita travamento do browser
+  var inp = document.createElement('input');
+  inp.type   = 'file';
+  inp.accept = 'image/*';
+  inp.style.display = 'none';
+  document.body.appendChild(inp);
+  inp.addEventListener('change', function() {
+    addFotoProd(inp);
+    document.body.removeChild(inp);
+  });
+  inp.click();
+}
+
 function resetFotoProd() {
   _produtosOCR = [];
   _fotosBase64 = [];
-  document.getElementById('prod-list').innerHTML = '';
-  document.getElementById('prod-list-wrap').style.display = 'none';
-  document.getElementById('btn-prod-criar').style.display = 'none';
-  document.getElementById('btn-mais-foto').style.display = 'none';
+  renderProdList();
 }
 
 async function addFotoProd(input) {
   if (!input.files || !input.files[0]) return;
-  var file = input.files[0];
-  input.value = '';  // permite selecionar a mesma foto novamente
+  if (_ocrRodando) return;
+  _ocrRodando = true;
 
+  var file   = input.files[0];
   var status = document.getElementById('ocr-status');
-  status.style.display = 'block';
-  status.textContent = '🔍 Lendo rótulos...';
+  var btnAdd = document.getElementById('btn-add-foto');
+
+  status.style.display  = 'block';
+  status.textContent    = '🔍 Lendo rótulos...';
+  btnAdd.disabled       = true;
 
   try {
-    // Converter para base64
     var b64 = await new Promise(function(res, rej) {
       var r = new FileReader();
-      r.onload = function(e) { res(e.target.result.split(',')[1]); };
+      r.onload  = function(e) { res(e.target.result.split(',')[1]); };
       r.onerror = rej;
       r.readAsDataURL(file);
     });
-    _fotosBase64.push(b64);
 
-    // OCR via Claude
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': getKey(),
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: 'Você é especialista em identificar produtos cosméticos. Leia os rótulos com precisão absoluta. Retorne APENAS JSON válido, sem texto fora do JSON.',
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
-            { type: 'text', text: 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO como está escrito na embalagem. NÃO invente. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/outro", "ativo": "ativo principal se visível ou vazio"}]}' }
-          ]
-        }]
+        system: 'Identifique produtos cosméticos em fotos. Leia os rótulos com precisão. Retorne APENAS JSON válido.',
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+          { type: 'text',  text:  'Leia TODOS os rótulos visíveis. Use o nome EXATO da embalagem. Retorne JSON: {"produtos":[{"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/aparelho/outro","ativo":"ativo principal ou vazio"}]}' }
+        ]}]
       })
     });
-    var data = await resp.json();
-    var raw = (data.content && data.content[0] && data.content[0].text) || '{}';
+
+    var data  = await resp.json();
+    var raw   = (data.content && data.content[0] && data.content[0].text) || '{}';
     var clean = raw.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(clean);
-    var prods = parsed.produtos || [];
+    var prods = (JSON.parse(clean).produtos || []);
 
     if (prods.length === 0) {
-      status.textContent = '⚠️ Não consegui ler os rótulos. Tente com mais luz ou aproxime a câmera.';
+      status.textContent = '⚠️ Não consegui ler os rótulos. Tente com mais luz.';
       setTimeout(function() { status.style.display = 'none'; }, 3000);
-      return;
+    } else {
+      _fotosBase64.push(b64);
+      prods.forEach(function(p) { _produtosOCR.push(p); });
+      status.style.display = 'none';
+      renderProdList();
     }
 
-    // Adicionar à lista
-    prods.forEach(function(p) { _produtosOCR.push(p); });
-    renderProdList();
-    status.style.display = 'none';
-
   } catch(e) {
-    status.textContent = '⚠️ Erro ao ler foto: ' + e.message;
+    status.textContent = '⚠️ Erro: ' + e.message;
     setTimeout(function() { status.style.display = 'none'; }, 3000);
   }
+
+  _ocrRodando    = false;
+  btnAdd.disabled = false;
 }
 
 function renderProdList() {
   var list = document.getElementById('prod-list');
+  if (!list) return;
   list.innerHTML = '';
   _produtosOCR.forEach(function(p, i) {
-    var div = document.createElement('div');
-    div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.15);border-radius:8px;margin-bottom:6px';
-    div.innerHTML = '<div style="flex:1"><div style="font-size:13px;color:var(--cream);font-weight:500">' + p.nome + '</div>' +
-      '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div></div>' +
-      '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px">×</button>';
-    list.appendChild(div);
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.15);border-radius:8px;margin-bottom:6px';
+    d.innerHTML =
+      '<div style="flex:1">' +
+        '<div style="font-size:13px;color:var(--cream);font-weight:500">' + p.nome + '</div>' +
+        '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
+      '</div>' +
+      '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 6px;line-height:1">×</button>';
+    list.appendChild(d);
   });
-  document.getElementById('prod-list-wrap').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
-  document.getElementById('btn-prod-criar').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
-  document.getElementById('btn-mais-foto').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
+  var temProd = _produtosOCR.length > 0;
+  document.getElementById('prod-list-wrap').style.display  = temProd ? 'block' : 'none';
+  document.getElementById('btn-prod-criar').style.display  = temProd ? 'block' : 'none';
+  document.getElementById('prod-hint').style.display       = temProd ? 'block' : 'none';
 }
 
 function removerProd(i) {
   _produtosOCR.splice(i, 1);
+  _fotosBase64.splice(i, 1);
   renderProdList();
 }
 
@@ -1706,7 +1750,9 @@ async function gerarProtocolo() {
   var mi = 0;
   var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
 
-  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"produtos_identificados\":[]}';
+  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.
+11. SCORE DA PELE (score_pele): Avalie a saúde geral da pele de 0 a 100 com base na foto e no perfil. 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente. Seja honesta mas gentil.
+12. SUGESTÕES (sugestoes): Liste os produtos que FALTAM na prateleira da cliente (ou que ela precisa começar do zero). Para cada item, dê 3 opções reais de mercado: econômica (dentro do orçamento declarado), intermediária (um pouco mais), premium (o melhor para o perfil dela). Use marcas REAIS disponíveis no Brasil com preços aproximados em R$.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"score_pele\":65,\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"sugestoes\":[{\"falta\":\"CATEGORIA QUE FALTA\",\"motivo\":\"por que é essencial para seu tipo de pele\",\"economica\":{\"produto\":\"nome produto\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta sobre o produto\"},\"intermediaria\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"},\"premium\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"}}],\"produtos_identificados\":[]}';
 
   try {
     // Claude API
