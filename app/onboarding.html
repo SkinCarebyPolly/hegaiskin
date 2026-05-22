@@ -185,7 +185,7 @@ input[type=file]{display:none}
 </div>
 
 <!-- 0: LGPD v6 -->
-<div class="scr on" id="s-lgpd" style="display:flex">
+<div class="scr" id="s-lgpd">
   <div class="inner">
     <div class="badge">Antes de começar</div>
     <h1>Seu consentimento<br><em>é essencial.</em></h1>
@@ -204,7 +204,7 @@ input[type=file]{display:none}
 </div>
 
 <!-- 1: CADASTRO -->
-<div class="scr" id="s-cad">
+<div class="scr" id="s-cad" style="display:flex">
   <div class="inner">
     <div class="atabs">
       <button class="atab on" id="auth-tab-new" onclick="authTab('new')">Nova conta</button>
@@ -304,10 +304,10 @@ input[type=file]{display:none}
     <div class="badge">Questionário · 4 de 8</div>
     <h1>Nível de<br><em>investimento?</em></h1>
     <div class="qopts" id="q4">
-      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">💊</span><div><div class="qopt-lbl">Acessível — Farmácia</div></div></div>
-      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">🌿</span><div><div class="qopt-lbl">Médio — Mix nacional + importado</div></div></div>
-      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Alto — K-Beauty</div></div></div>
-      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">👑</span><div><div class="qopt-lbl">Premium — Alta performance</div></div></div>
+      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">💊</span><div><div class="qopt-lbl">Até R$100/mês</div><div class="qopt-sub" style="font-size:11px;color:var(--muted);margin-top:2px">Farmácia e mercado</div></div></div>
+      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">🌿</span><div><div class="qopt-lbl">R$100 a R$250/mês</div><div class="qopt-sub" style="font-size:11px;color:var(--muted);margin-top:2px">Mix nacional + importado</div></div></div>
+      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">R$250 a R$500/mês</div><div class="qopt-sub" style="font-size:11px;color:var(--muted);margin-top:2px">K-Beauty e séries premium</div></div></div>
+      <div class="qopt" onclick="togS(this,'q4')"><div class="qcirc"></div><span class="qopt-icon">👑</span><div><div class="qopt-lbl">Acima de R$500/mês</div><div class="qopt-sub" style="font-size:11px;color:var(--muted);margin-top:2px">Alta performance e clínico</div></div></div>
     </div>
     <button class="btn" onclick="goValidate('s-q5','q4','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q3')">← Voltar</button>
@@ -649,28 +649,47 @@ input[type=file]{display:none}
     <div class="badge">Quase lá!</div>
     <h1>E os seus<br><em>produtos?</em></h1>
     <p class="sub">Como prefere informar seus produtos de skincare?</p>
-    <button class="popt" onclick="pickProd('foto')"><span class="popt-icon">📷</span><div><div class="popt-t">Tirar foto dos produtos</div><div class="popt-s">A IA identifica automaticamente</div></div></button>
-    <button class="popt" onclick="pickProd('manual')"><span class="popt-icon">✍️</span><div><div class="popt-t">Digitar a lista</div><div class="popt-s">Liste o que você tem em casa</div></div></button>
-    <button class="popt" onclick="pickProd('zero')"><span class="popt-icon">🌱</span><div><div class="popt-t">Começar do zero</div><div class="popt-s">A IA monta tudo dentro do seu orçamento</div></div></button>
-    <div id="area-foto-prod" style="display:none;margin-top:8px">
-      <div class="photo" id="foto-prod-area" style="margin-bottom:10px">
-        <div class="photo-icon">🧴</div>
-        <div class="photo-t">Foto dos produtos</div>
-        <div class="photo-s" id="foto-prod-status">Escolha como fotografar</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <label for="foto-prod-cam" style="flex:1;cursor:pointer">
-          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--muted)">📷 Câmera</div>
-        </label>
-        <label for="foto-prod-gal" style="flex:1;cursor:pointer">
-          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--muted)">🖼 Galeria</div>
-        </label>
-      </div>
-      <input type="file" id="foto-prod-cam" accept="image/*" capture="environment" onchange="prevFoto('foto-prod-cam','foto-prod-area','prod')" style="display:none">
-      <input type="file" id="foto-prod-gal" accept="image/*" onchange="prevFoto('foto-prod-gal','foto-prod-area','prod')" style="display:none">
-      <input type="file" id="foto-prod" accept="image/*" onchange="prevFoto('foto-prod','foto-prod-area','prod')" style="display:none">
-      <button class="btn" id="btn-prod" onclick="gerarProtocolo()" disabled>Criar meu protocolo →</button>
+    <!-- Opções iniciais -->
+    <div id="prod-opts">
+      <button class="popt" onclick="pickProd('foto')"><span class="popt-icon">📷</span><div><div class="popt-t">Fotografar os rótulos</div><div class="popt-s">A IA lê os rótulos automaticamente</div></div></button>
+      <button class="popt" onclick="pickProd('manual')"><span class="popt-icon">✍️</span><div><div class="popt-t">Digitar a lista</div><div class="popt-s">Liste o que você tem em casa</div></div></button>
+      <button class="popt" onclick="pickProd('zero')"><span class="popt-icon">🌱</span><div><div class="popt-t">Começar do zero</div><div class="popt-s">A IA monta tudo dentro do seu orçamento</div></div></button>
     </div>
+
+    <!-- Modo FOTO: múltiplas fotos com OCR -->
+    <div id="area-foto-prod" style="display:none;margin-top:8px">
+
+      <!-- Botões adicionar foto -->
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <label for="fp-cam" style="flex:1;cursor:pointer">
+          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--cream)">📷 Câmera</div>
+        </label>
+        <label for="fp-gal" style="flex:1;cursor:pointer">
+          <div style="padding:14px;border:1px solid rgba(201,169,110,.25);border-radius:8px;text-align:center;font-size:13px;color:var(--cream)">🖼 Galeria</div>
+        </label>
+      </div>
+      <input type="file" id="fp-cam" accept="image/*" capture="environment" onchange="addFotoProd(this)" style="display:none">
+      <input type="file" id="fp-gal" accept="image/*" onchange="addFotoProd(this)" style="display:none">
+
+      <!-- Status OCR -->
+      <div id="ocr-status" style="display:none;text-align:center;padding:12px;background:rgba(201,169,110,.08);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--gold)">
+        🔍 Lendo rótulos...
+      </div>
+
+      <!-- Lista de produtos identificados -->
+      <div id="prod-list-wrap" style="display:none;margin-bottom:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">✦ Produtos identificados</div>
+        <div id="prod-list"></div>
+        <button onclick="resetFotoProd()" style="background:none;border:none;color:var(--muted);font-size:11px;margin-top:4px;cursor:pointer;text-decoration:underline">Limpar e recomeçar</button>
+      </div>
+
+      <button class="btn" id="btn-prod-criar" onclick="gerarProtocolo()" style="display:none;margin-bottom:8px">Criar meu protocolo →</button>
+      <div id="btn-mais-foto" style="display:none;margin-bottom:8px">
+        <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:6px">Tem mais produtos? Adicione mais fotos</div>
+      </div>
+    </div>
+
+    <!-- Modo MANUAL -->
     <div id="area-manual-prod" style="display:none;margin-top:8px">
       <label class="ilbl">Liste seus produtos</label>
       <textarea id="txt-prod" class="ifield" style="resize:vertical;min-height:110px;padding:14px 16px;margin-bottom:10px" placeholder="Ex: Sabonete La Roche-Posay, Vitamina C, FPS 60..."></textarea>
@@ -750,14 +769,14 @@ const GEMINI_KEY = _ga+_gb+_gc+_gd+_ge+_gf+_gg+_gh+_gi;
 // -- STATE --
 const S = {
   nome:'', email:'', senha:'', cidade:'', loc:null,
-  fotoRosto:'', fotoProd:'', prodTxt:'', modoProd:'',
+  fotoRosto:'', fotoProd:'', fotosProds:[], prodTxt:'', modoProd:'',
   ativos:'', maquiagem:'', exercicio:'', objetivo:'', rotina_atual:'', ciclo:'', textura:'', alimentacao:'',
   gestante:'',
   protocolo: null
 };
 
 // -- SCREENS --
-const SCR_LIST = ['s-lgpd','s-cad','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-q8','s-q9','s-q10','s-q11','s-q12','s-q13','s-q14','s-q15','s-dicas','s-foto','s-prod','s-gen','s-conf','s-ok'];
+const SCR_LIST = ['s-cad','s-lgpd','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-q8','s-q9','s-q10','s-q11','s-q12','s-q13','s-q14','s-q15','s-dicas','s-foto','s-prod','s-gen','s-conf','s-ok'];
 const SCR_LABEL = {'s-lgpd':'Termos','s-cad':'Cadastro','s-q1':'1/15','s-q2':'2/15','s-q3':'3/15','s-q4':'4/15','s-q5':'5/15','s-q6':'6/15','s-q7':'7/15','s-q8':'8/15','s-q9':'9/15','s-q10':'10/15','s-q11':'11/15','s-q12':'12/15','s-q13':'13/15','s-q14':'14/15','s-q15':'15/15','s-dicas':'Dicas','s-foto':'Foto','s-prod':'Produtos','s-gen':'Gerando...','s-conf':'Confirmação','s-ok':'Concluído'};
 
 
@@ -870,7 +889,7 @@ function goLGPD() {
     if(btn){btn.style.animation="none";btn.offsetHeight;btn.style.animation="shake 0.4s ease";setTimeout(function(){btn.style.animation="";},400);}
     return;
   }
-  go("s-cad");
+  go("s-q1");
 }
 
 
@@ -920,7 +939,7 @@ async function loginComGoogle() {
       localStorage.setItem('sbp_ativo', 'true');
       window.location.href = 'protocolo.html';
     } else {
-      go('s-q1');
+      go('s-lgpd');
     }
   } catch(e) {
     alert('Erro ao entrar com Google: ' + e.message);
@@ -985,7 +1004,7 @@ async function doAuth() {
       window.location.href = 'protocolo.html';
       return;
     }
-    go('s-q1');
+    go('s-lgpd');
   } catch(e) {
     var msg = e.code === 'auth/email-already-in-use' ? 'Este email já está cadastrado.' :
               e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
@@ -1028,7 +1047,7 @@ async function doLoginGoogle() {
       window.location.href = 'protocolo.html';
       return;
     }
-    go('s-q1');
+    go('s-lgpd');
   } catch(e) {
     var errEl = document.getElementById('auth-err');
     if(errEl){errEl.textContent='Erro Google: ' + e.message;errEl.classList.add('on');}
@@ -1057,7 +1076,7 @@ function doCadastro() {
   localStorage.setItem('sbp_user', JSON.stringify({nome:nome, email:email, senha:pw}));
   localStorage.setItem('sbp_auth', nome);
   document.getElementById('ok-cad').style.display = 'block';
-  setTimeout(function(){ go('s-q1'); }, 900);
+  setTimeout(function(){ go('s-lgpd'); }, 900);
 }
 
 function doLogin() {
@@ -1071,7 +1090,7 @@ function doLogin() {
     if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
       window.location.href = 'protocolo.html'; return;
     }
-    go('s-q1');
+    go('s-lgpd');
   } else {
     err.textContent = 'Email ou senha incorrectos.'; err.style.display='block';
   }
@@ -1496,13 +1515,117 @@ function prevFotoGaleria(e) {
 }
 
 // -- PRODUTOS --
+// ── Produtos: múltiplas fotos com OCR ──────────────────────────────────
+var _produtosOCR = [];   // [{nome, categoria, ativo}]
+var _fotosBase64 = [];   // base64 de cada foto adicionada
+
 function pickProd(modo) {
   S.modoProd = modo;
+  document.getElementById('prod-opts').style.display = 'none';
   document.getElementById('area-foto-prod').style.display = 'none';
   document.getElementById('area-manual-prod').style.display = 'none';
-  if (modo === 'foto') document.getElementById('area-foto-prod').style.display = 'block';
-  else if (modo === 'manual') document.getElementById('area-manual-prod').style.display = 'block';
-  else { S.prodTxt = 'Sem produtos — começar do zero'; gerarProtocolo(); }
+  if (modo === 'foto') {
+    document.getElementById('area-foto-prod').style.display = 'block';
+  } else if (modo === 'manual') {
+    document.getElementById('area-manual-prod').style.display = 'block';
+  } else {
+    S.prodTxt = 'Cliente não tem produtos. Monte rotina e lista de compras do zero com marcas REAIS disponíveis no Brasil dentro do orçamento informado.';
+    S.fotosProds = [];
+    gerarProtocolo();
+  }
+}
+
+function resetFotoProd() {
+  _produtosOCR = [];
+  _fotosBase64 = [];
+  document.getElementById('prod-list').innerHTML = '';
+  document.getElementById('prod-list-wrap').style.display = 'none';
+  document.getElementById('btn-prod-criar').style.display = 'none';
+  document.getElementById('btn-mais-foto').style.display = 'none';
+}
+
+async function addFotoProd(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  input.value = '';  // permite selecionar a mesma foto novamente
+
+  var status = document.getElementById('ocr-status');
+  status.style.display = 'block';
+  status.textContent = '🔍 Lendo rótulos...';
+
+  try {
+    // Converter para base64
+    var b64 = await new Promise(function(res, rej) {
+      var r = new FileReader();
+      r.onload = function(e) { res(e.target.result.split(',')[1]); };
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    _fotosBase64.push(b64);
+
+    // OCR via Claude
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Você é especialista em identificar produtos cosméticos. Leia os rótulos com precisão absoluta. Retorne APENAS JSON válido, sem texto fora do JSON.',
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+            { type: 'text', text: 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO como está escrito na embalagem. NÃO invente. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/outro", "ativo": "ativo principal se visível ou vazio"}]}' }
+          ]
+        }]
+      })
+    });
+    var data = await resp.json();
+    var raw = (data.content && data.content[0] && data.content[0].text) || '{}';
+    var clean = raw.replace(/```json|```/g, '').trim();
+    var parsed = JSON.parse(clean);
+    var prods = parsed.produtos || [];
+
+    if (prods.length === 0) {
+      status.textContent = '⚠️ Não consegui ler os rótulos. Tente com mais luz ou aproxime a câmera.';
+      setTimeout(function() { status.style.display = 'none'; }, 3000);
+      return;
+    }
+
+    // Adicionar à lista
+    prods.forEach(function(p) { _produtosOCR.push(p); });
+    renderProdList();
+    status.style.display = 'none';
+
+  } catch(e) {
+    status.textContent = '⚠️ Erro ao ler foto: ' + e.message;
+    setTimeout(function() { status.style.display = 'none'; }, 3000);
+  }
+}
+
+function renderProdList() {
+  var list = document.getElementById('prod-list');
+  list.innerHTML = '';
+  _produtosOCR.forEach(function(p, i) {
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.15);border-radius:8px;margin-bottom:6px';
+    div.innerHTML = '<div style="flex:1"><div style="font-size:13px;color:var(--cream);font-weight:500">' + p.nome + '</div>' +
+      '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div></div>' +
+      '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px">×</button>';
+    list.appendChild(div);
+  });
+  document.getElementById('prod-list-wrap').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
+  document.getElementById('btn-prod-criar').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
+  document.getElementById('btn-mais-foto').style.display = _produtosOCR.length > 0 ? 'block' : 'none';
+}
+
+function removerProd(i) {
+  _produtosOCR.splice(i, 1);
+  renderProdList();
 }
 
 // -- GERAR PROTOCOLO --
@@ -1528,6 +1651,13 @@ async function gerarProtocolo() {
   S.textura   = getSel('q14')[0] || '';
   S.alimentacao = getSel('q15')[0] || '';
   if (S.modoProd === 'manual') S.prodTxt = document.getElementById('txt-prod').value;
+  // Montar texto de produtos a partir do OCR acumulado (múltiplas fotos)
+  if (S.modoProd === 'foto' && _produtosOCR.length > 0) {
+    S.prodTxt = _produtosOCR.map(function(p) {
+      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
+    }).join('\n');
+    S.fotosProds = _fotosBase64;
+  }
 
   go('s-gen');
 
@@ -1585,8 +1715,12 @@ async function gerarProtocolo() {
       claudeParts.push({"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":S.fotoRosto}});
       claudeParts.push({"type":"text","text":"FOTO DO ROSTO DA CLIENTE: analise com olhar clínico — textura da pele, visibilidade dos poros, nível de oleosidade (zona T vs bochechas), sinais de desidratação, vermelhidão, manchas visíveis, linhas de expressão, uniformidade do tom. Seja ESPECÍFICA ao que você vê nesta foto, não genérica."});
     }
-    if (S.fotoProd) {
-      claudeParts.push({"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":S.fotoProd}});
+    // Adicionar TODAS as fotos de produtos (multi-OCR)
+    var fotosParaEnviar = (S.fotosProds && S.fotosProds.length > 0) ? S.fotosProds : (S.fotoProd ? [S.fotoProd] : []);
+    if (fotosParaEnviar.length > 0) {
+      fotosParaEnviar.forEach(function(b64, idx) {
+        claudeParts.push({"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":b64}});
+      });
       claudeParts.push({"type":"text","text":"LEIA COM PRECISÃO ABSOLUTA OS RÓTULOS DE CADA EMBALAGEM NESTA FOTO. Para cada produto visível: 1. Leia o texto EXATO impresso na embalagem (marca + nome do produto). 2. Identifique a categoria (limpeza, tônico, sérum, hidratante, protetor, aparelho, etc). 3. Identifique os ativos principais se visível no rótulo. 4. NÃO invente produtos que não estão na foto. 5. NÃO substitua por marcas similares — use o nome EXATO que está escrito. 6. Se não conseguir ler um rótulo com certeza, descreva o que vê. Integre TODOS os produtos identificados na rotina personalizada."});
     }
 
@@ -1605,7 +1739,7 @@ async function gerarProtocolo() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 3000,
+        max_tokens: 8192,
         system: 'Você é uma especialista sênior em skincare com formação em biomedicina, estética clínica e K-Beauty. Tem visão clínica aguçada para análise de pele em fotos. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens de produtos cosméticos — você lê o texto EXATO das embalagens, reconhece marcas internacionais e brasileiras, e NUNCA substitui um produto por outro similar. Se vê "Anua Heartleaf" escrito, você escreve "Anua Heartleaf". Se vê "Medicube Reedle Shot", você escreve exatamente isso. Cria protocolos ultra detalhados e personalizados com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.',
         messages: [{role: 'user', content: claudeParts}]
       })
@@ -1700,7 +1834,7 @@ async function confirmProto() {
     }
   } catch(e) {}
   try {
-    var first = document.getElementById('s-lgpd');
+    var first = document.getElementById('s-cad');
     if (first) first.style.display = 'flex';
   } catch(e) {}
 })();

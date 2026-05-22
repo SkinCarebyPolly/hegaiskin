@@ -1,4 +1,4 @@
-const CACHE = 'sbp-app-v8';
+const CACHE = 'sbp-app-v9';
 
 self.addEventListener('install', function(e) {
   e.waitUntil(self.skipWaiting());
