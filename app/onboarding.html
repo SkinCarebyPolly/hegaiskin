@@ -4,11 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0e0c0b">
+<meta name="theme-color" content="#0D0804">
 <title>Skincare by Polly</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#c9a96e;--gold-light:#e8cfa0;--gold-dim:rgba(201,169,110,0.12);--dark:#0e0c0b;--dark2:#1a1410;--cream:#f5f0e8;--cdim:rgba(245,240,232,0.65);--muted:#7a6e68;--green:#8aab96;--red:#c4857a}
+:root{--gold:#D0B48C;--gold-light:#e8cfa0;--gold-dim:rgba(208,180,140,0.12);--dark:#0D0804;--dark2:#1C0E08;--cream:#F5EADA;--cdim:rgba(245,240,232,0.65);--muted:#7a6e68;--green:#8aab96;--red:#c4857a}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Jost',sans-serif;background:var(--dark);color:var(--cream);min-height:100vh;overflow-x:hidden;font-size:16px}
 .pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width .4s;z-index:100}
@@ -169,13 +169,13 @@ input[type=file]{display:none}
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #c9a96e;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #D0B48C;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
-    <div style="font-size:13px;color:#f5f0e8;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:13px;color:#F5EADA;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#c9a96e,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0e0c0b;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#D0B48C,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0D0804;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 <div class="pbar" id="pbar" style="width:0%"></div>
@@ -379,7 +379,7 @@ input[type=file]{display:none}
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">🤱</span><div><div class="qopt-lbl">Estou amamentando</div><div class="qopt-sub">O protocolo priorizará ativos seguros e naturais</div></div></div>
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">📅</span><div><div class="qopt-lbl">Acabei de ter bebê (pós-parto)</div><div class="qopt-sub">Pele em reequilíbrio hormonal — protocolo adaptado</div></div></div>
     </div>
-    <div style="background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
+    <div style="background:rgba(208,180,140,0.08);border:1px solid rgba(201,169,110,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
       ⚠️ <strong style="color:var(--cream)">Importante:</strong> Em caso de dúvidas sobre produtos durante a gestação ou amamentação, consulte sempre seu médico ou ginecologista.
     </div>
     <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
@@ -526,7 +526,7 @@ input[type=file]{display:none}
 <div class="scr" id="s-dicas">
   <div class="inner" style="padding:0;overflow:hidden">
     <!-- Header escuro com ícone -->
-    <div style="background:linear-gradient(160deg,#0e0c0b,#1a1208);padding:40px 24px 32px;text-align:center">
+    <div style="background:linear-gradient(160deg,#0D0804,#1a1208);padding:40px 24px 32px;text-align:center">
       <div style="width:80px;height:80px;border-radius:50%;background:rgba(201,169,110,0.1);border:2px solid rgba(201,169,110,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px">📸</div>
       <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Análise de pele</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.3">Para resultados<br>perfeitos</h1>
@@ -570,11 +570,11 @@ input[type=file]{display:none}
       </div>
 
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
-        <input type="checkbox" id="nao-mostrar-dicas" style="width:18px;height:18px;accent-color:#c9a96e">
+        <input type="checkbox" id="nao-mostrar-dicas" style="width:18px;height:18px;accent-color:#D0B48C">
         <label for="nao-mostrar-dicas" style="font-size:13px;color:#666;font-family:'Jost',sans-serif">Não mostrar isto novamente</label>
       </div>
 
-      <button class="btn" onclick="irParaFoto()" style="background:#0e0c0b;border:none;border-radius:10px;padding:16px;width:100%;font-size:13px;font-weight:600;letter-spacing:2px;color:#fff;cursor:pointer;text-transform:uppercase">
+      <button class="btn" onclick="irParaFoto()" style="background:#0D0804;border:none;border-radius:10px;padding:16px;width:100%;font-size:13px;font-weight:600;letter-spacing:2px;color:#fff;cursor:pointer;text-transform:uppercase">
         Continuar →
       </button>
     </div>
@@ -597,7 +597,7 @@ input[type=file]{display:none}
     <!-- Texto de análise -->
     <div id="face-analysis-text" style="position:absolute;top:15%;left:50%;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none">
       <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:6px">ANÁLISE DA PELE</div>
-      <div id="face-status" style="font-size:13px;color:#c9a96e;font-weight:600">Carregando detector...</div>
+      <div id="face-status" style="font-size:13px;color:#D0B48C;font-weight:600">Carregando detector...</div>
     </div>
 
     <!-- Indicadores em tempo real -->
@@ -633,7 +633,7 @@ input[type=file]{display:none}
       <img id="foto-preview-img" style="width:100%;height:100%;object-fit:cover">
       <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);display:flex;gap:12px">
         <button onclick="refazerFoto()" style="flex:1;padding:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:10px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Refazer</button>
-        <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#0e0c0b;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
+        <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#0D0804;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
       </div>
     </div>
   </div>
@@ -659,9 +659,12 @@ input[type=file]{display:none}
 
     <!-- Modo FOTO -->
     <div id="prod-foto" style="display:none;margin-top:8px">
-      <button class="btn" id="btn-add-foto" onclick="triggerFotoProd()" style="margin-bottom:12px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.3)">
-        📷 Adicionar foto de produto
-      </button>
+      <label for="fp-prod-real" style="display:block;margin-bottom:12px" id="btn-add-foto">
+        <div onclick="if(!_ocrRodando){document.getElementById('fp-prod-real').value='';document.getElementById('fp-prod-real').click();}" style="padding:15px;background:rgba(201,169,110,.12);color:var(--gold);border:1px solid rgba(201,169,110,.3);border-radius:10px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px">
+          📷 Adicionar foto de produto
+        </div>
+      </label>
+      <input type="file" id="fp-prod-real" accept="image/*" style="display:none" onchange="addFotoProd(this)">
 
       <div id="ocr-status" style="display:none;text-align:center;padding:14px;background:rgba(201,169,110,.08);border-radius:8px;margin-bottom:12px;font-size:14px;color:var(--gold)">
         🔍 Lendo rótulos...
@@ -712,15 +715,20 @@ input[type=file]{display:none}
 <div class="scr" id="s-conf">
   <div class="inner" style="padding:0;overflow:hidden;border-radius:0">
 
-    <!-- Foto Pollianna -->
-    <div style="position:relative;width:100%;height:260px;overflow:hidden">
-      <img src="foto-polly-welcome.jpg" alt="Pollianna" 
-           style="width:100%;height:100%;object-fit:cover;object-position:center center"
-           onerror="this.parentElement.style.background='linear-gradient(135deg,#1a1410,#261a12)'">
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom, transparent 40%, #0e0c0b 100%)"></div>
-      <div style="position:absolute;bottom:16px;left:20px;right:20px">
-        <div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">@skincarebypolly</div>
-        <div style="font-size:22px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.2">Bem-vinda ao protocolo<br>da pele de dorama 🌸</div>
+    <!-- Header sem foto - novo visual -->
+    <div style="position:relative;width:100%;padding:52px 24px 36px;background:linear-gradient(135deg,#0D0804 0%,#1C0E08 55%,#2A1208 100%);overflow:hidden">
+      <!-- Círculos decorativos com as novas cores -->
+      <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(208,180,140,0.10),transparent 70%)"></div>
+      <div style="position:absolute;bottom:-70px;left:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(100,48,10,0.35),transparent 70%)"></div>
+      <div style="position:absolute;top:50%;right:20px;transform:translateY(-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(162,117,64,0.08),transparent 70%)"></div>
+      <!-- Texto -->
+      <div style="position:relative;z-index:1">
+        <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@skincarebypolly</div>
+        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">seu protocolo 🌸</em></div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div style="width:32px;height:2px;background:linear-gradient(90deg,#D0B48C,#A27540);border-radius:1px"></div>
+          <div style="font-size:11px;color:rgba(245,234,218,.5);letter-spacing:1px">protocolo exclusivo</div>
+        </div>
       </div>
     </div>
 
@@ -1167,6 +1175,8 @@ function prevFoto(inputId, areaId, tipo) {
     resizeImg(raw, function(resized) {
       if (tipo === 'rosto') {
         S.fotoRosto = resized;
+        // Guardar para antes/depois na evolução
+        try { localStorage.setItem('sbp_foto_rosto', resized); } catch(e) {}
         document.getElementById('btn-foto').disabled = false;
       } else {
         S.fotoProd = resized;
@@ -1331,7 +1341,7 @@ function updateFaceAnnotations(ctx, kps, vw, vh, dw, dh, skinData) {
     // Ponto
     ctx.beginPath();
     ctx.arc(lb.x + (lb.x < dw/2 ? 60 : -10), lb.y, 3, 0, 2*Math.PI);
-    ctx.fillStyle = '#c9a96e';
+    ctx.fillStyle = '#D0B48C';
     ctx.fill();
 
     // Texto
@@ -1350,7 +1360,7 @@ function updateFaceIndicators(faceFound, skinData) {
     document.getElementById('face-status').textContent = 'Rosto detectado — pode fotografar!';
     var snap = document.getElementById('camsnap');
     if (snap) {
-      snap.querySelector('div').style.background = '#c9a96e';
+      snap.querySelector('div').style.background = '#D0B48C';
       snap.style.borderColor = 'rgba(201,169,110,0.8)';
     }
   }
@@ -1431,7 +1441,7 @@ function startLight() {
       var snap = document.getElementById('camsnap');
       if (snap) {
         var tudoOk = posOk && visOk && luzOk;
-        snap.querySelector('div').style.background = tudoOk ? '#c9a96e' : '#fff';
+        snap.querySelector('div').style.background = tudoOk ? '#D0B48C' : '#fff';
         snap.style.borderColor = tudoOk ? 'rgba(201,169,110,0.8)' : 'rgba(255,255,255,0.5)';
       }
 
@@ -1558,19 +1568,11 @@ function voltarProd() {
   document.getElementById('btn-prod-voltar-foto').style.display = 'block';
 }
 
+// Input fixo com reset — mais confiável em todos os browsers
 function triggerFotoProd() {
   if (_ocrRodando) return;
-  // Cria um input novo a cada clique — evita travamento do browser
-  var inp = document.createElement('input');
-  inp.type   = 'file';
-  inp.accept = 'image/*';
-  inp.style.display = 'none';
-  document.body.appendChild(inp);
-  inp.addEventListener('change', function() {
-    addFotoProd(inp);
-    document.body.removeChild(inp);
-  });
-  inp.click();
+  var inp = document.getElementById('fp-prod-real');
+  if (inp) { inp.value = ''; inp.click(); }
 }
 
 function resetFotoProd() {
@@ -1640,7 +1642,9 @@ async function addFotoProd(input) {
   }
 
   _ocrRodando    = false;
-  btnAdd.disabled = false;
+  // Reset input para permitir selecionar a mesma foto de novo
+  var inp = document.getElementById('fp-prod-real');
+  if (inp) inp.value = '';
 }
 
 function renderProdList() {
@@ -1748,7 +1752,10 @@ async function gerarProtocolo() {
   var mi = 0;
   var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
 
-  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"produtos_identificados\":[]}';
+  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no Brasil + alternativas K-Beauty + faixa de preço em reais.\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.
+10. TOM DO DIAGNÓSTICO: O campo "diagnostico" é a mensagem de boas-vindas. Use um tom CALOROSO, AMOROSO e ENCORAJADOR — como uma amiga especialista que vê o melhor na pele dela. NUNCA liste problemas de forma clínica ou fria. Em vez de "pele mista oleosa desidratada", diga algo como "Sua pele tem um potencial lindo! Ela só está pedindo um cuidado extra de hidratação — e com a rotina certa, você vai ver uma transformação incrível." Sempre termine com uma promessa positiva do que vai melhorar.
+11. SCORE DA PELE (score_pele): Avalie a saúde geral da pele de 0 a 100 com base na foto e no perfil. 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente. Seja honesta mas gentil.
+12. SUGESTÕES (sugestoes): Liste os produtos que FALTAM na prateleira da cliente (ou que ela precisa começar do zero). Para cada item, dê 3 opções reais de mercado: econômica (dentro do orçamento declarado), intermediária (um pouco mais), premium (o melhor para o perfil dela). Use marcas REAIS disponíveis no Brasil com preços aproximados em R$.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa com temperatura, quantidade, técnica, tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"score_pele\":65,\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"sugestoes\":[{\"falta\":\"CATEGORIA QUE FALTA\",\"motivo\":\"por que é essencial para seu tipo de pele\",\"economica\":{\"produto\":\"nome produto\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta sobre o produto\"},\"intermediaria\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"},\"premium\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"frase curta\"}}],\"produtos_identificados\":[]}';
 
   try {
     // Claude API

@@ -7,19 +7,22 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0e0c0b">
+<meta name="theme-color" content="#0D0804">
 <title>Skincare by Polly · Meu Protocolo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #c9a96e;
-  --gold-light: #e8cfa0;
-  --gold-dim: rgba(201,169,110,0.12);
-  --dark: #0e0c0b;
-  --dark-2: #1a1410;
-  --dark-3: #261a12;
-  --cream: #f5f0e8;
-  --cream-dim: rgba(245,240,232,0.65);
+  --gold: #D0B48C;
+  --gold-amber: #A27540;
+  --espresso: #643F22;
+  --mahogany: #64300A;
+  --gold-light: #E9D9BF;
+  --gold-dim: rgba(208,180,140,0.12);
+  --dark: #0D0804;
+  --dark-2: #1C0E08;
+  --dark-3: #2A1408;
+  --cream: #F5EADA;
+  --cream-dim: rgba(245,234,218,0.65);
   --muted: #7a6e68;
   --green: #8aab96;
   --green-dim: rgba(138,171,150,0.12);
@@ -32,7 +35,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 
 /* -- HERO -- */
 .hero {
-  background: linear-gradient(160deg, #0a0806, #1a0e09 60%, #261408);
+  background: linear-gradient(160deg, #0A0503, #180A05 60%, #261408);
   padding: 56px 24px 32px;
   position: relative;
   overflow: hidden;
@@ -41,7 +44,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   content:'';
   position:absolute; top:-60px; right:-60px;
   width:240px; height:240px; border-radius:50%;
-  background: radial-gradient(circle, rgba(201,169,110,0.08), transparent 70%);
+  background: radial-gradient(circle, rgba(208,180,140,0.08), transparent 70%);
 }
 .hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
 .hero-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; margin-bottom:4px; }
@@ -49,7 +52,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 .hero-sub { font-size:12px; color:var(--muted); letter-spacing:1px; margin-bottom:20px; }
 .hero-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
 .hero-tag {
-  padding:4px 12px; border:1px solid rgba(201,169,110,0.2);
+  padding:4px 12px; border:1px solid rgba(208,180,140,0.20);
   border-radius:20px; font-size:10px; color:var(--gold-light); letter-spacing:1px;
 }
 
@@ -58,7 +61,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   display: flex;
   overflow-x: auto;
   background: var(--dark-2);
-  border-bottom: 1px solid rgba(201,169,110,0.08);
+  border-bottom: 1px solid rgba(208,180,140,0.08);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -88,7 +91,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- CARDS -- */
 .card {
   background: var(--dark-2);
-  border: 1px solid rgba(201,169,110,0.1);
+  border: 1px solid rgba(208,180,140,0.10);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
@@ -106,12 +109,12 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   display:flex; align-items:flex-start; gap:14px;
   padding:18px 16px;
   background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(201,169,110,0.08);
+  border: 1px solid rgba(208,180,140,0.08);
   border-radius:10px;
 }
 .step-num {
   width:28px; height:28px; border-radius:50%;
-  background: var(--gold-dim); border:1px solid rgba(201,169,110,0.2);
+  background: var(--gold-dim); border:1px solid rgba(208,180,140,0.20);
   display:flex; align-items:center; justify-content:center;
   font-size:11px; color:var(--gold); flex-shrink:0;
   font-weight:600;
@@ -130,7 +133,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   display:flex; align-items:flex-start; gap:14px;
   padding:14px 16px;
   background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(201,169,110,0.08);
+  border: 1px solid rgba(208,180,140,0.08);
   border-radius:10px;
 }
 .week-day {
@@ -142,7 +145,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- CALENDAR -- */
 .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 .cal-month { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; color:var(--gold-light); }
-.cal-nav { background:none; border:1px solid rgba(201,169,110,0.2); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
+.cal-nav { background:none; border:1px solid rgba(208,180,140,0.20); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
 .cal-dow { text-align:center; font-size:9px; letter-spacing:2px; color:var(--muted); padding:6px 0; text-transform:uppercase; }
 .cal-day {
@@ -152,7 +155,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   transition: all 0.2s;
   flex-direction: column; gap:2px;
 }
-.cal-day:hover { background:var(--gold-dim); border-color:rgba(201,169,110,0.2); }
+.cal-day:hover { background:var(--gold-dim); border-color:rgba(208,180,140,0.20); }
 .cal-day.today { border-color:var(--gold); color:var(--gold); }
 .cal-day.has-event::after { content:''; width:4px; height:4px; border-radius:50%; background:var(--gold); }
 .cal-day.empty { cursor:default; }
@@ -173,7 +176,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- SUGGESTIONS -- */
 .suggestion-item {
   display:flex; gap:12px; align-items:flex-start;
-  padding:12px 0; border-bottom:1px solid rgba(201,169,110,0.06);
+  padding:12px 0; border-bottom:1px solid rgba(208,180,140,0.06);
 }
 .suggestion-item:last-child { border:none; }
 .suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
@@ -182,11 +185,11 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 
 /* -- EVOLUÇÃO -- */
 .evo-photo-area {
-  border:1px dashed rgba(201,169,110,0.2); border-radius:12px;
+  border:1px dashed rgba(208,180,140,0.20); border-radius:12px;
   padding:36px 20px; text-align:center; cursor:pointer; margin-bottom:16px;
-  transition:all 0.2s; background:rgba(201,169,110,0.02);
+  transition:all 0.2s; background:rgba(208,180,140,0.02);
 }
-.evo-photo-area:hover { border-color:rgba(201,169,110,0.4); background:rgba(201,169,110,0.04); }
+.evo-photo-area:hover { border-color:rgba(208,180,140,0.4); background:rgba(208,180,140,0.04); }
 .evo-photo-area.has-photo { padding:0; border-style:solid; }
 .evo-photo-area img { width:100%; max-height:280px; object-fit:cover; border-radius:11px; display:block; }
 .evo-icon { font-size:32px; margin-bottom:10px; }
@@ -196,7 +199,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 /* -- CONFIG -- */
 .config-item {
   display:flex; justify-content:space-between; align-items:center;
-  padding:16px 0; border-bottom:1px solid rgba(201,169,110,0.06);
+  padding:16px 0; border-bottom:1px solid rgba(208,180,140,0.06);
 }
 .config-item:last-child { border:none; }
 .config-label { font-size:13px; color:var(--cream-dim); }
@@ -223,7 +226,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
   min-height:100vh; flex-direction:column; gap:20px;
 }
 .loading-spinner {
-  width:48px; height:48px; border:2px solid rgba(201,169,110,0.1);
+  width:48px; height:48px; border:2px solid rgba(208,180,140,0.10);
   border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
 }
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -237,7 +240,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 }
 .modal-overlay.open { display:flex; }
 .modal {
-  background:var(--dark-2); border:1px solid rgba(201,169,110,0.15);
+  background:var(--dark-2); border:1px solid rgba(208,180,140,0.18);
   border-radius:20px 20px 0 0; width:100%; padding:24px 20px 48px;
   animation:slideUp 0.3s ease;
 }
@@ -250,7 +253,7 @@ body { font-family:'Jost',sans-serif; background:var(--dark); color:var(--cream)
 
 /* -- AI ANALYSIS -- */
 .ai-loading-bar { display:flex; align-items:center; gap:12px; padding:16px; background:var(--gold-dim); border-radius:10px; margin-top:12px; }
-.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(201,169,110,0.2); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(208,180,140,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
 .ai-loading-text { font-size:12px; color:var(--gold); }
 
 input[type="file"] { display:none; }
@@ -305,13 +308,13 @@ input[type="file"] { display:none; }
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #c9a96e;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#1c1714;border:1px solid #D0B48C;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
-    <div style="font-size:13px;color:#f5f0e8;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:13px;color:#F5EADA;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#c9a96e,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0e0c0b;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#D0B48C,#e8cfa0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#0D0804;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 
@@ -345,6 +348,28 @@ input[type="file"] { display:none; }
 
 <!-- ══ ADAPTAÇÃO ══ -->
 <div class="section active" id="tab-adaptacao">
+
+  <!-- BARRA DE SAÚDE -->
+  <div class="card" id="skin-score-card" style="display:none">
+    <div class="card-title"><span class="card-title-icon">✨</span> Saúde da sua pele</div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:10px;color:var(--cream-dim)">Recuperação</span>
+      <span style="font-size:10px;color:var(--cream-dim)">Evolução</span>
+      <span style="font-size:10px;color:var(--cream-dim)">Saudável</span>
+      <span style="font-size:10px;color:var(--cream-dim)">Excelente</span>
+    </div>
+    <div style="position:relative;height:22px;background:rgba(255,255,255,.06);border-radius:11px;overflow:visible;margin-bottom:10px">
+      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
+      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
+      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
+      <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:linear-gradient(90deg,#e07a7a 0%,#D0B48C 40%,#6aab8a 70%,#4a9b6f 91%);width:0%;transition:width 1.2s ease;position:relative">
+        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #D0B48C;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
+      </div>
+    </div>
+    <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
+    <div style="text-align:center;font-size:12px;color:var(--cream-dim)">💡 Isso é totalmente normal e ajustável com consistência</div>
+  </div>
+
   <div class="card">
     <div class="card-title"><span class="card-title-icon">🌱</span> Fase de Adaptação</div>
     <div id="content-adaptacao" class="alert alert-gold">
@@ -425,62 +450,27 @@ input[type="file"] { display:none; }
 <div class="section" id="tab-evolucao">
   <!-- Foto do mês atual -->
   <div class="card" id="evo-card-foto">
-    <div class="card-title"><span class="card-title-icon">📸</span> Foto do Mês</div>
-    <div id="evo-mes-status" style="font-size:12px;color:var(--cream-dim);margin-bottom:12px"></div>
-    <div class="evo-photo-area" id="evo-photo-area" onclick="document.getElementById('evo-photo-input').click()">
-      <div class="evo-icon">📸</div>
-      <div class="evo-title" id="evo-photo-title">Tirar foto do mês</div>
-      <div class="evo-sub" id="evo-photo-sub">Rosto limpo, boa iluminação</div>
+    <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
+    <p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
+    <div id="evo-comparativo" style="display:none;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Antes</div>
+          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(208,180,140,.2);background:rgba(255,255,255,.03)">
+            <img id="evo-foto-antes" style="width:100%;height:100%;object-fit:cover" src="">
+          </div>
+          <div id="evo-data-antes" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Agora</div>
+          <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(208,180,140,.2);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center" id="evo-agora-placeholder">
+            <span style="font-size:28px">📸</span>
+          </div>
+          <img id="evo-foto-agora" style="width:100%;border-radius:10px;border:1px solid rgba(208,180,140,.2);display:none;aspect-ratio:1;object-fit:cover" src="">
+          <div id="evo-data-agora" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px">Tire agora 👇</div>
+        </div>
+      </div>
     </div>
-    <input type="file" id="evo-photo-input" accept="image/*" capture="user" onchange="handleEvoPhoto(event)">
-    <div id="evo-loading" style="display:none" class="ai-loading-bar">
-      <div class="ai-mini-spinner"></div>
-      <div class="ai-loading-text">Analisando evolução da sua pele...</div>
-    </div>
-  </div>
-
-  <!-- Análise da IA -->
-  <div id="evo-analysis" style="display:none" class="card">
-    <div class="card-title"><span class="card-title-icon">✨</span> Análise do Mês</div>
-    <div id="evo-analysis-text"></div>
-  </div>
-
-  <!-- Histórico de fotos -->
-  <div class="card" id="evo-historico-card" style="display:none">
-    <div class="card-title"><span class="card-title-icon">🗓</span> Histórico</div>
-    <div id="evo-historico"></div>
-  </div>
-</div>
-
-<!-- cabelo removido -->
-<!-- ══ SUGESTÕES ══ -->
-<div class="section" id="tab-sugestoes">
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">⭐</span> O que vale a pena comprar</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Produtos sugeridos pela IA para o seu perfil — compare preços nas plataformas</p>
-    <div id="content-sugestoes"></div>
-  </div>
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
-    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
-    <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
-      <div class="evo-icon">📦</div>
-      <div class="evo-title">Fotografar produto novo</div>
-      <div class="evo-sub">A IA vai integrar ao seu protocolo</div>
-    </div>
-    <input type="file" id="new-product-input" accept="image/*" capture="environment" onchange="addNewProduct(event)">
-    <div id="new-product-loading" style="display:none" class="ai-loading-bar">
-      <div class="ai-mini-spinner"></div>
-      <div class="ai-loading-text">Analisando e integrando ao seu protocolo...</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ EVOLUÇÃO ══ -->
-<div class="section" id="tab-evolucao">
-  <!-- Foto do mês atual -->
-  <div class="card" id="evo-card-foto">
-    <div class="card-title"><span class="card-title-icon">📸</span> Foto do Mês</div>
     <div id="evo-mes-status" style="font-size:12px;color:var(--cream-dim);margin-bottom:12px"></div>
     <div class="evo-photo-area" id="evo-photo-area" onclick="document.getElementById('evo-photo-input').click()">
       <div class="evo-icon">📸</div>
@@ -532,20 +522,20 @@ input[type="file"] { display:none; }
   <div class="card">
     <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
     <div style="margin-bottom:16px">
-      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Como atualizar meu protocolo?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
       </div>
-      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">A IA pode errar?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">As sugestões são baseadas em boas práticas de skincare e K-Beauty. Em caso de irritação, interrompa o produto e consulte um dermatologista.</div>
       </div>
-      <div style="background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Meus dados são salvos?</div>
         <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
       </div>
     </div>
-    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
+    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(208,180,140,0.08);border:1px solid rgba(208,180,140,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
       <span style="font-size:18px">✉️</span>
       <div>
         <div style="font-size:13px;font-weight:600;color:var(--gold);letter-spacing:1px">FALAR COM O SUPORTE</div>
@@ -615,6 +605,31 @@ function renderApp() {
     span.textContent = tag;
     tagsEl.appendChild(span);
   });
+
+  // ── Score da pele ─────────────────────────────────────────────────────
+  (function() {
+    var score = parseInt(protocolo.score_pele) || 0;
+    if (!score) {
+      var tp = (protocolo.tipo_pele || '').toLowerCase();
+      if (tp.includes('saudável') || tp.includes('normal')) score = 78;
+      else if (tp.includes('danificad') || tp.includes('reativa')) score = 32;
+      else if (tp.includes('acne') || tp.includes('inflamad')) score = 38;
+      else if (tp.includes('desidrat') && tp.includes('oleosa')) score = 48;
+      else if (tp.includes('seca') || tp.includes('desidrat')) score = 52;
+      else if (tp.includes('mista') || tp.includes('oleosa')) score = 58;
+      else score = 62;
+    }
+    var scoreCard = document.getElementById('skin-score-card');
+    if (scoreCard) scoreCard.style.display = 'block';
+    var zonas = [{max:40,label:'Em Recuperação'},{max:70,label:'Em Evolução'},{max:90,label:'Saudável'},{max:100,label:'Excelente'}];
+    var zona = zonas.find(function(z){return score<=z.max;}) || zonas[3];
+    setTimeout(function() {
+      var fill = document.getElementById('skin-bar-fill');
+      if (fill) fill.style.width = score + '%';
+      var lbl = document.getElementById('skin-score-label');
+      if (lbl) lbl.textContent = '↑ Você está aqui: ' + zona.label + ' (' + score + '/100)';
+    }, 400);
+  })();
 
   // Adaptação
   if (protocolo.fase_adaptacao) {
@@ -694,50 +709,66 @@ function renderApp() {
   // ══ MAKE ══
   renderMake(protocolo);
 
-  // Sugestões
+  // ── Sugestões em 3 tiers ──────────────────────────────────────────────
   const sugEl = document.getElementById('content-sugestoes');
-  (protocolo.sugestoes_compra || protocolo.lista_compras || []).forEach((s, idx) => {
-    const partsArr = s.split('—');
-    const nomeProduto = partsArr[0]?.trim() || s;
-    const resto = partsArr.slice(1).join('—').trim();
-    // Separar ativo, motivo e preço
-    const precoMatch = resto.match(/R\$[\d,.]+(?:\s*[-–]\s*R\$[\d,.]+)?/);
-    const preco = precoMatch ? precoMatch[0] : '';
-    const descricao = resto.replace(preco, '').replace(/\s*[-–]\s*$/, '').trim();
-    const query = encodeURIComponent(nomeProduto);
-    const mlUrl = 'https://www.mercadolivre.com.br/busca?q='+query+'&matt_tool=polliannamachado';
-    const amzUrl = 'https://www.amazon.com.br/s?k='+query+'&tag=skincarebypol-20';
-    const shopeeUrl = 'https://shopee.com.br/search?keyword='+query+'&af_id=18391921032';
-    const imgId = 'prod-img-'+idx;
+  sugEl.innerHTML = '';
 
-    sugEl.innerHTML += `
-      <div style="padding:16px 0;border-bottom:1px solid rgba(201,169,110,0.08)">
-        <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:12px">
-          <div id="${imgId}" data-nome="${nomeProduto}" style="width:80px;height:80px;border-radius:10px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.15);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center">
-            <img src="https://via.placeholder.com/80x80/1a1612/c9a96e?text=..." 
-              onerror="this.parentElement.innerHTML='<span style=\'font-size:28px\'>🧴</span>'"
-              style="width:100%;height:100%;object-fit:cover;border-radius:10px"
-              alt="${nomeProduto}">
-          </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:15px;font-weight:600;color:var(--cream);margin-bottom:4px;line-height:1.3">${nomeProduto}</div>
-            ${descricao ? `<div style="font-size:12px;color:var(--cream-dim);line-height:1.6;margin-bottom:6px">${descricao}</div>` : ''}
-            ${preco ? `<div style="display:inline-block;background:rgba(201,169,110,0.12);border:1px solid rgba(201,169,110,0.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--gold)">${preco}</div>` : ''}
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <a href="${mlUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,230,0,0.1);border:1px solid rgba(255,230,0,0.3);border-radius:8px;font-size:12px;font-weight:600;color:#FFE600;text-decoration:none;letter-spacing:1px">
-            🛍 Mercado Livre
-          </a>
-          <a href="${amzUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,153,0,0.1);border:1px solid rgba(255,153,0,0.3);border-radius:8px;font-size:12px;font-weight:600;color:#FF9900;text-decoration:none;letter-spacing:1px">
-            📦 Amazon
-          </a>
-          <a href="${shopeeUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(238,77,45,0.1);border:1px solid rgba(238,77,45,0.3);border-radius:8px;font-size:12px;font-weight:600;color:#EE4D2D;text-decoration:none;letter-spacing:1px">
-            🟠 Shopee
-          </a>
-        </div>
-      </div>`;
-  });
+  const sugestoes   = protocolo.sugestoes || [];
+  const listaCompras = protocolo.lista_compras || [];
+
+  if (sugestoes.length > 0) {
+    sugestoes.forEach(function(s) {
+      const card = document.createElement('div');
+      card.style.cssText = 'margin-bottom:20px;border-radius:14px;overflow:hidden;border:1px solid rgba(208,180,140,.2)';
+
+      // Header: o que falta
+      const hdr = document.createElement('div');
+      hdr.style.cssText = 'padding:14px 16px;background:rgba(208,180,140,.08);border-bottom:1px solid rgba(208,180,140,.15)';
+      hdr.innerHTML = '<div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">FALTA NA SUA PRATELEIRA</div>' +
+        '<div style="font-size:15px;font-weight:600;color:var(--cream)">' + (s.falta || '') + '</div>' +
+        '<div style="font-size:12px;color:var(--cream-dim);margin-top:4px;line-height:1.4">' + (s.motivo || '') + '</div>';
+      card.appendChild(hdr);
+
+      // 3 tiers
+      const tiers = [
+        { key:'economica',     emoji:'💚', label:'Econômica',     sub:'dentro do seu orçamento' },
+        { key:'intermediaria', emoji:'💛', label:'Intermediária', sub:'um pouco mais, melhor resultado' },
+        { key:'premium',       emoji:'💎', label:'Premium',       sub:'o melhor para seu tipo de pele' }
+      ];
+      tiers.forEach(function(tier, ti) {
+        const t = s[tier.key];
+        if (!t || !t.produto) return;
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:14px 16px' + (ti < 2 ? ';border-bottom:1px solid rgba(255,255,255,.05)' : '');
+        const query = encodeURIComponent((t.produto || '') + ' ' + (t.marca || ''));
+        row.innerHTML =
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
+            '<span style="font-size:20px">' + tier.emoji + '</span>' +
+            '<div style="flex:1">' +
+              '<div style="font-size:13px;font-weight:600;color:var(--cream)">' + tier.label + '</div>' +
+              '<div style="font-size:11px;color:var(--cream-dim)">' + tier.sub + '</div>' +
+            '</div>' +
+            '<div style="font-size:15px;font-weight:700;color:var(--gold)">' + (t.preco || '') + '</div>' +
+          '</div>' +
+          '<div style="font-size:14px;font-weight:500;color:var(--cream);margin-bottom:4px">' + (t.produto || '') + ' <span style="font-size:12px;color:var(--cream-dim);font-weight:400">· ' + (t.marca || '') + '</span></div>' +
+          (t.descricao ? '<div style="font-size:12px;color:var(--cream-dim);font-style:italic;line-height:1.5;margin-bottom:10px">"' + t.descricao + '"</div>' : '') +
+          '<a href="https://www.mercadolivre.com.br/busca?q=' + query + '" target="_blank" style="display:inline-block;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid rgba(208,180,140,.3);border-radius:20px;padding:4px 12px">Ver no ML →</a>';
+        card.appendChild(row);
+      });
+      sugEl.appendChild(card);
+    });
+
+  } else if (listaCompras.length > 0) {
+    // Fallback: lista simples
+    listaCompras.forEach(function(s) {
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(208,180,140,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
+      div.textContent = s;
+      sugEl.appendChild(div);
+    });
+  } else {
+    sugEl.innerHTML = '<p style="color:var(--cream-dim);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar seu protocolo.</p>';
+  }
 
   // Config
   document.getElementById('cfg-nome').textContent = user.nome || '';
@@ -853,7 +884,32 @@ function getMesLabel(mesKey) {
 }
 
 function initEvolucao() {
-  const historico = getEvoHistorico();
+  const historico   = getEvoHistorico();
+  const mesAtual    = getMesAtual();
+  const fotoMes     = historico.find(h => h.mes === mesAtual);
+  const fotoInicio  = historico.length > 0 ? historico[historico.length-1] : null;
+  const fotoOnboard = localStorage.getItem('sbp_foto_rosto');
+
+  // Mostrar comparativo antes/depois
+  const compEl   = document.getElementById('evo-comparativo');
+  const antesSrc = fotoOnboard || (fotoInicio && fotoInicio.foto) || null;
+  if (antesSrc && compEl) {
+    compEl.style.display = 'block';
+    const antesImg = document.getElementById('evo-foto-antes');
+    if (antesImg) antesImg.src = antesSrc;
+    const antesLbl = document.getElementById('evo-data-antes');
+    if (antesLbl) antesLbl.textContent = fotoInicio ? getMesLabel(fotoInicio.mes) : 'Início';
+    if (fotoMes) {
+      const agoraImg = document.getElementById('evo-foto-agora');
+      const placeholder = document.getElementById('evo-agora-placeholder');
+      if (agoraImg) { agoraImg.src = fotoMes.foto; agoraImg.style.display = 'block'; }
+      if (placeholder) placeholder.style.display = 'none';
+      const agoraLbl = document.getElementById('evo-data-agora');
+      if (agoraLbl) agoraLbl.textContent = getMesLabel(mesAtual);
+    }
+  }
+
+  // Estado normal
   const mesAtual = getMesAtual();
   const fotoMes = historico.find(h => h.mes === mesAtual);
 
@@ -884,7 +940,7 @@ function renderHistorico(historico, mesAtual) {
 
   card.style.display = 'block';
   el.innerHTML = passados.map(h => `
-    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(201,169,110,0.08)">
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(208,180,140,0.08)">
       <img src="${h.foto}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0">
       <div style="flex:1">
         <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:4px">${getMesLabel(h.mes)}</div>
@@ -1142,7 +1198,7 @@ function renderRotinaDia() {
   var header = document.getElementById('rotina-hoje-header');
   if (header) {
     header.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.15);border-radius:12px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(208,180,140,0.06);border:1px solid rgba(208,180,140,0.18);border-radius:12px;margin-bottom:12px">
         <div>
           <div style="font-size:11px;color:var(--cream-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Hoje</div>
           <div style="font-size:20px;font-weight:600;color:var(--cream)">${diaSemana}</div>
@@ -1167,7 +1223,7 @@ function renderRotinaDia() {
   if (tratDiv && tratamento) {
     tratDiv.style.display = 'block';
     tratDiv.innerHTML = `
-      <div class="card" style="border-color:rgba(201,169,110,0.3);background:rgba(201,169,110,0.06)">
+      <div class="card" style="border-color:rgba(208,180,140,0.3);background:rgba(208,180,140,0.06)">
         <div class="card-title"><span class="card-title-icon">✨</span> Tratamento de Hoje</div>
         <div style="font-size:13px;color:var(--cream-dim);line-height:1.7">${tratamento}</div>
       </div>`;
@@ -1220,7 +1276,7 @@ async function buscarImagensSugestoes() {
 function renderSteps(steps) {
   if (!steps || !steps.length) return '';
   return steps.map(function(s,i) {
-    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#c9a96e">💡 '+s.dica+'</div>':'')+'</div></div>';
+    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#D0B48C">💡 '+s.dica+'</div>':'')+'</div></div>';
   }).join('');
 }
 
@@ -1257,7 +1313,7 @@ function renderEspinha(p) {
   if (e.proibidos && e.proibidos.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">🚫</span> Proibido nos dias de espinha</div>
-      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,110,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
+      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(208,180,140,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
     </div>`;
   }
 
@@ -1310,7 +1366,7 @@ function renderPraia(p) {
 
   if (e.na_praia && e.na_praia.length) {
     html += `<div class="card">
-      <div class="card-title" style="color:#c9a96e"><span class="card-title-icon">🏖</span> Na Praia</div>
+      <div class="card-title" style="color:#D0B48C"><span class="card-title-icon">🏖</span> Na Praia</div>
       <div class="step-list">${renderSteps(e.na_praia)}</div>
     </div>`;
   }
@@ -1366,7 +1422,7 @@ function renderMake(p) {
   if (e.dicas_extras && e.dicas_extras.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💡</span> Dicas Extras</div>
-      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,110,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
+      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(208,180,140,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
     </div>`;
   }
 
@@ -1382,10 +1438,7 @@ function renderMake(p) {
 
 // -- LOGOUT --
 function fazerLogout() {
-  // Limpar localStorage
-  ['sbp_auth','sbp_user','sbp_protocolo','sbp_perfil','sbp_ativo','sbp_plano','sbp_atualizacoes'].forEach(function(k){ localStorage.removeItem(k); });
-  // Deslogar do Firebase
-  try { if(window._fbAuth) window._fbAuth.signOut(); } catch(e){}
+  localStorage.removeItem('sbp_auth');
   window.location.href = 'onboarding.html';
 }
 
@@ -1434,8 +1487,8 @@ if ('serviceWorker' in navigator) {
     for (var r of registrations) { r.unregister(); }
   });
   // Register fresh SW
-  navigator.serviceWorker.register('./sw.js', {
-    scope: './',
+  navigator.serviceWorker.register('/skincare-polly/app/sw.js', {
+    scope: '/skincare-polly/app/',
     updateViaCache: 'none'
   }).then(function(reg) {
     reg.update();
