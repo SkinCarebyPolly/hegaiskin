@@ -172,7 +172,7 @@ input[type=file]{display:none}
 <div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#F2E8D9;border:1px solid #C9A97A;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
-    <div style="font-size:13px;color:#F2E8D9;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:13px;color:#2B1206;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
   <button onclick="installPWA()" style="background:linear-gradient(135deg,#C9A97A,#E8D5B0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#2B1206;cursor:pointer;white-space:nowrap">Instalar</button>
@@ -380,7 +380,7 @@ input[type=file]{display:none}
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">📅</span><div><div class="qopt-lbl">Acabei de ter bebê (pós-parto)</div><div class="qopt-sub">Pele em reequilíbrio hormonal — protocolo adaptado</div></div></div>
     </div>
     <div style="background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
-      ⚠️ <strong style="color:var(--cream)">Importante:</strong> Em caso de dúvidas sobre produtos durante a gestação ou amamentação, consulte sempre seu médico ou ginecologista.
+      ⚠️ <strong style="color:var(--dark)">Importante:</strong> Em caso de dúvidas sobre produtos durante a gestação ou amamentação, consulte sempre seu médico ou ginecologista.
     </div>
     <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q6')">← Voltar</button>
@@ -737,12 +737,12 @@ input[type=file]{display:none}
       <!-- Diagnóstico da IA -->
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
         <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Diagnóstico da sua pele</div>
-        <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);margin-bottom:12px"></div>
-        <div id="conf-txt" style="font-size:13px;color:var(--cream-dim);line-height:1.8"></div>
+        <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--dark);margin-bottom:12px"></div>
+        <div id="conf-txt" style="font-size:13px;color:var(--cdim);line-height:1.8"></div>
       </div>
 
       <!-- Mensagem fixa -->
-      <p style="font-size:13px;color:var(--cream-dim);line-height:1.8;margin-bottom:20px;font-style:italic">
+      <p style="font-size:13px;color:var(--cdim);line-height:1.8;margin-bottom:20px;font-style:italic">
         "A pele que você quer começa com o protocolo certo. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
       </p>
 
@@ -1656,7 +1656,7 @@ function renderProdList() {
     d.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(201,169,122,.06);border:1px solid rgba(201,169,122,.15);border-radius:8px;margin-bottom:6px';
     d.innerHTML =
       '<div style="flex:1">' +
-        '<div style="font-size:13px;color:var(--cream);font-weight:500">' + p.nome + '</div>' +
+        '<div style="font-size:13px;color:var(--dark);font-weight:500">' + p.nome + '</div>' +
         '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
       '</div>' +
       '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 6px;line-height:1">×</button>';
