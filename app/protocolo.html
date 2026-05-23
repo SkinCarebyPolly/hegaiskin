@@ -433,11 +433,11 @@ input[type="file"] { display:none; }
 
 <!-- ══ SUGESTÕES ══ -->
 <div class="section" id="tab-sugestoes">
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">⭐</span> O que vale a pena comprar</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Produtos sugeridos pela IA para o seu perfil — compare preços nas plataformas</p>
-    <div id="content-sugestoes"></div>
+  <div style="padding:0 0 4px">
+    <div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">Curadoria para você</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.5">Produtos que faltam na sua prateleira — compare preços antes de comprar</div>
   </div>
+  <div id="content-sugestoes" style="margin-top:16px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
     <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
@@ -573,6 +573,34 @@ input[type="file"] { display:none; }
 </div>
 
 <script>
+
+// ── AFILIADOS (preencha seus IDs aqui) ──────────────────────────────────────
+var AFILIADOS = {
+  BR: {
+    amazon:       { url: 'https://www.amazon.com.br/s?k=',                        tag: 'COLOQUE_TAG_BR',       label: 'Amazon' },
+    yesstyle:     { url: 'https://www.yesstyle.com/pt/search.html#/search?query=', tag: 'COLOQUE_TAG_YESSTYLE', label: 'YesStyle' },
+    mercadolivre: { url: 'https://lista.mercadolivre.com.br/',                    tag: '',                     label: 'Mercado Livre' }
+  },
+  PT: {
+    amazon:   { url: 'https://www.amazon.es/s?k=',                                tag: 'COLOQUE_TAG_ES',       label: 'Amazon.es' },
+    yesstyle: { url: 'https://www.yesstyle.com/pt/search.html#/search?query=',    tag: 'COLOQUE_TAG_YESSTYLE', label: 'YesStyle' },
+    notino:   { url: 'https://www.notino.pt/pesquisa/?phrase=',                   tag: '',                     label: 'Notino' }
+  }
+};
+
+function getAfiliados() {
+  var pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  return AFILIADOS[pais] || AFILIADOS['BR'];
+}
+
+function linkAfiliado(plataforma, query) {
+  var af = getAfiliados();
+  var p = af[plataforma];
+  if (!p) return '#';
+  var base = p.url + encodeURIComponent(query);
+  return p.tag ? base + (base.includes('?') ? '&' : '?') + 'tag=' + p.tag : base;
+}
+
 // -- API KEY --
 const _a = 'sk-ant-api03-V', _b = 'gU93q4z1crUe6TnHbP1j';
 const _c = '0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d = 'tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
@@ -602,6 +630,72 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
 });
 
 // -- RENDER --
+
+// ── SUGESTÕES HELPERS ────────────────────────────────────────────────────────
+function buildTierContent(s, tier, af) {
+  var t = s[tier.key];
+  if (!t || !t.produto) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:8px">Sem sugestão para este nível.</p>';
+  var query = (t.produto || '') + ' ' + (t.marca || '');
+
+  // Build buy buttons based on country
+  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
+
+  var btns = '';
+  if (af.amazon)   btns += '<a href="' + af.amazon.url   + encodeURIComponent(query) + (af.amazon.tag   ? '&tag=' + af.amazon.tag   : '') + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
+  if (af.yesstyle) btns += '<a href="' + af.yesstyle.url + encodeURIComponent(query) + (af.yesstyle.tag ? '&tag=' + af.yesstyle.tag : '') + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
+  if (af.mercadolivre) btns += '<a href="' + af.mercadolivre.url + encodeURIComponent(query) + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
+  if (af.notino)   btns += '<a href="' + af.notino.url   + encodeURIComponent(query) + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
+
+  return '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
+           '<div>' +
+             '<div style="font-size:15px;font-weight:500;color:var(--dark)">' + (t.produto || '') + '</div>' +
+             '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + (t.marca || '') + '</div>' +
+           '</div>' +
+           '<div style="font-size:15px;font-weight:500;color:var(--gold);white-space:nowrap;margin-left:8px">' + (t.preco || '') + '</div>' +
+         '</div>' +
+         (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3)">"' + t.descricao + '"</div>' : '') +
+         '<div style="display:flex;gap:8px;flex-wrap:wrap">' + btns + '</div>';
+}
+
+function toggleSug(bodyId) {
+  var body = document.getElementById(bodyId);
+  if (!body) return;
+  var cardId = bodyId.replace('sug-body-', 'sug-card-');
+  var chevron = document.getElementById(cardId + '-chevron');
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (chevron) chevron.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function switchSugTab(tabsId, conteudoId, tiIdx) {
+  var tiers = [
+    { key:'economica',     emoji:'💚', label:'Econômica',    sub:'dentro do seu orçamento' },
+    { key:'intermediaria', emoji:'💛', label:'Intermediária',sub:'melhor resultado' },
+    { key:'premium',       emoji:'💎', label:'Premium',      sub:'o melhor para você' }
+  ];
+  // Update tab styles
+  var tabsEl = document.getElementById(tabsId);
+  if (tabsEl) {
+    var btns = tabsEl.querySelectorAll('button');
+    btns.forEach(function(b, i) {
+      var active = (i === tiIdx);
+      b.style.background    = active ? 'rgba(160,112,64,.08)' : 'transparent';
+      b.style.color         = active ? 'var(--gold)' : 'var(--muted)';
+      b.style.borderBottom  = active ? '2px solid var(--gold)' : '2px solid transparent';
+    });
+  }
+  // Update content
+  var contEl = document.getElementById(conteudoId);
+  if (!contEl) return;
+  // Find the sugestao object from the card index
+  var si = parseInt(conteudoId.replace('sug-cont-', ''));
+  var sugestoes = protocolo.sugestoes || [];
+  var s = sugestoes[si];
+  if (!s) return;
+  var af = getAfiliados();
+  contEl.innerHTML = buildTierContent(s, tiers[tiIdx], af);
+}
+
 function renderApp() {
   // Hero
   document.getElementById('hero-nome').textContent = perfil.nome || user.nome || '';
@@ -718,64 +812,83 @@ function renderApp() {
   renderMake(protocolo);
 
   // ── Sugestões em 3 tiers ──────────────────────────────────────────────
-  const sugEl = document.getElementById('content-sugestoes');
+  var sugEl = document.getElementById('content-sugestoes');
   sugEl.innerHTML = '';
 
-  const sugestoes   = protocolo.sugestoes || [];
-  const listaCompras = protocolo.lista_compras || [];
+  var sugestoes    = protocolo.sugestoes || [];
+  var listaCompras = protocolo.lista_compras || [];
+  var af           = getAfiliados();
 
   if (sugestoes.length > 0) {
-    sugestoes.forEach(function(s) {
-      const card = document.createElement('div');
-      card.style.cssText = 'margin-bottom:20px;border-radius:14px;overflow:hidden;border:1px solid rgba(201,169,122,.2)';
+    sugestoes.forEach(function(s, si) {
+      var cardId   = 'sug-card-' + si;
+      var bodyId   = 'sug-body-' + si;
+      var tabsId   = 'sug-tabs-' + si;
+      var conteudoId = 'sug-cont-' + si;
 
-      // Header: o que falta
-      const hdr = document.createElement('div');
-      hdr.style.cssText = 'padding:14px 16px;background:rgba(201,169,122,.08);border-bottom:1px solid rgba(201,169,122,.15)';
-      hdr.innerHTML = '<div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">FALTA NA SUA PRATELEIRA</div>' +
-        '<div style="font-size:15px;font-weight:600;color:var(--cream)">' + (s.falta || '') + '</div>' +
-        '<div style="font-size:12px;color:var(--cream-dim);margin-top:4px;line-height:1.4">' + (s.motivo || '') + '</div>';
-      card.appendChild(hdr);
-
-      // 3 tiers
-      const tiers = [
-        { key:'economica',     emoji:'💚', label:'Econômica',     sub:'dentro do seu orçamento' },
-        { key:'intermediaria', emoji:'💛', label:'Intermediária', sub:'um pouco mais, melhor resultado' },
-        { key:'premium',       emoji:'💎', label:'Premium',       sub:'o melhor para seu tipo de pele' }
+      var tiers = [
+        { key:'economica',     emoji:'💚', label:'Econômica',    sub:'dentro do seu orçamento' },
+        { key:'intermediaria', emoji:'💛', label:'Intermediária',sub:'melhor resultado' },
+        { key:'premium',       emoji:'💎', label:'Premium',      sub:'o melhor para você' }
       ];
-      tiers.forEach(function(tier, ti) {
-        const t = s[tier.key];
-        if (!t || !t.produto) return;
-        const row = document.createElement('div');
-        row.style.cssText = 'padding:14px 16px' + (ti < 2 ? ';border-bottom:1px solid rgba(255,255,255,.05)' : '');
-        const query = encodeURIComponent((t.produto || '') + ' ' + (t.marca || ''));
-        row.innerHTML =
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
-            '<span style="font-size:20px">' + tier.emoji + '</span>' +
-            '<div style="flex:1">' +
-              '<div style="font-size:13px;font-weight:600;color:var(--cream)">' + tier.label + '</div>' +
-              '<div style="font-size:11px;color:var(--cream-dim)">' + tier.sub + '</div>' +
+
+      // Build card HTML
+      var icone = s.icone || '🧴';
+      var html =
+        '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(160,112,64,.18);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+
+          // ── Cabeçalho (clicável para expand/collapse)
+          '<div id="hdr-'+bodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
+            '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
+              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(160,112,64,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
+              '<div style="flex:1">' +
+                '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
+                '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
+              '</div>' +
             '</div>' +
-            '<div style="font-size:15px;font-weight:700;color:var(--gold)">' + (t.preco || '') + '</div>' +
+            '<div id="'+cardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
           '</div>' +
-          '<div style="font-size:14px;font-weight:500;color:var(--cream);margin-bottom:4px">' + (t.produto || '') + ' <span style="font-size:12px;color:var(--cream-dim);font-weight:400">· ' + (t.marca || '') + '</span></div>' +
-          (t.descricao ? '<div style="font-size:12px;color:var(--cream-dim);font-style:italic;line-height:1.5;margin-bottom:10px">"' + t.descricao + '"</div>' : '') +
-          '<a href="https://www.mercadolivre.com.br/busca?q=' + query + '" target="_blank" style="display:inline-block;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid rgba(201,169,122,.3);border-radius:20px;padding:4px 12px">Ver no ML →</a>';
-        card.appendChild(row);
-      });
-      sugEl.appendChild(card);
+
+          // ── Corpo (expandível)
+          '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(160,112,64,.12)">' +
+
+            // Tabs
+            '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(160,112,64,.12)">' +
+              tiers.map(function(t, ti){
+                return '<button data-tabs="'+tabsId+'" data-cont="'+conteudoId+'" data-ti="'+ti+'" ' +
+                  'onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" ' +
+                  'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(160,112,64,.08)':'transparent') + ';' +
+                  'color:' + (ti===0?'var(--gold)':'var(--muted)') + ';cursor:pointer;' +
+                  'border-bottom:2px solid ' + (ti===0?'var(--gold)':'transparent') + ';' +
+                  'font-family:inherit;transition:all .15s" data-ti="'+ti+'">' +
+                  t.emoji + ' ' + t.label +
+                '</button>';
+              }).join('') +
+            '</div>' +
+
+            // Conteúdo do tier ativo
+            '<div id="'+conteudoId+'" style="padding:16px">' +
+              buildTierContent(s, tiers[0], af) +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      sugEl.insertAdjacentHTML('beforeend', html);
     });
 
+    // Abrir o primeiro card automaticamente
+    var primeiro = document.getElementById('sug-body-0');
+    if (primeiro) { primeiro.style.display = 'block'; var ch = document.getElementById('sug-card-0-chevron'); if(ch) ch.style.transform='rotate(180deg)'; }
+
   } else if (listaCompras.length > 0) {
-    // Fallback: lista simples
     listaCompras.forEach(function(s) {
-      const div = document.createElement('div');
-      div.style.cssText = 'padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(201,169,122,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
+      var div = document.createElement('div');
+      div.style.cssText = 'padding:12px 14px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
       div.textContent = s;
       sugEl.appendChild(div);
     });
   } else {
-    sugEl.innerHTML = '<p style="color:var(--cream-dim);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar seu protocolo.</p>';
+    sugEl.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar seu protocolo.</p>';
   }
 
   // Config
