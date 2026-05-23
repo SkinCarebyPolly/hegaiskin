@@ -121,11 +121,11 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   background: var(--gold-dim); border:1px solid rgba(160,112,64,0.25);
   display:flex; align-items:center; justify-content:center;
   font-size:11px; color:var(--gold); flex-shrink:0;
-  font-weight:600;
+  font-weight:500;
 }
 .step-content { flex:1; }
-.step-product { font-size:16px; font-weight:600; color:var(--dark); margin-bottom:6px; }
-.step-how { font-size:14px; color:var(--cream-dim); line-height:1.8; white-space:pre-line; }
+.step-product { font-size:15px; font-weight:500; color:var(--dark); margin-bottom:6px; }
+.step-how { font-size:14px; color:var(--muted); line-height:1.7; white-space:pre-line; }
 .step-time {
   font-size:10px; color:var(--gold); letter-spacing:1px;
   margin-top:6px; display:inline-block;
@@ -144,7 +144,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   font-size:10px; letter-spacing:2px; color:var(--gold);
   text-transform:uppercase; width:50px; flex-shrink:0; padding-top:2px;
 }
-.week-desc { font-size:13px; color:var(--cream-dim); line-height:1.6; }
+.week-desc { font-size:13px; color:var(--muted); line-height:1.6; }
 
 /* -- CALENDAR -- */
 .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
@@ -175,7 +175,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 .alert-title { font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
 .alert-gold .alert-title { color:var(--gold); }
 .alert-green .alert-title { color:var(--green); }
-.alert-text { font-size:13px; color:var(--cream-dim); line-height:1.7; }
+.alert-text { font-size:13px; color:var(--muted); line-height:1.7; }
 
 /* -- SUGGESTIONS -- */
 .suggestion-item {
@@ -184,7 +184,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 }
 .suggestion-item:last-child { border:none; }
 .suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
-.suggestion-text { font-size:13px; color:var(--cream-dim); line-height:1.6; }
+.suggestion-text { font-size:13px; color:var(--muted); line-height:1.6; }
 .suggestion-text strong { color:var(--dark); }
 
 /* -- EVOLUÇÃO -- */
@@ -206,7 +206,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   padding:16px 0; border-bottom:1px solid rgba(160,112,64,0.08);
 }
 .config-item:last-child { border:none; }
-.config-label { font-size:13px; color:var(--cream-dim); }
+.config-label { font-size:13px; color:var(--muted); }
 .config-value { font-size:12px; color:var(--gold); letter-spacing:1px; }
 
 .btn-danger {
@@ -253,7 +253,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 .modal-handle { width:40px; height:3px; background:rgba(160,112,64,0.2); border-radius:2px; margin:0 auto 16px; }
 .modal-title { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--gold); margin-bottom:4px; }
 .modal-sub { font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:1px; }
-.modal-body { font-size:13px; color:var(--cream-dim); line-height:1.8; }
+.modal-body { font-size:13px; color:var(--muted); line-height:1.8; }
 .modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(160,112,64,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
 
 /* -- AI ANALYSIS -- */
@@ -361,21 +361,21 @@ input[type="file"] { display:none; }
   <div class="card" id="skin-score-card" style="display:none">
     <div class="card-title"><span class="card-title-icon">✨</span> Saúde da sua pele</div>
     <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-      <span style="font-size:10px;color:var(--cream-dim)">Recuperação</span>
-      <span style="font-size:10px;color:var(--cream-dim)">Evolução</span>
-      <span style="font-size:10px;color:var(--cream-dim)">Saudável</span>
-      <span style="font-size:10px;color:var(--cream-dim)">Excelente</span>
+      <span style="font-size:10px;color:var(--muted)">Recuperação</span>
+      <span style="font-size:10px;color:var(--muted)">Evolução</span>
+      <span style="font-size:10px;color:var(--muted)">Saudável</span>
+      <span style="font-size:10px;color:var(--muted)">Excelente</span>
     </div>
-    <div style="position:relative;height:22px;background:rgba(255,255,255,.06);border-radius:11px;overflow:visible;margin-bottom:10px">
-      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
-      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
-      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.15)"></div>
-      <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:linear-gradient(90deg,#e07a7a 0%,#C9A97A 40%,#6aab8a 70%,#4a9b6f 91%);width:0%;transition:width 1.2s ease;position:relative">
+    <div style="position:relative;height:22px;background:rgba(160,112,64,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
+      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
+      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
+      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
+      <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:var(--gold);width:0%;transition:width 1.2s ease;position:relative">
         <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #C9A97A;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
       </div>
     </div>
     <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
-    <div style="text-align:center;font-size:12px;color:var(--cream-dim)">💡 Isso é totalmente normal e ajustável com consistência</div>
+    <div style="text-align:center;font-size:12px;color:var(--muted)">💡 Isso é totalmente normal e ajustável com consistência</div>
   </div>
 
   <div class="card">
@@ -440,7 +440,7 @@ input[type="file"] { display:none; }
   <div id="content-sugestoes" style="margin-top:16px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
-    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
     <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
       <div class="evo-icon">📦</div>
       <div class="evo-title">Fotografar produto novo</div>
@@ -459,7 +459,7 @@ input[type="file"] { display:none; }
   <!-- Foto do mês atual -->
   <div class="card" id="evo-card-foto">
     <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
-    <p style="font-size:12px;color:var(--cream-dim);margin-bottom:14px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
     <div id="evo-comparativo" style="display:none;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
@@ -467,7 +467,7 @@ input[type="file"] { display:none; }
           <div style="aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid rgba(201,169,122,.2);background:rgba(255,255,255,.03)">
             <img id="evo-foto-antes" style="width:100%;height:100%;object-fit:cover" src="">
           </div>
-          <div id="evo-data-antes" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px"></div>
+          <div id="evo-data-antes" style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px"></div>
         </div>
         <div>
           <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;text-align:center">Agora</div>
@@ -475,11 +475,11 @@ input[type="file"] { display:none; }
             <span style="font-size:28px">📸</span>
           </div>
           <img id="evo-foto-agora" style="width:100%;border-radius:10px;border:1px solid rgba(201,169,122,.2);display:none;aspect-ratio:1;object-fit:cover" src="">
-          <div id="evo-data-agora" style="font-size:10px;color:var(--cream-dim);text-align:center;margin-top:4px">Tire agora 👇</div>
+          <div id="evo-data-agora" style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">Tire agora 👇</div>
         </div>
       </div>
     </div>
-    <div id="evo-mes-status" style="font-size:12px;color:var(--cream-dim);margin-bottom:12px"></div>
+    <div id="evo-mes-status" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
     <div class="evo-photo-area" id="evo-photo-area" onclick="document.getElementById('evo-photo-input').click()">
       <div class="evo-icon">📸</div>
       <div class="evo-title" id="evo-photo-title">Tirar foto do mês</div>
@@ -531,23 +531,23 @@ input[type="file"] { display:none; }
     <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
     <div style="margin-bottom:16px">
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Como atualizar meu protocolo?</div>
-        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
+        <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">Como atualizar meu protocolo?</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
       </div>
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">A IA pode errar?</div>
-        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">As sugestões são baseadas em boas práticas de skincare e K-Beauty. Em caso de irritação, interrompa o produto e consulte um dermatologista.</div>
+        <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">A IA pode errar?</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">As sugestões são baseadas em boas práticas de skincare e K-Beauty. Em caso de irritação, interrompa o produto e consulte um dermatologista.</div>
       </div>
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:4px">Meus dados são salvos?</div>
-        <div style="font-size:12px;color:var(--cream-dim);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
+        <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">Meus dados são salvos?</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
       </div>
     </div>
     <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
       <span style="font-size:18px">✉️</span>
       <div>
         <div style="font-size:13px;font-weight:600;color:var(--gold);letter-spacing:1px">FALAR COM O SUPORTE</div>
-        <div style="font-size:11px;color:var(--cream-dim)">skincarepolly@gmail.com</div>
+        <div style="font-size:11px;color:var(--muted)">skincarepolly@gmail.com</div>
       </div>
     </a>
   </div>
@@ -752,16 +752,18 @@ function renderApp() {
   }
 
   // Produtos identificados
-  const prodEl = document.getElementById('content-produtos');
-  (protocolo.produtos_identificados || []).forEach((p, i) => {
-    prodEl.innerHTML += `
-      <div class="step-item">
-        <div class="step-num">${i+1}</div>
-        <div class="step-content">
-          <div class="step-product">${p}</div>
-        </div>
-      </div>`;
-  });
+  var prodEl = document.getElementById('content-produtos');
+  if (prodEl) {
+    prodEl.innerHTML = '';
+    (protocolo.produtos_identificados || []).forEach(function(p, i) {
+      var div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;margin-bottom:8px';
+      div.innerHTML =
+        '<div style="width:32px;height:32px;border-radius:50%;background:rgba(160,112,64,.1);border:1px solid rgba(160,112,64,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
+        '<div style="font-size:14px;font-weight:500;color:var(--dark);flex:1">' + p + '</div>';
+      prodEl.appendChild(div);
+    });
+  }
 
   // Rotina do dia
   renderRotinaDia();
@@ -1184,10 +1186,10 @@ function initEvolucao() {
 
     if (fotoMes.analise) {
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${fotoMes.analise.replace(/\n/g,'<br>')}</p>`;
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${fotoMes.analise.replace(/\n/g,'<br>')}</p>`;
     }
   } else {
-    if (statusEl) statusEl.innerHTML = `<span style="color:var(--cream-dim)">Nenhuma foto registada este mês</span>`;
+    if (statusEl) statusEl.innerHTML = `<span style="color:var(--muted)">Nenhuma foto registada este mês</span>`;
   }
 
   renderHistorico(historico, mesAtual);
@@ -1204,8 +1206,8 @@ function renderHistorico(historico, mesAtual) {
     <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(201,169,122,0.08)">
       <img src="${h.foto}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;flex-shrink:0">
       <div style="flex:1">
-        <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:4px">${getMesLabel(h.mes)}</div>
-        ${h.analise ? `<div style="font-size:12px;color:var(--cream-dim);line-height:1.6">${h.analise.substring(0,150)}...</div>` : ''}
+        <div style="font-size:12px;font-weight:500;color:var(--gold);margin-bottom:4px">${getMesLabel(h.mes)}</div>
+        ${h.analise ? `<div style="font-size:12px;color:var(--muted);line-height:1.6">${h.analise.substring(0,150)}...</div>` : ''}
       </div>
     </div>`).join('');
 }
@@ -1274,7 +1276,7 @@ Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
       saveEvoHistorico(historico);
 
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${texto.replace(/\n/g,'<br>')}</p>`;
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${texto.replace(/\n/g,'<br>')}</p>`;
 
       const statusEl = document.getElementById('evo-mes-status');
       if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
@@ -1288,7 +1290,7 @@ Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
       historico.push(novaEntrada);
       saveEvoHistorico(historico);
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--cream-dim)">Foto registada com sucesso!</p>`;
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted)">Foto registada com sucesso!</p>`;
     }
 
     document.getElementById('evo-loading').style.display = 'none';
@@ -1353,7 +1355,7 @@ async function addNewProduct(e) {
 function openModal(title, sub, body) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-sub').textContent = sub;
-  document.getElementById('modal-body').innerHTML = `<p style="font-size:13px;color:var(--cream-dim);line-height:1.8">${body}</p>`;
+  document.getElementById('modal-body').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${body}</p>`;
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1461,9 +1463,9 @@ function renderRotinaDia() {
     header.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:12px;margin-bottom:12px">
         <div>
-          <div style="font-size:11px;color:var(--cream-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Hoje</div>
-          <div style="font-size:20px;font-weight:600;color:var(--cream)">${diaSemana}</div>
-          <div style="font-size:13px;color:var(--cream-dim)">${dia} de ${mes}</div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Hoje</div>
+          <div style="font-size:18px;font-weight:500;color:var(--dark)">${diaSemana}</div>
+          <div style="font-size:13px;color:var(--muted)">${dia} de ${mes}</div>
         </div>
         <div style="font-size:36px">${getTratamentoEmoji(hoje.getDay())}</div>
       </div>`;
@@ -1486,7 +1488,7 @@ function renderRotinaDia() {
     tratDiv.innerHTML = `
       <div class="card" style="border-color:rgba(201,169,122,0.3);background:rgba(201,169,122,0.06)">
         <div class="card-title"><span class="card-title-icon">✨</span> Tratamento de Hoje</div>
-        <div style="font-size:13px;color:var(--cream-dim);line-height:1.7">${tratamento}</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7">${tratamento}</div>
       </div>`;
   }
 }
@@ -1618,15 +1620,25 @@ function marcarFeito(uid) {
 var _audioCtx = null;
 function tocarBeep(freq, dur) {
   try {
-    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!_audioCtx) {
+      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Prevent Android media session takeover
+      if (navigator.mediaSession) {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.setActionHandler('play', null);
+        navigator.mediaSession.setActionHandler('pause', null);
+      }
+    }
+    if (_audioCtx.state === 'suspended') _audioCtx.resume();
     var o = _audioCtx.createOscillator();
     var g = _audioCtx.createGain();
     o.connect(g); g.connect(_audioCtx.destination);
     o.frequency.value = freq;
     o.type = 'sine';
-    g.gain.setValueAtTime(0.18, _audioCtx.currentTime);
+    g.gain.setValueAtTime(0.12, _audioCtx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + dur);
-    o.start(); o.stop(_audioCtx.currentTime + dur);
+    o.start(_audioCtx.currentTime);
+    o.stop(_audioCtx.currentTime + dur);
   } catch(e) {}
 }
 
@@ -1663,7 +1675,7 @@ function renderEspinha(p) {
   if (e.proibidos && e.proibidos.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">🚫</span> Proibido nos dias de espinha</div>
-      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
+      ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--muted);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
     </div>`;
   }
 
@@ -1772,7 +1784,7 @@ function renderMake(p) {
   if (e.dicas_extras && e.dicas_extras.length) {
     html += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💡</span> Dicas Extras</div>
-      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--cream-dim);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
+      ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--muted);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
     </div>`;
   }
 
