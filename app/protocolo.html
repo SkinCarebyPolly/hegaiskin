@@ -659,7 +659,12 @@ function buildTierContent(s, tier, af) {
            '<div style="font-size:15px;font-weight:500;color:var(--gold);white-space:nowrap;margin-left:8px">' + (t.preco || '') + '</div>' +
          '</div>' +
          (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3)">"' + t.descricao + '"</div>' : '') +
-         '<div style="display:flex;gap:8px;flex-wrap:wrap">' + btns + '</div>';
+         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' + btns + '</div>' +
+         (function() {
+           var btnId = 'add-btn-' + Math.random().toString(36).substr(2,6);
+           window['_prod_' + btnId] = t;
+           return '<button id="' + btnId + '" onclick="adicionarSugestaoRotina(window[\'_prod_\'+this.id])" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">+ Já comprei — adicionar à minha rotina</button>';
+         })();
 }
 
 function toggleSug(bodyId) {
@@ -703,7 +708,8 @@ function switchSugTab(tabsId, conteudoId, tiIdx) {
 
 function renderApp() {
   // Hero
-  document.getElementById('hero-nome').textContent = perfil.nome || user.nome || '';
+  var nomeExibir = protocolo.nome_cliente || perfil.nome || user.nome || '';
+  document.getElementById('hero-nome').textContent = nomeExibir;
   document.getElementById('hero-tipo').textContent = perfil.tipoPele || '';
   const tagsEl = document.getElementById('hero-tags');
   (perfil.tags || []).forEach(tag => {
@@ -761,32 +767,12 @@ function renderApp() {
   renderRotinaDia();
 
   // Rotina manhã
-  const manhaEl = document.getElementById('content-manha');
-  (protocolo.rotina_manha || []).forEach(s => {
-    manhaEl.innerHTML += `
-      <div class="step-item">
-        <div class="step-num">${s.passo}</div>
-        <div class="step-content">
-          <div class="step-product">${s.produto}</div>
-          <div class="step-how">${s.como}</div>
-          ${s.tempo ? `<span class="step-time">⏱ ${s.tempo}</span>` : ''}
-        </div>
-      </div>`;
-  });
+  var manhaEl = document.getElementById('content-manha');
+  if (manhaEl) manhaEl.innerHTML = renderSteps(protocolo.rotina_manha, 'manha');
 
   // Rotina noite
-  const noiteEl = document.getElementById('content-noite');
-  (protocolo.rotina_noite || []).forEach(s => {
-    noiteEl.innerHTML += `
-      <div class="step-item">
-        <div class="step-num">${s.passo}</div>
-        <div class="step-content">
-          <div class="step-product">${s.produto}</div>
-          <div class="step-how">${s.como}</div>
-          ${s.tempo ? `<span class="step-time">⏱ ${s.tempo}</span>` : ''}
-        </div>
-      </div>`;
-  });
+  var noiteEl = document.getElementById('content-noite');
+  if (noiteEl) noiteEl.innerHTML = renderSteps(protocolo.rotina_noite, 'noite');
 
   // Semana
   const semEl = document.getElementById('content-semana');
@@ -887,6 +873,81 @@ async function converterListaParaSugestoes(listaCompras) {
         '</div>';
       sugEl.appendChild(div);
     });
+  }
+}
+
+
+// ── ADICIONAR SUGESTÃO À ROTINA ──────────────────────────────────────────────
+async function adicionarSugestaoRotina(produto) {
+  var nome = produto.produto || '';
+  var marca = produto.marca || '';
+  var nomeFull = nome + (marca ? ' (' + marca + ')' : '');
+
+  // Show loading feedback on the button
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(43,18,6,.4);z-index:300;display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML =
+    '<div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center">' +
+      '<div style="width:36px;height:36px;border:2px solid rgba(160,112,64,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
+      '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">Integrando à sua rotina...</div>' +
+      '<div style="font-size:12px;color:var(--muted)">A IA está encontrando o melhor lugar para ' + nomeFull + '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  try {
+    var rotinaAtual = JSON.stringify({
+      rotina_manha: protocolo.rotina_manha || [],
+      rotina_noite: protocolo.rotina_noite || []
+    });
+
+    var prompt = 'Você é especialista em skincare. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}' ;
+
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    var data = await resp.json();
+    var text = (data.content && data.content[0] && data.content[0].text) || '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    var novaRotina = JSON.parse(clean);
+
+    // Update protocolo and save
+    if (novaRotina.rotina_manha) protocolo.rotina_manha = novaRotina.rotina_manha;
+    if (novaRotina.rotina_noite) protocolo.rotina_noite = novaRotina.rotina_noite;
+    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+
+    // Re-render rotina
+    var manhaEl = document.getElementById('content-manha');
+    var noiteEl = document.getElementById('content-noite');
+    if (manhaEl) manhaEl.innerHTML = renderSteps(protocolo.rotina_manha, 'manha');
+    if (noiteEl) noiteEl.innerHTML = renderSteps(protocolo.rotina_noite, 'noite');
+
+    document.body.removeChild(overlay);
+
+    // Success toast
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap';
+    toast.textContent = '✓ ' + nomeFull + ' adicionado à sua rotina!';
+    document.body.appendChild(toast);
+    setTimeout(function() { document.body.removeChild(toast); }, 3000);
+
+    // Switch to rotina tab
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    var tabRotina = document.querySelector('.tab[data-tab="rotina"]');
+    var secRotina = document.getElementById('tab-rotina');
+    if (tabRotina) tabRotina.classList.add('active');
+    if (secRotina) secRotina.classList.add('active');
+
+  } catch(e) {
+    document.body.removeChild(overlay);
+    alert('Não foi possível integrar o produto agora. Tente novamente.');
   }
 }
 
@@ -1473,11 +1534,100 @@ async function buscarImagensSugestoes() {
 
 
 // ══ RENDER STEPS (global) ══
-function renderSteps(steps) {
+function renderSteps(steps, rotinaTipo) {
   if (!steps || !steps.length) return '';
   return steps.map(function(s,i) {
-    return '<div class="step-item"><div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-product">'+(s.produto||s.nome||'')+'</div><div class="step-how">'+(s.como||s.instrucao||'')+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+(s.alerta?'<div style="margin-top:6px;font-size:12px;color:#e07a7a">⚠️ '+s.alerta+'</div>':'')+(s.dica?'<div style="margin-top:6px;font-size:12px;color:#C9A97A">💡 '+s.dica+'</div>':'')+'</div></div>';
+    var uid = 'step-' + (rotinaTipo||'r') + '-' + i;
+    var tempoSeg = parseTempoSeg(s.tempo);
+    return '<div class="step-item" id="'+uid+'">' +
+      '<div class="step-num">'+(i+1)+'</div>' +
+      '<div class="step-content">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
+          '<div class="step-product">'+(s.produto||s.nome||'')+'</div>' +
+          (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
+        '</div>' +
+        '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
+        (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.alerta+'</div>' : '') +
+        (s.dica ? '<div style="margin-top:6px;font-size:12px;color:var(--gold)">💡 '+s.dica+'</div>' : '') +
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:12px">' +
+          (tempoSeg > 0 ?
+            '<button data-uid="'+uid+'" data-seg="'+tempoSeg+'" onclick="iniciarTimer(this.dataset.uid,parseInt(this.dataset.seg))" style="display:flex;align-items:center;gap:5px;padding:8px 14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">▶ Iniciar timer</button>' : '') +
+          '<button data-uid="'+uid+'" onclick="marcarFeito(this.dataset.uid)" style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;color:var(--gold);cursor:pointer">✓ Feito</button>' +
+        '</div>' +
+        '<div id="'+uid+'-timer" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(160,112,64,.08);border-radius:8px;text-align:center">' +
+          '<div id="'+uid+'-time" style="font-size:24px;font-weight:500;color:var(--gold);font-variant-numeric:tabular-nums">0:00</div>' +
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px">restante</div>' +
+          '<button data-uid="'+uid+'" onclick="pararTimer(this.dataset.uid)" style="margin-top:8px;background:none;border:none;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline">parar</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }).join('');
+}
+
+function parseTempoSeg(tempoStr) {
+  if (!tempoStr) return 0;
+  var m = tempoStr.match(/(\d+)\s*min/i);
+  var s = tempoStr.match(/(\d+)\s*s/i);
+  return (m ? parseInt(m[1]) * 60 : 0) + (s ? parseInt(s[1]) : 0);
+}
+
+var _timers = {};
+
+function iniciarTimer(uid, segundos) {
+  if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
+  var timerEl = document.getElementById(uid + '-timer');
+  var timeEl  = document.getElementById(uid + '-time');
+  if (!timerEl || !timeEl) return;
+  timerEl.style.display = 'block';
+  var restante = segundos;
+  timeEl.textContent = formatTimer(restante);
+  tocarBeep(440, 0.1);
+  _timers[uid] = setInterval(function() {
+    restante--;
+    timeEl.textContent = formatTimer(restante);
+    if (restante <= 0) {
+      clearInterval(_timers[uid]);
+      delete _timers[uid];
+      timeEl.textContent = '✓ Concluído';
+      tocarBeep(523, 0.3);
+      setTimeout(function() { tocarBeep(659, 0.3); }, 350);
+    }
+  }, 1000);
+}
+
+function pararTimer(uid) {
+  if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
+  var timerEl = document.getElementById(uid + '-timer');
+  if (timerEl) timerEl.style.display = 'none';
+}
+
+function formatTimer(s) {
+  var m = Math.floor(s / 60);
+  var ss = s % 60;
+  return m + ':' + (ss < 10 ? '0' : '') + ss;
+}
+
+function marcarFeito(uid) {
+  var el = document.getElementById(uid);
+  if (!el) return;
+  el.style.opacity = '0.45';
+  el.style.transition = 'opacity .3s';
+  pararTimer(uid);
+}
+
+var _audioCtx = null;
+function tocarBeep(freq, dur) {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var o = _audioCtx.createOscillator();
+    var g = _audioCtx.createGain();
+    o.connect(g); g.connect(_audioCtx.destination);
+    o.frequency.value = freq;
+    o.type = 'sine';
+    g.gain.setValueAtTime(0.18, _audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + dur);
+    o.start(); o.stop(_audioCtx.currentTime + dur);
+  } catch(e) {}
 }
 
 // ══ RENDER ESPINHA ══
