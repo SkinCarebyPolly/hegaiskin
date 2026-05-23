@@ -2039,18 +2039,15 @@ function installPWA() {
     if (b) b.style.display = 'none';
   });
 }
-if ('serviceWorker' in navigator && location.protocol !== 'blob:' && !location.hostname.includes('claudeusercontent')) {
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for (var r of registrations) { r.unregister(); }
   });
-  navigator.serviceWorker.register('./sw.js', {
-    scope: './',
-    updateViaCache: 'none'
-  }).then(function(reg) {
-    reg.update();
-  }).catch(function(e) {
-    console.log('SW not available:', e.message);
-  });
+  if (window.caches) {
+    caches.keys().then(function(keys) {
+      keys.forEach(function(key) { caches.delete(key); });
+    });
+  }
 }
 </script>
   <!-- TensorFlow + Face Detection (carregado depois do app) -->

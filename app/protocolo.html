@@ -1851,20 +1851,15 @@ function installPWA() {
   });
 }
 if ('serviceWorker' in navigator) {
-  // Unregister old SW that may be serving cached files
+  // Unregister ALL service workers and clear ALL caches to prevent stale file serving
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for (var r of registrations) { r.unregister(); }
   });
-  // Register fresh SW
-  navigator.serviceWorker.register('/skincare-polly/app/sw.js', {
-    scope: '/skincare-polly/app/',
-    updateViaCache: 'none'
-  }).then(function(reg) {
-    reg.update();
-    console.log('SW v3 registered');
-  }).catch(function(e) {
-    console.log('SW error:', e);
-  });
+  if (window.caches) {
+    caches.keys().then(function(keys) {
+      keys.forEach(function(key) { caches.delete(key); });
+    });
+  }
 }
 </script>
 </body>
