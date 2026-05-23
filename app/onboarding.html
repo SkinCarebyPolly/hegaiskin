@@ -149,7 +149,11 @@ input[type=file]{display:none}
           if (user) {
             window._currentUser = user;
             var hasLocal = localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo');
-            if (!hasLocal) {
+            var atualizando = localStorage.getItem('sbp_atualizando');
+            if (atualizando) {
+              // Usuária veio do botão "Atualizar" — deixar fazer o quiz de novo
+              localStorage.removeItem('sbp_atualizando');
+            } else if (!hasLocal) {
               try {
                 var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
                 if (snap.exists) {

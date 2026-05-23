@@ -555,7 +555,7 @@ input[type="file"] { display:none; }
     <div class="card-title"><span class="card-title-icon">⚙️</span> Opções</div>
     <div id="btn-atualizar-wrap" style="display:none;margin-bottom:8px">
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
-      <button class="btn-gold" onclick="window.location.href='onboarding.html'">Atualizar meu protocolo</button>
+      <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar meu protocolo</button>
     </div>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
@@ -1637,8 +1637,23 @@ function renderMake(p) {
 }
 
 // -- LOGOUT --
+function atualizarProtocolo() {
+  // Limpa protocolo mas mantém auth para não precisar logar de novo
+  localStorage.removeItem('sbp_protocolo');
+  localStorage.removeItem('sbp_perfil');
+  localStorage.removeItem('sbp_ativo');
+  localStorage.setItem('sbp_atualizando', 'true'); // flag para onboarding não redirecionar
+  window.location.href = 'onboarding.html';
+}
+
 function fazerLogout() {
   localStorage.removeItem('sbp_auth');
+  localStorage.removeItem('sbp_protocolo');
+  localStorage.removeItem('sbp_perfil');
+  localStorage.removeItem('sbp_ativo');
+  localStorage.removeItem('sbp_user');
+  localStorage.removeItem('sbp_pais');
+  if (window._fbAuth) window._fbAuth.signOut().catch(function(){});
   window.location.href = 'onboarding.html';
 }
 
