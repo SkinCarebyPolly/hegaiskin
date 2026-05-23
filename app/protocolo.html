@@ -313,6 +313,7 @@ input[type="file"] { display:none; }
       }
     });
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
@@ -854,10 +855,16 @@ async function converterListaParaSugestoes(listaCompras) {
   try {
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2000,
+        system: 'Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.',
         messages: [{ role: 'user', content: promptConv }]
       })
     });
@@ -922,10 +929,16 @@ async function adicionarSugestaoRotina(produto) {
 
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2000,
+        system: 'Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.',
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -1569,6 +1582,20 @@ async function buscarImagensSugestoes() {
 
 
 // ══ RENDER STEPS (global) ══
+
+// ── TITLE CASE helper ────────────────────────────────────────────────────────
+function toTitleCase(str) {
+  if (!str) return str;
+  // Words to keep lowercase (prepositions/articles)
+  var lower = ['de','da','do','das','dos','e','a','o','as','os','em','com','por','para','no','na','nos','nas','um','uma'];
+  return str.toLowerCase().replace(/[^\s-]+/g, function(word, idx) {
+    // Always capitalize first word, or if not in lower list
+    return (idx === 0 || lower.indexOf(word) === -1)
+      ? word.charAt(0).toUpperCase() + word.slice(1)
+      : word;
+  });
+}
+
 function renderSteps(steps, rotinaTipo) {
   if (!steps || !steps.length) return '';
   var semProd = protocolo.sem_produto === true;
@@ -1596,7 +1623,7 @@ function renderSteps(steps, rotinaTipo) {
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
-          '<div class="step-product">'+(s.produto||s.nome||'')+'</div>' +
+          '<div class="step-product">'+ toTitleCase(s.produto||s.nome||'')+'</div>' +
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
@@ -1967,30 +1994,106 @@ function desativarNotificacoes() {
 
 // ── COMPARTILHAR PROTOCOLO ───────────────────────────────────────────────────
 async function compartilharProtocolo() {
-  var nome = protocolo.nome_cliente || user.nome || 'Eu';
-  var tipo = protocolo.tipo_pele || '';
+  var nome  = protocolo.nome_cliente || user.nome || 'Eu';
+  var tipo  = protocolo.tipo_pele || '';
   var score = protocolo.score_pele || '';
+  var tags  = (protocolo.tags || []).slice(0, 3);
   var passosManha = (protocolo.rotina_manha || []).length;
   var passosNoite = (protocolo.rotina_noite || []).length;
 
-  var texto =
-    '✨ Minha rotina personalizado foi criado pelo Hegai Skin versão beta!\n\n' +
-    '🌸 ' + nome + '\n' +
-    (tipo ? '💧 Pele: ' + tipo + '\n' : '') +
-    (score ? '📊 Score: ' + score + '/100\n' : '') +
-    '☀️ ' + passosManha + ' passos de manhã\n' +
-    '🌙 ' + passosNoite + ' passos à noite\n\n' +
-    '🔗 Crie o seu em: hegaiskin.app';
+  mostrarToast('Gerando imagem...');
 
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: 'Minha Rotina Hegai Skin', text: texto });
-    } catch(e) {
-      if (e.name !== 'AbortError') copiarTexto(texto);
-    }
-  } else {
+  // Build share card HTML
+  var card = document.createElement('div');
+  card.style.cssText = [
+    'position:fixed', 'left:-9999px', 'top:0',
+    'width:360px', 'background:#2B1206',
+    'font-family:Georgia,serif', 'overflow:hidden',
+    'border-radius:0', 'padding:0'
+  ].join(';');
+
+  card.innerHTML =
+    // Header dark
+    '<div style="background:linear-gradient(160deg,#2B1206,#3D1A08);padding:36px 28px 28px">' +
+      '<div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px;margin-bottom:6px">Hegai Skin</div>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">' +
+        '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.8);border:0.5px solid rgba(201,169,122,.3);border-radius:20px;padding:2px 8px">versão beta</span>' +
+        '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,169,122,.4)">· Rotina Exclusiva</span>' +
+      '</div>' +
+      '<div style="font-family:Georgia,serif;font-size:24px;color:#F2E8D9;font-weight:400;margin-bottom:4px">Minha Rotina</div>' +
+      '<div style="font-family:Georgia,serif;font-size:26px;font-style:italic;color:#C9A97A;margin-bottom:6px">' + nome + '</div>' +
+      (tipo ? '<div style="font-size:12px;color:rgba(242,232,217,.55);letter-spacing:1px">' + tipo + '</div>' : '') +
+      (tags.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">' + tags.map(function(t){ return '<span style="padding:3px 10px;border:0.5px solid rgba(201,169,122,.25);border-radius:20px;font-size:10px;color:#C9A97A;font-family:Georgia,serif">' + t + '</span>'; }).join('') + '</div>' : '') +
+    '</div>' +
+    // Stats light
+    '<div style="background:#F2E8D9;padding:24px 28px">' +
+      (score ? '<div style="margin-bottom:18px">' +
+        '<div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A07040;margin-bottom:8px">Estado da pele</div>' +
+        '<div style="height:6px;background:rgba(160,112,64,.15);border-radius:3px;overflow:hidden;margin-bottom:6px">' +
+          '<div style="height:100%;width:' + Math.min(score, 100) + '%;background:#A07040;border-radius:3px"></div>' +
+        '</div>' +
+        '<div style="font-size:13px;font-weight:500;color:#2B1206">' + score + '/100</div>' +
+      '</div>' : '') +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">' +
+        '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:10px;padding:14px">' +
+          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:4px">Manhã</div>' +
+          '<div style="font-size:22px;font-weight:400;color:#2B1206">' + passosManha + '</div>' +
+          '<div style="font-size:11px;color:#9a8878">passos</div>' +
+        '</div>' +
+        '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:10px;padding:14px">' +
+          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:4px">Noite</div>' +
+          '<div style="font-size:22px;font-weight:400;color:#2B1206">' + passosNoite + '</div>' +
+          '<div style="font-size:11px;color:#9a8878">passos</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="text-align:center;padding-top:4px">' +
+        '<div style="font-size:11px;color:#9a8878;margin-bottom:4px">Crie a sua rotina em</div>' +
+        '<div style="font-size:14px;font-weight:500;color:#A07040;letter-spacing:.5px">hegaiskin.app</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(card);
+
+  try {
+    var canvas = await html2canvas(card, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#2B1206',
+      logging: false
+    });
+    document.body.removeChild(card);
+
+    canvas.toBlob(async function(blob) {
+      if (!blob) { mostrarToast('Erro ao gerar imagem'); return; }
+      var file = new File([blob], 'hegai-skin-rotina.png', { type: 'image/png' });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: 'Minha Rotina Hegai Skin' });
+        } catch(e) {
+          if (e.name !== 'AbortError') baixarImagem(canvas);
+        }
+      } else {
+        // Fallback: download image
+        baixarImagem(canvas);
+      }
+    }, 'image/png');
+
+  } catch(e) {
+    if (document.body.contains(card)) document.body.removeChild(card);
+    console.warn('html2canvas error:', e);
+    // Fallback to text
+    var texto = 'Minha rotina foi criada pelo Hegai Skin versão beta!\n\n' + nome + '\nPele: ' + tipo + (score ? '\nScore: ' + score + '/100' : '') + '\n' + passosManha + ' passos de manhã · ' + passosNoite + ' à noite\n\nhegaiskin.app';
     copiarTexto(texto);
   }
+}
+
+function baixarImagem(canvas) {
+  var link = document.createElement('a');
+  link.download = 'hegai-skin-rotina.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  mostrarToast('Imagem salva! Compartilhe no WhatsApp 💬');
 }
 
 function copiarTexto(txt) {

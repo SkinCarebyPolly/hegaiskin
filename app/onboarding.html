@@ -293,13 +293,42 @@ input[type=file]{display:none}
   <div class="inner">
     <div class="badge">Questionário · 3 de 15</div>
     <h1>Tem aparelhos<br><em>de skincare?</em></h1>
+
+    <!-- Foto dos aparelhos -->
+    <div style="border:1px dashed rgba(160,112,64,.22);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px;background:rgba(160,112,64,.03)">
+      <div style="font-size:13px;font-weight:500;color:#2B1206;margin-bottom:3px">Fotografar meus aparelhos</div>
+      <div style="font-size:11px;color:#9a8878;margin-bottom:14px;font-weight:300">A IA identifica automaticamente</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="abrirCameraAparelhos()" style="padding:10px 8px;background:rgba(160,112,64,.1);color:#A07040;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer">📷 Câmera</button>
+        <button onclick="abrirGaleriaAparelhos()" style="padding:10px 8px;background:rgba(160,112,64,.1);color:#A07040;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer">🖼️ Galeria</button>
+      </div>
+      <input type="file" id="fp-aparelho-camera" accept="image/*" capture="environment" style="display:none" onchange="processarFotoAparelhos(this)">
+      <input type="file" id="fp-aparelho-galeria" accept="image/*" multiple style="display:none" onchange="processarFotoAparelhos(this)">
+      <div id="aparelho-ocr-status" style="display:none;margin-top:10px;font-size:12px;color:#A07040">
+        <div style="display:inline-flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border:2px solid rgba(160,112,64,.2);border-top-color:#A07040;border-radius:50%;animation:sp 1s linear infinite"></div>
+          Identificando aparelhos...
+        </div>
+      </div>
+      <div id="aparelhos-identificados" style="display:none;margin-top:10px;text-align:left"></div>
+    </div>
+
+    <!-- Separador -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="flex:1;height:0.5px;background:rgba(160,112,64,.15)"></div>
+      <div style="font-size:9px;letter-spacing:2px;color:#9a8878;text-transform:uppercase">ou selecione</div>
+      <div style="flex:1;height:0.5px;background:rgba(160,112,64,.15)"></div>
+    </div>
+
+    <!-- Checkboxes sem emojis -->
     <div class="qopts" id="q3">
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">⚡</span><div><div class="qopt-lbl">Radiofrequência</div><div class="qopt-sub">Ex: Medicube Age-R, NEWA</div></div></div>
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🔮</span><div><div class="qopt-lbl">LED facial</div></div></div>
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">💎</span><div><div class="qopt-lbl">Microcorrente</div><div class="qopt-sub">Ex: NuFace, GESKE</div></div></div>
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🌊</span><div><div class="qopt-lbl">Gua sha / rolo</div></div></div>
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🫧</span><div><div class="qopt-lbl">Limpeza sônica</div><div class="qopt-sub">Ex: Foreo</div></div></div>
-      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">❌</span><div><div class="qopt-lbl">Não tenho aparelhos</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Radiofrequência</div><div class="qopt-sub">Ex: Medicube Age-R, NEWA</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">LED facial</div><div class="qopt-sub">Ex: Déesse Pro, Currentbody</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Microcorrente</div><div class="qopt-sub">Ex: NuFace, GESKE</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Gua sha / rolo</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Limpeza sônica</div><div class="qopt-sub">Ex: Foreo, Anlan</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Ultrassom facial</div><div class="qopt-sub">Penetração de ativos</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Não tenho aparelhos</div></div></div>
     </div>
     <button class="btn" onclick="goValidate('s-q4','q3','multi')">Continuar →</button>
     <button class="btn2" onclick="go('s-q2')">← Voltar</button>
@@ -1657,6 +1686,105 @@ function voltarProd() {
   document.getElementById('btn-prod-voltar-foto').style.display = 'block';
 }
 
+
+// ── OCR DE APARELHOS ─────────────────────────────────────────────────────────
+function abrirCameraAparelhos() {
+  var inp = document.getElementById('fp-aparelho-camera');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+function abrirGaleriaAparelhos() {
+  var inp = document.getElementById('fp-aparelho-galeria');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+
+async function processarFotoAparelhos(input) {
+  if (!input.files || !input.files.length) return;
+  var status = document.getElementById('aparelho-ocr-status');
+  var resultado = document.getElementById('aparelhos-identificados');
+  status.style.display = 'block';
+  resultado.style.display = 'none';
+
+  try {
+    var files = Array.from(input.files).slice(0, 5);
+    var b64s = await Promise.all(files.map(fileToBase64));
+
+    var todosAparelhos = [];
+    for (var i = 0; i < b64s.length; i += 2) {
+      var lote = b64s.slice(i, i + 2);
+      var res = await Promise.allSettled(lote.map(async function(b64) {
+        var resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': getKey(),
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 400,
+            system: 'Identifica aparelhos de skincare em fotos. Retorna APENAS JSON válido.',
+            messages: [{ role: 'user', content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+              { type: 'text', text: 'Identifique TODOS os aparelhos de skincare visíveis nesta foto. Retorne JSON: {"aparelhos":[{"nome":"nome exato do aparelho","tipo":"radiofrequencia/led/microcorrente/ultrassom/limpeza_sonica/gua_sha/outro","marca":"marca se visível"}]}' }
+            ]}]
+          })
+        });
+        var data = await resp.json();
+        var raw = data.content && data.content[0] ? data.content[0].text : '{}';
+        var clean = raw.replace(/```json|```/g, '').trim();
+        return JSON.parse(clean).aparelhos || [];
+      }));
+      res.forEach(function(r) {
+        if (r.status === 'fulfilled') todosAparelhos = todosAparelhos.concat(r.value);
+      });
+    }
+
+    status.style.display = 'none';
+
+    if (todosAparelhos.length > 0) {
+      // Auto-select matching checkboxes
+      var tipoMap = {
+        'radiofrequencia': 'Radiofrequência',
+        'led': 'LED facial',
+        'microcorrente': 'Microcorrente',
+        'ultrassom': 'Ultrassom facial',
+        'limpeza_sonica': 'Limpeza sônica',
+        'gua_sha': 'Gua sha / rolo'
+      };
+      todosAparelhos.forEach(function(a) {
+        var label = tipoMap[a.tipo];
+        if (label) {
+          var opts = document.querySelectorAll('#q3 .qopt');
+          opts.forEach(function(opt) {
+            if (opt.querySelector('.qopt-lbl').textContent.trim() === label) {
+              if (!opt.classList.contains('on')) togM(opt);
+            }
+          });
+        }
+      });
+
+      // Show identified list
+      resultado.style.display = 'block';
+      resultado.innerHTML = '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:8px">Identificados</div>' +
+        todosAparelhos.map(function(a) {
+          return '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:8px;margin-bottom:6px">' +
+            '<div style="width:6px;height:6px;border-radius:50%;background:#A07040;flex-shrink:0"></div>' +
+            '<div style="font-size:13px;font-weight:400;color:#2B1206">' + a.nome + (a.marca ? ' "font-size:11px;color:#9a8878">· ' + a.marca + '</span>' : '') + '</div>' +
+          '</div>';
+        }).join('');
+    } else {
+      status.style.display = 'block';
+      status.innerHTML = '<div style="font-size:12px;color:#9a8878">Não identificamos aparelhos — selecione manualmente abaixo.</div>';
+      setTimeout(function() { status.style.display = 'none'; }, 3000);
+    }
+  } catch(e) {
+    status.style.display = 'none';
+    console.warn('Aparelho OCR error:', e);
+  }
+  input.value = '';
+}
+
 function abrirCamera() {
   if (_ocrRodando) return;
   var inp = document.getElementById('fp-camera');
@@ -1810,6 +1938,20 @@ async function addFotoProd(input) {
   return processarFotos(input);
 }
 
+
+// ── TITLE CASE helper ────────────────────────────────────────────────────────
+function toTitleCase(str) {
+  if (!str) return str;
+  // Words to keep lowercase (prepositions/articles)
+  var lower = ['de','da','do','das','dos','e','a','o','as','os','em','com','por','para','no','na','nos','nas','um','uma'];
+  return str.toLowerCase().replace(/[^\s-]+/g, function(word, idx) {
+    // Always capitalize first word, or if not in lower list
+    return (idx === 0 || lower.indexOf(word) === -1)
+      ? word.charAt(0).toUpperCase() + word.slice(1)
+      : word;
+  });
+}
+
 function renderProdList() {
   var list = document.getElementById('prod-list');
   if (!list) return;
@@ -1821,7 +1963,7 @@ function renderProdList() {
     d.innerHTML =
       '<div style="width:36px;height:36px;border-radius:8px;background:rgba(160,112,64,.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-size:14px;font-weight:500;color:var(--dark)">' + p.nome + '</div>' +
+        '<div style="font-size:14px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
         '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
       '</div>' +
       '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;line-height:1;font-size:18px">×</button>';
