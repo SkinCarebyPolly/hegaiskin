@@ -625,7 +625,10 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
     const tabId = this.getAttribute('data-tab');
     document.getElementById('tab-' + tabId).classList.add('active');
     if (tabId === 'evolucao') initEvolucao();
-    if (tabId === 'sugestoes') setTimeout(buscarImagensSugestoes, 300);
+    if (tabId === 'sugestoes') {
+      renderSugestoes();
+      setTimeout(buscarImagensSugestoes, 300);
+    }
   });
 });
 
@@ -812,7 +815,12 @@ function renderApp() {
   renderMake(protocolo);
 
   // ── Sugestões em 3 tiers ──────────────────────────────────────────────
+  renderSugestoes();
+}
+
+function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
+  if (!sugEl) return;
   sugEl.innerHTML = '';
 
   var sugestoes    = protocolo.sugestoes || [];
