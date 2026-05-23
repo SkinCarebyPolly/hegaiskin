@@ -339,6 +339,7 @@ input[type="file"] { display:none; }
   <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
   <p class="hero-sub" id="hero-tipo"></p>
   <div class="hero-tags" id="hero-tags"></div>
+  <button onclick="compartilharProtocolo()" style="margin-top:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;font-family:inherit;font-size:11px;color:rgba(242,232,217,.8);cursor:pointer;letter-spacing:1px">📤 Compartilhar</button>
 </div>
 
 <!-- TABS -->
@@ -392,9 +393,6 @@ input[type="file"] { display:none; }
 
 <!-- ══ ROTINA ══ -->
 <div class="section" id="tab-rotina">
-  <div style="font-size:11px;color:var(--muted);padding:10px 14px;background:rgba(160,112,64,.04);border-radius:8px;margin-bottom:12px;line-height:1.6;border:1px solid rgba(160,112,64,.08)">
-    ✨ Sua rotina é <strong>personalizada e fixa</strong> — os mesmos passos toda manhã e noite, com consistência. Os tratamentos extras variam por dia na aba <strong>Semana</strong>.
-  </div>
   <!-- Cabeçalho do dia -->
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
   <!-- Tratamento especial do dia -->
@@ -459,13 +457,11 @@ input[type="file"] { display:none; }
 
 <!-- ══ EVOLUÇÃO ══ -->
 <div class="section" id="tab-evolucao">
+  <div id="content-evolucao-fotos" style="margin-bottom:16px"></div>
   <!-- Foto do mês atual -->
   <div class="card" id="evo-card-foto">
     <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;padding:8px 12px;background:rgba(160,112,64,.04);border-radius:8px;line-height:1.6;border:1px solid rgba(160,112,64,.08)">
-      🔒 Suas fotos ficam <strong>somente no seu celular</strong> — não são enviadas para nenhum servidor. Se limpar o app ou sair da conta, somem automaticamente.
-    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
     <div id="evo-comparativo" style="display:none;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
@@ -563,6 +559,8 @@ input[type="file"] { display:none; }
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
       <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar meu protocolo</button>
     </div>
+    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar meu protocolo</button>
+    <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
 </div>
@@ -667,9 +665,9 @@ function buildTierContent(s, tier, af) {
          (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3)">"' + t.descricao + '"</div>' : '') +
          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' + btns + '</div>' +
          (function() {
-           var btnId = 'add-btn-' + Math.random().toString(36).substr(2,6);
-           window['_prod_' + btnId] = t;
-           return '<button id="' + btnId + '" onclick="adicionarSugestaoRotina(window[\'_prod_\'+this.id])" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">+ Já comprei — adicionar à minha rotina</button>';
+           var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
+           window[key] = t;
+           return '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key])" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">+ Já comprei — adicionar à minha rotina</button>';
          })();
 }
 
@@ -766,10 +764,7 @@ function renderApp() {
       div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;margin-bottom:8px';
       div.innerHTML =
         '<div style="width:32px;height:32px;border-radius:50%;background:rgba(160,112,64,.1);border:1px solid rgba(160,112,64,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
-        '<div>' +
-        '<div style="font-size:14px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome||p) + '</div>' +
-        (p.categoria ? '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo?' · '+p.ativo:'') + '</div>' : '') +
-        '</div>';
+        '<div style="font-size:14px;font-weight:500;color:var(--dark);flex:1">' + p + '</div>';
       prodEl.appendChild(div);
     });
   }
@@ -1054,6 +1049,8 @@ function renderSugestoes() {
   // Show app
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app-content').style.display = 'block';
+  // Render evolução
+  renderEvolucaoFotos();
 }
 
 // -- CALENDAR --
@@ -1545,34 +1542,18 @@ async function buscarImagensSugestoes() {
 
 
 // ══ RENDER STEPS (global) ══
-// ── Normalizar capitalização de nomes de produtos ─────────────────────────
-function toTitleCase(str) {
-  if (!str) return '';
-  var allCaps = str === str.toUpperCase();
-  if (!allCaps) return str; // já tem capitalização intencional
-  return str.split(' ').map(function(w) {
-    if (!w) return w;
-    // Preservar siglas curtas como SPF, FPS, BHA, D2, UV
-    if (w.length <= 3 && /^[A-Z0-9+]+$/.test(w)) return w;
-    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-  }).join(' ');
-}
-
-// ── Renderizar passos da rotina ─────────────────────────────────────────
 function renderSteps(steps, rotinaTipo) {
   if (!steps || !steps.length) return '';
   return steps.map(function(s,i) {
     var uid = 'step-' + (rotinaTipo||'r') + '-' + i;
     var tempoSeg = parseTempoSeg(s.tempo);
-    var nomeProd = toTitleCase(s.produto || s.nome || '');
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
-          '<div class="step-product">'+nomeProd+'</div>' +
+          '<div class="step-product">'+(s.produto||s.nome||'')+'</div>' +
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
-        (s.proposito ? '<div style="font-size:11px;color:var(--gold);font-style:italic;margin-bottom:6px;opacity:.85">✦ '+s.proposito+'</div>' : '') +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
         (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.alerta+'</div>' : '') +
         (s.dica ? '<div style="margin-top:6px;font-size:12px;color:var(--gold)">💡 '+s.dica+'</div>' : '') +
@@ -1821,6 +1802,237 @@ function renderMake(p) {
   }
 
   root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Dicas não disponíveis</div></div></div>';
+}
+
+
+// ── NOTIFICAÇÕES PUSH ────────────────────────────────────────────────────────
+async function pedirPermissaoNotificacao() {
+  if (!('Notification' in window)) return false;
+  if (Notification.permission === 'granted') return true;
+  var perm = await Notification.requestPermission();
+  return perm === 'granted';
+}
+
+function agendarNotificacoes(horaManha, horaNoite) {
+  // Salva horários escolhidos
+  localStorage.setItem('sbp_notif_manha', horaManha || '07:00');
+  localStorage.setItem('sbp_notif_noite', horaNoite || '21:00');
+  localStorage.setItem('sbp_notif_ativa', 'true');
+  mostrarToast('✅ Lembretes configurados!');
+}
+
+function verificarLembretes() {
+  if (!localStorage.getItem('sbp_notif_ativa')) return;
+  if (Notification.permission !== 'granted') return;
+  var agora = new Date();
+  var h = agora.getHours().toString().padStart(2,'0');
+  var m = agora.getMinutes().toString().padStart(2,'0');
+  var atual = h + ':' + m;
+  var manha = localStorage.getItem('sbp_notif_manha') || '07:00';
+  var noite  = localStorage.getItem('sbp_notif_noite')  || '21:00';
+  var lastM  = localStorage.getItem('sbp_notif_last_manha');
+  var lastN  = localStorage.getItem('sbp_notif_last_noite');
+  var hoje   = agora.toDateString();
+  if (atual === manha && lastM !== hoje) {
+    localStorage.setItem('sbp_notif_last_manha', hoje);
+    new Notification('☀️ Skincare by Polly', { body: 'Hora da sua rotina da manhã! Sua pele agradece 🌸', icon: '/skincare-polly/app/icon-192.png' });
+  }
+  if (atual === noite && lastN !== hoje) {
+    localStorage.setItem('sbp_notif_last_noite', hoje);
+    new Notification('🌙 Skincare by Polly', { body: 'Não esqueça da rotina noturna! Sua pele se regenera enquanto dorme ✨', icon: '/skincare-polly/app/icon-192.png' });
+  }
+}
+
+// Verificar a cada minuto
+setInterval(verificarLembretes, 60000);
+
+function fecharModalNotif() { var el = document.getElementById('modal-notif'); if(el) el.remove(); }
+
+function mostrarModalNotificacoes() {
+  var jaAtivo = localStorage.getItem('sbp_notif_ativa');
+  var manha = localStorage.getItem('sbp_notif_manha') || '07:00';
+  var noite  = localStorage.getItem('sbp_notif_noite')  || '21:00';
+  var overlay = document.createElement('div');
+  overlay.id = 'modal-notif';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(43,18,6,.5);z-index:400;display:flex;align-items:flex-end';
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:28px 24px 48px">' +
+      '<div style="width:40px;height:3px;background:rgba(160,112,64,.2);border-radius:2px;margin:0 auto 20px"></div>' +
+      '<div style="font-family:var(--font-serif,serif);font-size:20px;font-style:italic;color:var(--gold);margin-bottom:6px">Lembretes de rotina</div>' +
+      '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">Receba uma notificação nos horários da sua rotina</div>' +
+      '<div style="margin-bottom:14px">' +
+        '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">☀️ Rotina da manhã</div>' +
+        '<input type="time" id="notif-manha" value="'+manha+'" style="width:100%;padding:12px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+      '</div>' +
+      '<div style="margin-bottom:24px">' +
+        '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">🌙 Rotina da noite</div>' +
+        '<input type="time" id="notif-noite" value="'+noite+'" style="width:100%;padding:12px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+      '</div>' +
+      '<button onclick="ativarNotificacoes()" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-bottom:10px">Ativar lembretes</button>' +
+      (jaAtivo ? '<button onclick="desativarNotificacoes()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(160,112,64,.2);border-radius:8px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:10px">Desativar lembretes</button>' : '') +
+      '<button onclick="fecharModalNotif()" style="width:100%;padding:12px;background:transparent;border:none;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Fechar</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+}
+
+async function ativarNotificacoes() {
+  var ok = await pedirPermissaoNotificacao();
+  if (!ok) {
+    mostrarToast('⚠️ Permissão negada. Ative nas configurações do browser.');
+    return;
+  }
+  var m = document.getElementById('notif-manha').value;
+  var n = document.getElementById('notif-noite').value;
+  agendarNotificacoes(m, n);
+  var el = document.getElementById('modal-notif');
+  if (el) el.remove();
+}
+
+function desativarNotificacoes() {
+  localStorage.removeItem('sbp_notif_ativa');
+  var el = document.getElementById('modal-notif');
+  if (el) el.remove();
+  mostrarToast('Lembretes desativados');
+}
+
+// ── COMPARTILHAR PROTOCOLO ───────────────────────────────────────────────────
+async function compartilharProtocolo() {
+  var nome = protocolo.nome_cliente || user.nome || 'Eu';
+  var tipo = protocolo.tipo_pele || '';
+  var score = protocolo.score_pele || '';
+  var passosManha = (protocolo.rotina_manha || []).length;
+  var passosNoite = (protocolo.rotina_noite || []).length;
+
+  var texto =
+    '✨ Meu protocolo personalizado de skincare foi criado pelo Skincare by Polly!\n\n' +
+    '🌸 ' + nome + '\n' +
+    (tipo ? '💧 Pele: ' + tipo + '\n' : '') +
+    (score ? '📊 Score: ' + score + '/100\n' : '') +
+    '☀️ ' + passosManha + ' passos de manhã\n' +
+    '🌙 ' + passosNoite + ' passos à noite\n\n' +
+    '🔗 Crie o seu em: kincarebypolly.github.io';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'Meu Protocolo Skincare by Polly', text: texto });
+    } catch(e) {
+      if (e.name !== 'AbortError') copiarTexto(texto);
+    }
+  } else {
+    copiarTexto(texto);
+  }
+}
+
+function copiarTexto(txt) {
+  navigator.clipboard.writeText(txt).then(function() {
+    mostrarToast('✅ Copiado! Cole no WhatsApp 💬');
+  }).catch(function() {
+    mostrarToast('Copie o texto acima e compartilhe!');
+  });
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function mostrarToast(msg) {
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:500;white-space:nowrap;max-width:90vw;text-align:center';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { if(t.parentNode) t.parentNode.removeChild(t); }, 3000);
+}
+
+// ── EVOLUÇÃO ANTES/DEPOIS ────────────────────────────────────────────────────
+function salvarFotoEvolucao(b64) {
+  var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
+  var entrada = {
+    data: new Date().toISOString(),
+    semana: Math.ceil(historico.length + 1),
+    foto: b64,
+    score: protocolo.score_pele || null
+  };
+  historico.push(entrada);
+  // Manter máximo 12 fotos
+  if (historico.length > 12) historico = historico.slice(-12);
+  localStorage.setItem('sbp_evolucao', JSON.stringify(historico));
+  return entrada;
+}
+
+function renderEvolucaoFotos() {
+  var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
+  var root = document.getElementById('content-evolucao-fotos');
+  if (!root) return;
+
+  if (historico.length === 0) {
+    root.innerHTML =
+      '<div style="text-align:center;padding:32px 20px">' +
+        '<div style="font-size:40px;margin-bottom:12px">📸</div>' +
+        '<div style="font-size:15px;font-weight:500;color:var(--dark);margin-bottom:6px">Registre sua evolução</div>' +
+        '<div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
+        '<button onclick="tirarFotoEvolucao()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar semana 1</button>' +
+      '</div>';
+    return;
+  }
+
+  var html = '<div style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">' +
+    '<div style="font-size:13px;color:var(--muted)">' + historico.length + ' registros</div>' +
+    '<button onclick="tirarFotoEvolucao()" style="padding:8px 16px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">+ Nova foto</button>' +
+  '</div>';
+
+  // Antes/Depois se tiver 2+ fotos
+  if (historico.length >= 2) {
+    var primeira = historico[0];
+    var ultima   = historico[historico.length - 1];
+    html +=
+      '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:12px;padding:16px;margin-bottom:16px">' +
+        '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px">Sua transformação</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
+          '<div style="text-align:center">' +
+            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Semana ' + primeira.semana + '</div>' +
+            '<img src="data:image/jpeg;base64,' + primeira.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
+            (primeira.score ? '<div style="font-size:11px;color:var(--gold);margin-top:4px">Score ' + primeira.score + '</div>' : '') +
+          '</div>' +
+          '<div style="text-align:center">' +
+            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Semana ' + ultima.semana + ' ✨</div>' +
+            '<img src="data:image/jpeg;base64,' + ultima.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
+            (ultima.score ? '<div style="font-size:11px;color:var(--gold);margin-top:4px">Score ' + ultima.score + '</div>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // Timeline completa
+  html += '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Histórico</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
+  historico.forEach(function(h) {
+    var dt = new Date(h.data);
+    var label = dt.getDate() + '/' + (dt.getMonth()+1);
+    html +=
+      '<div style="text-align:center">' +
+        '<img src="data:image/jpeg;base64,' + h.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover;margin-bottom:4px">' +
+        '<div style="font-size:10px;color:var(--muted)">' + label + '</div>' +
+        (h.score ? '<div style="font-size:10px;color:var(--gold)">' + h.score + '</div>' : '') +
+      '</div>';
+  });
+  html += '</div>';
+  root.innerHTML = html;
+}
+
+function tirarFotoEvolucao() {
+  var inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = async function() {
+    if (!inp.files || !inp.files[0]) return;
+    var file = inp.files[0];
+    var b64 = await new Promise(function(res) {
+      var r = new FileReader();
+      r.onload = function(e) { res(e.target.result.split(',')[1]); };
+      r.readAsDataURL(file);
+    });
+    salvarFotoEvolucao(b64);
+    renderEvolucaoFotos();
+    mostrarToast('📸 Foto registrada!');
+  };
+  inp.click();
 }
 
 // -- LOGOUT --

@@ -311,6 +311,7 @@ input[type=file]{display:none}
   <div class="inner">
     <div class="badge">Questionário · 4 de 8</div>
     <h1>Nível de<br><em>investimento?</em></h1>
+    <p class="sub" style="margin-bottom:8px">Quanto você investe em skincare <strong>por mês no total</strong>, somando todos os produtos?</p>
     <div class="qopts" id="q4"></div>
     <button class="btn" onclick="goValidate('s-q5','q4','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q3')">← Voltar</button>
@@ -669,7 +670,7 @@ input[type=file]{display:none}
           <span style="font-size:24px">📷</span>Tirar foto
         </button>
         <button onclick="abrirGaleria()" style="padding:16px 8px;background:rgba(160,112,64,.1);color:var(--gold);border:1px solid rgba(160,112,64,.3);border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
-          <span style="font-size:24px">🖼️</span>Galeria (até 10)
+          <span style="font-size:24px">🖼️</span>Galeria (múltiplas)
         </button>
       </div>
 
@@ -803,6 +804,13 @@ var AFILIADOS = {
 window._sbpPais = localStorage.getItem('sbp_pais') || 'BR';
 
 function detectarPais() {
+  // URL param para testes: ?pais=PT ou ?pais=BR
+  var urlParam = new URLSearchParams(window.location.search).get('pais');
+  if (urlParam === 'PT' || urlParam === 'BR') {
+    localStorage.setItem('sbp_pais', urlParam);
+    window._sbpPais = urlParam;
+    return Promise.resolve(urlParam);
+  }
   if (localStorage.getItem('sbp_pais')) {
     window._sbpPais = localStorage.getItem('sbp_pais');
     return Promise.resolve(window._sbpPais);
@@ -821,16 +829,16 @@ function detectarPais() {
 // ── ORÇAMENTO POR PAÍS ───────────────────────────────────────────────────────
 var ORCAMENTOS = {
   BR: [
-    { icon:'💊', lbl:'Até R$100/mês',      sub:'Farmácia e mercado' },
-    { icon:'🌿', lbl:'R$100 a R$250/mês',  sub:'Mix nacional + importado' },
-    { icon:'✨', lbl:'R$250 a R$500/mês',  sub:'K-Beauty e séries premium' },
-    { icon:'👑', lbl:'Acima de R$500/mês', sub:'Alta performance e clínico' }
+    { icon:'💊', lbl:'Até R$100/mês',      sub:'Somando todos os produtos' },
+    { icon:'🌿', lbl:'R$100 a R$250/mês',  sub:'Somando todos os produtos' },
+    { icon:'✨', lbl:'R$250 a R$500/mês',  sub:'Somando todos os produtos' },
+    { icon:'👑', lbl:'Acima de R$500/mês', sub:'Somando todos os produtos' }
   ],
   PT: [
-    { icon:'💊', lbl:'Até €15/mês',        sub:'Farmácia e supermercado' },
-    { icon:'🌿', lbl:'€15 a €50/mês',      sub:'Mix nacional + K-Beauty' },
-    { icon:'✨', lbl:'€50 a €100/mês',     sub:'K-Beauty e séries premium' },
-    { icon:'👑', lbl:'Acima de €100/mês',  sub:'Alta performance e clínico' }
+    { icon:'💊', lbl:'Até €15/mês',        sub:'Somando todos os produtos' },
+    { icon:'🌿', lbl:'€15 a €50/mês',      sub:'Somando todos os produtos' },
+    { icon:'✨', lbl:'€50 a €100/mês',     sub:'Somando todos os produtos' },
+    { icon:'👑', lbl:'Acima de €100/mês',  sub:'Somando todos os produtos' }
   ]
 };
 
@@ -852,9 +860,8 @@ detectarPais().then(function(pais){ configurarOrcamento(pais); });
 const _a='sk-ant-api03-V', _b='gU93q4z1crUe6TnHbP1j';
 const _c='0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d='tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
 function getKey() { return _a+_b+_c+_d; }
-const _ga='AQ.Ab', _gb='8RN6K', _gc='4zZPA', _gd='PlXAz';
-const _ge='jwKbd', _gf='49cUw', _gg='d6W12', _gh='rnwc3', _gi='9qWhUJli8ZPvw';
-const GEMINI_KEY = _ga+_gb+_gc+_gd+_ge+_gf+_gg+_gh+_gi;
+const _ga='AIzaSyByOxu', _gb='eyIlPtuQ-bU', _gc='Kxx_8zscc7C', _gd='HElxnQ';
+const GEMINI_KEY = _ga+_gb+_gc+_gd;
 
 // -- STATE --
 const S = {
@@ -1710,44 +1717,69 @@ async function processarFotos(input) {
   if (_ocrRodando) return;
   _ocrRodando = true;
 
-  var files  = Array.from(input.files).slice(0, 10);
+  // Sem limite — aceita quantas fotos a usuária selecionar
+  var files     = Array.from(input.files);
+  var total     = files.length;
+  var LOTE      = 3; // máximo de chamadas simultâneas por vez
   var status    = document.getElementById('ocr-status');
   var statusTxt = document.getElementById('ocr-status-txt');
   var progBar   = document.getElementById('ocr-progress-bar');
   var progFill  = document.getElementById('ocr-progress-fill');
 
-  // Show progress
   status.style.display  = 'block';
-  progBar.style.display = files.length > 1 ? 'block' : 'none';
-  statusTxt.textContent = files.length > 1
-    ? 'Lendo ' + files.length + ' fotos...'
-    : 'Lendo rótulos...';
+  progBar.style.display = total > 1 ? 'block' : 'none';
+  progFill.style.width  = '0%';
+  statusTxt.textContent = total > 1 ? 'Preparando ' + total + ' fotos...' : 'Lendo rótulos...';
 
   var concluidos = 0;
+  var novos = 0;
+  var falhas = 0;
 
   try {
-    // Convert all to base64 first
+    // Converter todas para base64 primeiro
     var b64s = await Promise.all(files.map(fileToBase64));
 
-    // OCR em paralelo
-    var resultados = await Promise.allSettled(b64s.map(async function(b64, i) {
-      var prods = await ocrUmaFoto(b64);
-      concluidos++;
-      progFill.style.width = Math.round((concluidos / files.length) * 100) + '%';
-      statusTxt.textContent = files.length > 1
-        ? concluidos + ' de ' + files.length + ' fotos lidas...'
-        : 'Lendo rótulos...';
-      if (prods.length > 0) _fotosBase64.push(b64);
-      return prods;
-    }));
+    // Processar em lotes de LOTE para não sobrecarregar a API
+    for (var i = 0; i < b64s.length; i += LOTE) {
+      var lote = b64s.slice(i, i + LOTE);
+      statusTxt.textContent = 'Lendo fotos ' + (i+1) + '-' + Math.min(i+LOTE, total) + ' de ' + total + '...';
 
-    // Flatten results
-    var novos = 0;
-    resultados.forEach(function(r) {
-      if (r.status === 'fulfilled') {
-        r.value.forEach(function(p) { _produtosOCR.push(p); novos++; });
+      var resultados = await Promise.allSettled(lote.map(async function(b64) {
+        // Retry automático uma vez em caso de falha
+        var prods = null;
+        for (var tentativa = 0; tentativa < 2; tentativa++) {
+          try {
+            prods = await ocrUmaFoto(b64);
+            break;
+          } catch(e) {
+            if (tentativa === 0) {
+              // Aguarda 2s antes de tentar de novo
+              await new Promise(function(r) { setTimeout(r, 2000); });
+            }
+          }
+        }
+        return prods || [];
+      }));
+
+      resultados.forEach(function(r) {
+        concluidos++;
+        progFill.style.width = Math.round((concluidos / total) * 100) + '%';
+        if (r.status === 'fulfilled' && r.value.length > 0) {
+          r.value.forEach(function(p) { _produtosOCR.push(p); novos++; });
+        } else {
+          falhas++;
+        }
+      });
+
+      // Atualiza lista a cada lote para dar feedback imediato
+      if (novos > 0) renderProdList();
+
+      // Pausa entre lotes para não saturar a API
+      if (i + LOTE < b64s.length) {
+        statusTxt.textContent = novos + ' produtos encontrados, continuando...';
+        await new Promise(function(r) { setTimeout(r, 800); });
       }
-    });
+    }
 
     status.style.display = 'none';
 
@@ -1756,13 +1788,17 @@ async function processarFotos(input) {
       status.style.display = 'block';
       setTimeout(function() { status.style.display = 'none'; }, 3000);
     } else {
+      var msg = '✅ ' + novos + ' produtos encontrados';
+      if (falhas > 0) msg += ' (' + falhas + ' foto(s) não lidas)';
+      statusTxt.textContent = msg;
+      setTimeout(function() { status.style.display = 'none'; }, 2500);
       renderProdList();
     }
 
   } catch(e) {
-    statusTxt.textContent = '⚠️ Erro: ' + e.message;
+    statusTxt.textContent = '⚠️ Erro inesperado: ' + e.message;
     status.style.display  = 'block';
-    setTimeout(function() { status.style.display = 'none'; }, 3000);
+    setTimeout(function() { status.style.display = 'none'; }, 4000);
   }
 
   _ocrRodando = false;
@@ -1804,6 +1840,51 @@ function removerProd(i) {
 }
 
 // -- GERAR PROTOCOLO --
+
+// ── GEMINI: analisa foto do rosto ────────────────────────────────────────────
+async function analisarFotoGemini(b64) {
+  try {
+    var resp = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: 'image/jpeg', data: b64 } },
+              { text: 'Analise esta foto do rosto com olhar clínico de esteticista. Retorne APENAS JSON válido sem markdown:\n{"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não","textura":"lisa/levemente irregular/irregular/muito irregular","poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis","manchas":"nenhuma/poucas/moderadas/muitas","vermelhidao":"nenhuma/leve/moderada/intensa","hidratacao":"muito hidratada/hidratada/levemente desidratada/desidratada","tom":"uniforme/levemente irregular/irregular","linhas":"nenhuma/finas/moderadas","brilho":"opaca/normal/brilhante","observacoes":"2-3 frases específicas sobre o que você vê nesta foto"}' }
+            ]
+          }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 500 }
+        })
+      }
+    );
+    var data = await resp.json();
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] ? data.candidates[0].content.parts[0].text : '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    console.warn('Gemini analysis failed:', e.message);
+    return null;
+  }
+}
+
+function formatGeminiDiag(g) {
+  if (!g) return '';
+  return 'ANÁLISE VISUAL DA FOTO DO ROSTO (por Gemini Vision):\n' +
+    '- Oleosidade: ' + (g.oleosidade||'') + (g.zona_t==='sim' ? ' (zona T mais oleosa)' : '') + '\n' +
+    '- Textura: ' + (g.textura||'') + '\n' +
+    '- Poros: ' + (g.poros||'') + '\n' +
+    '- Manchas: ' + (g.manchas||'') + '\n' +
+    '- Vermelhidão: ' + (g.vermelhidao||'') + '\n' +
+    '- Hidratação aparente: ' + (g.hidratacao||'') + '\n' +
+    '- Tom de pele: ' + (g.tom||'') + '\n' +
+    '- Linhas de expressão: ' + (g.linhas||'') + '\n' +
+    '- Brilho: ' + (g.brilho||'') + '\n' +
+    '- Observações: ' + (g.observacoes||'');
+}
+
 async function gerarProtocolo() {
   // Collect all state
   S.incomodos = getSel('q1');
@@ -1877,31 +1958,106 @@ async function gerarProtocolo() {
     }
   }
 
-  var msgs = ['Analisando sua pele','Cruzando com seus hábitos','Montando rotina manhã e noite','Criando calendário semanal','Finalizando protocolo detalhado'];
+  // Gemini analisa foto do rosto
+  var geminiDiag = '';
+  if (S.fotoRosto) {
+    document.getElementById('gen-msg').textContent = 'Analisando sua pele com IA...';
+    var gResult = await analisarFotoGemini(S.fotoRosto);
+    geminiDiag = formatGeminiDiag(gResult);
+    S.geminiDiag = geminiDiag;
+  }
+
+  var msgs = ['Cruzando com seus hábitos','Montando rotina manhã e noite','Criando calendário semanal','Adicionando protocolos especiais','Finalizando protocolo detalhado'];
   var mi = 0;
   var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
 
-  var prompt = 'Você é especialista sênior em skincare, K-Beauty e biomedicina estética. Analise as fotos enviadas com olhar clínico e crie um protocolo ULTRA PERSONALIZADO e ULTRA DETALHADO.\n\nANALISE A FOTO DO ROSTO: identifique oleosidade, textura, poros, manchas, vermelhidão, hidratação, sinais de envelhecimento.\n\nPERFIL DA CLIENTE:\n- Nome: '+S.nome+'\n- Cidade/Clima: '+(S.cidade||'não informado')+'\n- Tipo de pele declarado: '+S.tipoPele+'\n- Principais incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n- Aparelhos disponíveis: '+(S.aparelhos.join(', ')||'nenhum')+'\n- País/Região: '+(window._sbpPais==='PT'?'Portugal (Europa)':'Brasil')+'\\n- Moeda: '+(window._sbpPais==='PT'?'Euros (€)':'Reais (R$)')+'\\n- Nível de investimento: '+S.investimento+'\n- Tempo disponível para rotina: '+S.rotina+'\n\nHÁBITOS DE VIDA:\n- Exposição ao sol: '+S.sol+'\n- Qualidade do sono: '+S.sono+'\n- Nível de estresse: '+S.estresse+'\n- Consumo de água: '+S.agua+'\n- Sensibilidade cutânea: '+S.sensibilidade+'\n- Situação gestacional: '+S.gestante+'\n- Exercício físico: '+S.exercicio+'\n- Alimentação: '+S.alimentacao+'\n- Ciclo hormonal: '+S.ciclo+'\n\nPERFIL DE ROTINA E PREFERÊNCIAS:\n- Experiência com ativos: '+S.ativos+'\n- Uso de maquiagem: '+S.maquiagem+'\n- Rotina atual: '+S.rotina_atual+'\n- Textura preferida: '+S.textura+'\n- Objetivo principal: '+S.objetivo+'\n\nPRODUTOS IDENTIFICADOS NA FOTO (USE ESTES NOMES EXATOS NA ROTINA):\n'+(S.prodTxt||'ver na foto')+'\n\nATENÇÃO: A rotina DEVE usar os produtos listados acima pelos nomes EXATOS. Cada passo da rotina_manha e rotina_noite DEVE referenciar um desses produtos. Aparelhos identificados DEVEM aparecer na rotina com instruções de uso.'+'\n\nREGRAS OBRIGATÓRIAS:\n1. FOTO DA PELE: analise objetivamente oleosidade, textura, poros, manchas, vermelhidão, hidratação — seja específica ao que VÊ nesta foto, não genérica. 1b. FOTO DOS PRODUTOS: leia os rótulos com precisão absoluta. Use SEMPRE o nome exato da marca e produto como está escrito na embalagem. NUNCA invente ou substitua produtos que não estão na foto por similares.\n2. Cada passo da rotina: temperatura da água, quantidade EXATA (gotas/pressões/ml), técnica (patting/circular/deslizante), tempo de espera antes do próximo passo.\n3. APARELHOS: Se a cliente tem aparelho (identificado na foto ou declarado), ele DEVE aparecer na rotina com: nome exato do aparelho, modo/intensidade, minutos por zona facial, movimentos específicos, frequência semanal. Inclua o aparelho nos dias corretos da semana.\n4. Adaptação progressiva: semana 1 (introdução suave), semana 2 (aumento gradual), semanas 3-4 (rotina completa) + sinais de alerta para interromper.\n5. PROTOCOLO ESPINHA: Use os produtos REAIS da cliente em cada passo. SOS em 2h + tratamento 3 dias manhã/noite detalhado com produtos identificados + o que NUNCA fazer.\n6. PROTOCOLO PRAIA: Use os produtos REAIS da cliente. Dia anterior (preparo com produtos dela) + manhã da praia (com horários e produtos) + reaplicação a cada 2h + pós-praia (recuperação com produtos dela).\n7. MAQUIAGEM: Use os produtos REAIS da cliente no preparo e remoção. Preparo 15min antes com produtos dela + técnica de aplicação sem pilling + remoção com dupla limpeza usando os produtos dela.\n8. Liste compras com marcas REAIS disponíveis no país da cliente (Brasil ou Portugal conforme indicado no perfil) + K-Beauty disponível via YesStyle + faixa de preço na moeda correta (R$ para BR, € para PT).\n9. NÃO use termos médicos. Este é app de estética e bem-estar pessoal.\n10. TOM DO DIAGNÓSTICO: O campo "diagnostico" é a mensagem de boas-vindas. Use um tom CALOROSO, AMOROSO e ENCORAJADOR — como uma amiga especialista que vê o melhor na pele dela. NUNCA liste problemas de forma clínica ou fria. Em vez de "pele mista oleosa desidratada", diga algo como "Sua pele tem um potencial lindo! Ela só está pedindo um cuidado extra de hidratação — e com a rotina certa, você vai ver uma transformação incrível." Sempre termine com uma promessa positiva do que vai melhorar.\n11. SCORE DA PELE (score_pele): Avalie a saúde geral da pele de 0 a 100 com base na foto e no perfil. 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente. Seja honesta mas gentil.\n12. SUGESTÕES (sugestoes): Identifique 4 a 6 categorias de produtos que FALTAM na prateleira da cliente ou que ela precisa. Para cada categoria: (a) campo "falta" = nome curto da categoria; (b) campo "motivo" = 1-2 frases PERSONALIZADAS explicando por que AQUELA cliente específica precisa disso — mencione o tipo de pele, clima, incomodos dela, nunca texto genérico; (c) 3 opções reais de mercado (econômica/intermediária/premium) com marcas REAIS disponíveis no país da cliente (Brasil: farmácias, Sephora BR, importados via ML; Portugal: farmácias PT, Notino, YesStyle, Amazon.es) e preços na moeda correta (R$ para BR, € para PT). Priorize categorias mais impactantes para o perfil dela.\n10. SEGURANÇA GESTANTE/LACTANTE: NUNCA sugira Retinol, AHA/BHA acima de 5%, Vitamina A, Ácido Salicílico. Use APENAS: Ácido Hialurônico, Vitamina C suave ≤10%, Niacinamida, Ceramidas, óleos vegetais seguros.\n\nRetorne APENAS JSON válido:\n{\"nome_cliente\":\"'+S.nome+'\",\"diagnostico\":\"3-4 frases analisando tipo de pele, hábitos e clima\",\"tipo_pele\":\"tipo identificado\",\"tags\":[\"tag1\",\"tag2\",\"tag3\"],\"fase_adaptacao\":\"semana a semana detalhada\",\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome exato\",\"proposito\":\"1 frase curta e amorosa: o que este produto faz PELA pele dela\",\"como\":\"instrução completa: quantidade exata + técnica + tempo espera\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[{\"passo\":1,\"produto\":\"nome exato\",\"proposito\":\"1 frase curta e amorosa sobre o benefício\",\"como\":\"instrução completa\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"semana\":{\"seg_qui\":\"tratamento + instrução detalhada\",\"ter_sex\":\"tratamento + instrução\",\"qua_sab\":\"tratamento + instrução\",\"dom\":\"descanso + instrução\"},\"lista_compras\":[\"produto — ativo + motivo + faixa de preço\"],\"protocolo_espinha\":\"resumo texto fallback\",\"protocolo_espinha_detalhado\":{\"regra_ouro\":\"regra principal\",\"sos_tratamento\":\"tratamento pontual detalhado\",\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução específica com quantidades e técnica\",\"tempo\":\"X min\",\"alerta\":\"cuidado específico se houver\"}],\"noite\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\",\"alerta\":\"cuidado\"}],\"proibidos\":[\"produto/ação proibida com motivo\"]},\"protocolo_praia\":\"resumo texto fallback\",\"protocolo_praia_detalhado\":{\"regra_ouro\":\"regra principal da praia\",\"vespera\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"X min\"}],\"manha\":[{\"produto\":\"nome\",\"como\":\"instrução com quantidade exata e tempo de espera\",\"tempo\":\"X min\"}],\"na_praia\":[{\"produto\":\"nome\",\"como\":\"instrução\",\"tempo\":\"quando reaplicar\"}],\"pos_praia\":[{\"produto\":\"nome\",\"como\":\"instrução de recuperação\",\"tempo\":\"X min\"}]},\"dicas_maquiagem\":\"resumo texto fallback\",\"dicas_maquiagem_detalhado\":{\"preparo\":[{\"produto\":\"nome\",\"como\":\"instrução de preparo da pele 15 min antes\",\"tempo\":\"X min\",\"dica\":\"dica extra se houver\"}],\"aplicacao\":[{\"produto\":\"produto de make\",\"como\":\"técnica de aplicação sem pilling\",\"dica\":\"dica para fixação\"}],\"remocao\":[{\"produto\":\"nome\",\"como\":\"instrução de remoção\",\"tempo\":\"X min\"}],\"dicas_extras\":[\"dica importante\"]},\"score_pele\":65,\"lista_compras\":[\"produto — ativo + motivo + faixa de preço em reais\"],\"sugestoes\":[{\"falta\":\"CATEGORIA QUE FALTA\",\"icone\":\"emoji representando a categoria\",\"motivo\":\"1-2 frases personalizadas — mencione tipo de pele, clima, incomodos DESTA cliente\",\"economica\":{\"produto\":\"nome produto\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"1 frase: diferencial e por que serve para ela\"},\"intermediaria\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"1 frase: o que melhora em relação à econômica\"},\"premium\":{\"produto\":\"nome\",\"marca\":\"marca\",\"preco\":\"~R$XX\",\"descricao\":\"1 frase: por que é o melhor para o perfil dela\"}}],\"produtos_identificados\":[]}';
+
+  // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
+  // Limita lista de produtos a 25 mais relevantes para não estourar o contexto
+  var prodListaLimitada = S.prodTxt || '';
+  if (_produtosOCR && _produtosOCR.length > 25) {
+    // Prioriza: limpeza, sérum, hidratante, protetor — mais importantes para rotina
+    var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
+    var sorted = _produtosOCR.slice().sort(function(a,b) {
+      return ordemCateg.indexOf(a.categoria) - ordemCateg.indexOf(b.categoria);
+    });
+    prodListaLimitada = sorted.slice(0, 25).map(function(p) {
+      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
+    }).join('\n');
+    prodListaLimitada += '\n[+ ' + (_produtosOCR.length - 25) + ' outros produtos identificados]';
+  }
+
+  var perfil_txt = (S.geminiDiag||'SEM FOTO — baseie o diagnóstico no questionário.') +
+    '\n\nPERFIL DA CLIENTE:\n' +
+    '- Nome: '+S.nome+'\n' +
+    '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
+    '- Tipo de pele: '+S.tipoPele+'\n' +
+    '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
+    '- Aparelhos: '+(S.aparelhos.join(', ')||'nenhum')+'\n' +
+    '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+'\n' +
+    '- Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
+    '- Orçamento mensal total: '+S.investimento+'\n' +
+    '- Tempo de rotina: '+S.rotina+'\n' +
+    '- Sol: '+S.sol+' | Sono: '+S.sono+' | Estresse: '+S.estresse+'\n' +
+    '- Água: '+S.agua+' | Sensibilidade: '+S.sensibilidade+'\n' +
+    '- Gestante: '+S.gestante+' | Exercício: '+S.exercicio+'\n' +
+    '- Ativos: '+S.ativos+' | Maquiagem: '+S.maquiagem+'\n' +
+    '- Objetivo: '+S.objetivo+' | Textura: '+S.textura+'\n' +
+    '- Ciclo: '+S.ciclo+' | Alimentação: '+S.alimentacao+'\n\n' +
+    'PRODUTOS IDENTIFICADOS (USE NOMES EXATOS NA ROTINA):\n' + prodListaLimitada;
+
+  var prompt1 = 'Especialista sênior em skincare e K-Beauty. Crie protocolo ULTRA PERSONALIZADO.\n\n' +
+    perfil_txt + '\n\n' +
+    'REGRAS:\n' +
+    '1. Use APENAS os produtos listados pelos nomes exatos. Campo "tempo" = mesmo valor mencionado em "como".\n' +
+    '2. Aparelhos DEVEM aparecer na rotina com: modo, minutos por zona, movimentos, frequência.\n' +
+    '3. Adaptação: semana 1 suave → semana 4 completa.\n' +
+    '4. Tom caloroso e encorajador no diagnóstico.\n' +
+    '5. Score 0-100: 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente.\n' +
+    (S.gestante !== 'Não' ? '6. GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
+    '\nRetorne APENAS JSON válido:\n' +
+    '{"nome_cliente":"'+S.nome+'","diagnostico":"3-4 frases calorosas sobre a pele","tipo_pele":"tipo","tags":["tag1","tag2","tag3"],' +
+    '"fase_adaptacao":"semana a semana detalhada",' +
+    '"rotina_manha":[{"passo":1,"produto":"nome exato","como":"instrução completa","icone":"emoji","tempo":"Xs ou X min"}],' +
+    '"rotina_noite":[{"passo":1,"produto":"nome","como":"instrução","icone":"emoji","tempo":"X min"}],' +
+    '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
+    '"score_pele":72,' +
+    '"produtos_identificados":[]}';
+
+  var prompt2_base = 'Especialista em skincare. Com base neste perfil, gere os protocolos especiais e sugestões.\n\n' +
+    'PERFIL RESUMIDO:\n' +
+    '- Tipo de pele: '+S.tipoPele+' | Cidade: '+(S.cidade||'não informado')+'\n' +
+    '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+' | Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
+    '- Orçamento mensal total: '+S.investimento+'\n' +
+    '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
+    '- Gestante: '+S.gestante+'\n\n' +
+    'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
+    'REGRAS SUGESTÕES: Orçamento é MENSAL TOTAL. Opção econômica não pode ultrapassar o orçamento sozinha.\n' +
+    'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (farmácias, Sephora BR, ML, YesStyle)')+'\n' +
+    (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
+    '\nRetorne APENAS JSON válido:\n' +
+    '{"lista_compras":["produto — ativo + preço"],' +
+    '"protocolo_espinha":"resumo",' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"tratamento pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"proibidos":["item"]},' +
+    '"protocolo_praia":"resumo",' +
+    '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
+    '"dicas_maquiagem":"resumo",' +
+    '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]},' +
+    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}]}';
+
+  var prompt = prompt1; // usado pela chamada principal abaixo
+
 
   try {
     // Claude API
+    // Claude recebe apenas texto — análise visual já foi feita pelo Gemini
+    // Claude recebe apenas texto — OCR já foi feito, fotos não são necessárias
+    // Isso evita timeout com 40+ produtos (fotos = MB de dados desnecessários)
     var claudeParts = [{"type":"text","text":prompt}];
-    if (S.fotoRosto) {
-      claudeParts.push({"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":S.fotoRosto}});
-      claudeParts.push({"type":"text","text":"FOTO DO ROSTO DA CLIENTE: analise com olhar clínico — textura da pele, visibilidade dos poros, nível de oleosidade (zona T vs bochechas), sinais de desidratação, vermelhidão, manchas visíveis, linhas de expressão, uniformidade do tom. Seja ESPECÍFICA ao que você vê nesta foto, não genérica."});
-    }
-    // Adicionar TODAS as fotos de produtos (multi-OCR)
-    var fotosParaEnviar = (S.fotosProds && S.fotosProds.length > 0) ? S.fotosProds : (S.fotoProd ? [S.fotoProd] : []);
-    if (fotosParaEnviar.length > 0) {
-      fotosParaEnviar.forEach(function(b64, idx) {
-        claudeParts.push({"type":"image","source":{"type":"base64","media_type":"image/jpeg","data":b64}});
-      });
-      claudeParts.push({"type":"text","text":"LEIA COM PRECISÃO ABSOLUTA OS RÓTULOS DE CADA EMBALAGEM NESTA FOTO. Para cada produto visível: 1. Leia o texto EXATO impresso na embalagem (marca + nome do produto). 2. Identifique a categoria (limpeza, tônico, sérum, hidratante, protetor, aparelho, etc). 3. Identifique os ativos principais se visível no rótulo. 4. NÃO invente produtos que não estão na foto. 5. NÃO substitua por marcas similares — use o nome EXATO que está escrito. 6. Se não conseguir ler um rótulo com certeza, descreva o que vê. Integre TODOS os produtos identificados na rotina personalizada."});
-    }
 
     // Timeout de 60s
     var controller = new AbortController();
-    var timeoutId = setTimeout(function() { controller.abort(); }, 120000);
+    var timeoutId = setTimeout(function() { controller.abort(); }, 180000); // 3 min para protocolos grandes
 
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       signal: controller.signal,
@@ -1951,6 +2107,49 @@ async function gerarProtocolo() {
     }
 
         S.protocolo = parsed;
+
+    // ── CHAMADA 2: Protocolos especiais + Sugestões ────────────────────────
+    document.getElementById('gen-msg').textContent = 'Criando protocolos especiais e sugestões...';
+    try {
+      var controller2 = new AbortController();
+      var timeoutId2 = setTimeout(function() { controller2.abort(); }, 180000);
+      var resp2 = await fetch('https://api.anthropic.com/v1/messages', {
+        signal: controller2.signal,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 6000,
+          system: 'Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
+          messages: [{role: 'user', content: prompt2_base}]
+        })
+      });
+      clearTimeout(timeoutId2);
+      if (resp2.ok) {
+        var data2 = await resp2.json();
+        var raw2 = data2.content && data2.content[0] ? data2.content[0].text : '';
+        var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
+        try {
+          var parsed2 = JSON.parse(clean2);
+          // Merge call 2 into protocolo
+          Object.assign(S.protocolo, parsed2);
+        } catch(e) {
+          var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
+          if (j2s !== -1 && j2e !== -1) {
+            try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
+          }
+        }
+      }
+    } catch(e) {
+      console.warn('Chamada 2 falhou (não crítico):', e.message);
+      // Protocolo básico ainda funciona sem os protocolos especiais
+    }
+
     var diagText = typeof S.protocolo.diagnostico === 'object'
       ? Object.values(S.protocolo.diagnostico).join(' ')
       : (S.protocolo.diagnostico || '');
