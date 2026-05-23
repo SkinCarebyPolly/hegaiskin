@@ -376,7 +376,7 @@ input[type="file"] { display:none; }
       </div>
     </div>
     <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
-    <div style="text-align:center;font-size:12px;color:var(--muted)">💡 Isso é totalmente normal e ajustável com consistência</div>
+    <div id="skin-score-msg" style="text-align:center;font-size:12px;color:var(--muted)">💡 </div>
   </div>
 
   <div class="card">
@@ -434,11 +434,14 @@ input[type="file"] { display:none; }
 
 <!-- ══ SUGESTÕES ══ -->
 <div class="section" id="tab-sugestoes">
-  <div style="padding:0 0 4px">
-    <div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">Curadoria para você</div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.5">Produtos que faltam na sua prateleira — compare preços antes de comprar</div>
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;padding:16px 0 8px">
+    <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #A07040;background:#A07040;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
+    <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(160,112,64,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
   </div>
-  <div id="content-sugestoes" style="margin-top:16px"></div>
+  <div id="subtab-rotina-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px">Produtos para completar os passos da sua rotina</div>
+  <div id="subtab-boosters-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none">Produtos para potencializar o que você já usa</div>
+  <div id="content-sugestoes" style="margin-top:4px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no sua rotina.</p>
@@ -745,6 +748,15 @@ function renderApp() {
       if (fill) fill.style.width = score + '%';
       var lbl = document.getElementById('skin-score-label');
       if (lbl) lbl.textContent = '↑ Você está aqui: ' + zona.label + ' (' + score + '/100)';
+      var msgs = [
+        'Sua pele está pedindo atenção e consistência. Você está no lugar certo.',
+        'Boa base! Com consistência sua pele vai longe.',
+        'Sua pele está bem cuidada. Vamos potencializar ainda mais.',
+        'Pele incrível! Continue com sua rotina — ela está funcionando.'
+      ];
+      var mi = score <= 40 ? 0 : score <= 70 ? 1 : score <= 90 ? 2 : 3;
+      var msgEl = document.getElementById('skin-score-msg');
+      if (msgEl) msgEl.textContent = '💡 ' + msgs[mi];
     }, 400);
   })();
 
@@ -960,11 +972,26 @@ async function adicionarSugestaoRotina(produto) {
 function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
   if (!sugEl) return;
-  sugEl.innerHTML = '';
 
-  var sugestoes    = protocolo.sugestoes || [];
+  var semProd = protocolo.sem_produto === true;
+  var subTab  = window._subTabAtivo || (semProd ? 'rotina' : 'boosters');
+
+  // Hide "Da rotina" tab if user has products
+  var btnR = document.getElementById('subtab-rotina');
+  if (btnR) btnR.style.display = semProd ? 'inline-block' : 'none';
+  var descR = document.getElementById('subtab-rotina-desc');
+  if (descR && !semProd) descR.style.display = 'none';
+
+  if (!window._subTabAtivo) {
+    window._subTabAtivo = semProd ? 'rotina' : 'boosters';
+    switchSubTab(window._subTabAtivo);
+    return;
+  }
+
+  var sugestoes    = subTab === 'rotina' ? (protocolo.sugestoes_rotina || protocolo.sugestoes || []) : (protocolo.sugestoes || []);
   var listaCompras = protocolo.lista_compras || [];
   var af           = getAfiliados();
+
 
   if (sugestoes.length > 0) {
     sugestoes.forEach(function(s, si) {
@@ -1544,9 +1571,27 @@ async function buscarImagensSugestoes() {
 // ══ RENDER STEPS (global) ══
 function renderSteps(steps, rotinaTipo) {
   if (!steps || !steps.length) return '';
+  var semProd = protocolo.sem_produto === true;
   return steps.map(function(s,i) {
     var uid = 'step-' + (rotinaTipo||'r') + '-' + i;
     var tempoSeg = parseTempoSeg(s.tempo);
+    var temProduto = s.produto && s.produto !== 'null';
+
+    if (semProd && !temProduto) {
+      return '<div class="step-item" id="'+uid+'">' +
+        '<div class="step-num">'+(i+1)+'</div>' +
+        '<div class="step-content">' +
+          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px">'+(s.categoria||'')+'</div>' +
+          (s.ativo_ideal ? '<div style="font-size:13px;font-style:italic;color:var(--muted);margin-bottom:6px">'+(s.ativo_ideal||'')+'</div>' : '') +
+          '<div class="step-how">'+(s.como||'')+'</div>' +
+          '<div style="margin-top:10px;padding:10px 14px;background:rgba(160,112,64,.06);border-radius:8px;border:0.5px solid rgba(160,112,64,.15);display:flex;align-items:center;justify-content:space-between">' +
+            '<div style="font-size:11px;color:var(--muted)">Você ainda não tem este produto</div>' +
+            '<button onclick="irParaSugestoesRotina()" style="font-size:10px;letter-spacing:1px;color:var(--gold);border:0.5px solid rgba(160,112,64,.3);border-radius:20px;padding:4px 12px;background:transparent;font-family:inherit;cursor:pointer">Ver →</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
@@ -1555,7 +1600,7 @@ function renderSteps(steps, rotinaTipo) {
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
-        (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.atencao+'</div>' : '') +
+        (s.atencao ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.atencao+'</div>' : '') +
         (s.dica ? '<div style="margin-top:6px;font-size:12px;color:var(--gold)">💡 '+s.dica+'</div>' : '') +
         '<div style="display:flex;align-items:center;gap:8px;margin-top:12px">' +
           (tempoSeg > 0 ?
@@ -1570,6 +1615,31 @@ function renderSteps(steps, rotinaTipo) {
       '</div>' +
     '</div>';
   }).join('');
+}
+
+
+function switchSubTab(tab) {
+  var isRotina = tab === 'rotina';
+  var btnR = document.getElementById('subtab-rotina');
+  var btnB = document.getElementById('subtab-boosters');
+  var descR = document.getElementById('subtab-rotina-desc');
+  var descB = document.getElementById('subtab-boosters-desc');
+  if (btnR) { btnR.style.background = isRotina ? 'var(--gold)' : 'transparent'; btnR.style.color = isRotina ? '#fff' : '#9a8878'; btnR.style.borderColor = isRotina ? 'var(--gold)' : 'rgba(160,112,64,.25)'; }
+  if (btnB) { btnB.style.background = !isRotina ? 'var(--gold)' : 'transparent'; btnB.style.color = !isRotina ? '#fff' : '#9a8878'; btnB.style.borderColor = !isRotina ? 'var(--gold)' : 'rgba(160,112,64,.25)'; }
+  if (descR) descR.style.display = isRotina ? 'block' : 'none';
+  if (descB) descB.style.display = !isRotina ? 'block' : 'none';
+  window._subTabAtivo = tab;
+  renderSugestoes();
+}
+function irParaSugestoesRotina() {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  var tabSug = document.querySelector('.tab[data-tab="sugestoes"]');
+  var secSug = document.getElementById('tab-sugestoes');
+  if (tabSug) tabSug.classList.add('active');
+  if (secSug) secSug.classList.add('active');
+  switchSubTab('rotina');
+  renderSugestoes();
 }
 
 function parseTempoSeg(tempoStr) {

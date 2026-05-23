@@ -254,7 +254,7 @@ input[type=file]{display:none}
 <!-- 2: Q1 INCOMODOS -->
 <div class="scr" id="s-q1">
   <div class="inner">
-    <div class="badge">Questionário · 1 de 8</div>
+    <div class="badge">Questionário · 1 de 15</div>
     <h1>O que mais te<br><em>incomoda na pele?</em></h1>
     <p class="sub">Pode selecionar mais de uma.</p>
     <div class="qopts" id="q1">
@@ -273,7 +273,7 @@ input[type=file]{display:none}
 <!-- 3: Q2 TIPO PELE -->
 <div class="scr" id="s-q2">
   <div class="inner">
-    <div class="badge">Questionário · 2 de 8</div>
+    <div class="badge">Questionário · 2 de 15</div>
     <h1>Como você descreveria<br><em>sua pele?</em></h1>
     <div class="qopts" id="q2">
       <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">💦</span><div><div class="qopt-lbl">Oleosa</div><div class="qopt-sub">Brilha ao longo do dia</div></div></div>
@@ -291,7 +291,7 @@ input[type=file]{display:none}
 <!-- 4: Q3 APARELHOS -->
 <div class="scr" id="s-q3">
   <div class="inner">
-    <div class="badge">Questionário · 3 de 8</div>
+    <div class="badge">Questionário · 3 de 15</div>
     <h1>Tem aparelhos<br><em>de skincare?</em></h1>
     <div class="qopts" id="q3">
       <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">⚡</span><div><div class="qopt-lbl">Radiofrequência</div><div class="qopt-sub">Ex: Medicube Age-R, NEWA</div></div></div>
@@ -309,7 +309,7 @@ input[type=file]{display:none}
 <!-- 5: Q4 INVESTIMENTO -->
 <div class="scr" id="s-q4">
   <div class="inner">
-    <div class="badge">Questionário · 4 de 8</div>
+    <div class="badge">Questionário · 4 de 15</div>
     <h1>Nível de<br><em>investimento?</em></h1>
     <p class="sub" style="margin-bottom:8px">Quanto você investe em skincare <strong>por mês no total</strong>, somando todos os produtos?</p>
     <div class="qopts" id="q4"></div>
@@ -321,7 +321,7 @@ input[type=file]{display:none}
 <!-- 6: Q5 HABITOS -->
 <div class="scr" id="s-q5">
   <div class="inner">
-    <div class="badge">Questionário · 5 de 8</div>
+    <div class="badge">Questionário · 5 de 15</div>
     <h1>Hábitos do<br><em>dia a dia.</em></h1>
     <p class="sub">Impactam directamente na sua pele.</p>
     <div class="ilbl" style="margin-bottom:8px">Exposição ao sol</div>
@@ -359,7 +359,7 @@ input[type=file]{display:none}
 <!-- 7: Q6 ROTINA -->
 <div class="scr" id="s-q6">
   <div class="inner">
-    <div class="badge">Questionário · 6 de 8</div>
+    <div class="badge">Questionário · 6 de 15</div>
     <h1>Tempo para<br><em>a rotina?</em></h1>
     <div class="qopts" id="q6">
       <div class="qopt" onclick="togS(this,'q6')"><div class="qcirc"></div><span class="qopt-icon">⚡</span><div><div class="qopt-lbl">Rápida — até 5 minutos</div></div></div>
@@ -374,7 +374,7 @@ input[type=file]{display:none}
 <!-- 7: Q7 GESTANTE/LACTANTE -->
 <div class="scr" id="s-q7">
   <div class="inner">
-    <div class="badge">Questionário · 7 de 8</div>
+    <div class="badge">Questionário · 7 de 15</div>
     <h1>Mais uma<br><em>informação importante.</em></h1>
     <p class="sub">Alguns ativos são contra-indicados em certas fases. Sua resposta garante um protocolo seguro para você.</p>
     <div class="qopts" id="q7">
@@ -1909,9 +1909,19 @@ async function gerarProtocolo() {
   if (S.modoProd === 'manual') S.prodTxt = document.getElementById('txt-prod').value;
   // Montar texto de produtos a partir do OCR acumulado (múltiplas fotos)
   if (S.modoProd === 'foto' && _produtosOCR.length > 0) {
-    S.prodTxt = _produtosOCR.map(function(p) {
+    // Limita a 20 produtos mais relevantes para não estourar o contexto da IA
+    var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
+    var prodOrdenados = _produtosOCR.slice().sort(function(a,b) {
+      var ia = ordemCateg.indexOf(a.categoria); var ib = ordemCateg.indexOf(b.categoria);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    var prodParaIA = prodOrdenados.slice(0, 20);
+    S.prodTxt = prodParaIA.map(function(p) {
       return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
     }).join('\n');
+    if (_produtosOCR.length > 20) {
+      S.prodTxt += '\n[+ ' + (_produtosOCR.length - 20) + ' outros produtos identificados — disponíveis para consulta]';
+    }
     S.fotosProds = _fotosBase64;
   }
 
@@ -1974,18 +1984,7 @@ async function gerarProtocolo() {
 
   // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
   // Limita lista de produtos a 25 mais relevantes para não estourar o contexto
-  var prodListaLimitada = S.prodTxt || '';
-  if (_produtosOCR && _produtosOCR.length > 25) {
-    // Prioriza: limpeza, sérum, hidratante, protetor — mais importantes para rotina
-    var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
-    var sorted = _produtosOCR.slice().sort(function(a,b) {
-      return ordemCateg.indexOf(a.categoria) - ordemCateg.indexOf(b.categoria);
-    });
-    prodListaLimitada = sorted.slice(0, 25).map(function(p) {
-      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
-    }).join('\n');
-    prodListaLimitada += '\n[+ ' + (_produtosOCR.length - 25) + ' outros produtos identificados]';
-  }
+  var prodListaLimitada = S.prodTxt || ''; // já limitado a 20 ao ser montado
 
   var perfil_txt = (S.geminiDiag||'SEM FOTO — baseie o diagnóstico no questionário.') +
     '\n\nPERFIL DA CLIENTE:\n' +
@@ -2009,7 +2008,7 @@ async function gerarProtocolo() {
   var prompt1 = 'Especialista sênior em cosmetologia e K-Beauty com profundo conhecimento de ingredientes ativos, combinações de produtos e rotinas de cuidado. Crie uma rotina ULTRA PERSONALIZADA.\n\n' +
     perfil_txt + '\n\n' +
     'REGRAS:\n' +
-    '1. Use APENAS os produtos listados pelos nomes exatos. Campo "tempo" = mesmo valor mencionado em "como".\n' +
+    '1. ' + (S.modoProd==="zero" ? 'Cliente NÃO TEM PRODUTOS. Para cada passo: campo "produto"=null, preencha "categoria" (ex: Gel de limpeza) e "ativo_ideal" (ex: Ácido salicílico 0,5%) mas NUNCA invente marca real. A rotina deve mostrar o TIPO de produto e o ativo ideal, não uma marca específica.' : 'Use APENAS os produtos listados pelos nomes exatos.') + ' Campo "tempo" = mesmo valor mencionado em "como".\n' +
     '2. Aparelhos DEVEM aparecer na rotina com: modo, minutos por zona, movimentos, frequência.\n' +
     '3. Adaptação: semana 1 suave → semana 4 completa.\n' +
     '4. Tom caloroso e encorajador na análise personalizada — como amiga especialista em cosmetologia.\n' +
@@ -2018,7 +2017,7 @@ async function gerarProtocolo() {
     '\nRetorne APENAS JSON válido:\n' +
     '{"nome_cliente":"'+S.nome+'","diagnostico":"3-4 frases calorosas e motivadoras sobre a pele — como amiga especialista, sem termos médicos","tipo_pele":"tipo","tags":["tag1","tag2","tag3"],' +
     '"fase_adaptacao":"semana a semana detalhada",' +
-    '"rotina_manha":[{"passo":1,"produto":"nome exato","como":"instrução completa","icone":"emoji","tempo":"Xs ou X min"}],' +
+    '"sem_produto":'+(S.modoProd==="zero"?'true':'false')+',"rotina_manha":[{"passo":1,"produto":"nome exato ou null se sem produto","categoria":"tipo do produto","ativo_ideal":"ativo recomendado para o perfil","como":"instrução de como aplicar","icone":"emoji","tempo":"Xs ou X min"}],' +
     '"rotina_noite":[{"passo":1,"produto":"nome","como":"instrução","icone":"emoji","tempo":"X min"}],' +
     '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
     '"score_pele":72,' +
@@ -2036,7 +2035,7 @@ async function gerarProtocolo() {
     'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (farmácias, Sephora BR, ML, YesStyle)')+'\n' +
     (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
     '\nRetorne APENAS JSON válido:\n' +
-    '{"lista_compras":["produto — ativo + preço"],' +
+    '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}],' +
     '"protocolo_espinha":"resumo",' +
     '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"tratamento pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"proibidos":["item"]},' +
     '"protocolo_praia":"resumo",' +
@@ -2177,6 +2176,7 @@ async function confirmProto() {
     aparelhos: S.aparelhos,
     investimento: S.investimento,
       pais: window._sbpPais || 'BR',
+      sem_produto: S.modoProd === 'zero',
     rotina: S.rotina,
     gestante: S.gestante
   };
