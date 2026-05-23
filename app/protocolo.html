@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SBP v2.3 ts=1779505015 -->
+<!-- Hegai Skin v1.0-beta -->
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#F2E8D9">
-<title>Skincare by Polly · Meu Protocolo</title>
+<title>Hegai Skin · Meu Protocolo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -335,7 +335,7 @@ input[type="file"] { display:none; }
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">@skincarebypolly · Protocolo Exclusivo · v2.3</div>
+  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Protocolo Exclusivo</span></div>
   <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
   <p class="hero-sub" id="hero-tipo"></p>
   <div class="hero-tags" id="hero-tags"></div>
@@ -545,7 +545,7 @@ input[type="file"] { display:none; }
         <div style="font-size:12px;color:var(--muted);line-height:1.6">Seus dados ficam salvos no seu dispositivo. Se limpar o cache do navegador, precisará refazer o cadastro.</div>
       </div>
     </div>
-    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Skincare%20by%20Polly" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
+    <a href="mailto:skincarepolly@gmail.com?subject=Duvida%20-%20Hegai%20Skin" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.3);border-radius:10px;text-decoration:none;margin-bottom:8px">
       <span style="font-size:18px">✉️</span>
       <div>
         <div style="font-size:13px;font-weight:600;color:var(--gold);letter-spacing:1px">FALAR COM O SUPORTE</div>
@@ -1835,11 +1835,11 @@ function verificarLembretes() {
   var hoje   = agora.toDateString();
   if (atual === manha && lastM !== hoje) {
     localStorage.setItem('sbp_notif_last_manha', hoje);
-    new Notification('☀️ Skincare by Polly', { body: 'Hora da sua rotina da manhã! Sua pele agradece 🌸', icon: '/skincare-polly/app/icon-192.png' });
+    new Notification('☀️ Hegai Skin', { body: 'Hora da sua rotina da manhã! Sua pele agradece 🌸', icon: '/skincare-polly/app/icon-192.png' });
   }
   if (atual === noite && lastN !== hoje) {
     localStorage.setItem('sbp_notif_last_noite', hoje);
-    new Notification('🌙 Skincare by Polly', { body: 'Não esqueça da rotina noturna! Sua pele se regenera enquanto dorme ✨', icon: '/skincare-polly/app/icon-192.png' });
+    new Notification('🌙 Hegai Skin', { body: 'Não esqueça da rotina noturna! Sua pele se regenera enquanto dorme ✨', icon: '/skincare-polly/app/icon-192.png' });
   }
 }
 
@@ -1904,17 +1904,17 @@ async function compartilharProtocolo() {
   var passosNoite = (protocolo.rotina_noite || []).length;
 
   var texto =
-    '✨ Meu protocolo personalizado de skincare foi criado pelo Skincare by Polly!\n\n' +
+    '✨ Meu protocolo personalizado foi criado pelo Hegai Skin versão beta!\n\n' +
     '🌸 ' + nome + '\n' +
     (tipo ? '💧 Pele: ' + tipo + '\n' : '') +
     (score ? '📊 Score: ' + score + '/100\n' : '') +
     '☀️ ' + passosManha + ' passos de manhã\n' +
     '🌙 ' + passosNoite + ' passos à noite\n\n' +
-    '🔗 Crie o seu em: kincarebypolly.github.io';
+    '🔗 Crie o seu em: hegaiskin.app';
 
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'Meu Protocolo Skincare by Polly', text: texto });
+      await navigator.share({ title: 'Meu Protocolo Hegai Skin', text: texto });
     } catch(e) {
       if (e.name !== 'AbortError') copiarTexto(texto);
     }
