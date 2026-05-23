@@ -553,8 +553,10 @@ input[type="file"] { display:none; }
   </div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">⚙️</span> Opções</div>
-    <p style="font-size:13px;color:var(--cream-dim);margin-bottom:16px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
-    <button class="btn-gold" onclick="window.location.href='onboarding.html'">Atualizar meu protocolo</button>
+    <div id="btn-atualizar-wrap" style="display:none;margin-bottom:8px">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
+      <button class="btn-gold" onclick="window.location.href='onboarding.html'">Atualizar meu protocolo</button>
+    </div>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
 </div>
@@ -968,6 +970,12 @@ function renderSugestoes() {
   // Config
   document.getElementById('cfg-nome').textContent = user.nome || '';
   document.getElementById('cfg-email').textContent = user.email || '';
+
+  // Botão de atualizar: apenas para admin
+  var ADMIN_EMAILS = ['polly.machado18@gmail.com']; // ← adicione aqui outros emails admin se precisar
+  var isAdmin = user.email && ADMIN_EMAILS.indexOf(user.email.toLowerCase().trim()) !== -1;
+  var btnAtualizar = document.getElementById('btn-atualizar-wrap');
+  if (btnAtualizar) btnAtualizar.style.display = isAdmin ? 'block' : 'none';
   document.getElementById('cfg-pele').textContent = perfil.tipoPele || '';
   document.getElementById('cfg-investimento').textContent = perfil.investimento || '';
 
