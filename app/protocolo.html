@@ -392,6 +392,9 @@ input[type="file"] { display:none; }
 
 <!-- ══ ROTINA ══ -->
 <div class="section" id="tab-rotina">
+  <div style="font-size:11px;color:var(--muted);padding:10px 14px;background:rgba(160,112,64,.04);border-radius:8px;margin-bottom:12px;line-height:1.6;border:1px solid rgba(160,112,64,.08)">
+    ✨ Sua rotina é <strong>personalizada e fixa</strong> — os mesmos passos toda manhã e noite, com consistência. Os tratamentos extras variam por dia na aba <strong>Semana</strong>.
+  </div>
   <!-- Cabeçalho do dia -->
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
   <!-- Tratamento especial do dia -->
@@ -459,7 +462,10 @@ input[type="file"] { display:none; }
   <!-- Foto do mês atual -->
   <div class="card" id="evo-card-foto">
     <div class="card-title"><span class="card-title-icon">📸</span> Antes &amp; Depois</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Tire uma foto agora e compare com o início da sua jornada.</p>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;padding:8px 12px;background:rgba(160,112,64,.04);border-radius:8px;line-height:1.6;border:1px solid rgba(160,112,64,.08)">
+      🔒 Suas fotos ficam <strong>somente no seu celular</strong> — não são enviadas para nenhum servidor. Se limpar o app ou sair da conta, somem automaticamente.
+    </div>
     <div id="evo-comparativo" style="display:none;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
@@ -760,7 +766,10 @@ function renderApp() {
       div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;margin-bottom:8px';
       div.innerHTML =
         '<div style="width:32px;height:32px;border-radius:50%;background:rgba(160,112,64,.1);border:1px solid rgba(160,112,64,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
-        '<div style="font-size:14px;font-weight:500;color:var(--dark);flex:1">' + p + '</div>';
+        '<div>' +
+        '<div style="font-size:14px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome||p) + '</div>' +
+        (p.categoria ? '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo?' · '+p.ativo:'') + '</div>' : '') +
+        '</div>';
       prodEl.appendChild(div);
     });
   }
@@ -1536,18 +1545,34 @@ async function buscarImagensSugestoes() {
 
 
 // ══ RENDER STEPS (global) ══
+// ── Normalizar capitalização de nomes de produtos ─────────────────────────
+function toTitleCase(str) {
+  if (!str) return '';
+  var allCaps = str === str.toUpperCase();
+  if (!allCaps) return str; // já tem capitalização intencional
+  return str.split(' ').map(function(w) {
+    if (!w) return w;
+    // Preservar siglas curtas como SPF, FPS, BHA, D2, UV
+    if (w.length <= 3 && /^[A-Z0-9+]+$/.test(w)) return w;
+    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  }).join(' ');
+}
+
+// ── Renderizar passos da rotina ─────────────────────────────────────────
 function renderSteps(steps, rotinaTipo) {
   if (!steps || !steps.length) return '';
   return steps.map(function(s,i) {
     var uid = 'step-' + (rotinaTipo||'r') + '-' + i;
     var tempoSeg = parseTempoSeg(s.tempo);
+    var nomeProd = toTitleCase(s.produto || s.nome || '');
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
-          '<div class="step-product">'+(s.produto||s.nome||'')+'</div>' +
+          '<div class="step-product">'+nomeProd+'</div>' +
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
+        (s.proposito ? '<div style="font-size:11px;color:var(--gold);font-style:italic;margin-bottom:6px;opacity:.85">✦ '+s.proposito+'</div>' : '') +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
         (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.alerta+'</div>' : '') +
         (s.dica ? '<div style="margin-top:6px;font-size:12px;color:var(--gold)">💡 '+s.dica+'</div>' : '') +
