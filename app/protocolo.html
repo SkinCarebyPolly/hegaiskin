@@ -818,6 +818,76 @@ function renderApp() {
   renderSugestoes();
 }
 
+
+// ── CONVERTER lista_compras ANTIGA → sugestoes RICAS ────────────────────────
+async function converterListaParaSugestoes(listaCompras) {
+  var sugEl = document.getElementById('content-sugestoes');
+  if (!sugEl) return;
+
+  // Loading state
+  sugEl.innerHTML =
+    '<div style="display:flex;align-items:center;gap:12px;padding:20px 16px;background:rgba(160,112,64,.06);border-radius:10px">' +
+      '<div style="width:20px;height:20px;border:2px solid rgba(160,112,64,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>' +
+      '<div style="font-size:13px;color:var(--gold)">Enriquecendo suas sugestões com a IA...</div>' +
+    '</div>';
+
+  var pais    = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  var moeda   = pais === 'PT' ? 'euros (€)' : 'reais (R$)';
+  var mercado = pais === 'PT' ? 'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)' : 'Brasil (farmácias, Sephora, Mercado Livre)';
+
+  var listaTexto = listaCompras.join('\n');
+
+  var promptConv =
+    'Você é especialista em skincare. Converta esta lista de compras em sugestões estruturadas.\n\n' +
+    'LISTA:\n' + listaTexto + '\n\n' +
+    'PERFIL: tipo de pele=' + (perfil.tipoPele || 'não informado') + ', investimento=' + (perfil.investimento || 'não informado') + ', país=' + pais + '\n\n' +
+    'Para cada item da lista, crie uma entrada com 3 opções de produto REAL disponível em ' + mercado + ' com preços em ' + moeda + '.\n' +
+    'Retorne APENAS JSON válido sem markdown:\n' +
+    '[{"falta":"NOME CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas por que ela precisa","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}]';
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: promptConv }]
+      })
+    });
+    var data = await resp.json();
+    var text = (data.content && data.content[0] && data.content[0].text) || '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    var sugestoesConv = JSON.parse(clean);
+
+    // Save converted sugestoes back to localStorage
+    protocolo.sugestoes = sugestoesConv;
+    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+
+    // Re-render with new data
+    renderSugestoes();
+
+  } catch(e) {
+    console.error('Conversão falhou:', e);
+    // Fallback: show simple list nicely
+    sugEl.innerHTML = '';
+    listaCompras.forEach(function(s) {
+      var parts = s.split('—');
+      var nome  = (parts[0] || s).trim();
+      var resto = parts.slice(1).join('—').trim();
+      var div   = document.createElement('div');
+      div.style.cssText = 'background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px';
+      div.innerHTML =
+        '<div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div>' +
+        '<div>' +
+          '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:3px">' + nome + '</div>' +
+          (resto ? '<div style="font-size:12px;color:var(--muted);line-height:1.5">' + resto + '</div>' : '') +
+        '</div>';
+      sugEl.appendChild(div);
+    });
+  }
+}
+
 function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
   if (!sugEl) return;
@@ -889,12 +959,8 @@ function renderSugestoes() {
     if (primeiro) { primeiro.style.display = 'block'; var ch = document.getElementById('sug-card-0-chevron'); if(ch) ch.style.transform='rotate(180deg)'; }
 
   } else if (listaCompras.length > 0) {
-    listaCompras.forEach(function(s) {
-      var div = document.createElement('div');
-      div.style.cssText = 'padding:12px 14px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--cream-dim);line-height:1.5';
-      div.textContent = s;
-      sugEl.appendChild(div);
-    });
+    // Converter lista_compras antiga para sugestoes ricas via IA
+    converterListaParaSugestoes(listaCompras);
   } else {
     sugEl.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar seu protocolo.</p>';
   }
