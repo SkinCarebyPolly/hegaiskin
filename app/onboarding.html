@@ -196,18 +196,18 @@ input[type=file]{display:none}
 <div class="scr" id="s-lgpd">
   <div class="inner">
     <div class="badge">Antes de começar</div>
-    <h1>Seu consentimento<br><em>é essencial.</em></h1>
-    <p class="sub">Leia e concorde com os 3 pontos abaixo para continuar.</p>
+    <h1>Algumas coisas<br><em>importantes.</em></h1>
+    <p class="sub">O Hegai Skin é a primeira consultora de rotina inteligente — usa o que você já tem em casa, evita desperdício e protege sua pele de combinações erradas.</p>
     <div class="chk-wrap">
-      <label><input type="checkbox" id="c1" onchange="chkUpdate()"><span><strong>Uso de imagem para IA</strong> — Autorizo o uso das minhas fotos para análise por inteligência artificial com o único objetivo de criar meu protocolo de skincare.</span></label>
+      <label><input type="checkbox" id="c1" onchange="chkUpdate()"><span><strong>Uso de fotos pela IA</strong> — Autorizo o uso das minhas fotos exclusivamente para que a consultora inteligente crie minha rotina personalizada. As imagens não são armazenadas em servidores nem compartilhadas com terceiros.</span></label>
     </div>
     <div class="chk-wrap">
-      <label><input type="checkbox" id="c2" onchange="chkUpdate()"><span><strong>Não é consulta médica</strong> — Entendo que o Hegai Skin é um app de estética e bem-estar, não substitui consulta médica ou dermatológica.</span></label>
+      <label><input type="checkbox" id="c2" onchange="chkUpdate()"><span><strong>Consultora de rotinas, não de saúde</strong> — Entendo que o Hegai Skin é uma consultora de rotinas de skincare baseada em inteligência artificial. Não presta serviço médico, dermatológico nem de saúde. Em caso de dúvidas sobre minha pele, consultarei um profissional.</span></label>
     </div>
     <div class="chk-wrap">
-      <label><input type="checkbox" id="c3" onchange="chkUpdate()"><span><strong>Condições de pele</strong> — Em caso de doenças de pele ou alergias severas, consultarei um dermatologista antes de seguir qualquer protocolo.</span></label>
+      <label><input type="checkbox" id="c3" onchange="chkUpdate()"><span><strong>Uso consciente</strong> — Se tiver condições de pele diagnosticadas, alergias severas ou usar medicamentos tópicos, consultarei um dermatologista antes de iniciar qualquer rotina.</span></label>
     </div>
-    <button class="btn" id="btn-lgpd" onclick="goLGPD()">Concordo e quero começar →</button>
+    <button class="btn" id="btn-lgpd" onclick="goLGPD()">Entendi, quero começar →</button>
   </div>
 </div>
 
@@ -384,7 +384,7 @@ input[type=file]{display:none}
       <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">📅</span><div><div class="qopt-lbl">Acabei de ter bebê (pós-parto)</div><div class="qopt-sub">Pele em reequilíbrio hormonal — protocolo adaptado</div></div></div>
     </div>
     <div style="background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
-      ⚠️ <strong style="color:var(--dark)">Importante:</strong> Em caso de dúvidas sobre produtos durante a gestação ou amamentação, consulte sempre seu médico ou ginecologista.
+      ⚠️ <strong style="color:var(--dark)">Atenção:</strong> Durante a gestação ou amamentação, confirme com seu médico antes de iniciar qualquer rotina com ativos.
     </div>
     <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q6')">← Voltar</button>
@@ -703,7 +703,7 @@ input[type=file]{display:none}
       </div>
 
       <button class="btn" id="btn-prod-criar" onclick="gerarProtocolo()" style="display:none;margin-bottom:8px">
-        Criar meu protocolo →
+        Criar minha rotina →
       </button>
 
       <button class="btn2" onclick="voltarProd()" style="margin-top:4px">← Voltar</button>
@@ -713,7 +713,7 @@ input[type=file]{display:none}
     <div id="prod-manual" style="display:none;margin-top:8px">
       <label class="ilbl">Liste seus produtos</label>
       <textarea id="txt-prod" class="ifield" style="resize:vertical;min-height:110px;padding:14px 16px;margin-bottom:10px" placeholder="Ex: Sabonete La Roche-Posay, Vitamina C, FPS 60..."></textarea>
-      <button class="btn" onclick="gerarProtocolo()">Criar meu protocolo →</button>
+      <button class="btn" onclick="gerarProtocolo()">Criar minha rotina →</button>
       <button class="btn2" onclick="voltarProd()" style="margin-top:8px">← Voltar</button>
     </div>
 
@@ -725,7 +725,7 @@ input[type=file]{display:none}
   <div class="inner" style="text-align:center">
     <div class="spin-wrap">
       <div class="spinner"></div>
-      <div class="spin-t">Criando seu protocolo<span class="dots"></span></div>
+      <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
       <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
     </div>
   </div>
@@ -744,7 +744,7 @@ input[type=file]{display:none}
       <!-- Texto -->
       <div style="position:relative;z-index:1">
         <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@hegaiskin</div>
-        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">seu protocolo 🌸</em></div>
+        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
         <div style="display:flex;gap:6px;align-items:center">
           <div style="width:32px;height:2px;background:linear-gradient(90deg,#C9A97A,#A27540);border-radius:1px"></div>
           <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
@@ -1853,7 +1853,7 @@ async function analisarFotoGemini(b64) {
           contents: [{
             parts: [
               { inline_data: { mime_type: 'image/jpeg', data: b64 } },
-              { text: 'Analise esta foto do rosto com olhar clínico de esteticista. Retorne APENAS JSON válido sem markdown:\n{"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não","textura":"lisa/levemente irregular/irregular/muito irregular","poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis","manchas":"nenhuma/poucas/moderadas/muitas","vermelhidao":"nenhuma/leve/moderada/intensa","hidratacao":"muito hidratada/hidratada/levemente desidratada/desidratada","tom":"uniforme/levemente irregular/irregular","linhas":"nenhuma/finas/moderadas","brilho":"opaca/normal/brilhante","observacoes":"2-3 frases específicas sobre o que você vê nesta foto"}' }
+              { text: 'Analise esta foto do rosto com o olhar detalhado de uma especialista em cosmetologia: observe e classifique cada característica visual da pele com precisão. Retorne APENAS JSON válido sem markdown:\n{"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não","textura":"lisa/levemente irregular/irregular/muito irregular","poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis","manchas":"nenhuma/poucas/moderadas/muitas","vermelhidao":"nenhuma/leve/moderada/intensa","hidratacao":"muito hidratada/hidratada/levemente desidratada/desidratada","tom":"uniforme/levemente irregular/irregular","linhas":"nenhuma/finas/moderadas","brilho":"opaca/normal/brilhante","observacoes":"2-3 frases específicas e detalhadas sobre o que você observa nesta foto — mencione áreas específicas do rosto, padrões visíveis de oleosidade ou ressecamento, e qualquer característica marcante da pele"}' }
             ]
           }],
           generationConfig: { temperature: 0.1, maxOutputTokens: 500 }
@@ -2006,17 +2006,17 @@ async function gerarProtocolo() {
     '- Ciclo: '+S.ciclo+' | Alimentação: '+S.alimentacao+'\n\n' +
     'PRODUTOS IDENTIFICADOS (USE NOMES EXATOS NA ROTINA):\n' + prodListaLimitada;
 
-  var prompt1 = 'Especialista sênior em skincare e K-Beauty. Crie protocolo ULTRA PERSONALIZADO.\n\n' +
+  var prompt1 = 'Especialista sênior em cosmetologia e K-Beauty com profundo conhecimento de ingredientes ativos, combinações de produtos e rotinas de cuidado. Crie uma rotina ULTRA PERSONALIZADA.\n\n' +
     perfil_txt + '\n\n' +
     'REGRAS:\n' +
     '1. Use APENAS os produtos listados pelos nomes exatos. Campo "tempo" = mesmo valor mencionado em "como".\n' +
     '2. Aparelhos DEVEM aparecer na rotina com: modo, minutos por zona, movimentos, frequência.\n' +
     '3. Adaptação: semana 1 suave → semana 4 completa.\n' +
-    '4. Tom caloroso e encorajador no diagnóstico.\n' +
-    '5. Score 0-100: 0-40=Em Recuperação, 41-70=Em Evolução, 71-90=Saudável, 91-100=Excelente.\n' +
+    '4. Tom caloroso e encorajador na análise personalizada — como amiga especialista em cosmetologia.\n' +
+    '5. Score da pele 0-100: 0-40=Início da jornada, 41-70=Em Evolução, 71-90=Pele em dia, 91-100=Pele radiante. Seja encorajadora.\n' +
     (S.gestante !== 'Não' ? '6. GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
     '\nRetorne APENAS JSON válido:\n' +
-    '{"nome_cliente":"'+S.nome+'","diagnostico":"3-4 frases calorosas sobre a pele","tipo_pele":"tipo","tags":["tag1","tag2","tag3"],' +
+    '{"nome_cliente":"'+S.nome+'","diagnostico":"3-4 frases calorosas e motivadoras sobre a pele — como amiga especialista, sem termos médicos","tipo_pele":"tipo","tags":["tag1","tag2","tag3"],' +
     '"fase_adaptacao":"semana a semana detalhada",' +
     '"rotina_manha":[{"passo":1,"produto":"nome exato","como":"instrução completa","icone":"emoji","tempo":"Xs ou X min"}],' +
     '"rotina_noite":[{"passo":1,"produto":"nome","como":"instrução","icone":"emoji","tempo":"X min"}],' +
@@ -2024,7 +2024,7 @@ async function gerarProtocolo() {
     '"score_pele":72,' +
     '"produtos_identificados":[]}';
 
-  var prompt2_base = 'Especialista em skincare. Com base neste perfil, gere os protocolos especiais e sugestões.\n\n' +
+  var prompt2_base = 'Especialista em cosmetologia com profundo conhecimento de ingredientes e combinações de produtos. Com base neste perfil, gere as rotinas especiais e sugestões de produtos.\n\n' +
     'PERFIL RESUMIDO:\n' +
     '- Tipo de pele: '+S.tipoPele+' | Cidade: '+(S.cidade||'não informado')+'\n' +
     '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+' | Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
@@ -2071,7 +2071,7 @@ async function gerarProtocolo() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 8192,
-        system: 'Você é uma especialista sênior em skincare com formação em biomedicina, estética clínica e K-Beauty. Tem visão clínica aguçada para análise de pele em fotos. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens de produtos cosméticos — você lê o texto EXATO das embalagens, reconhece marcas internacionais e brasileiras, e NUNCA substitui um produto por outro similar. Se vê "Anua Heartleaf" escrito, você escreve "Anua Heartleaf". Se vê "Medicube Reedle Shot", você escreve exatamente isso. Cria protocolos ultra detalhados e personalizados com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.',
+        system: 'Você é uma especialista sênior em cosmetologia, formulação cosmética e K-Beauty com domínio profundo de ingredientes ativos, combinações de produtos, tipos de pele e rotinas de cuidado. Conhece extensamente: ativos como ácido hialurônico, niacinamida, retinol, AHA/BHA, vitamina C, ceramidas, peptídeos e SPF; marcas brasileiras, europeias e coreanas; interações entre ingredientes que podem irritar ou potencializar resultados; e a ordem correta de aplicação de cada tipo de produto. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens — lê o texto EXATO das embalagens, reconhece marcas internacionais e brasileiras, e NUNCA substitui um produto por outro similar. Se vê "Anua Heartleaf" escrito, escreve "Anua Heartleaf". Se vê "Medicube Reedle Shot", escreve exatamente isso. Cria rotinas ultra detalhadas e personalizadas com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.',
         messages: [{role: 'user', content: claudeParts}]
       })
     });

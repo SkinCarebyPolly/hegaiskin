@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#F2E8D9">
-<title>Hegai Skin · Meu Protocolo</title>
+<title>Hegai Skin · Minha Rotina</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -328,14 +328,14 @@ input[type="file"] { display:none; }
 
 <div id="app-loading">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando seu protocolo...</div>
+  <div class="loading-text">Carregando sua rotina...</div>
 </div>
 
 <div id="app-content" style="display:none">
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Protocolo Exclusivo</span></div>
+  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Rotina Exclusiva</span></div>
   <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
   <p class="hero-sub" id="hero-tipo"></p>
   <div class="hero-tags" id="hero-tags"></div>
@@ -348,7 +348,7 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="sugestoes">⭐ Sugestões</button>
   <button class="tab" data-tab="rotina">✨ Rotina</button>
   <button class="tab" data-tab="semana">🗓 Semana</button>
-  <button class="tab" data-tab="espinha">🔴 Espinha</button>
+  <button class="tab" data-tab="espinha">🔴 SOS Espinha</button>
   <button class="tab" data-tab="praia">🏖 Praia</button>
   <button class="tab" data-tab="make">💄 Make</button>
   <button class="tab" data-tab="evolucao">📸 Evolução</button>
@@ -360,12 +360,12 @@ input[type="file"] { display:none; }
 
   <!-- BARRA DE SAÚDE -->
   <div class="card" id="skin-score-card" style="display:none">
-    <div class="card-title"><span class="card-title-icon">✨</span> Saúde da sua pele</div>
+    <div class="card-title"><span class="card-title-icon">✨</span> Estado da sua pele</div>
     <div style="display:flex;justify-content:space-between;margin-bottom:6px">
       <span style="font-size:10px;color:var(--muted)">Recuperação</span>
       <span style="font-size:10px;color:var(--muted)">Evolução</span>
-      <span style="font-size:10px;color:var(--muted)">Saudável</span>
-      <span style="font-size:10px;color:var(--muted)">Excelente</span>
+      <span style="font-size:10px;color:var(--muted)">Pele em dia</span>
+      <span style="font-size:10px;color:var(--muted)">Pele radiante</span>
     </div>
     <div style="position:relative;height:22px;background:rgba(160,112,64,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
       <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
@@ -395,7 +395,7 @@ input[type="file"] { display:none; }
 <div class="section" id="tab-rotina">
   <!-- Cabeçalho do dia -->
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
-  <!-- Tratamento especial do dia -->
+  <!-- Cuidado extra do dia -->
   <div id="rotina-tratamento-dia" style="display:none"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
@@ -410,7 +410,7 @@ input[type="file"] { display:none; }
 <!-- ══ SEMANA ══ -->
 <div class="section" id="tab-semana">
   <div class="card">
-    <div class="card-title"><span class="card-title-icon">🗓</span> Tratamentos Semanais</div>
+    <div class="card-title"><span class="card-title-icon">🗓</span> Cuidados da Semana</div>
     <div class="week-grid" id="content-semana"></div>
   </div>
 </div>
@@ -441,16 +441,16 @@ input[type="file"] { display:none; }
   <div id="content-sugestoes" style="margin-top:16px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no seu protocolo.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no sua rotina.</p>
     <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
       <div class="evo-icon">📦</div>
       <div class="evo-title">Fotografar produto novo</div>
-      <div class="evo-sub">A IA vai integrar ao seu protocolo</div>
+      <div class="evo-sub">A IA vai integrar ao sua rotina</div>
     </div>
     <input type="file" id="new-product-input" accept="image/*" capture="environment" onchange="addNewProduct(event)">
     <div id="new-product-loading" style="display:none" class="ai-loading-bar">
       <div class="ai-mini-spinner"></div>
-      <div class="ai-loading-text">Analisando e integrando ao seu protocolo...</div>
+      <div class="ai-loading-text">Analisando e integrando ao sua rotina...</div>
     </div>
   </div>
 </div>
@@ -533,8 +533,8 @@ input[type="file"] { display:none; }
     <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
     <div style="margin-bottom:16px">
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">Como atualizar meu protocolo?</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.6">Vá em Configurações → "Atualizar meu protocolo" e refaça o questionário com seus produtos atuais.</div>
+        <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">Como atualizar minha rotina?</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">Vá em Configurações → "Atualizar minha rotina" e refaça o questionário com seus produtos atuais.</div>
       </div>
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px">A IA pode errar?</div>
@@ -556,10 +556,10 @@ input[type="file"] { display:none; }
   <div class="card">
     <div class="card-title"><span class="card-title-icon">⚙️</span> Opções</div>
     <div id="btn-atualizar-wrap" style="display:none;margin-bottom:8px">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar seu protocolo.</p>
-      <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar meu protocolo</button>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar sua rotina.</p>
+      <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar minha rotina</button>
     </div>
-    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar meu protocolo</button>
+    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
     <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
@@ -738,7 +738,7 @@ function renderApp() {
     }
     var scoreCard = document.getElementById('skin-score-card');
     if (scoreCard) scoreCard.style.display = 'block';
-    var zonas = [{max:40,label:'Em Recuperação'},{max:70,label:'Em Evolução'},{max:90,label:'Saudável'},{max:100,label:'Excelente'}];
+    var zonas = [{max:40,label:'Início da jornada'},{max:70,label:'Em Evolução'},{max:90,label:'Pele em dia'},{max:100,label:'Pele radiante'}];
     var zona = zonas.find(function(z){return score<=z.max;}) || zonas[3];
     setTimeout(function() {
       var fill = document.getElementById('skin-bar-fill');
@@ -832,7 +832,7 @@ async function converterListaParaSugestoes(listaCompras) {
   var listaTexto = listaCompras.join('\n');
 
   var promptConv =
-    'Você é especialista em skincare. Converta esta lista de compras em sugestões estruturadas.\n\n' +
+    'Você é especialista em cosmetologia e conhecimento de produtos. Converta esta lista de cuidados em sugestões estruturadas.\n\n' +
     'LISTA:\n' + listaTexto + '\n\n' +
     'PERFIL: tipo de pele=' + (perfil.tipoPele || 'não informado') + ', investimento=' + (perfil.investimento || 'não informado') + ', país=' + pais + '\n\n' +
     'Para cada item da lista, crie uma entrada com 3 opções de produto REAL disponível em ' + mercado + ' com preços em ' + moeda + '.\n' +
@@ -906,7 +906,7 @@ async function adicionarSugestaoRotina(produto) {
       rotina_noite: protocolo.rotina_noite || []
     });
 
-    var prompt = 'Você é especialista em skincare. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}' ;
+    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}' ;
 
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1031,7 +1031,7 @@ function renderSugestoes() {
     // Converter lista_compras antiga para sugestoes ricas via IA
     converterListaParaSugestoes(listaCompras);
   } else {
-    sugEl.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar seu protocolo.</p>';
+    sugEl.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar sua rotina.</p>';
   }
 
   // Config
@@ -1123,8 +1123,8 @@ function openDayModal(day) {
   document.getElementById('modal-title').textContent = days[dow] + ', ' + day + ' de ' + months[calDate.getMonth()];
   document.getElementById('modal-sub').textContent = 'Tratamento do dia';
   document.getElementById('modal-body').innerHTML = event
-    ? `<p style="margin-bottom:12px">${event}</p><div class="alert alert-green"><div class="alert-title">Rotina base</div><div class="alert-text">Não esqueça a rotina manhã e noite todos os dias!</div></div>`
-    : `<div class="alert alert-green"><div class="alert-title">Rotina base</div><div class="alert-text">Hoje é dia de rotina básica manhã e noite. Sem tratamentos adicionais.</div></div>`;
+    ? `<p style="margin-bottom:12px">${event}</p><div class="alert alert-green"><div class="alert-title">Rotina do dia</div><div class="alert-text">Não esqueça a rotina manhã e noite todos os dias!</div></div>`
+    : `<div class="alert alert-green"><div class="alert-title">Rotina do dia</div><div class="alert-text">Hoje é dia de rotina básica manhã e noite. Sem cuidados adicionais.</div></div>`;
   document.getElementById('modal').classList.add('open');
 }
 
@@ -1268,7 +1268,7 @@ Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 600,
-          system: 'Você é especialista em skincare com visão clínica. Analisa fotos de pele e dá feedback motivador e profissional. Responde sempre em português brasileiro.',
+          system: 'Você é especialista em cosmetologia com profundo conhecimento de cuidados com a pele. Analisa fotos e dá feedback motivador, acolhedor e focado na evolução da rotina. Responde sempre em português brasileiro.',
           messages: [{role:'user', content: claudeParts}]
         })
       });
@@ -1350,7 +1350,7 @@ async function addNewProduct(e) {
       const data = await res.json();
       const text = data.content[0].text;
       document.getElementById('new-product-loading').style.display = 'none';
-      openModal('Produto Integrado! ✨', 'Como usar no seu protocolo', text.replace(/\n/g,'<br>'));
+      openModal('Produto Integrado! ✨', 'Como usar no sua rotina', text.replace(/\n/g,'<br>'));
     } catch(err) {
       document.getElementById('new-product-loading').style.display = 'none';
     }
@@ -1428,7 +1428,7 @@ async function gerarProtocoloCapilar(e) {
       var resized = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
       
       var perfil = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
-      var prompt = 'Você é especialista em K-Beauty e cuidados capilares. Analise o cabelo nesta foto e crie um protocolo K-Beauty personalizado. Perfil: '+JSON.stringify(perfil)+'. Retorne APENAS JSON: {"diagnostico":"análise do cabelo","tipo_cabelo":"tipo identificado","rotina_lavagem":[{"passo":1,"produto":"nome","como":"instrução detalhada","icone":"emoji","tempo":"X min"}],"tratamentos_semanais":[{"dia":"Seg/Qui","tratamento":"nome","como":"instrução"}],"produtos_kbeauty":["produto coreano — benefício e como usar"]}';
+      var prompt = 'Você é especialista em K-Beauty e cuidados capilares. Analise o cabelo nesta foto e crie uma rotina K-Beauty personalizado. Perfil: '+JSON.stringify(perfil)+'. Retorne APENAS JSON: {"diagnostico":"análise do cabelo","tipo_cabelo":"tipo identificado","rotina_lavagem":[{"passo":1,"produto":"nome","como":"instrução detalhada","icone":"emoji","tempo":"X min"}],"tratamentos_semanais":[{"dia":"Seg/Qui","tratamento":"nome","como":"instrução"}],"produtos_kbeauty":["produto coreano — benefício e como usar"]}';
       
       try {
         var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+GEMINI_KEY, {
@@ -1477,7 +1477,7 @@ function renderRotinaDia() {
       </div>`;
   }
 
-  // Tratamento especial do dia
+  // Cuidado extra do dia
   var semana = protocolo.semana || {};
   var dow = hoje.getDay();
   var tratamento = '';
@@ -1555,7 +1555,7 @@ function renderSteps(steps, rotinaTipo) {
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
-        (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.alerta+'</div>' : '') +
+        (s.alerta ? '<div style="margin-top:6px;font-size:12px;color:var(--red)">⚠️ '+s.atencao+'</div>' : '') +
         (s.dica ? '<div style="margin-top:6px;font-size:12px;color:var(--gold)">💡 '+s.dica+'</div>' : '') +
         '<div style="display:flex;align-items:center;gap:8px;margin-top:12px">' +
           (tempoSeg > 0 ?
@@ -1741,14 +1741,14 @@ function renderPraia(p) {
 
   if (e.pos_praia && e.pos_praia.length) {
     html += `<div class="card">
-      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite Pós-Praia — SOS Recuperação</div>
+      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite Pós-Praia — SOS Início da jornada</div>
       <div class="step-list">${renderSteps(e.pos_praia)}</div>
     </div>`;
   }
 
   if (!html && p.protocolo_praia) {
     html = `<div class="card"><div class="alert alert-gold" style="margin:0">
-      <div class="alert-title">☀️ Protocolo Praia</div>
+      <div class="alert-title">☀️ Rotina Praia</div>
       <div class="alert-text">${p.protocolo_praia.replace(/\n/g,'<br>')}</div>
     </div></div>`;
   }
@@ -1904,7 +1904,7 @@ async function compartilharProtocolo() {
   var passosNoite = (protocolo.rotina_noite || []).length;
 
   var texto =
-    '✨ Meu protocolo personalizado foi criado pelo Hegai Skin versão beta!\n\n' +
+    '✨ Minha rotina personalizado foi criado pelo Hegai Skin versão beta!\n\n' +
     '🌸 ' + nome + '\n' +
     (tipo ? '💧 Pele: ' + tipo + '\n' : '') +
     (score ? '📊 Score: ' + score + '/100\n' : '') +
@@ -1914,7 +1914,7 @@ async function compartilharProtocolo() {
 
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'Meu Protocolo Hegai Skin', text: texto });
+      await navigator.share({ title: 'Minha Rotina Hegai Skin', text: texto });
     } catch(e) {
       if (e.name !== 'AbortError') copiarTexto(texto);
     }
