@@ -1714,8 +1714,8 @@ async function processarFotoAparelhos(input) {
       var lote = b64s.slice(i, i + 2);
       var res = await Promise.allSettled(lote.map(async function(b64) {
         var raw = await geminiVision(b64,
-          'Identifique TODOS os aparelhos de skincare visíveis nesta foto. Retorne APENAS JSON válido sem markdown: {"aparelhos":[{"nome":"nome exato do aparelho","tipo":"radiofrequencia/led/microcorrente/ultrassom/limpeza_sonica/gua_sha/outro","marca":"marca se visível"}]}',
-          400
+          'Analise esta imagem — pode ser foto real, print de site, screenshot de loja, foto de caixa ou embalagem. Identifique TODOS os aparelhos e dispositivos para cuidados com o rosto e pele. Exemplos: Medicube Age-R, NEWA, TriPollar (radiofrequência), Déesse Pro, Currentbody LED, NuFace, GESKE (microcorrente e multifuncionais), Foreo Luna (sônica), gua sha, rolos de jade, dermapen/dermaroller, qualquer aparelho de luz LED, qualquer dispositivo facial elétrico ou manual. Se for print de site ou loja, leia o nome do produto na página. Se for foto da caixa, leia o nome na embalagem. Retorne APENAS JSON válido sem markdown: {"aparelhos":[{"nome":"nome exato do produto ou descrição clara","tipo":"radiofrequencia/led/microcorrente/ultrassom/limpeza_sonica/gua_sha/microagulhamento/outro","marca":"marca se identificável ou vazio"}]}',
+          600
         );
         try { return JSON.parse(raw).aparelhos || []; } catch(e) { return []; }
       }));
@@ -1734,8 +1734,12 @@ async function processarFotoAparelhos(input) {
         'microcorrente': 'Microcorrente',
         'ultrassom': 'Ultrassom facial',
         'limpeza_sonica': 'Limpeza sônica',
-        'gua_sha': 'Gua sha / rolo'
+        'gua_sha': 'Gua sha / rolo',
+        'microagulhamento': 'Microagulhamento',
+        'outro': null
       };
+      // Track aparelhos extras (tipo 'outro' ou não mapeado)
+      var extrasManual = [];
       todosAparelhos.forEach(function(a) {
         var label = tipoMap[a.tipo];
         if (label) {
@@ -1745,8 +1749,16 @@ async function processarFotoAparelhos(input) {
               if (!opt.classList.contains('on')) togM(opt);
             }
           });
+        } else if (a.nome) {
+          // Aparelho identificado mas não na lista — guarda para mostrar
+          extrasManual.push(a);
         }
       });
+      // Salva aparelhos extras para passar ao prompt
+      if (extrasManual.length > 0) {
+        S = S || {};
+        S.aparelhosExtras = (S.aparelhosExtras || []).concat(extrasManual.map(function(a){ return a.nome + (a.marca ? ' ' + a.marca : ''); }));
+      }
 
       // Show identified list
       resultado.style.display = 'block';
@@ -1754,7 +1766,7 @@ async function processarFotoAparelhos(input) {
         todosAparelhos.map(function(a) {
           return '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:8px;margin-bottom:6px">' +
             '<div style="width:6px;height:6px;border-radius:50%;background:#A07040;flex-shrink:0"></div>' +
-            '<div style="font-size:13px;font-weight:400;color:#2B1206">' + a.nome + (a.marca ? ' "font-size:11px;color:#9a8878">· ' + a.marca + '</span>' : '') + '</div>' +
+            '<div style="font-size:13px;font-weight:400;color:#2B1206">' + a.nome + (a.marca ? ' <span style="font-size:11px;color:#9a8878">· ' + a.marca + '</span>' : '') + '</div>' +
           '</div>';
         }).join('');
     } else {
@@ -2125,7 +2137,7 @@ async function gerarProtocolo() {
     '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
     '- Tipo de pele: '+S.tipoPele+'\n' +
     '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
-    '- Aparelhos: '+(S.aparelhos.join(', ')||'nenhum')+'\n' +
+    '- Aparelhos: '+(S.aparelhos.join(', ')||'nenhum')+(S.aparelhosExtras&&S.aparelhosExtras.length?' + extras: '+S.aparelhosExtras.join(', '):'')+'\n' +
     '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+'\n' +
     '- Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
     '- Orçamento mensal total: '+S.investimento+'\n' +

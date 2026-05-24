@@ -1,44 +1,28 @@
-const CACHE = 'sbp-app-v9';
+// Hegai Skin — Service Worker v2
+// Minimal SW: apenas para PWA ser instalável. Sem cache agressivo.
+const CACHE = 'hegai-v2';
 
 self.addEventListener('install', function(e) {
-  e.waitUntil(self.skipWaiting());
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', function(e) {
+  // Limpa caches antigos
   e.waitUntil(
     caches.keys().then(function(keys) {
-      return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+      return Promise.all(
+        keys.filter(function(k) { return k !== CACHE; })
+            .map(function(k) { return caches.delete(k); })
+      );
     }).then(function() { return self.clients.claim(); })
   );
 });
 
+// Network first — sempre busca a versão mais recente do servidor
 self.addEventListener('fetch', function(e) {
-  if (e.request.method !== 'GET') return;
-  
-  var url = e.request.url;
-  
-  // Nunca cachear páginas principais, API calls ou recursos externos
-  if (url.includes('onboarding') || 
-      url.includes('protocolo') ||
-      url.includes('api.anthropic.com') ||
-      url.includes('googleapis.com') ||
-      url.includes('firestore') ||
-      url.includes('identitytoolkit') ||
-      url.includes('securetoken')) {
-    return; // passa direto ao servidor
-  }
-  
-  // Para icons, manifest e fontes: cache
   e.respondWith(
-    caches.match(e.request).then(function(cached) {
-      var fetchFresh = fetch(e.request).then(function(response) {
-        if (response && response.status === 200) {
-          var clone = response.clone();
-          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
-        }
-        return response;
-      });
-      return cached || fetchFresh;
+    fetch(e.request).catch(function() {
+      return caches.match(e.request);
     })
   );
 });

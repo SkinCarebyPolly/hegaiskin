@@ -2361,7 +2361,7 @@ function installPWA() {
   });
 }
 if ('serviceWorker' in navigator) {
-  // Unregister ALL service workers and clear ALL caches to prevent stale file serving
+  // Register SW for PWA installability — but clear old caches first
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for (var r of registrations) { r.unregister(); }
   });
@@ -2370,6 +2370,10 @@ if ('serviceWorker' in navigator) {
       keys.forEach(function(key) { caches.delete(key); });
     });
   }
+  // Re-register fresh SW so browser recognizes app as installable PWA
+  navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+    .then(function(reg) { reg.update(); })
+    .catch(function(e) { console.log('SW:', e.message); });
 }
 </script>
 </body>
