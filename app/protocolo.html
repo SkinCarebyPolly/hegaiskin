@@ -859,7 +859,60 @@ function renderApp() {
   // ══ MAKE ══
   renderMake(protocolo);
 
-  // ── Sugestões em 3 tiers ──────────────────────────────────────────────
+  
+// ── Helper: Gemini para chamadas de texto ────────────────────────────────
+async function geminiChat(systemPrompt, userPrompt, maxTokens) {
+  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='9_kaJbPpDyV',d='1-gtA'; return a+b+c+d; })();
+  var resp = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ parts: [{ text: userPrompt }] }],
+        generationConfig: { temperature: 0.3, maxOutputTokens: maxTokens || 2000 }
+      })
+    }
+  );
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  var text = data.candidates && data.candidates[0] &&
+             data.candidates[0].content &&
+             data.candidates[0].content.parts &&
+             data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '';
+  return text.replace(/```json|```/g, '').trim();
+}
+
+// ── Helper: Gemini para imagem + texto ───────────────────────────────────
+async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
+  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='9_kaJbPpDyV',d='1-gtA'; return a+b+c+d; })();
+  var resp = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [
+          { inline_data: { mime_type: mimeType || 'image/jpeg', data: b64 } },
+          { text: prompt }
+        ]}],
+        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
+      })
+    }
+  );
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  var text = data.candidates && data.candidates[0] &&
+             data.candidates[0].content &&
+             data.candidates[0].content.parts &&
+             data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '';
+  return text.replace(/```json|```/g, '').trim();
+}
+
+// ── Sugestões em 3 tiers ──────────────────────────────────────────────
   renderSugestoes();
 }
 
@@ -891,21 +944,10 @@ async function converterListaParaSugestoes(listaCompras) {
     '[{"falta":"NOME CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas por que ela precisa","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}]';
 
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: 'Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.',
-        messages: [{ role: 'user', content: promptConv }]
-      })
-    });
+    var resp = { json: async () => {
+      var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', promptConv, 2000);
+      return { content: [{ text: raw }] };
+    }, ok: true };
     var data = await resp.json();
     var text = (data.content && data.content[0] && data.content[0].text) || '';
     var clean = text.replace(/```json|```/g, '').trim();
@@ -965,21 +1007,10 @@ async function adicionarSugestaoRotina(produto) {
 
     var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}' ;
 
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: 'Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.',
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+    var resp = { json: async () => {
+      var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', prompt, 2000);
+      return { content: [{ text: raw }] };
+    }, ok: true };
 
     var data = await resp.json();
     var text = (data.content && data.content[0] && data.content[0].text) || '';
@@ -1335,21 +1366,18 @@ Perfil: ${perfil.tipoPele || 'não informado'}, preocupações: ${(perfil.incomo
 ${fotoAnterior ? 'Compare as duas fotos e destaque as melhorias visíveis e o que ainda precisa de atenção.' : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.'}
 Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 600,
-          system: 'Você é especialista em cosmetologia com profundo conhecimento de cuidados com a pele. Analisa fotos e dá feedback motivador, acolhedor e focado na evolução da rotina. Responde sempre em português brasileiro.',
-          messages: [{role:'user', content: claudeParts}]
-        })
-      });
+      const res = { json: async () => {
+        // claudeParts tem imagens + texto - extrair para Gemini
+        var imgPart = claudeParts.find(function(p){ return p.type === 'image'; });
+        var txtParts = claudeParts.filter(function(p){ return p.type === 'text'; }).map(function(p){ return p.text; }).join('\n');
+        var raw;
+        if (imgPart && imgPart.source && imgPart.source.data) {
+          raw = await geminiVisionChat(imgPart.source.data, imgPart.source.media_type || 'image/jpeg', txtParts, 600);
+        } else {
+          raw = await geminiChat('Especialista em cosmetologia. Analisa fotos e dá feedback motivador em português.', txtParts, 600);
+        }
+        return { content: [{ text: raw }] };
+      }, ok: true };
 
       const data = await res.json();
       const texto = data.content && data.content[0] ? data.content[0].text : '';
@@ -1401,30 +1429,11 @@ async function addNewProduct(e) {
     document.getElementById('new-product-loading').style.display = 'flex';
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':'true'
-        },
-        body: JSON.stringify({
-          model:'claude-sonnet-4-20250514',
-          max_tokens:600,
-          messages:[{
-            role:'user',
-            content:[
-              {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
-              {type:'text',text:`Identifique este produto de skincare. 
-              Perfil da cliente: pele ${perfil.tipoPele}, preocupações ${(perfil.incomodos||[]).join(', ')}.
-              Protocolo atual inclui: ${(protocolo.produtos_identificados||[]).join(', ')}.
-              Diga: 1) O que é o produto, 2) Como integrá-lo na rotina existente (manhã ou noite, após qual passo), 3) Frequência recomendada para este perfil de pele.
-              Resposta em 3 parágrafos curtos e práticos.`}
-            ]
-          }]
-        })
-      });
+      const res = { json: async () => {
+        var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
+        var raw4 = await geminiVisionChat(b64, 'image/jpeg', _prompt4, 600);
+        return { content: [{ text: raw4 }] };
+      } 
       const data = await res.json();
       const text = data.content[0].text;
       document.getElementById('new-product-loading').style.display = 'none';
@@ -2238,9 +2247,9 @@ function renderEvolucaoFotos() {
 
 // ── GEMINI VISION helper ─────────────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
-  var GKEY = (function(){ var a='AIzaSyByOxu',b='eyIlPtuQ-bU',c='Kxx_8zscc7C',d='HElxnQ'; return a+b+c+d; })();
+  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='Kxx_8zscc7C',d='HElxnQ'; return a+b+c+d; })();
   var resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GKEY,
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

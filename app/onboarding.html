@@ -331,6 +331,22 @@ input[type=file]{display:none}
       <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Ultrassom facial</div><div class="qopt-sub">Penetração de ativos</div></div></div>
       <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Não tenho aparelhos</div></div></div>
     </div>
+    <!-- OCR de aparelhos via Gemini -->
+    <div style="margin:12px 0 4px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;opacity:.8">ou fotografe seu aparelho</div>
+      <div onclick="if(!_aparOCRRodando){document.getElementById('fp-apar-real').value='';document.getElementById('fp-apar-real').click();}"
+           style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px dashed rgba(208,180,140,.35);border-radius:10px;cursor:pointer;background:rgba(208,180,140,.04)">
+        <span style="font-size:22px">📷</span>
+        <div>
+          <div style="font-size:13px;color:var(--cream);font-weight:500">Fotografar aparelho</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">A IA identifica o modelo automaticamente</div>
+        </div>
+      </div>
+      <input type="file" id="fp-apar-real" accept="image/*" style="display:none" onchange="ocrAparelho(this)">
+      <div id="apar-ocr-status" style="display:none;margin-top:10px;padding:12px;background:rgba(208,180,140,.08);border-radius:8px;font-size:13px;color:var(--gold);text-align:center">🔍 Identificando...</div>
+      <div id="apar-ocr-list"></div>
+    </div>
+
     <button class="btn" onclick="goValidate('s-q4','q3','multi')">Continuar →</button>
     <button class="btn2" onclick="go('s-q2')">← Voltar</button>
   </div>
@@ -665,6 +681,28 @@ input[type=file]{display:none}
     <!-- Foto tirada overlay -->
     <div id="foto-preview-overlay" style="display:none;position:absolute;inset:0;z-index:10;background:#000">
       <img id="foto-preview-img" style="width:100%;height:100%;object-fit:cover">
+      <!-- Análise de qualidade -->
+      <div id="foto-qualidade-checking" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.75);z-index:20;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+        <div style="width:48px;height:48px;border:3px solid rgba(208,180,140,.3);border-top-color:#D0B48C;border-radius:50%;animation:spin 1s linear infinite"></div>
+        <div style="font-size:14px;color:#D0B48C;letter-spacing:1px">Verificando qualidade...</div>
+      </div>
+
+      <!-- Feedback de problema -->
+      <div id="foto-qualidade-erro" style="display:none;position:absolute;inset:0;background:rgba(13,8,4,0.92);z-index:21;padding:32px 24px;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px">
+        <div style="font-size:48px" id="foto-erro-icon">⚠️</div>
+        <div style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:#F5EADA" id="foto-erro-titulo">Foto com problema</div>
+        <div style="font-size:14px;color:rgba(245,234,218,0.7);line-height:1.6" id="foto-erro-msg">Detalhes do problema aqui.</div>
+        <div style="background:rgba(208,180,140,0.08);border:1px solid rgba(208,180,140,0.2);border-radius:12px;padding:14px 18px;font-size:13px;color:rgba(245,234,218,0.6);line-height:1.6;width:100%;box-sizing:border-box" id="foto-erro-dica"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <button id="btn-tentar-novamente" onclick="tentarNovamente()" style="padding:15px;background:linear-gradient(135deg,#D0B48C,#A27540);border:none;border-radius:10px;color:#0D0804;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;text-transform:uppercase">
+            📷 Tirar nova foto
+          </button>
+          <button onclick="ignorarQualidade()" style="padding:13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:rgba(245,234,218,0.5);font-size:12px;cursor:pointer">
+            Continuar mesmo assim
+          </button>
+        </div>
+      </div>
+
       <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);display:flex;gap:12px">
         <button onclick="refazerFoto()" style="flex:1;padding:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:10px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Refazer</button>
         <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#2B1206;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
@@ -890,7 +928,7 @@ detectarPais().then(function(pais){ configurarOrcamento(pais); });
 const _a='sk-ant-api03-V', _b='gU93q4z1crUe6TnHbP1j';
 const _c='0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d='tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
 function getKey() { return _a+_b+_c+_d; }
-const _ga='AIzaSyByOxu', _gb='eyIlPtuQ-bU', _gc='Kxx_8zscc7C', _gd='HElxnQ';
+const _ga='AIzaSyAFtB1p', _gb='2P2RIEY3uL3', _gc='9_kaJbPpDyV', _gd='1-gtA';
 const GEMINI_KEY = _ga+_gb+_gc+_gd;
 
 // -- STATE --
@@ -1622,14 +1660,63 @@ function refazerFoto() {
   if (overlay) overlay.style.display = 'none';
 }
 
-function usarFoto() {
+var _tentativasFoto = 0;
+
+async function usarFoto() {
   if (!_snapDataUrl) return;
-  stopLight();
-  resizeImg(_snapDataUrl.split(',')[1], function(r) {
-    S.fotoRosto = r;
-    document.getElementById('btn-foto').disabled = false;
-    go('s-prod');
+
+  var checking = document.getElementById('foto-qualidade-checking');
+  if (checking) checking.style.display = 'flex';
+
+  resizeImg(_snapDataUrl.split(',')[1], async function(r) {
+    try {
+      var analise = await analisarFotoGemini(r);
+      if (checking) checking.style.display = 'none';
+
+      if (!analise || analise.qualidade_ok !== false) {
+        confirmarFoto(r); return;
+      }
+
+      _tentativasFoto++;
+      var erroEl   = document.getElementById('foto-qualidade-erro');
+      var icons    = {maquiagem:'💄',reflexo:'✨',escuro:'🌑',rosto_nao_detectado:'🙈',borrada:'📷'};
+      document.getElementById('foto-erro-icon').textContent   = icons[analise.problema] || '⚠️';
+      document.getElementById('foto-erro-titulo').textContent = analise.problema_titulo || 'Foto com problema';
+      document.getElementById('foto-erro-msg').textContent    = analise.problema_msg    || 'Não conseguimos analisar sua pele com essa foto.';
+      document.getElementById('foto-erro-dica').textContent   = analise.problema_dica   || 'Tente em ambiente com mais luz e sem maquiagem.';
+
+      if (_tentativasFoto >= 2) {
+        var btnNova = document.getElementById('btn-tentar-novamente');
+        if (btnNova) btnNova.style.display = 'none';
+        document.getElementById('foto-erro-msg').textContent = 'Tudo bem! O protocolo será baseado nas suas respostas — vai ficar ótimo assim mesmo 🌸';
+        document.getElementById('foto-erro-dica').style.display = 'none';
+      }
+
+      if (erroEl) erroEl.style.display = 'flex';
+    } catch(e) {
+      if (checking) checking.style.display = 'none';
+      resizeImg(_snapDataUrl.split(',')[1], confirmarFoto);
+    }
   });
+}
+
+function confirmarFoto(b64) {
+  S.fotoRosto = b64;
+  try { localStorage.setItem('sbp_foto_rosto', b64); } catch(e) {}
+  stopLight();
+  document.getElementById('btn-foto').disabled = false;
+  go('s-prod');
+}
+
+function tentarNovamente() {
+  document.getElementById('foto-qualidade-erro').style.display = 'none';
+  document.getElementById('foto-preview-overlay').style.display = 'none';
+  _snapDataUrl = null;
+}
+
+function ignorarQualidade() {
+  document.getElementById('foto-qualidade-erro').style.display = 'none';
+  resizeImg(_snapDataUrl.split(',')[1], confirmarFoto);
 }
 
 function prevFotoGaleria(e) {
@@ -1637,11 +1724,10 @@ function prevFotoGaleria(e) {
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(ev) {
-    resizeImg(ev.target.result.split(',')[1], function(r) {
-      S.fotoRosto = r;
-      stopLight();
-      go('s-prod');
-    });
+    _snapDataUrl = ev.target.result;
+    var overlay = document.getElementById('foto-preview-overlay');
+    document.getElementById('foto-preview-img').src = _snapDataUrl;
+    if (overlay) overlay.style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
@@ -1812,24 +1898,32 @@ function fileToBase64(file) {
 // OCR de uma única imagem
 
 // ── GEMINI VISION helper ─────────────────────────────────────────────────────
-async function geminiVision(b64, prompt, maxTokens) {
+async async function geminiVision(b64, prompt, maxTokens) {
+  var mime = 'image/jpeg';
+  if (b64.startsWith('iVBOR')) mime = 'image/png';
+  else if (b64.startsWith('R0lGO')) mime = 'image/gif';
+  else if (b64.startsWith('UklGR')) mime = 'image/webp';
+
   var resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY,
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GEMINI_KEY,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [
-          { inline_data: { mime_type: 'image/jpeg', data: b64 } },
+          { inline_data: { mime_type: mime, data: b64 } },
           { text: prompt }
         ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 600 }
+        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
       })
     }
   );
   var data = await resp.json();
-  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
-             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  var text = data.candidates && data.candidates[0] &&
+             data.candidates[0].content &&
+             data.candidates[0].content.parts &&
+             data.candidates[0].content.parts[0]
              ? data.candidates[0].content.parts[0].text : '';
   return text.replace(/```json|```/g, '').trim();
 }
@@ -1840,6 +1934,62 @@ async function ocrUmaFoto(b64) {
     800
   );
   try { return JSON.parse(raw).produtos || []; } catch(e) { return []; }
+}
+
+
+// ── Aparelhos: OCR via Gemini ──────────────────────────────────────────────
+var _aparOCRRodando = false;
+var _aparIdentificados = [];
+
+async function ocrAparelho(input) {
+  if (!input.files || !input.files[0]) return;
+  if (_aparOCRRodando) return;
+  _aparOCRRodando = true;
+  var file = input.files[0];
+  input.value = '';
+
+  var status = document.getElementById('apar-ocr-status');
+  if (status) { status.style.display = 'block'; status.textContent = '🔍 Identificando aparelho...'; }
+
+  try {
+    var b64 = await fileToBase64(file);
+    var raw = await geminiVision(b64,
+      'Identifique o aparelho de skincare/beleza nesta foto. Use nome e modelo EXATOS visíveis. Retorne APENAS JSON: {"aparelho":"nome e modelo exato","tipo":"radiofrequência/LED/microcorrente/limpeza sônica/gua sha/outro","encontrado":true}. Se não for aparelho de skincare: {"encontrado":false}.',
+      400
+    );
+    var result = JSON.parse(raw);
+    if (!result.encontrado) {
+      if (status) { status.textContent = '⚠️ Não identifiquei aparelho de skincare. Tente outra foto.'; setTimeout(function(){ status.style.display='none'; }, 3000); }
+    } else {
+      _aparIdentificados.push(result);
+      if (!S.aparelhosOCR) S.aparelhosOCR = [];
+      S.aparelhosOCR.push(result.aparelho + ' (' + result.tipo + ')');
+      renderAparOCRList();
+      if (status) status.style.display = 'none';
+    }
+  } catch(e) {
+    if (status) { status.textContent = '⚠️ Erro: ' + e.message; setTimeout(function(){ status.style.display='none'; }, 3000); }
+  }
+  _aparOCRRodando = false;
+}
+
+function renderAparOCRList() {
+  var list = document.getElementById('apar-ocr-list');
+  if (!list) return;
+  list.innerHTML = '';
+  _aparIdentificados.forEach(function(a, i) {
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(208,180,140,.06);border:1px solid rgba(208,180,140,.2);border-radius:8px;margin-bottom:6px';
+    d.innerHTML = '<div style="flex:1"><div style="font-size:13px;color:var(--cream);font-weight:500">✓ '+a.aparelho+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+a.tipo+'</div></div>' +
+      '<button onclick="removerApar('+i+')" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 6px">×</button>';
+    list.appendChild(d);
+  });
+}
+
+function removerApar(i) {
+  _aparIdentificados.splice(i,1);
+  if (S.aparelhosOCR) S.aparelhosOCR.splice(i,1);
+  renderAparOCRList();
 }
 
 // Processa 1 ou múltiplas fotos em paralelo (máx 10)
@@ -1987,30 +2137,51 @@ function removerProd(i) {
 // -- GERAR PROTOCOLO --
 
 // ── GEMINI: analisa foto do rosto ────────────────────────────────────────────
-async function analisarFotoGemini(b64) {
+async async function analisarFotoGemini(b64) {
   try {
+    var mime = 'image/jpeg';
+    if (b64.startsWith('iVBOR')) mime = 'image/png';
+    else if (b64.startsWith('UklGR')) mime = 'image/webp';
+
+    var prompt = 'Analise esta foto do rosto com o olhar de uma especialista em cosmetologia. ' +
+      'PRIMEIRO avalie a qualidade da foto. Depois analise a pele. ' +
+      'Retorne APENAS JSON válido sem markdown:\n' +
+      '{"qualidade_ok":true,"problema":"ok/maquiagem/reflexo/escuro/rosto_nao_detectado/borrada",' +
+      '"problema_titulo":"título curto amoroso","problema_msg":"1 frase sobre o problema","problema_dica":"1 dica de como corrigir",' +
+      '"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não",' +
+      '"textura":"lisa/levemente irregular/irregular/muito irregular",' +
+      '"poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis",' +
+      '"manchas":"nenhuma/poucas/moderadas/muitas",' +
+      '"vermelhidao":"nenhuma/leve/moderada/intensa",' +
+      '"hidratacao":"muito desidratada/desidratada/normal/bem hidratada",' +
+      '"sensibilidade":"baixa/média/alta",' +
+      '"acne_ativa":"nenhuma/leve/moderada/intensa",' +
+      '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
+
     var resp = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GEMINI_KEY,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{
-            parts: [
-              { inline_data: { mime_type: 'image/jpeg', data: b64 } },
-              { text: 'Analise esta foto do rosto com o olhar detalhado de uma especialista em cosmetologia: observe e classifique cada característica visual da pele com precisão. Retorne APENAS JSON válido sem markdown:\n{"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não","textura":"lisa/levemente irregular/irregular/muito irregular","poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis","manchas":"nenhuma/poucas/moderadas/muitas","vermelhidao":"nenhuma/leve/moderada/intensa","hidratacao":"muito hidratada/hidratada/levemente desidratada/desidratada","tom":"uniforme/levemente irregular/irregular","linhas":"nenhuma/finas/moderadas","brilho":"opaca/normal/brilhante","observacoes":"2-3 frases específicas e detalhadas sobre o que você observa nesta foto — mencione áreas específicas do rosto, padrões visíveis de oleosidade ou ressecamento, e qualquer característica marcante da pele"}' }
-            ]
-          }],
-          generationConfig: { temperature: 0.1, maxOutputTokens: 500 }
+          contents: [{ parts: [
+            { inline_data: { mime_type: mime, data: b64 } },
+            { text: prompt }
+          ]}],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 1000 }
         })
       }
     );
-    var data = await resp.json();
-    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] ? data.candidates[0].content.parts[0].text : '';
-    var clean = text.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
+    var data  = await resp.json();
+    if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+    var raw   = data.candidates && data.candidates[0] &&
+                data.candidates[0].content &&
+                data.candidates[0].content.parts &&
+                data.candidates[0].content.parts[0]
+                ? data.candidates[0].content.parts[0].text : '{}';
+    return JSON.parse(raw.replace(/```json|```/g, '').trim());
   } catch(e) {
-    console.warn('Gemini analysis failed:', e.message);
+    console.error('analisarFotoGemini erro:', e);
     return null;
   }
 }
