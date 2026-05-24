@@ -862,53 +862,50 @@ function renderApp() {
   
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
 async function geminiChat(systemPrompt, userPrompt, maxTokens) {
-  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='9_kaJbPpDyV',d='1-gtA'; return a+b+c+d; })();
-  var resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ parts: [{ text: userPrompt }] }],
-        generationConfig: { temperature: 0.3, maxOutputTokens: maxTokens || 2000 }
-      })
-    }
-  );
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 2000,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }]
+    })
+  });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
-  var text = data.candidates && data.candidates[0] &&
-             data.candidates[0].content &&
-             data.candidates[0].content.parts &&
-             data.candidates[0].content.parts[0]
-             ? data.candidates[0].content.parts[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro API');
+  var text = data.content && data.content[0] ? data.content[0].text : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
 // ── Helper: Gemini para imagem + texto ───────────────────────────────────
 async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
-  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='9_kaJbPpDyV',d='1-gtA'; return a+b+c+d; })();
-  var resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [
-          { inline_data: { mime_type: mimeType || 'image/jpeg', data: b64 } },
-          { text: prompt }
-        ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
-      })
-    }
-  );
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 800,
+      system: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido.',
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mimeType || 'image/jpeg', data: b64 } },
+        { type: 'text',  text: prompt }
+      ]}]
+    })
+  });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
-  var text = data.candidates && data.candidates[0] &&
-             data.candidates[0].content &&
-             data.candidates[0].content.parts &&
-             data.candidates[0].content.parts[0]
-             ? data.candidates[0].content.parts[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro API');
+  var text = data.content && data.content[0] ? data.content[0].text : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
@@ -2245,27 +2242,32 @@ function renderEvolucaoFotos() {
 }
 
 
-// ── GEMINI VISION helper ─────────────────────────────────────────────────────
+// ── VISION helper (Claude) ───────────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
-  var GKEY = (function(){ var a='AIzaSyAFtB1p',b='2P2RIEY3uL3',c='Kxx_8zscc7C',d='HElxnQ'; return a+b+c+d; })();
-  var resp = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=' + GKEY,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [
-          { inline_data: { mime_type: 'image/jpeg', data: b64 } },
-          { text: prompt }
-        ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 600 }
-      })
-    }
-  );
+  var mime = 'image/jpeg';
+  if (b64.startsWith('iVBOR')) mime = 'image/png';
+  else if (b64.startsWith('UklGR')) mime = 'image/webp';
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 800,
+      system: 'Especialista em cosmetologia. Retorne APENAS JSON válido.',
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
+        { type: 'text',  text: prompt }
+      ]}]
+    })
+  });
   var data = await resp.json();
-  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
-             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
-             ? data.candidates[0].content.parts[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro API');
+  var text = data.content && data.content[0] ? data.content[0].text : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
