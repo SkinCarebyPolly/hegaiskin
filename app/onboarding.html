@@ -1124,6 +1124,49 @@ function authTab(t) {
   if (tabLog) { tabLog.className = 'atab ' + (isLog ? 'on' : 'off'); }
 }
 
+
+async function doLoginGoogle() {
+  var err = document.getElementById('auth-err') || document.getElementById('auth-err-log');
+  try {
+    if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var cred = await window._fbAuth.signInWithPopup(provider);
+    var user = cred.user;
+
+    // Verificar se já tem protocolo salvo
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    if (snap.exists) {
+      var dados = snap.data();
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
+      localStorage.setItem('sbp_auth', user.uid);
+      window.location.href = 'protocolo.html';
+      return;
+    }
+
+    // Novo usuário — salvar dados básicos e ir para onboarding
+    var nome = user.displayName || user.email.split('@')[0];
+    await window._fbDb.collection('usuarios').doc(user.uid).set({
+      nome: nome,
+      email: user.email,
+      plano: 'beta',
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+      atualizacoes: { mes: '', usado: 0, limite: 5 }
+    }, { merge: true });
+
+    localStorage.setItem('sbp_auth', user.uid);
+    localStorage.setItem('sbp_user', JSON.stringify({ nome, email: user.email, uid: user.uid }));
+    go('s-lgpd');
+
+  } catch(e) {
+    var msg = e.code === 'auth/popup-closed-by-user' ? 'Login cancelado.'
+            : e.code === 'auth/popup-blocked'        ? 'Popup bloqueado. Permita popups para este site.'
+            : e.message || 'Erro ao entrar com Google.';
+    if (err) { err.textContent = msg; err.style.display = 'block'; }
+  }
+}
+
 async function doAuth() {
   var isLog = document.getElementById('form-log').style.display !== 'none';
   var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
