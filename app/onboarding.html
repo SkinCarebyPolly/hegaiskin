@@ -1941,7 +1941,7 @@ function fileToBase64(file) {
 // OCR de uma única imagem
 
 // ── GEMINI VISION helper ─────────────────────────────────────────────────────
-async async function geminiVision(b64, prompt, maxTokens) {
+async function geminiVision(b64, prompt, maxTokens) {
   var mime = 'image/jpeg';
   if (b64.startsWith('iVBOR')) mime = 'image/png';
   else if (b64.startsWith('R0lGO')) mime = 'image/gif';
@@ -2180,7 +2180,7 @@ function removerProd(i) {
 // -- GERAR PROTOCOLO --
 
 // ── GEMINI: analisa foto do rosto ────────────────────────────────────────────
-async async function analisarFotoGemini(b64) {
+async function analisarFotoGemini(b64) {
   try {
     var mime = 'image/jpeg';
     if (b64.startsWith('iVBOR')) mime = 'image/png';
