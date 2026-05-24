@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="commission-factory-verification" content="3f3cac15de6b423a86d7692bee41526e" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -648,16 +649,53 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
 function buildTierContent(s, tier, af) {
   var t = s[tier.key];
   if (!t || !t.produto) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:8px">Sem sugestão para este nível.</p>';
+  // Enrich tier with category from parent sugestao
+  t.categoria = t.categoria || s.falta || '';
   var query = (t.produto || '') + ' ' + (t.marca || '');
 
-  // Build buy buttons based on country
+  // ── Smart affiliate links ────────────────────────────────────────────────
   var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
+  // Detect if K-Beauty brand (prioritize YesStyle)
+  var kbeautyBrands = ['anua','cosrx','medicube','some by mi','innisfree','dear klairs','klairs','beauty of joseon','numbuzin','isntree','tocobo','round lab','purito','axis-y','skin1004','dr.jart','missha','etude','laneige','sulwhasoo','the ordinary','cerave','la roche-posay','bioderma','vichy','garnier','neutrogena'];
+  var marcaLower = (t.marca || '').toLowerCase();
+  var isKbeauty = kbeautyBrands.some(function(b) { return marcaLower.indexOf(b) !== -1; });
+
+  // Build optimized search query: marca + produto + categoria
+  var categoria = t.categoria || '';
+  var queryBase = (t.marca ? t.marca + ' ' : '') + (t.produto || '') + (categoria ? ' ' + categoria : '');
+  var queryEnc = encodeURIComponent(queryBase);
+
+  // Amazon: add beauty category filter + sort by reviews
+  var amazonTag = af.amazon && af.amazon.tag && af.amazon.tag !== 'COLOQUE_TAG_BR' && af.amazon.tag !== 'COLOQUE_TAG_ES' ? '&tag=' + af.amazon.tag : '';
+  var amazonUrl = af.amazon ? af.amazon.url + queryEnc + '&i=beauty&s=review-rank' + amazonTag : null;
+
+  // YesStyle: just brand + product (no category needed)
+  var ysQuery = encodeURIComponent((t.marca ? t.marca + ' ' : '') + (t.produto || ''));
+  var ysTag = af.yesstyle && af.yesstyle.tag && af.yesstyle.tag !== 'COLOQUE_TAG_YESSTYLE' ? '&ref=' + af.yesstyle.tag : '';
+  var ysUrl = af.yesstyle ? af.yesstyle.url + ysQuery + ysTag : null;
+
+  // Mercado Livre: marca + produto (replaces spaces with hyphens for ML)
+  var mlUrl = af.mercadolivre ? af.mercadolivre.url + encodeURIComponent(queryBase) : null;
+
+  // Notino: marca + produto
+  var notinoUrl = af.notino ? af.notino.url + queryEnc : null;
+
   var btns = '';
-  if (af.amazon)   btns += '<a href="' + af.amazon.url   + encodeURIComponent(query) + (af.amazon.tag   ? '&tag=' + af.amazon.tag   : '') + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
-  if (af.yesstyle) btns += '<a href="' + af.yesstyle.url + encodeURIComponent(query) + (af.yesstyle.tag ? '&tag=' + af.yesstyle.tag : '') + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
-  if (af.mercadolivre) btns += '<a href="' + af.mercadolivre.url + encodeURIComponent(query) + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
-  if (af.notino)   btns += '<a href="' + af.notino.url   + encodeURIComponent(query) + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
+
+  // K-Beauty: show YesStyle first, Amazon second
+  if (isKbeauty) {
+    if (ysUrl)      btns += '<a href="' + ysUrl      + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
+    if (amazonUrl)  btns += '<a href="' + amazonUrl  + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
+    if (mlUrl)      btns += '<a href="' + mlUrl      + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
+    if (notinoUrl)  btns += '<a href="' + notinoUrl  + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
+  } else {
+    // Non K-Beauty: Amazon first, then YesStyle, then ML/Notino
+    if (amazonUrl)  btns += '<a href="' + amazonUrl  + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
+    if (ysUrl)      btns += '<a href="' + ysUrl      + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
+    if (mlUrl)      btns += '<a href="' + mlUrl      + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
+    if (notinoUrl)  btns += '<a href="' + notinoUrl  + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
+  }
 
   return '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
            '<div>' +
