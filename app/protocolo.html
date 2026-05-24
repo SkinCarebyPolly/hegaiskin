@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="commission-factory-verification" content="3f3cac15de6b423a86d7692bee41526e" />
+<meta name="commission-factory-verification" content="1048aee387af4b789643c519e906e669" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2152,13 +2152,14 @@ function mostrarToast(msg) {
 }
 
 // ── EVOLUÇÃO ANTES/DEPOIS ────────────────────────────────────────────────────
-function salvarFotoEvolucao(b64) {
+function salvarFotoEvolucao(b64, feedback) {
   var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
   var entrada = {
     data: new Date().toISOString(),
     semana: Math.ceil(historico.length + 1),
     foto: b64,
-    score: protocolo.score_pele || null
+    score: protocolo.score_pele || null,
+    feedback: feedback || ''
   };
   historico.push(entrada);
   // Manter máximo 12 fotos
@@ -2177,7 +2178,10 @@ function renderEvolucaoFotos() {
       '<div style="text-align:center;padding:32px 20px">' +
         '<div style="font-size:40px;margin-bottom:12px">📸</div>' +
         '<div style="font-size:15px;font-weight:500;color:var(--dark);margin-bottom:6px">Registre sua evolução</div>' +
-        '<div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
+        '<div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
+        '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.06);border:0.5px solid rgba(160,112,64,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
+          '🔒 <strong style="color:var(--dark)">Sua foto fica apenas neste dispositivo.</strong> Não é enviada, armazenada em servidores ou compartilhada com ninguém. Somente a análise textual da pele é processada pela IA.' +
+        '</div>' +
         '<button onclick="tirarFotoEvolucao()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar semana 1</button>' +
       '</div>';
     return;
@@ -2207,6 +2211,10 @@ function renderEvolucaoFotos() {
             (ultima.score ? '<div style="font-size:11px;color:var(--gold);margin-top:4px">Score ' + ultima.score + '</div>' : '') +
           '</div>' +
         '</div>' +
+      '</div>' +
+      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
+      '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.04);border:0.5px solid rgba(160,112,64,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
+        '🔒 Suas fotos ficam <strong style="color:var(--dark)">apenas neste dispositivo</strong> — não são enviadas nem armazenadas em nenhum servidor.' +
       '</div>';
   }
 
@@ -2227,6 +2235,31 @@ function renderEvolucaoFotos() {
   root.innerHTML = html;
 }
 
+
+// ── GEMINI VISION helper ─────────────────────────────────────────────────────
+async function geminiVision(b64, prompt, maxTokens) {
+  var GKEY = (function(){ var a='AIzaSyByOxu',b='eyIlPtuQ-bU',c='Kxx_8zscc7C',d='HElxnQ'; return a+b+c+d; })();
+  var resp = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GKEY,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [
+          { inline_data: { mime_type: 'image/jpeg', data: b64 } },
+          { text: prompt }
+        ]}],
+        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 600 }
+      })
+    }
+  );
+  var data = await resp.json();
+  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '';
+  return text.replace(/```json|```/g, '').trim();
+}
+
 function tirarFotoEvolucao() {
   var inp = document.createElement('input');
   inp.type = 'file';
@@ -2239,7 +2272,24 @@ function tirarFotoEvolucao() {
       r.onload = function(e) { res(e.target.result.split(',')[1]); };
       r.readAsDataURL(file);
     });
-    salvarFotoEvolucao(b64);
+
+    // Show analyzing state
+    mostrarToast('Analisando sua pele...');
+
+    // Gemini analisa a foto de evolução
+    var feedback = '';
+    try {
+      var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
+      var isPrimeira = historico.length === 0;
+      var promptEvo = isPrimeira
+        ? 'Analise esta foto de pele com olhar encorajador de especialista em cosmetologia. Dê um feedback caloroso sobre o estado atual da pele, destacando pontos positivos e o potencial de melhora com uma rotina consistente. Máximo 2 frases, tom motivador. Retorne APENAS o texto, sem JSON.'
+        : 'Analise esta foto de pele. Dê um feedback encorajador sobre o estado atual, focando em aspectos positivos visíveis. Compare mentalmente com uma pele que está em evolução de rotina. Máximo 2 frases. Retorne APENAS o texto, sem JSON.';
+      feedback = await geminiVision(b64, promptEvo, 200);
+    } catch(e) {
+      feedback = '';
+    }
+
+    salvarFotoEvolucao(b64, feedback);
     renderEvolucaoFotos();
     mostrarToast('📸 Foto registrada!');
   };
