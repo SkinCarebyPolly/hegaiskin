@@ -1,0 +1,2485 @@
+<!DOCTYPE html>
+<!-- Hegai Skin v1.0-beta -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="commission-factory-verification" content="1048aee387af4b789643c519e906e669" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#F2E8D9">
+<title>Hegai Skin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#A07040;--gold-light:#C9A97A;--gold-dim:rgba(160,112,64,0.10);--dark:#2B1206;--dark2:#3D1A08;--cream:#F2E8D9;--surface:#FFFAF5;--surface2:#FAF3E8;--cdim:rgba(43,18,6,0.55);--muted:#9a8878;--green:#5a8a6e;--red:#b85a50}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;font-size:16px}
+.pbar{position:fixed;top:0;left:0;height:3px;background:var(--gold);transition:width .4s;z-index:100}
+.hdr{position:fixed;top:0;left:0;right:0;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50;background:linear-gradient(180deg,rgba(242,232,217,.98),rgba(242,232,217,.0))}
+.hdr-brand{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--gold)}
+.hdr-step{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.scr{display:none;min-height:100vh;padding:96px 24px 60px;flex-direction:column;align-items:center;justify-content:center}
+.scr.on{display:flex;animation:fi .4s ease}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.inner{width:100%;max-width:460px}
+.badge{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.badge::before{content:'';width:24px;height:1px;background:var(--gold)}
+h1{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,38px);font-weight:400;line-height:1.15;margin-bottom:10px}
+h1 em{font-style:italic;color:var(--gold)}
+.sub{font-size:15px;color:var(--cdim);line-height:1.7;margin-bottom:28px}
+.igrp{margin-bottom:14px}
+.ilbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block}
+.ifield{width:100%;background:#fff;border:1px solid rgba(160,112,64,.2);border-radius:8px;padding:14px 16px;font-family:'Jost',sans-serif;font-size:16px;color:var(--dark);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.ifield:focus{border-color:var(--gold)}
+.ifield::placeholder{color:#b8a898}
+.pwrap{position:relative}
+.pwrap .ifield{padding-right:46px}
+.peye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px}
+.btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:8px;padding:16px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+.btn:active{opacity:.85}
+.btn.dim{opacity:.45}
+.btn2{width:100%;background:transparent;border:1px solid rgba(160,112,64,.25);border-radius:8px;padding:14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;margin-top:8px;transition:all .2s}
+.btn2:active{border-color:var(--gold);color:var(--gold)}
+/* LGPD */
+.chk-wrap{margin-bottom:12px}
+.chk-wrap label{display:flex;align-items:flex-start;gap:14px;padding:16px;border:1px solid rgba(160,112,64,.15);border-radius:10px;cursor:pointer;background:#fff;transition:background .2s}
+.chk-wrap label:active{background:var(--gold-dim)}
+.chk-wrap input[type=checkbox]{width:24px;height:24px;min-width:24px;accent-color:var(--gold);cursor:pointer;margin-top:1px}
+.chk-wrap span{font-size:15px;color:var(--cdim);line-height:1.65}
+.chk-wrap span strong{color:var(--dark)}
+/* QUIZ */
+.qopts{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.qopt{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid rgba(160,112,64,.15);border-radius:10px;cursor:pointer;background:#fff;transition:all .2s;user-select:none}
+.qopt.on{border-color:var(--gold);background:var(--gold-dim)}
+.qopt:active{background:var(--gold-dim)}
+.qcirc{width:20px;height:20px;border:1.5px solid rgba(160,112,64,.35);border-radius:50%;flex-shrink:0;transition:all .2s;position:relative}
+.qopt.on .qcirc{background:var(--gold);border-color:var(--gold)}
+.qcirc::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s}
+.qopt.on .qcirc::after{opacity:1}
+.qopt.multi .qcirc{border-radius:4px}
+.qopt-icon{font-size:20px;flex-shrink:0}
+.qopt-lbl{font-size:15px;font-weight:500;color:var(--dark)}
+.qopt-sub{font-size:13px;color:var(--muted);margin-top:2px}
+/* PHOTO */
+.photo{border:1px dashed rgba(160,112,64,.3);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:14px;background:rgba(160,112,64,.04);position:relative;overflow:hidden}
+.photo.full{padding:0;border-style:solid}
+.photo img{width:100%;max-height:260px;object-fit:cover;border-radius:11px;display:block}
+.photo-icon{font-size:32px;margin-bottom:10px}
+.photo-t{font-size:14px;font-weight:500;margin-bottom:5px}
+.photo-s{font-size:12px;color:var(--muted)}
+input[type=file]{display:none}
+/* LIGHT METER */
+#lmeter{display:flex;align-items:center;gap:10px;padding:12px 15px;border-radius:10px;margin-bottom:12px;font-size:13px;font-weight:500;background:#fff;border:1px solid rgba(160,112,64,.15);transition:all .3s}
+#lmeter.dark{background:rgba(184,90,80,.08);border-color:var(--red);color:var(--red)}
+#lmeter.good{background:rgba(90,138,110,.08);border-color:var(--green);color:var(--green)}
+#lmeter .dot{width:10px;height:10px;border-radius:50%;background:currentColor;flex-shrink:0}
+#cambox{position:relative;margin-bottom:14px;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:3/4;display:none}
+#camprev{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#camsnap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:#fff;border:3px solid var(--gold);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center}
+/* PRODUCTS */
+.popt{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid rgba(160,112,64,.15);border-radius:12px;background:#fff;cursor:pointer;width:100%;font-family:'Jost',sans-serif;margin-bottom:9px;transition:all .2s;text-align:left}
+.popt:active{border-color:var(--gold);background:var(--gold-dim)}
+.popt-icon{font-size:26px;flex-shrink:0}
+.popt-t{font-size:15px;font-weight:500;color:var(--dark);margin-bottom:2px}
+.popt-s{font-size:13px;color:var(--muted)}
+/* SPINNER */
+.spin-wrap{text-align:center;padding:40px 0}
+.spinner{width:56px;height:56px;border:2px solid rgba(160,112,64,.15);border-top-color:var(--gold);border-radius:50%;margin:0 auto 22px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:7px}
+.spin-s{font-size:13px;color:var(--muted)}
+.dots::after{content:'';animation:dt 1.5s infinite}
+@keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+/* CONFIRM */
+.cbox{background:#fff;border:1px solid rgba(160,112,64,.2);border-radius:12px;padding:20px;margin-bottom:20px}
+.cbox-t{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.cbox-b{font-size:14px;color:var(--cdim);line-height:1.8}
+/* SUCCESS */
+.sicon{width:70px;height:70px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 22px;animation:pop .5s ease}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+/* LOCATION */
+.locbtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid rgba(160,112,64,.15);border-radius:10px;background:#fff;cursor:pointer;width:100%;font-family:'Jost',sans-serif;font-size:14px;color:var(--muted);margin-bottom:14px;text-align:left;transition:all .2s}
+.locbtn.ok{border-color:var(--green);color:var(--green);background:rgba(90,138,110,.08)}
+.locbtn.no{border-color:var(--red);color:var(--red)}
+.errmsg{font-size:13px;color:var(--red);margin-top:6px;display:none}
+.errmsg.on{display:block}
+/* AUTH TABS */
+.atabs{display:flex;margin-bottom:28px;border:1px solid rgba(201,169,122,.15);border-radius:10px;overflow:hidden}
+.atab{flex:1;padding:12px;border:none;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.atab.on{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark)}
+.atab.off{background:rgba(160,112,64,.06);color:var(--muted);font-weight:500}
+
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+@keyframes fadeIn {
+  from{opacity:0;transform:translateY(-4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skincare Polly">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    try {
+      if (typeof firebase !== 'undefined') {
+        const _fbConfig = {
+          apiKey: "AIzaSyBlZP6K55T1Mos8NzvOJtffXUDOOz_xR8o",
+          authDomain: "skincare-by-polly.firebaseapp.com",
+          projectId: "skincare-by-polly",
+          storageBucket: "skincare-by-polly.firebasestorage.app",
+          messagingSenderId: "423592521435",
+          appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+        window._fbAuth = firebase.auth();
+        window._fbDb = firebase.firestore();
+        window._fbAuth.onAuthStateChanged(async function(user) {
+          if (user) {
+            window._currentUser = user;
+            var hasLocal = localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo');
+            var atualizando = localStorage.getItem('sbp_atualizando');
+            if (atualizando) {
+              // Usuária veio do botão "Atualizar" — deixar fazer o quiz de novo
+              localStorage.removeItem('sbp_atualizando');
+            } else if (!hasLocal) {
+              try {
+                var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+                if (snap.exists) {
+                  var dados = snap.data();
+                  localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+                  localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+                  localStorage.setItem('sbp_ativo', 'true');
+                  localStorage.setItem('sbp_auth', user.uid);
+                  window.location.href = 'protocolo.html';
+                }
+              } catch(e) { console.error('Firebase fetch error:', e); }
+            }
+          }
+        });
+      } else {
+        console.warn('Firebase SDK nao carregado — modo offline ativo.');
+      }
+    } catch(e) { console.warn('Firebase init error:', e.message); }
+  </script>
+
+</head>
+<body>
+<!-- PWA INSTALL BANNER -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#F2E8D9;border:1px solid #C9A97A;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <div style="font-size:24px;flex-shrink:0">📲</div>
+  <div style="flex:1">
+    <div style="font-size:13px;color:#2B1206;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
+    <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
+  </div>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#C9A97A,#E8D5B0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#2B1206;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
+</div>
+<div class="pbar" id="pbar" style="width:0%"></div>
+<div class="hdr">
+  <div class="hdr-brand">Hegai Skin <span style="font-size:9px;letter-spacing:1px;font-style:normal;background:rgba(160,112,64,.12);border:0.5px solid rgba(160,112,64,.3);border-radius:20px;padding:2px 7px;vertical-align:middle;font-family:'Jost',sans-serif">versão beta</span></div>
+  <div class="hdr-step" id="hstep"></div>
+</div>
+
+<!-- 0: LGPD v6 -->
+<div class="scr" id="s-lgpd">
+  <div class="inner">
+    <div class="badge">Antes de começar</div>
+    <h1>Algumas coisas<br><em>importantes.</em></h1>
+    <p class="sub">O Hegai Skin é a primeira consultora de rotina inteligente — usa o que você já tem em casa, evita desperdício e protege sua pele de combinações erradas.</p>
+    <div class="chk-wrap">
+      <label><input type="checkbox" id="c1" onchange="chkUpdate()"><span><strong>Uso de fotos pela IA</strong> — Autorizo o uso das minhas fotos exclusivamente para que a consultora inteligente crie minha rotina personalizada. As imagens não são armazenadas em servidores nem compartilhadas com terceiros.</span></label>
+    </div>
+    <div class="chk-wrap">
+      <label><input type="checkbox" id="c2" onchange="chkUpdate()"><span><strong>Consultora de rotinas, não de saúde</strong> — Entendo que o Hegai Skin é uma consultora de rotinas de skincare baseada em inteligência artificial. Não presta serviço médico, dermatológico nem de saúde. Em caso de dúvidas sobre minha pele, consultarei um profissional.</span></label>
+    </div>
+    <div class="chk-wrap">
+      <label><input type="checkbox" id="c3" onchange="chkUpdate()"><span><strong>Uso consciente</strong> — Se tiver condições de pele diagnosticadas, alergias severas ou usar medicamentos tópicos, consultarei um dermatologista antes de iniciar qualquer rotina.</span></label>
+    </div>
+    <button class="btn" id="btn-lgpd" onclick="goLGPD()">Entendi, quero começar →</button>
+  </div>
+</div>
+
+<!-- 1: CADASTRO -->
+<div class="scr" id="s-cad" style="display:flex">
+  <div class="inner">
+    <div class="atabs">
+      <button class="atab on" id="auth-tab-new" onclick="authTab('new')">Nova conta</button>
+      <button class="atab off" id="auth-tab-log" onclick="authTab('log')">Já tenho conta</button>
+    </div>
+
+    <!-- Botão Google -->
+    <button onclick="doLoginGoogle()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:#fff;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;color:#333;cursor:pointer;margin-bottom:16px">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px;height:18px">
+      Continuar com Google
+    </button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
+      <span style="font-size:11px;color:var(--muted)">ou</span>
+      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
+    </div>
+
+    <div id="form-new">
+      <div class="badge">Bem-vinda</div>
+      <h1>Vamos criar<br><em>sua conta.</em></h1>
+      <div class="igrp"><label class="ilbl">Seu nome</label><input type="text" id="inp-nome" class="ifield" placeholder="Como quer ser chamada?"></div>
+      <div class="igrp"><label class="ilbl">Email</label><input type="email" id="inp-email" class="ifield" placeholder="seu@email.com"></div>
+      <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="inp-pw" class="ifield" placeholder="Mínimo 6 caracteres"><button class="peye" onclick="tgPw('inp-pw',this)" type="button">👁</button></div></div>
+      <button class="locbtn" id="locbtn" onclick="getLocation()"><span style="font-size:20px">📍</span><span id="loctxt">Permitir localização (clima da sua cidade)</span></button>
+      <div class="errmsg on" id="auth-err" style="display:none"></div>
+      <button class="btn" onclick="doAuth()">Criar minha conta →</button>
+    </div>
+    <div id="form-log" style="display:none">
+      <div class="badge">Bem-vinda de volta</div>
+      <h1>Entre na<br><em>sua conta.</em></h1>
+      <div class="igrp"><label class="ilbl">Email</label><input type="email" id="log-email" class="ifield" placeholder="seu@email.com"></div>
+      <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="log-pw" class="ifield" placeholder="Sua senha"><button class="peye" onclick="tgPw('log-pw',this)" type="button">👁</button></div></div>
+      <div class="errmsg" id="auth-err-log"></div>
+      <button class="btn" onclick="doAuth()">Entrar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2: Q1 INCOMODOS -->
+<div class="scr" id="s-q1">
+  <div class="inner">
+    <div class="badge">Questionário · 1 de 15</div>
+    <h1>O que mais te<br><em>incomoda na pele?</em></h1>
+    <p class="sub">Pode selecionar mais de uma.</p>
+    <div class="qopts" id="q1">
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🔴</span><div><div class="qopt-lbl">Acne e espinhas</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Brilho excessivo / oleosidade</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🕳</span><div><div class="qopt-lbl">Poros dilatados</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🌙</span><div><div class="qopt-lbl">Manchas e tom irregular</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">⏳</span><div><div class="qopt-lbl">Linhas finas e envelhecimento</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">💧</span><div><div class="qopt-lbl">Ressecamento e descamação</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🔥</span><div><div class="qopt-lbl">Vermelhidão e sensibilidade</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q2','q1','multi')">Continuar →</button>
+  </div>
+</div>
+
+<!-- 3: Q2 TIPO PELE -->
+<div class="scr" id="s-q2">
+  <div class="inner">
+    <div class="badge">Questionário · 2 de 15</div>
+    <h1>Como você descreveria<br><em>sua pele?</em></h1>
+    <div class="qopts" id="q2">
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">💦</span><div><div class="qopt-lbl">Oleosa</div><div class="qopt-sub">Brilha ao longo do dia</div></div></div>
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">🌊</span><div><div class="qopt-lbl">Mista</div><div class="qopt-sub">Oleosa na zona T</div></div></div>
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">🏜</span><div><div class="qopt-lbl">Seca</div><div class="qopt-sub">Sente aperto, descama</div></div></div>
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">🌸</span><div><div class="qopt-lbl">Sensível</div><div class="qopt-sub">Reage facilmente</div></div></div>
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">✦</span><div><div class="qopt-lbl">Normal</div><div class="qopt-sub">Equilibrada</div></div></div>
+      <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">❓</span><div><div class="qopt-lbl">Não sei</div><div class="qopt-sub">A IA vai descobrir</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q3','q2','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q1')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 4: Q3 APARELHOS -->
+<div class="scr" id="s-q3">
+  <div class="inner">
+    <div class="badge">Questionário · 3 de 15</div>
+    <h1>Tem aparelhos<br><em>de skincare?</em></h1>
+
+    <!-- Foto dos aparelhos -->
+    <div style="border:1px dashed rgba(160,112,64,.22);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px;background:rgba(160,112,64,.03)">
+      <div style="font-size:13px;font-weight:500;color:#2B1206;margin-bottom:3px">Fotografar meus aparelhos</div>
+      <div style="font-size:11px;color:#9a8878;margin-bottom:14px;font-weight:300">A IA identifica automaticamente</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="abrirCameraAparelhos()" style="padding:10px 8px;background:rgba(160,112,64,.1);color:#A07040;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer">📷 Câmera</button>
+        <button onclick="abrirGaleriaAparelhos()" style="padding:10px 8px;background:rgba(160,112,64,.1);color:#A07040;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;cursor:pointer">🖼️ Galeria</button>
+      </div>
+      <input type="file" id="fp-aparelho-camera" accept="image/*" capture="environment" style="display:none" onchange="processarFotoAparelhos(this)">
+      <input type="file" id="fp-aparelho-galeria" accept="image/*" multiple style="display:none" onchange="processarFotoAparelhos(this)">
+      <div id="aparelho-ocr-status" style="display:none;margin-top:10px;font-size:12px;color:#A07040">
+        <div style="display:inline-flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border:2px solid rgba(160,112,64,.2);border-top-color:#A07040;border-radius:50%;animation:sp 1s linear infinite"></div>
+          Identificando aparelhos...
+        </div>
+      </div>
+      <div id="aparelhos-identificados" style="display:none;margin-top:10px;text-align:left"></div>
+    </div>
+
+    <!-- Separador -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="flex:1;height:0.5px;background:rgba(160,112,64,.15)"></div>
+      <div style="font-size:9px;letter-spacing:2px;color:#9a8878;text-transform:uppercase">ou selecione</div>
+      <div style="flex:1;height:0.5px;background:rgba(160,112,64,.15)"></div>
+    </div>
+
+    <!-- Checkboxes sem emojis -->
+    <div class="qopts" id="q3">
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Radiofrequência</div><div class="qopt-sub">Ex: Medicube Age-R, NEWA</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">LED facial</div><div class="qopt-sub">Ex: Déesse Pro, Currentbody</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Microcorrente</div><div class="qopt-sub">Ex: NuFace, GESKE</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Gua sha / rolo</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Limpeza sônica</div><div class="qopt-sub">Ex: Foreo, Anlan</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Ultrassom facial</div><div class="qopt-sub">Penetração de ativos</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><div><div class="qopt-lbl">Não tenho aparelhos</div></div></div>
+    </div>
+    <!-- OCR de aparelhos via Gemini -->
+    <div style="margin:12px 0 4px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;opacity:.8">ou fotografe seu aparelho</div>
+      <div onclick="if(!_aparOCRRodando){document.getElementById('fp-apar-real').value='';document.getElementById('fp-apar-real').click();}"
+           style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px dashed rgba(208,180,140,.35);border-radius:10px;cursor:pointer;background:rgba(208,180,140,.04)">
+        <span style="font-size:22px">📷</span>
+        <div>
+          <div style="font-size:13px;color:var(--cream);font-weight:500">Fotografar aparelho</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">A IA identifica o modelo automaticamente</div>
+        </div>
+      </div>
+      <input type="file" id="fp-apar-real" accept="image/*" style="display:none" onchange="ocrAparelho(this)">
+      <div id="apar-ocr-status" style="display:none;margin-top:10px;padding:12px;background:rgba(208,180,140,.08);border-radius:8px;font-size:13px;color:var(--gold);text-align:center">🔍 Identificando...</div>
+      <div id="apar-ocr-list"></div>
+    </div>
+
+    <button class="btn" onclick="goValidate('s-q4','q3','multi')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q2')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 5: Q4 INVESTIMENTO -->
+<div class="scr" id="s-q4">
+  <div class="inner">
+    <div class="badge">Questionário · 4 de 15</div>
+    <h1>Nível de<br><em>investimento?</em></h1>
+    <p class="sub" style="margin-bottom:8px">Quanto você investe em skincare <strong>por mês no total</strong>, somando todos os produtos?</p>
+    <div class="qopts" id="q4"></div>
+    <button class="btn" onclick="goValidate('s-q5','q4','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q3')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 6: Q5 HABITOS -->
+<div class="scr" id="s-q5">
+  <div class="inner">
+    <div class="badge">Questionário · 5 de 15</div>
+    <h1>Hábitos do<br><em>dia a dia.</em></h1>
+    <p class="sub">Impactam directamente na sua pele.</p>
+    <div class="ilbl" style="margin-bottom:8px">Exposição ao sol</div>
+    <div class="qopts" id="q5a" style="flex-direction:row;gap:8px;margin-bottom:16px">
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5a')"><div class="qcirc"></div><div><div class="qopt-lbl">🌤 Rara</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5a')"><div class="qcirc"></div><div><div class="qopt-lbl">☀️ Frequente</div></div></div>
+    </div>
+    <div class="ilbl" style="margin-bottom:8px">Horas de sono</div>
+    <div class="qopts" id="q5b" style="flex-direction:row;gap:8px;margin-bottom:16px">
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5b')"><div class="qcirc"></div><div><div class="qopt-lbl">&lt;6h</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5b')"><div class="qcirc"></div><div><div class="qopt-lbl">6–8h</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5b')"><div class="qcirc"></div><div><div class="qopt-lbl">&gt;8h</div></div></div>
+    </div>
+    <div class="ilbl" style="margin-bottom:8px">Nível de estresse</div>
+    <div class="qopts" id="q5c" style="flex-direction:row;gap:8px;margin-bottom:16px">
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5c')"><div class="qcirc"></div><div><div class="qopt-lbl">😌 Baixo</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5c')"><div class="qcirc"></div><div><div class="qopt-lbl">😤 Alto</div></div></div>
+    </div>
+    <div class="ilbl" style="margin-bottom:8px">Água por dia</div>
+    <div class="qopts" id="q5d" style="flex-direction:row;gap:8px;margin-bottom:16px">
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5d')"><div class="qcirc"></div><div><div class="qopt-lbl">&lt;1L</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5d')"><div class="qcirc"></div><div><div class="qopt-lbl">1–2L</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5d')"><div class="qcirc"></div><div><div class="qopt-lbl">&gt;2L</div></div></div>
+    </div>
+    <div class="ilbl" style="margin-bottom:8px">Sensibilidade</div>
+    <div class="qopts" id="q5e" style="flex-direction:row;gap:8px;margin-bottom:16px">
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5e')"><div class="qcirc"></div><div><div class="qopt-lbl">Sim, pinica</div></div></div>
+      <div class="qopt" style="flex:1" onclick="togS(this,'q5e')"><div class="qcirc"></div><div><div class="qopt-lbl">Não, resistente</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidateHabitos('s-q6')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q4')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 7: Q6 ROTINA -->
+<div class="scr" id="s-q6">
+  <div class="inner">
+    <div class="badge">Questionário · 6 de 15</div>
+    <h1>Tempo para<br><em>a rotina?</em></h1>
+    <div class="qopts" id="q6">
+      <div class="qopt" onclick="togS(this,'q6')"><div class="qcirc"></div><span class="qopt-icon">⚡</span><div><div class="qopt-lbl">Rápida — até 5 minutos</div></div></div>
+      <div class="qopt" onclick="togS(this,'q6')"><div class="qcirc"></div><span class="qopt-icon">☕</span><div><div class="qopt-lbl">Moderada — 10 a 15 minutos</div></div></div>
+      <div class="qopt" onclick="togS(this,'q6')"><div class="qcirc"></div><span class="qopt-icon">🌸</span><div><div class="qopt-lbl">Completa — 20 a 30 minutos</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q7','q6','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q5')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 7: Q7 GESTANTE/LACTANTE -->
+<div class="scr" id="s-q7">
+  <div class="inner">
+    <div class="badge">Questionário · 7 de 15</div>
+    <h1>Mais uma<br><em>informação importante.</em></h1>
+    <p class="sub">Alguns ativos são contra-indicados em certas fases. Sua resposta garante um protocolo seguro para você.</p>
+    <div class="qopts" id="q7">
+      <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">🌸</span><div><div class="qopt-lbl">Não estou grávida nem amamentando</div></div></div>
+      <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">🤰</span><div><div class="qopt-lbl">Estou grávida</div><div class="qopt-sub">O protocolo evitará retinol, AHA/BHA em alta concentração e outros ativos de risco</div></div></div>
+      <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">🤱</span><div><div class="qopt-lbl">Estou amamentando</div><div class="qopt-sub">O protocolo priorizará ativos seguros e naturais</div></div></div>
+      <div class="qopt" onclick="togS(this,'q7')"><div class="qcirc"></div><span class="qopt-icon">📅</span><div><div class="qopt-lbl">Acabei de ter bebê (pós-parto)</div><div class="qopt-sub">Pele em reequilíbrio hormonal — protocolo adaptado</div></div></div>
+    </div>
+    <div style="background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
+      ⚠️ <strong style="color:var(--dark)">Atenção:</strong> Durante a gestação ou amamentação, confirme com seu médico antes de iniciar qualquer rotina com ativos.
+    </div>
+    <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q6')">← Voltar</button>
+  </div>
+</div>
+
+
+<!-- Q8: EXPERIÊNCIA COM ATIVOS -->
+<div class="scr" id="s-q8">
+  <div class="inner">
+    <div class="badge">Questionário · 8 de 15</div>
+    <h1>Já usou<br><em>ativos na pele?</em></h1>
+    <p class="sub">Isso define sua fase de adaptação.</p>
+    <div class="qopts" id="q8">
+      <div class="qopt" onclick="togS(this,'q8')"><div class="qcirc"></div><span class="qopt-icon">🌱</span><div><div class="qopt-lbl">Nunca usei</div><div class="qopt-sub">Só hidratante e protetor solar</div></div></div>
+      <div class="qopt" onclick="togS(this,'q8')"><div class="qcirc"></div><span class="qopt-icon">🌿</span><div><div class="qopt-lbl">Uso básico</div><div class="qopt-sub">Vitamina C ou Niacinamida</div></div></div>
+      <div class="qopt" onclick="togS(this,'q8')"><div class="qcirc"></div><span class="qopt-icon">⚗️</span><div><div class="qopt-lbl">Uso intermediário</div><div class="qopt-sub">AHA/BHA, Retinol iniciante</div></div></div>
+      <div class="qopt" onclick="togS(this,'q8')"><div class="qcirc"></div><span class="qopt-icon">🔬</span><div><div class="qopt-lbl">Uso avançado</div><div class="qopt-sub">Retinol, ácidos fortes, combinações</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q9','q8','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q7')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q9: MAQUIAGEM -->
+<div class="scr" id="s-q9">
+  <div class="inner">
+    <div class="badge">Questionário · 9 de 15</div>
+    <h1>Você usa<br><em>maquiagem?</em></h1>
+    <div class="qopts" id="q9">
+      <div class="qopt" onclick="togS(this,'q9')"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Não uso</div></div></div>
+      <div class="qopt" onclick="togS(this,'q9')"><div class="qcirc"></div><span class="qopt-icon">🎉</span><div><div class="qopt-lbl">Raramente</div><div class="qopt-sub">Só em ocasiões especiais</div></div></div>
+      <div class="qopt" onclick="togS(this,'q9')"><div class="qcirc"></div><span class="qopt-icon">💄</span><div><div class="qopt-lbl">Às vezes</div><div class="qopt-sub">Algumas vezes por semana</div></div></div>
+      <div class="qopt" onclick="togS(this,'q9')"><div class="qcirc"></div><span class="qopt-icon">👑</span><div><div class="qopt-lbl">Diariamente</div><div class="qopt-sub">Uso todo dia</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q10','q9','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q8')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q10: EXERCÍCIO -->
+<div class="scr" id="s-q10">
+  <div class="inner">
+    <div class="badge">Questionário · 10 de 15</div>
+    <h1>Pratica<br><em>exercício físico?</em></h1>
+    <div class="qopts" id="q10">
+      <div class="qopt" onclick="togS(this,'q10')"><div class="qcirc"></div><span class="qopt-icon">🛋️</span><div><div class="qopt-lbl">Não pratico</div></div></div>
+      <div class="qopt" onclick="togS(this,'q10')"><div class="qcirc"></div><span class="qopt-icon">🚶</span><div><div class="qopt-lbl">Leve</div><div class="qopt-sub">1-2x por semana, caminhada</div></div></div>
+      <div class="qopt" onclick="togS(this,'q10')"><div class="qcirc"></div><span class="qopt-icon">🏃</span><div><div class="qopt-lbl">Moderado</div><div class="qopt-sub">3-4x por semana</div></div></div>
+      <div class="qopt" onclick="togS(this,'q10')"><div class="qcirc"></div><span class="qopt-icon">💪</span><div><div class="qopt-lbl">Intenso</div><div class="qopt-sub">5x+ por semana, muito suor</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q11','q10','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q9')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q11: OBJETIVO -->
+<div class="scr" id="s-q11">
+  <div class="inner">
+    <div class="badge">Questionário · 11 de 15</div>
+    <h1>Qual o seu<br><em>sonho para a pele?</em></h1>
+    <p class="sub">Pode selecionar mais de uma.</p>
+    <div class="qopts" id="q11">
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🪟</span><div><div class="qopt-lbl">Pele de vidro</div><div class="qopt-sub">Brilho saudável, poros invisíveis</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🌓</span><div><div class="qopt-lbl">Sem manchas</div><div class="qopt-sub">Tom uniforme, sem marcas</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🫧</span><div><div class="qopt-lbl">Sem acne</div><div class="qopt-sub">Pele limpa e sem espinhas</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">⏳</span><div><div class="qopt-lbl">Anti-idade</div><div class="qopt-sub">Firme, sem linhas e com viço</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">💧</span><div><div class="qopt-lbl">Hidratação profunda</div><div class="qopt-sub">Pele macia, sem ressecamento</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q12','q11','multi')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q10')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q12: ROTINA ATUAL -->
+<div class="scr" id="s-q12">
+  <div class="inner">
+    <div class="badge">Questionário · 12 de 15</div>
+    <h1>Sua rotina<br><em>hoje é...</em></h1>
+    <div class="qopts" id="q12">
+      <div class="qopt" onclick="togS(this,'q12')"><div class="qcirc"></div><span class="qopt-icon">0️⃣</span><div><div class="qopt-lbl">Nenhuma</div><div class="qopt-sub">Não faço nada ainda</div></div></div>
+      <div class="qopt" onclick="togS(this,'q12')"><div class="qcirc"></div><span class="qopt-icon">🧼</span><div><div class="qopt-lbl">Básica</div><div class="qopt-sub">Limpeza + protetor solar</div></div></div>
+      <div class="qopt" onclick="togS(this,'q12')"><div class="qcirc"></div><span class="qopt-icon">🌿</span><div><div class="qopt-lbl">Intermediária</div><div class="qopt-sub">Sérum + hidratante + protetor</div></div></div>
+      <div class="qopt" onclick="togS(this,'q12')"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Avançada</div><div class="qopt-sub">Múltiplos passos, ativos, esfoliação</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q13','q12','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q11')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q13: CICLO HORMONAL -->
+<div class="scr" id="s-q13">
+  <div class="inner">
+    <div class="badge">Questionário · 13 de 15</div>
+    <h1>Sua pele muda<br><em>no mês?</em></h1>
+    <p class="sub">Hormônios impactam diretamente a pele.</p>
+    <div class="qopts" id="q13">
+      <div class="qopt" onclick="togS(this,'q13')"><div class="qcirc"></div><span class="qopt-icon">😌</span><div><div class="qopt-lbl">Não, fica igual</div></div></div>
+      <div class="qopt" onclick="togS(this,'q13')"><div class="qcirc"></div><span class="qopt-icon">📈</span><div><div class="qopt-lbl">Sim, fica mais oleosa/com acne</div><div class="qopt-sub">Antes da menstruação</div></div></div>
+      <div class="qopt" onclick="togS(this,'q13')"><div class="qcirc"></div><span class="qopt-icon">🌸</span><div><div class="qopt-lbl">Estou na menopausa</div><div class="qopt-sub">Pele mais seca e menos firme</div></div></div>
+      <div class="qopt" onclick="togS(this,'q13')"><div class="qcirc"></div><span class="qopt-icon">💊</span><div><div class="qopt-lbl">Uso anticoncepcional</div><div class="qopt-sub">Hormônios regulados</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q14','q13','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q12')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q14: TEXTURA PREFERIDA -->
+<div class="scr" id="s-q14">
+  <div class="inner">
+    <div class="badge">Questionário · 14 de 15</div>
+    <h1>Prefere produtos<br><em>com qual textura?</em></h1>
+    <div class="qopts" id="q14">
+      <div class="qopt" onclick="togS(this,'q14')"><div class="qcirc"></div><span class="qopt-icon">💨</span><div><div class="qopt-lbl">Levíssima</div><div class="qopt-sub">Gel, água, sérum fluido</div></div></div>
+      <div class="qopt" onclick="togS(this,'q14')"><div class="qcirc"></div><span class="qopt-icon">🌊</span><div><div class="qopt-lbl">Leve</div><div class="qopt-sub">Loção, emulsão, gel-creme</div></div></div>
+      <div class="qopt" onclick="togS(this,'q14')"><div class="qcirc"></div><span class="qopt-icon">🧴</span><div><div class="qopt-lbl">Média</div><div class="qopt-sub">Creme fluido, hidratante comum</div></div></div>
+      <div class="qopt" onclick="togS(this,'q14')"><div class="qcirc"></div><span class="qopt-icon">🧈</span><div><div class="qopt-lbl">Rica</div><div class="qopt-sub">Creme denso, óleo, manteiga</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q15','q14','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q13')">← Voltar</button>
+  </div>
+</div>
+
+<!-- Q15: ALIMENTAÇÃO -->
+<div class="scr" id="s-q15">
+  <div class="inner">
+    <div class="badge">Questionário · 15 de 15</div>
+    <h1>Como é sua<br><em>alimentação?</em></h1>
+    <p class="sub">Açúcar e inflamação afetam diretamente a pele.</p>
+    <div class="qopts" id="q15">
+      <div class="qopt" onclick="togS(this,'q15')"><div class="qcirc"></div><span class="qopt-icon">🥗</span><div><div class="qopt-lbl">Muito saudável</div><div class="qopt-sub">Pouco açúcar, muita fruta e vegetal</div></div></div>
+      <div class="qopt" onclick="togS(this,'q15')"><div class="qcirc"></div><span class="qopt-icon">⚖️</span><div><div class="qopt-lbl">Equilibrada</div><div class="qopt-sub">Mix de saudável e processados</div></div></div>
+      <div class="qopt" onclick="togS(this,'q15')"><div class="qcirc"></div><span class="qopt-icon">🍔</span><div><div class="qopt-lbl">Muito processada</div><div class="qopt-sub">Fast food, muito açúcar e sódio</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-dicas','q15','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q14')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 8: FOTO ROSTO -->
+
+<!-- DICAS PARA FOTO -->
+<div class="scr" id="s-dicas">
+  <div class="inner" style="padding:0;overflow:hidden">
+    <!-- Header escuro com ícone -->
+    <div style="background:linear-gradient(160deg,#2B1206,#1a1208);padding:40px 24px 32px;text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:rgba(201,169,122,0.1);border:2px solid rgba(201,169,122,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px">📸</div>
+      <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Análise de pele</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.3">Para resultados<br>perfeitos</h1>
+    </div>
+
+    <!-- Dicas -->
+    <div style="background:#fff;padding:28px 24px 32px">
+      <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:32px">
+
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="22" cy="16" r="10" stroke="#111" stroke-width="1.5" fill="none"/>
+              <path d="M8 40c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="#111" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M22 6 Q28 10 22 14 Q16 10 22 6Z" stroke="#111" stroke-width="1.2" fill="none"/>
+            </svg>
+          </div>
+          <div style="font-size:15px;font-weight:500;color:#111;font-family:'Jost',sans-serif">Puxa o cabelo para trás</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px">🧹</div>
+          <div style="font-size:15px;font-weight:500;color:#111;font-family:'Jost',sans-serif">Remove a maquiagem</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px">👓</div>
+          <div style="font-size:15px;font-weight:500;color:#111;font-family:'Jost',sans-serif">Tira os óculos</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px">😊</div>
+          <div style="font-size:15px;font-weight:500;color:#111;font-family:'Jost',sans-serif">Mantém uma expressão natural</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px">💡</div>
+          <div style="font-size:15px;font-weight:500;color:#111;font-family:'Jost',sans-serif">Garante luz suficiente</div>
+        </div>
+
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+        <input type="checkbox" id="nao-mostrar-dicas" style="width:18px;height:18px;accent-color:#C9A97A">
+        <label for="nao-mostrar-dicas" style="font-size:13px;color:#666;font-family:'Jost',sans-serif">Não mostrar isto novamente</label>
+      </div>
+
+      <button class="btn" onclick="irParaFoto()" style="background:var(--gold);border:none;border-radius:10px;padding:16px;width:100%;font-size:13px;font-weight:600;letter-spacing:2px;color:#fff;cursor:pointer;text-transform:uppercase">
+        Continuar →
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="scr" id="s-foto" style="padding:0;background:#000">
+  <!-- Câmera fullscreen -->
+  <div id="cam-fullscreen" style="position:relative;width:100%;height:100vh;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center">
+
+    <!-- Video -->
+    <video id="camprev" autoplay playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video>
+
+    <!-- Canvas para análise facial -->
+    <canvas id="face-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none"></canvas>
+
+    <!-- Overlay escuro nas bordas -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 42%, transparent 60%, rgba(0,0,0,0.75) 100%);pointer-events:none;z-index:2"></div>
+
+    <!-- Texto de análise -->
+    <div id="face-analysis-text" style="position:absolute;top:15%;left:50%;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none">
+      <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:6px">ANÁLISE DA PELE</div>
+      <div id="face-status" style="font-size:13px;color:#C9A97A;font-weight:600">Carregando detector...</div>
+    </div>
+
+    <!-- Indicadores em tempo real -->
+    <div id="cam-indicators" style="position:absolute;bottom:160px;left:50%;transform:translateX(-50%);z-index:4;display:flex;gap:8px;flex-wrap:nowrap">
+      <div id="ind-pos" style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.5);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap">
+        <span id="ind-pos-icon">⏳</span> Posição
+      </div>
+      <div id="ind-vis" style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.5);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap">
+        <span id="ind-vis-icon">⏳</span> Visibilidade
+      </div>
+      <div id="ind-luz" style="display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.5);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap">
+        <span id="ind-luz-icon">⏳</span> Iluminação
+      </div>
+    </div>
+
+    <!-- Botão captura -->
+    <div style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:32px">
+      <!-- Galeria -->
+      <label for="foto-rosto-gal" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px">🖼</div>
+        <span style="font-size:10px;color:rgba(255,255,255,0.7)">Galeria</span>
+      </label>
+      <!-- Shutter -->
+      <button id="camsnap" onclick="snapPhoto()" style="width:72px;height:72px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid #ccc"></div>
+      </button>
+      <!-- Placeholder direita -->
+      <div style="width:44px"></div>
+    </div>
+
+    <!-- Foto tirada overlay -->
+    <div id="foto-preview-overlay" style="display:none;position:absolute;inset:0;z-index:10;background:#000">
+      <img id="foto-preview-img" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);display:flex;gap:12px">
+        <button onclick="refazerFoto()" style="flex:1;padding:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:10px;color:#fff;font-size:13px;font-weight:600;cursor:pointer">Refazer</button>
+        <button onclick="usarFoto()" style="flex:1;padding:14px;background:var(--gold);border:none;border-radius:10px;color:#2B1206;font-size:13px;font-weight:600;cursor:pointer">Usar esta foto →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inputs ocultos -->
+  <input type="file" id="foto-rosto-gal" accept="image/*" onchange="prevFotoGaleria(event)" style="display:none">
+  <button class="btn" id="btn-foto" onclick="go('s-prod')" disabled style="display:none">Continuar</button>
+</div>
+
+<!-- 9: PRODUTOS -->
+<div class="scr" id="s-prod">
+  <div class="inner">
+    <div class="badge">Quase lá!</div>
+    <h1>E os seus<br><em>produtos?</em></h1>
+    <p class="sub">Como prefere informar seus produtos de skincare?</p>
+
+    <!-- Escolha do modo -->
+    <div id="prod-modo">
+      <button class="popt" onclick="pickProd('foto')"><span class="popt-icon">📷</span><div><div class="popt-t">Fotografar os rótulos</div><div class="popt-s">A IA lê os rótulos automaticamente</div></div></button>
+      <button class="popt" onclick="pickProd('manual')"><span class="popt-icon">✍️</span><div><div class="popt-t">Digitar a lista</div><div class="popt-s">Liste o que você tem em casa</div></div></button>
+      <button class="popt" onclick="pickProd('zero')"><span class="popt-icon">🌱</span><div><div class="popt-t">Não tenho produtos</div><div class="popt-s">A IA monta tudo dentro do seu orçamento</div></div></button>
+    </div>
+
+    <!-- Modo FOTO -->
+    <div id="prod-foto" style="display:none;margin-top:8px">
+
+      <!-- Dois botões: câmera e galeria -->
+      <div id="prod-foto-btns" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <button onclick="abrirCamera()" style="padding:16px 8px;background:rgba(160,112,64,.1);color:var(--gold);border:1px solid rgba(160,112,64,.3);border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <span style="font-size:24px">📷</span>Tirar foto
+        </button>
+        <button onclick="abrirGaleria()" style="padding:16px 8px;background:rgba(160,112,64,.1);color:var(--gold);border:1px solid rgba(160,112,64,.3);border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <span style="font-size:24px">🖼️</span>Galeria (múltiplas)
+        </button>
+      </div>
+
+      <!-- Inputs separados: câmera e galeria -->
+      <input type="file" id="fp-camera" accept="image/*" capture="environment" style="display:none" onchange="processarFotos(this)">
+      <input type="file" id="fp-galeria" accept="image/*" multiple style="display:none" onchange="processarFotos(this)">
+
+      <!-- Status OCR -->
+      <div id="ocr-status" style="display:none;padding:14px;background:rgba(160,112,64,.08);border-radius:10px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:18px;height:18px;border:2px solid rgba(160,112,64,.2);border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;flex-shrink:0"></div>
+          <div id="ocr-status-txt" style="font-size:13px;color:var(--gold)">Lendo rótulos...</div>
+        </div>
+        <div id="ocr-progress-bar" style="margin-top:8px;height:3px;background:rgba(160,112,64,.15);border-radius:2px;overflow:hidden;display:none">
+          <div id="ocr-progress-fill" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s"></div>
+        </div>
+      </div>
+
+      <!-- Lista de produtos identificados -->
+      <div id="prod-list-wrap" style="display:none;margin-bottom:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">✦ Produtos identificados</div>
+        <div id="prod-list"></div>
+        <button onclick="resetFotoProd()" style="background:none;border:none;color:var(--muted);font-size:11px;margin-top:6px;cursor:pointer;text-decoration:underline;padding:0">
+          Limpar tudo e recomeçar
+        </button>
+      </div>
+
+      <div id="prod-hint" style="display:none;text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px">
+        Quer adicionar mais? Use os botões acima 👆
+      </div>
+
+      <button class="btn" id="btn-prod-criar" onclick="gerarProtocolo()" style="display:none;margin-bottom:8px">
+        Criar minha rotina →
+      </button>
+
+      <button class="btn2" onclick="voltarProd()" style="margin-top:4px">← Voltar</button>
+    </div>
+
+    <!-- Modo MANUAL -->
+    <div id="prod-manual" style="display:none;margin-top:8px">
+      <label class="ilbl">Liste seus produtos</label>
+      <textarea id="txt-prod" class="ifield" style="resize:vertical;min-height:110px;padding:14px 16px;margin-bottom:10px" placeholder="Ex: Sabonete La Roche-Posay, Vitamina C, FPS 60..."></textarea>
+      <button class="btn" onclick="gerarProtocolo()">Criar minha rotina →</button>
+      <button class="btn2" onclick="voltarProd()" style="margin-top:8px">← Voltar</button>
+    </div>
+
+    <button class="btn2" id="btn-prod-voltar-foto" onclick="go('s-foto')" style="margin-top:8px">← Voltar</button>
+  </div>
+</div>
+
+<div class="scr" id="s-gen">
+  <div class="inner" style="text-align:center">
+    <div class="spin-wrap">
+      <div class="spinner"></div>
+      <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
+      <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
+    </div>
+  </div>
+</div>
+
+<!-- 11: CONFIRMAÇÃO -->
+<div class="scr" id="s-conf">
+  <div class="inner" style="padding:0;overflow:hidden;border-radius:0">
+
+    <!-- Header sem foto - novo visual -->
+    <div style="position:relative;width:100%;padding:52px 24px 36px;background:linear-gradient(135deg,#2B1206 0%,#3D1A08 55%,#2A1208 100%);overflow:hidden">
+      <!-- Círculos decorativos com as novas cores -->
+      <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(201,169,122,0.10),transparent 70%)"></div>
+      <div style="position:absolute;bottom:-70px;left:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(100,48,10,0.35),transparent 70%)"></div>
+      <div style="position:absolute;top:50%;right:20px;transform:translateY(-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(162,117,64,0.08),transparent 70%)"></div>
+      <!-- Texto -->
+      <div style="position:relative;z-index:1">
+        <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@hegaiskin</div>
+        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div style="width:32px;height:2px;background:linear-gradient(90deg,#C9A97A,#A27540);border-radius:1px"></div>
+          <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div style="padding:20px">
+      <!-- Diagnóstico da IA -->
+      <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Diagnóstico da sua pele</div>
+        <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--dark);margin-bottom:12px"></div>
+        <div id="conf-txt" style="font-size:13px;color:var(--cdim);line-height:1.8"></div>
+      </div>
+
+      <!-- Mensagem fixa -->
+      <p style="font-size:13px;color:var(--cdim);line-height:1.8;margin-bottom:20px;font-style:italic">
+        "A pele que você quer começa com o protocolo certo. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
+      </p>
+
+      <button class="btn" onclick="confirmProto()">Ver meu protocolo completo →</button>
+      <button class="btn2" onclick="go('s-q1')" style="margin-top:10px">← Refazer questionário</button>
+    </div>
+  </div>
+</div>
+
+<!-- 12: PRONTO -->
+<div class="scr" id="s-ok">
+  <div class="inner" style="text-align:center">
+    <div class="sicon">✨</div>
+    <div class="badge" style="justify-content:center">Pronto!</div>
+    <h1 style="text-align:center">Seu protocolo<br><em>está criado.</em></h1>
+    <p class="sub" style="text-align:center;margin:0 auto 36px">Rotina personalizada, calendário e guias — tudo pronto para começar hoje.</p>
+    <button class="btn" onclick="window.location.href='protocolo.html'">Ver meu protocolo completo →</button>
+  </div>
+</div>
+
+<script>
+// -- CONFIG --
+
+// ── AFILIADOS (preencha seus IDs aqui) ──────────────────────────────────────
+var AFILIADOS = {
+  BR: {
+    amazon:       { url: 'https://www.amazon.com.br/s?k=',                        tag: 'COLOQUE_TAG_BR',        label: 'Amazon' },
+    yesstyle:     { url: 'https://www.yesstyle.com/pt/search.html#/search?query=', tag: 'COLOQUE_TAG_YESSTYLE',  label: 'YesStyle' },
+    mercadolivre: { url: 'https://lista.mercadolivre.com.br/',                    tag: '',                      label: 'Mercado Livre' }
+  },
+  PT: {
+    amazon:   { url: 'https://www.amazon.es/s?k=',                                tag: 'COLOQUE_TAG_ES',        label: 'Amazon.es' },
+    yesstyle: { url: 'https://www.yesstyle.com/pt/search.html#/search?query=',    tag: 'COLOQUE_TAG_YESSTYLE',  label: 'YesStyle' },
+    notino:   { url: 'https://www.notino.pt/pesquisa/?phrase=',                   tag: '',                      label: 'Notino' }
+  }
+};
+
+// ── DETECÇÃO DE PAÍS ─────────────────────────────────────────────────────────
+window._sbpPais = localStorage.getItem('sbp_pais') || 'BR';
+
+function detectarPais() {
+  // URL param para testes: ?pais=PT ou ?pais=BR
+  var urlParam = new URLSearchParams(window.location.search).get('pais');
+  if (urlParam === 'PT' || urlParam === 'BR') {
+    localStorage.setItem('sbp_pais', urlParam);
+    window._sbpPais = urlParam;
+    return Promise.resolve(urlParam);
+  }
+  if (localStorage.getItem('sbp_pais')) {
+    window._sbpPais = localStorage.getItem('sbp_pais');
+    return Promise.resolve(window._sbpPais);
+  }
+  return fetch('https://ipapi.co/json/')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var pais = (d.country_code === 'PT') ? 'PT' : 'BR';
+      localStorage.setItem('sbp_pais', pais);
+      window._sbpPais = pais;
+      return pais;
+    })
+    .catch(function(){ return 'BR'; });
+}
+
+// ── ORÇAMENTO POR PAÍS ───────────────────────────────────────────────────────
+var ORCAMENTOS = {
+  BR: [
+    { icon:'💊', lbl:'Até R$100/mês',      sub:'Somando todos os produtos' },
+    { icon:'🌿', lbl:'R$100 a R$250/mês',  sub:'Somando todos os produtos' },
+    { icon:'✨', lbl:'R$250 a R$500/mês',  sub:'Somando todos os produtos' },
+    { icon:'👑', lbl:'Acima de R$500/mês', sub:'Somando todos os produtos' }
+  ],
+  PT: [
+    { icon:'💊', lbl:'Até €15/mês',        sub:'Somando todos os produtos' },
+    { icon:'🌿', lbl:'€15 a €50/mês',      sub:'Somando todos os produtos' },
+    { icon:'✨', lbl:'€50 a €100/mês',     sub:'Somando todos os produtos' },
+    { icon:'👑', lbl:'Acima de €100/mês',  sub:'Somando todos os produtos' }
+  ]
+};
+
+function configurarOrcamento(pais) {
+  var opts = ORCAMENTOS[pais] || ORCAMENTOS['BR'];
+  var q4 = document.getElementById('q4');
+  if (!q4) return;
+  q4.innerHTML = opts.map(function(o){
+    return '<div class="qopt" onclick="togS(this,\'q4\')"><div class="qcirc"></div>' +
+           '<span class="qopt-icon">' + o.icon + '</span>' +
+           '<div><div class="qopt-lbl">' + o.lbl + '</div>' +
+           '<div class="qopt-sub" style="font-size:11px;color:var(--muted);margin-top:2px">' + o.sub + '</div></div></div>';
+  }).join('');
+}
+
+// Roda ao carregar
+detectarPais().then(function(pais){ configurarOrcamento(pais); });
+
+const _a='sk-ant-api03-V', _b='gU93q4z1crUe6TnHbP1j';
+const _c='0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d='tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
+function getKey() { return _a+_b+_c+_d; }
+const _ga='AIzaSyByOxu', _gb='eyIlPtuQ-bU', _gc='Kxx_8zscc7C', _gd='HElxnQ';
+const GEMINI_KEY = _ga+_gb+_gc+_gd;
+
+// -- STATE --
+const S = {
+  nome:'', email:'', senha:'', cidade:'', loc:null,
+  fotoRosto:'', fotoProd:'', fotosProds:[], prodTxt:'', modoProd:'',
+  ativos:'', maquiagem:'', exercicio:'', objetivo:'', rotina_atual:'', ciclo:'', textura:'', alimentacao:'',
+  gestante:'',
+  protocolo: null
+};
+
+// -- SCREENS --
+const SCR_LIST = ['s-cad','s-lgpd','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-q8','s-q9','s-q10','s-q11','s-q12','s-q13','s-q14','s-q15','s-dicas','s-foto','s-prod','s-gen','s-conf','s-ok'];
+const SCR_LABEL = {'s-lgpd':'Termos','s-cad':'Cadastro','s-q1':'1/15','s-q2':'2/15','s-q3':'3/15','s-q4':'4/15','s-q5':'5/15','s-q6':'6/15','s-q7':'7/15','s-q8':'8/15','s-q9':'9/15','s-q10':'10/15','s-q11':'11/15','s-q12':'12/15','s-q13':'13/15','s-q14':'14/15','s-q15':'15/15','s-dicas':'Dicas','s-foto':'Foto','s-prod':'Produtos','s-gen':'Gerando...','s-conf':'Confirmação','s-ok':'Concluído'};
+
+
+// -- VALIDAÇÃO OBRIGATÓRIA --
+function shakeBtn(btn) {
+  btn.style.animation = 'none';
+  btn.offsetHeight; // reflow
+  btn.style.animation = 'shake 0.4s ease';
+  setTimeout(function(){ btn.style.animation = ''; }, 400);
+}
+
+function showError(msg, btn) {
+  var existing = document.getElementById('val-error');
+  if (existing) existing.remove();
+  var err = document.createElement('div');
+  err.id = 'val-error';
+  err.style.cssText = 'color:#e07a7a;font-size:13px;text-align:center;margin-bottom:10px;animation:fadeIn 0.3s ease';
+  err.textContent = msg;
+  btn.parentNode.insertBefore(err, btn);
+  setTimeout(function(){ if(err.parentNode) err.remove(); }, 2500);
+  shakeBtn(btn);
+}
+
+function goValidate(dest, groupId, type) {
+  var btn = event.currentTarget;
+  var group = document.getElementById(groupId);
+  if (!group) { go(dest); return; }
+  var selected = group.querySelectorAll('.qopt.on');
+  if (selected.length === 0) {
+    showError('Por favor, selecione pelo menos uma opção.', btn);
+    return;
+  }
+  go(dest);
+}
+
+function goValidateHabitos(dest) {
+  var btn = event.currentTarget;
+  var groups = ['q5a','q5b','q5c','q5d','q5e'];
+  var labels = ['Exposição ao sol','Horas de sono','Nível de estresse','Água por dia','Sensibilidade'];
+  for (var i = 0; i < groups.length; i++) {
+    var g = document.getElementById(groups[i]);
+    if (!g) continue;
+    if (g.querySelectorAll('.qopt.on').length === 0) {
+      showError('Selecione uma opção em: ' + labels[i], btn);
+      return;
+    }
+  }
+  go(dest);
+}
+
+function go(id) {
+  // Hide ALL screens with inline style - works on all browsers
+  try {
+    var all = document.querySelectorAll('.scr');
+    for (var i = 0; i < all.length; i++) {
+      all[i].style.display = 'none';
+      all[i].classList.remove('on');
+    }
+  } catch(e) {}
+
+  // Show target screen with inline style
+  try {
+    var el = document.getElementById(id);
+    if (el) {
+      el.style.display = 'flex';
+      el.classList.add('on');
+    }
+  } catch(e) {}
+
+  // Hooks por tela
+  if (id === 's-prod') { try { enterProd(); } catch(e){} }
+
+  // Scroll to top
+  try { window.scrollTo(0, 0); } catch(e) {}
+
+  // Progress bar
+  try {
+    var idx = SCR_LIST.indexOf(id);
+    var pbar = document.getElementById('pbar');
+    if (pbar) pbar.style.width = (idx >= 0 ? Math.round(idx / (SCR_LIST.length - 1) * 100) : 0) + '%';
+  } catch(e) {}
+
+  // Header label
+  try {
+    var hstep = document.getElementById('hstep');
+    if (hstep) hstep.textContent = SCR_LABEL[id] || '';
+  } catch(e) {}
+
+  // Camera - isolated
+  try {
+    if (id === 's-foto') { setTimeout(startLight, 800); }
+    else if (id === 's-dicas') { /* noop */ }
+    else { stopLight(); }
+  } catch(e) {}
+}
+
+// -- LGPD --
+function chkUpdate() {
+  var c1 = document.getElementById('c1');
+  var c2 = document.getElementById('c2');
+  var c3 = document.getElementById('c3');
+  var btn = document.getElementById('btn-lgpd');
+  if (!btn) return;
+  var ok = c1 && c2 && c3 && c1.checked && c2.checked && c3.checked;
+  btn.style.opacity = ok ? '1' : '0.5';
+}
+
+
+function goLGPD() {
+  var c1=document.getElementById("c1"),c2=document.getElementById("c2"),c3=document.getElementById("c3");
+  if (!c1||!c2||!c3||!c1.checked||!c2.checked||!c3.checked) {
+    var btn=document.getElementById("btn-lgpd");
+    if(btn){btn.style.animation="none";btn.offsetHeight;btn.style.animation="shake 0.4s ease";setTimeout(function(){btn.style.animation="";},400);}
+    return;
+  }
+  go("s-q1");
+}
+
+
+// -- PLANOS --
+function salvarPlano(plano) {
+  localStorage.setItem('sbp_plano', plano);
+  // Limites de atualizações por plano
+  var limites = { starter: 1, plus: 3, premium: 6, anual: 6 };
+  var limite = limites[plano] || 1;
+  // Só reseta se não tiver registro do mês atual
+  var mesAtual = new Date().toISOString().substring(0,7);
+  var atualizacoes = JSON.parse(localStorage.getItem('sbp_atualizacoes') || '{"mes":"","usado":0}');
+  if (atualizacoes.mes !== mesAtual) {
+    localStorage.setItem('sbp_atualizacoes', JSON.stringify({mes: mesAtual, usado: 0, limite: limite}));
+  } else {
+    atualizacoes.limite = limite;
+    localStorage.setItem('sbp_atualizacoes', JSON.stringify(atualizacoes));
+  }
+}
+
+// -- AUTH --
+async function loginComGoogle() {
+  try {
+    if (!window._fbAuth) { alert('Firebase não carregado. Tente email/senha.'); return; }
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var cred = await window._fbAuth.signInWithPopup(provider);
+    var user = cred.user;
+    window._currentUser = user;
+    localStorage.setItem('sbp_auth', user.uid);
+    S.nome = user.displayName || '';
+    
+    // Criar perfil se novo
+    var userSnap = await window._fbDb.collection('usuarios').doc(user.uid).get();
+    if (!userSnap.exists) {
+      await window._fbDb.collection('usuarios').doc(user.uid).set({
+        nome: user.displayName || '', email: user.email, plano: 'mensal',
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+        atualizacoes: { mes: '', usado: 0, limite: 3 }
+      });
+    }
+    
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    var dados = snap.exists ? snap.data() : null;
+    if (dados && dados.protocolo) {
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
+      window.location.href = 'protocolo.html';
+    } else {
+      go('s-lgpd');
+    }
+  } catch(e) {
+    alert('Erro ao entrar com Google: ' + e.message);
+  }
+}
+
+function authTab(t) {
+  var isLog = t === 'log';
+  document.getElementById('form-new').style.display = isLog ? 'none' : 'block';
+  document.getElementById('form-log').style.display = isLog ? 'block' : 'none';
+  var tabNew = document.getElementById('auth-tab-new');
+  var tabLog = document.getElementById('auth-tab-log');
+  if (tabNew) { tabNew.className = 'atab ' + (!isLog ? 'on' : 'off'); }
+  if (tabLog) { tabLog.className = 'atab ' + (isLog ? 'on' : 'off'); }
+}
+
+async function doAuth() {
+  var isLog = document.getElementById('form-log').style.display !== 'none';
+  var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
+  var email = isLog ? (document.getElementById('log-email')||{value:''}).value.trim() : (document.getElementById('inp-email')||{value:''}).value.trim();
+  var pw = isLog ? (document.getElementById('log-pw')||{value:''}).value : (document.getElementById('inp-pw')||{value:''}).value;
+  var err = isLog ? document.getElementById("auth-err-log") : document.getElementById("auth-err");
+
+  if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.style.display='block';} return; }
+  if (!isLog && pw.length < 6) { if(err){err.textContent='Senha mínimo 6 caracteres.';err.style.display='block';} return; }
+
+  try {
+    var user;
+    if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
+    
+    if (isLog) {
+      var cred = await window._fbAuth.signInWithEmailAndPassword(email, pw);
+      user = cred.user;
+      // Buscar protocolo no Firebase
+      var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+      if (snap.exists) {
+        var dados = snap.data();
+        localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+        localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+        localStorage.setItem('sbp_ativo', 'true');
+      }
+    } else {
+      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.style.display='block';} return; }
+      var cred = await window._fbAuth.createUserWithEmailAndPassword(email, pw);
+      user = cred.user;
+      // Salvar perfil no Firestore
+      await window._fbDb.collection('usuarios').doc(user.uid).set({
+        nome: nome, email: email, plano: 'mensal',
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+        atualizacoes: { mes: '', usado: 0, limite: 3 }
+      });
+    }
+    
+    window._currentUser = user;
+    S.nome = nome || user.displayName || email.split('@')[0];
+    S.email = email;
+    localStorage.setItem('sbp_user', JSON.stringify({nome:S.nome, email:email, uid:user.uid}));
+    localStorage.setItem('sbp_auth', user.uid);
+    
+    // Se login e tem protocolo, vai direto
+    if (isLog && localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
+      window.location.href = 'protocolo.html';
+      return;
+    }
+    go('s-lgpd');
+  } catch(e) {
+    var msg = e.code === 'auth/email-already-in-use' ? 'Este email já está cadastrado.' :
+              e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
+              e.code === 'auth/user-not-found' ? 'Conta não encontrada.' :
+              e.code === 'auth/weak-password' ? 'Senha muito fraca (mínimo 6 caracteres).' :
+              'Erro: ' + e.message;
+    if(err){err.textContent=msg;err.style.display='block';}
+  }
+}
+
+async function doLoginGoogle() {
+  try {
+    if (!window._fbAuth) throw new Error('Firebase não carregado.');
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var cred2 = await window._fbAuth.signInWithPopup(provider);
+    var user = cred2.user;
+    window._currentUser = user;
+    S.nome = user.displayName || '';
+    S.email = user.email || '';
+    localStorage.setItem('sbp_user', JSON.stringify({nome:S.nome, email:S.email, uid:user.uid}));
+    localStorage.setItem('sbp_auth', user.uid);
+    
+    // Criar perfil se novo usuario
+    var userSnap = await window._fbDb.collection('usuarios').doc(user.uid).get();
+    if (!userSnap.exists) {
+      await window._fbDb.collection('usuarios').doc(user.uid).set({
+        nome: S.nome, email: S.email, plano: 'mensal',
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+        atualizacoes: { mes: '', usado: 0, limite: 3 }
+      });
+    }
+    
+    // Buscar protocolo existente
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    if (snap.exists) {
+      var dados = snap.data();
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
+      window.location.href = 'protocolo.html';
+      return;
+    }
+    go('s-lgpd');
+  } catch(e) {
+    var errEl = document.getElementById('auth-err');
+    if(errEl){errEl.textContent='Erro Google: ' + e.message;errEl.classList.add('on');}
+  }
+}
+
+// -- PLANOS --
+
+function tgPw(id, btn) {
+  var el = document.getElementById(id);
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? '👁' : '🙈';
+}
+
+function doCadastro() {
+  var nome = document.getElementById('inp-nome').value.trim();
+  var email = document.getElementById('inp-email').value.trim();
+  var pw = document.getElementById('inp-pw').value;
+  var err = document.getElementById('err-cad');
+  if (!nome || !email || !email.includes('@') || pw.length < 6) {
+    err.textContent = pw.length < 6 ? 'Senha: mínimo 6 caracteres.' : 'Preencha todos os campos.';
+    err.style.display='block'; return;
+  }
+  err.style.display='none';
+  S.nome = nome; S.email = email; S.senha = pw;
+  localStorage.setItem('sbp_user', JSON.stringify({nome:nome, email:email, senha:pw}));
+  localStorage.setItem('sbp_auth', nome);
+  document.getElementById('ok-cad').style.display = 'block';
+  setTimeout(function(){ go('s-lgpd'); }, 900);
+}
+
+function doLogin() {
+  var email = document.getElementById('log-email').value.trim();
+  var pw = document.getElementById('log-pw').value;
+  var err = document.getElementById('err-log');
+  var saved = JSON.parse(localStorage.getItem('sbp_user') || '{}');
+  if (saved.email === email && saved.senha === pw) {
+    localStorage.setItem('sbp_auth', saved.nome);
+    S.nome = saved.nome; S.email = saved.email;
+    if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
+      window.location.href = 'protocolo.html'; return;
+    }
+    go('s-lgpd');
+  } else {
+    err.textContent = 'Email ou senha incorrectos.'; err.style.display='block';
+  }
+}
+
+// -- LOCATION --
+function getLocation() {
+  if (!navigator.geolocation) return;
+  document.getElementById('loctxt').textContent = 'Aguardando...';
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    S.loc = {lat: pos.coords.latitude, lon: pos.coords.longitude};
+    document.getElementById('locbtn').classList.add('ok');
+    fetch('https://nominatim.openstreetmap.org/reverse?lat='+pos.coords.latitude+'&lon='+pos.coords.longitude+'&format=json')
+      .then(function(r){ return r.json(); })
+      .then(function(d){ S.cidade = d.address && (d.address.city || d.address.town || ''); document.getElementById('loctxt').textContent = '📍 ' + (S.cidade || 'Localização obtida!'); })
+      .catch(function(){ document.getElementById('loctxt').textContent = '📍 Localização obtida!'; });
+  }, function() {
+    document.getElementById('locbtn').classList.add('no');
+    document.getElementById('loctxt').textContent = 'Localização negada — sem problema!';
+  });
+}
+
+// -- QUIZ --
+function togS(el, gid) {
+  document.querySelectorAll('#'+gid+' .qopt').forEach(function(o){ o.classList.remove('on'); });
+  el.classList.add('on');
+}
+function togM(el) {
+  var isNone = el.querySelector('.qopt-lbl') && el.querySelector('.qopt-lbl').textContent.includes('Não tenho');
+  var group = el.closest('.qopts');
+  if (isNone) {
+    // Selecionar só este, desmarcar os outros
+    group.querySelectorAll('.qopt').forEach(function(o){ o.classList.remove('on'); });
+    el.classList.add('on');
+  } else {
+    // Desmarcar o 'Não tenho' se existir
+    group.querySelectorAll('.qopt').forEach(function(o){
+      if (o.querySelector('.qopt-lbl') && o.querySelector('.qopt-lbl').textContent.includes('Não tenho')) {
+        o.classList.remove('on');
+      }
+    });
+    el.classList.toggle('on');
+  }
+}
+function getSel(gid) {
+  return Array.from(document.querySelectorAll('#'+gid+' .qopt.on')).map(function(o){ return (o.querySelector('.qopt-lbl')||{textContent:''}).textContent; });
+}
+
+// -- PHOTO --
+function resizeImg(b64, cb) {
+  var img = new Image();
+  img.onload = function() {
+    var max = 800;
+    var ratio = Math.min(max/img.width, max/img.height, 1);
+    var c = document.createElement('canvas');
+    c.width = Math.round(img.width * ratio);
+    c.height = Math.round(img.height * ratio);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    cb(c.toDataURL('image/jpeg', 0.8).split(',')[1]);
+  };
+  img.src = 'data:image/jpeg;base64,' + b64;
+}
+
+function prevFoto(inputId, areaId, tipo) {
+  var file = document.getElementById(inputId).files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var area = document.getElementById(areaId);
+    area.innerHTML = '<img src="' + e.target.result + '">';
+    area.classList.add('full');
+    var raw = e.target.result.split(',')[1];
+    resizeImg(raw, function(resized) {
+      if (tipo === 'rosto') {
+        S.fotoRosto = resized;
+        // Guardar para antes/depois na evolução
+        try { localStorage.setItem('sbp_foto_rosto', resized); } catch(e) {}
+        document.getElementById('btn-foto').disabled = false;
+      } else {
+        S.fotoProd = resized;
+        document.getElementById('btn-prod').disabled = false;
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+// -- LIGHT SENSOR --
+var _lstream = null, _linterval = null;
+var _snapDataUrl = null;
+
+function irParaFoto() {
+  // Verificar se não mostrar novamente
+  var naoMostrar = document.getElementById('nao-mostrar-dicas');
+  if (naoMostrar && naoMostrar.checked) localStorage.setItem('sbp_skip_dicas','1');
+  go('s-foto');
+}
+
+var _faceDetector = null;
+var _faceDetecting = false;
+var _faceData = {};
+
+async function loadFaceDetector() {
+  try {
+    var model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+    var config = { runtime: 'tfjs', modelType: 'short' };
+    _faceDetector = await faceDetection.createDetector(model, config);
+    document.getElementById('face-status').textContent = 'Posicione seu rosto no círculo';
+    return true;
+  } catch(e) {
+    console.error('Face detector error:', e);
+    document.getElementById('face-status').textContent = 'Pronto para fotografar';
+    return false;
+  }
+}
+
+async function analyzeFace(vid, canvas) {
+  if (!_faceDetector || !vid || vid.readyState < 2) return;
+  try {
+    var faces = await _faceDetector.estimateFaces(vid);
+    var ctx = canvas.getContext('2d');
+    canvas.width = vid.videoWidth || canvas.offsetWidth;
+    canvas.height = vid.videoHeight || canvas.offsetHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (faces && faces.length > 0) {
+      var face = faces[0];
+      var box = face.box;
+      var kps = face.keypoints || [];
+
+      // Escala do canvas para o display
+      var scaleX = canvas.offsetWidth / canvas.width;
+      var scaleY = canvas.offsetHeight / canvas.height;
+      // Como o vídeo está espelhado, inverter X
+      var flip = canvas.width;
+
+      // Desenhar pontos faciais
+      kps.forEach(function(kp) {
+        var x = (flip - kp.x) / canvas.width * canvas.offsetWidth;
+        var y = kp.y / canvas.height * canvas.offsetHeight;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(201,169,122,0.9)';
+        ctx.fill();
+
+        // Anel externo
+        ctx.beginPath();
+        ctx.arc(x, y, 7, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'rgba(201,169,122,0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      // Análise de pele nas regiões
+      _faceData = analyzeSkinRegions(vid, face, canvas.width, canvas.height);
+      updateFaceIndicators(true, _faceData);
+      updateFaceAnnotations(ctx, kps, canvas.width, canvas.height, canvas.offsetWidth, canvas.offsetHeight, _faceData);
+
+    } else {
+      updateFaceIndicators(false, {});
+      document.getElementById('face-status').textContent = 'Posicione seu rosto no círculo';
+    }
+  } catch(e) {
+    console.error('analyze error:', e);
+  }
+}
+
+function analyzeSkinRegions(vid, face, vw, vh) {
+  try {
+    var tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = 60; tmpCanvas.height = 60;
+    var ctx2 = tmpCanvas.getContext('2d');
+    ctx2.drawImage(vid, 0, 0, 60, 60);
+    var d = ctx2.getImageData(0,0,60,60).data;
+    var total = d.length/4;
+
+    var br = 0;
+    for (var i = 0; i < d.length; i+=4) br += (d[i]+d[i+1]+d[i+2])/3;
+    br = br/total;
+
+    // Detectar oleosidade (pixels mais brilhantes)
+    var highlights = 0;
+    for (var i = 0; i < d.length; i+=4) {
+      if (d[i] > 200 && d[i+1] > 200 && d[i+2] > 200) highlights++;
+    }
+    var oleosidade = highlights/total > 0.15;
+
+    // Tom irregular (variância de cor)
+    var variance = 0;
+    for (var i = 0; i < d.length; i+=4) {
+      var lum = (d[i]+d[i+1]+d[i+2])/3;
+      variance += (lum-br)*(lum-br);
+    }
+    variance = variance/total;
+
+    return {
+      iluminacao: br > 80,
+      oleosa: oleosidade,
+      tomIrregular: variance > 400,
+      brilho: br
+    };
+  } catch(e) { return {}; }
+}
+
+function updateFaceAnnotations(ctx, kps, vw, vh, dw, dh, skinData) {
+  var flip = vw;
+  var labels = [];
+
+  if (skinData.oleosa) {
+    // Zona T - nariz
+    var nose = kps.find(k => k.name === 'noseTip') || kps[2];
+    if (nose) {
+      labels.push({ x: (flip-nose.x)/vw*dw - 80, y: nose.y/vh*dh, text: 'Zona T oleosa' });
+    }
+  }
+  if (skinData.tomIrregular) {
+    // Bochecha direita
+    var rCheek = kps.find(k => k.name === 'rightEye') || kps[0];
+    if (rCheek) {
+      labels.push({ x: (flip-rCheek.x)/vw*dw + 20, y: rCheek.y/vh*dh + 40, text: 'Tom irregular' });
+    }
+  }
+  // Poros - sempre mostra
+  var lCheek = kps.find(k => k.name === 'leftEye') || kps[1];
+  if (lCheek) {
+    labels.push({ x: (flip-lCheek.x)/vw*dw - 100, y: lCheek.y/vh*dh + 40, text: 'Análise de poros' });
+  }
+
+  labels.forEach(function(lb) {
+    // Linha
+    ctx.beginPath();
+    ctx.moveTo(lb.x + (lb.x < dw/2 ? 60 : -10), lb.y);
+    ctx.lineTo(lb.x + (lb.x < dw/2 ? 70 : -20), lb.y);
+    ctx.strokeStyle = 'rgba(201,169,122,0.8)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Ponto
+    ctx.beginPath();
+    ctx.arc(lb.x + (lb.x < dw/2 ? 60 : -10), lb.y, 3, 0, 2*Math.PI);
+    ctx.fillStyle = '#C9A97A';
+    ctx.fill();
+
+    // Texto
+    ctx.font = '11px Jost, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText(lb.text, lb.x < dw/2 ? lb.x : lb.x - 80, lb.y - 4);
+  });
+}
+
+function updateFaceIndicators(faceFound, skinData) {
+  setIndicator('pos', faceFound ? 'ok' : 'warn');
+  setIndicator('vis', faceFound ? 'ok' : 'warn');
+  setIndicator('luz', skinData.iluminacao ? 'ok' : 'bad');
+
+  if (faceFound) {
+    document.getElementById('face-status').textContent = 'Rosto detectado — pode fotografar!';
+    var snap = document.getElementById('camsnap');
+    if (snap) {
+      snap.querySelector('div').style.background = '#C9A97A';
+      snap.style.borderColor = 'rgba(201,169,122,0.8)';
+    }
+  }
+}
+
+function startLight() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setIndicator('pos','warn'); setIndicator('vis','warn'); setIndicator('luz','warn');
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
+  }).then(async function(stream) {
+    _lstream = stream;
+    var vid = document.getElementById('camprev');
+    vid.srcObject = stream;
+    
+    // Carregar detector facial
+    await loadFaceDetector();
+
+    var canvas = document.getElementById('face-canvas');
+    var cv = document.createElement('canvas');
+    var ctx = cv.getContext('2d');
+    var frameCount = 0;
+
+    _linterval = setInterval(function() {
+      if (!vid || vid.readyState < 2) return;
+      frameCount++;
+
+      // Analisar região central (onde o rosto deve estar)
+      var vw = vid.videoWidth || 320;
+      var vh = vid.videoHeight || 240;
+      cv.width = 60; cv.height = 60;
+      // Pegar só o centro da imagem (40% central)
+      var sx = vw * 0.3, sy = vh * 0.2, sw = vw * 0.4, sh = vh * 0.5;
+      ctx.drawImage(vid, sx, sy, sw, sh, 0, 0, 60, 60);
+      var d = ctx.getImageData(0,0,60,60).data;
+      var total = d.length / 4;
+
+      // Brilho médio
+      var br = 0;
+      for (var i = 0; i < d.length; i += 4) br += (d[i]+d[i+1]+d[i+2])/3;
+      br = br / total;
+
+      // Variância (nitidez/foco)
+      var variance = 0;
+      for (var i = 0; i < d.length; i += 4) {
+        var lum = (d[i]+d[i+1]+d[i+2])/3;
+        variance += (lum - br) * (lum - br);
+      }
+      variance = variance / total;
+
+      // Detecção de pele — algoritmo mais tolerante para todos os tons
+      var skinPixels = 0;
+      for (var i = 0; i < d.length; i += 4) {
+        var r = d[i], g = d[i+1], b = d[i+2];
+        var max = Math.max(r,g,b), min = Math.min(r,g,b);
+        // Tons de pele: de pele clara a escura
+        var isSkin = (r > 45 && g > 30 && b > 15) &&  // mínimo de luminosidade
+                     (max - min > 10) &&               // alguma saturação
+                     (r > b) &&                        // vermelho dominante
+                     (Math.abs(r-g) < 80) &&           // não muito saturado
+                     (r < 250);                        // não saturado demais
+        if (isSkin) skinPixels++;
+      }
+      var skinRatio = skinPixels / total;
+
+      // Status de cada indicador
+      var posOk = skinRatio > 0.12 && frameCount > 3;
+      var visOk = variance > 100;
+      var luzOk = br > 50;
+
+      setIndicator('pos', posOk ? 'ok' : 'warn');
+      setIndicator('vis', visOk ? 'ok' : 'warn');
+      setIndicator('luz', luzOk ? 'ok' : 'bad');
+
+      // Botão dourado quando tudo OK
+      var snap = document.getElementById('camsnap');
+      if (snap) {
+        var tudoOk = posOk && visOk && luzOk;
+        snap.querySelector('div').style.background = tudoOk ? '#C9A97A' : '#fff';
+        snap.style.borderColor = tudoOk ? 'rgba(201,169,122,0.8)' : 'rgba(255,255,255,0.5)';
+      }
+
+    }, 700);
+  }).catch(function() {
+    setIndicator('pos','warn'); setIndicator('vis','warn'); setIndicator('luz','warn');
+  });
+}
+
+function setIndicator(id, status) {
+  var el = document.getElementById('ind-' + id);
+  var iconEl = document.getElementById('ind-' + id + '-icon');
+  if (!el || !iconEl) return;
+  if (status === 'ok') {
+    el.style.background = 'rgba(34,197,94,0.3)';
+    el.style.border = '1px solid rgba(34,197,94,0.5)';
+    iconEl.textContent = '✅';
+  } else if (status === 'bad') {
+    el.style.background = 'rgba(239,68,68,0.3)';
+    el.style.border = '1px solid rgba(239,68,68,0.5)';
+    iconEl.textContent = '🔴';
+  } else {
+    el.style.background = 'rgba(0,0,0,0.5)';
+    el.style.border = 'none';
+    iconEl.textContent = '⏳';
+  }
+}
+
+function stopLight() {
+  try { if (_linterval) { clearInterval(_linterval); _linterval = null; } } catch(e) {}
+  try { if (_lstream) { _lstream.getTracks().forEach(function(t){ try{t.stop();}catch(e){} }); _lstream = null; } } catch(e) {}
+}
+
+function snapPhoto() {
+  var vid = document.getElementById('camprev');
+  if (!vid || vid.readyState < 2) return;
+  var c = document.createElement('canvas');
+  c.width = vid.videoWidth || 640;
+  c.height = vid.videoHeight || 480;
+  var ctx = c.getContext('2d');
+  ctx.scale(-1,1);
+  ctx.drawImage(vid, -c.width, 0);
+  _snapDataUrl = c.toDataURL('image/jpeg', 0.92);
+
+  // Mostrar preview para confirmar
+  var overlay = document.getElementById('foto-preview-overlay');
+  var previewImg = document.getElementById('foto-preview-img');
+  if (overlay && previewImg) {
+    previewImg.src = _snapDataUrl;
+    overlay.style.display = 'block';
+  }
+}
+
+function refazerFoto() {
+  _snapDataUrl = null;
+  var overlay = document.getElementById('foto-preview-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function usarFoto() {
+  if (!_snapDataUrl) return;
+  stopLight();
+  resizeImg(_snapDataUrl.split(',')[1], function(r) {
+    S.fotoRosto = r;
+    document.getElementById('btn-foto').disabled = false;
+    go('s-prod');
+  });
+}
+
+function prevFotoGaleria(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    resizeImg(ev.target.result.split(',')[1], function(r) {
+      S.fotoRosto = r;
+      stopLight();
+      go('s-prod');
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+// -- PRODUTOS --
+// ── Produtos: OCR múltiplas fotos ──────────────────────────────────────
+var _produtosOCR = [];
+var _fotosBase64 = [];
+var _ocrRodando  = false;
+
+function enterProd() {
+  _produtosOCR = [];
+  _fotosBase64 = [];
+  _ocrRodando  = false;
+  document.getElementById('prod-modo').style.display   = 'block';
+  document.getElementById('prod-foto').style.display   = 'none';
+  document.getElementById('prod-manual').style.display = 'none';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'block';
+  var st = document.getElementById('ocr-status');
+  if (st) st.style.display = 'none';
+  renderProdList();
+}
+
+function pickProd(modo) {
+  S.modoProd = modo;
+  document.getElementById('prod-modo').style.display   = 'none';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'none';
+  if (modo === 'foto') {
+    document.getElementById('prod-foto').style.display = 'block';
+  } else if (modo === 'manual') {
+    document.getElementById('prod-manual').style.display = 'block';
+  } else {
+    S.prodTxt    = 'Cliente não tem produtos. Monte rotina e lista de compras do zero com marcas REAIS disponíveis ' + (window._sbpPais === 'PT' ? 'em Portugal (farmácias PT, Notino, YesStyle, Amazon.es)' : 'no Brasil (farmácias, Sephora, ML, importados)') + ' dentro do orçamento informado.';
+    S.fotosProds = [];
+    gerarProtocolo();
+  }
+}
+
+function voltarProd() {
+  document.getElementById('prod-foto').style.display   = 'none';
+  document.getElementById('prod-manual').style.display = 'none';
+  document.getElementById('prod-modo').style.display   = 'block';
+  document.getElementById('btn-prod-voltar-foto').style.display = 'block';
+}
+
+
+// ── OCR DE APARELHOS ─────────────────────────────────────────────────────────
+function abrirCameraAparelhos() {
+  var inp = document.getElementById('fp-aparelho-camera');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+function abrirGaleriaAparelhos() {
+  var inp = document.getElementById('fp-aparelho-galeria');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+
+async function processarFotoAparelhos(input) {
+  if (!input.files || !input.files.length) return;
+  var status = document.getElementById('aparelho-ocr-status');
+  var resultado = document.getElementById('aparelhos-identificados');
+  status.style.display = 'block';
+  resultado.style.display = 'none';
+
+  try {
+    var files = Array.from(input.files).slice(0, 5);
+    var b64s = await Promise.all(files.map(fileToBase64));
+
+    var todosAparelhos = [];
+    for (var i = 0; i < b64s.length; i += 2) {
+      var lote = b64s.slice(i, i + 2);
+      var res = await Promise.allSettled(lote.map(async function(b64) {
+        var raw = await geminiVision(b64,
+          'Analise esta imagem — pode ser foto real, print de site, screenshot de loja, foto de caixa ou embalagem. Identifique TODOS os aparelhos e dispositivos para cuidados com o rosto e pele. Exemplos: Medicube Age-R, NEWA, TriPollar (radiofrequência), Déesse Pro, Currentbody LED, NuFace, GESKE (microcorrente e multifuncionais), Foreo Luna (sônica), gua sha, rolos de jade, dermapen/dermaroller, qualquer aparelho de luz LED, qualquer dispositivo facial elétrico ou manual. Se for print de site ou loja, leia o nome do produto na página. Se for foto da caixa, leia o nome na embalagem. Retorne APENAS JSON válido sem markdown: {"aparelhos":[{"nome":"nome exato do produto ou descrição clara","tipo":"radiofrequencia/led/microcorrente/ultrassom/limpeza_sonica/gua_sha/microagulhamento/outro","marca":"marca se identificável ou vazio"}]}',
+          600
+        );
+        try { return JSON.parse(raw).aparelhos || []; } catch(e) { return []; }
+      }));
+      res.forEach(function(r) {
+        if (r.status === 'fulfilled') todosAparelhos = todosAparelhos.concat(r.value);
+      });
+    }
+
+    status.style.display = 'none';
+
+    if (todosAparelhos.length > 0) {
+      // Auto-select matching checkboxes
+      var tipoMap = {
+        'radiofrequencia': 'Radiofrequência',
+        'led': 'LED facial',
+        'microcorrente': 'Microcorrente',
+        'ultrassom': 'Ultrassom facial',
+        'limpeza_sonica': 'Limpeza sônica',
+        'gua_sha': 'Gua sha / rolo',
+        'microagulhamento': 'Microagulhamento',
+        'outro': null
+      };
+      // Track aparelhos extras (tipo 'outro' ou não mapeado)
+      var extrasManual = [];
+      todosAparelhos.forEach(function(a) {
+        var label = tipoMap[a.tipo];
+        if (label) {
+          var opts = document.querySelectorAll('#q3 .qopt');
+          opts.forEach(function(opt) {
+            if (opt.querySelector('.qopt-lbl').textContent.trim() === label) {
+              if (!opt.classList.contains('on')) togM(opt);
+            }
+          });
+        } else if (a.nome) {
+          // Aparelho identificado mas não na lista — guarda para mostrar
+          extrasManual.push(a);
+        }
+      });
+      // Salva aparelhos extras para passar ao prompt
+      if (extrasManual.length > 0) {
+        S = S || {};
+        S.aparelhosExtras = (S.aparelhosExtras || []).concat(extrasManual.map(function(a){ return a.nome + (a.marca ? ' ' + a.marca : ''); }));
+      }
+
+      // Show identified list
+      resultado.style.display = 'block';
+      resultado.innerHTML = '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:8px">Identificados</div>' +
+        todosAparelhos.map(function(a) {
+          return '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:8px;margin-bottom:6px">' +
+            '<div style="width:6px;height:6px;border-radius:50%;background:#A07040;flex-shrink:0"></div>' +
+            '<div style="font-size:13px;font-weight:400;color:#2B1206">' + a.nome + (a.marca ? ' <span style="font-size:11px;color:#9a8878">· ' + a.marca + '</span>' : '') + '</div>' +
+          '</div>';
+        }).join('');
+    } else {
+      status.style.display = 'block';
+      status.innerHTML = '<div style="font-size:12px;color:#9a8878">Não identificamos aparelhos — selecione manualmente abaixo.</div>';
+      setTimeout(function() { status.style.display = 'none'; }, 3000);
+    }
+  } catch(e) {
+    status.style.display = 'none';
+    console.warn('Aparelho OCR error:', e);
+  }
+  input.value = '';
+}
+
+function abrirCamera() {
+  if (_ocrRodando) return;
+  var inp = document.getElementById('fp-camera');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+
+function abrirGaleria() {
+  if (_ocrRodando) return;
+  var inp = document.getElementById('fp-galeria');
+  if (inp) { inp.value = ''; inp.click(); }
+}
+
+function resetFotoProd() {
+  _produtosOCR = [];
+  _fotosBase64 = [];
+  renderProdList();
+}
+
+// Converte File para base64
+function fileToBase64(file) {
+  return new Promise(function(res, rej) {
+    var r = new FileReader();
+    r.onload  = function(e) { res(e.target.result.split(',')[1]); };
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// OCR de uma única imagem
+
+// ── GEMINI VISION helper ─────────────────────────────────────────────────────
+async async function geminiVision(b64, prompt, maxTokens) {
+  // Detectar mime type real da imagem
+  var mime = 'image/jpeg';
+  if (b64.startsWith('iVBOR')) mime = 'image/png';
+  else if (b64.startsWith('R0lGO')) mime = 'image/gif';
+  else if (b64.startsWith('UklGR')) mime = 'image/webp';
+
+  var resp = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [
+          { inline_data: { mime_type: mime, data: b64 } },
+          { text: prompt }
+        ]}],
+        generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
+      })
+    }
+  );
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini API');
+  var text = data.candidates && data.candidates[0] &&
+             data.candidates[0].content && data.candidates[0].content.parts &&
+             data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '';
+  return text.replace(/```json|```/g, '').trim();
+}
+
+async function ocrUmaFoto(b64) {
+  var raw = await geminiVision(b64,
+    'Leia TODOS os rótulos visíveis nesta foto com precisão absoluta. Use o nome EXATO da embalagem. NÃO invente. NÃO substitua por similares. Retorne APENAS JSON válido sem markdown: {"produtos":[{"nome":"nome exato do produto","categoria":"limpeza/tônico/sérum/hidratante/protetor/aparelho/outro","ativo":"ativo principal ou vazio"}]}',
+    800
+  );
+  try { return JSON.parse(raw).produtos || []; } catch(e) { return []; }
+}
+
+
+// ── Aparelhos: OCR via Gemini ──────────────────────────────────────────────
+var _aparOCRRodando = false;
+var _aparIdentificados = [];
+
+async function ocrAparelho(input) {
+  if (!input.files || !input.files[0]) return;
+  if (_aparOCRRodando) return;
+  _aparOCRRodando = true;
+  var file = input.files[0];
+  input.value = '';
+
+  var status = document.getElementById('apar-ocr-status');
+  if (status) { status.style.display = 'block'; status.textContent = '🔍 Identificando aparelho...'; }
+
+  try {
+    var b64 = await fileToBase64(file);
+    var raw = await geminiVision(b64,
+      'Identifique o aparelho de skincare/beleza nesta foto. Use nome e modelo EXATOS visíveis. Retorne APENAS JSON: {"aparelho":"nome e modelo exato","tipo":"radiofrequência/LED/microcorrente/limpeza sônica/gua sha/outro","encontrado":true}. Se não for aparelho de skincare: {"encontrado":false}.',
+      400
+    );
+    var result = JSON.parse(raw);
+    if (!result.encontrado) {
+      if (status) { status.textContent = '⚠️ Não identifiquei aparelho de skincare. Tente outra foto.'; setTimeout(function(){ status.style.display='none'; }, 3000); }
+    } else {
+      _aparIdentificados.push(result);
+      if (!S.aparelhosOCR) S.aparelhosOCR = [];
+      S.aparelhosOCR.push(result.aparelho + ' (' + result.tipo + ')');
+      renderAparOCRList();
+      if (status) status.style.display = 'none';
+    }
+  } catch(e) {
+    if (status) { status.textContent = '⚠️ Erro: ' + e.message; setTimeout(function(){ status.style.display='none'; }, 3000); }
+  }
+  _aparOCRRodando = false;
+}
+
+function renderAparOCRList() {
+  var list = document.getElementById('apar-ocr-list');
+  if (!list) return;
+  list.innerHTML = '';
+  _aparIdentificados.forEach(function(a, i) {
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(208,180,140,.06);border:1px solid rgba(208,180,140,.2);border-radius:8px;margin-bottom:6px';
+    d.innerHTML = '<div style="flex:1"><div style="font-size:13px;color:var(--cream);font-weight:500">✓ '+a.aparelho+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px">'+a.tipo+'</div></div>' +
+      '<button onclick="removerApar('+i+')" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 6px">×</button>';
+    list.appendChild(d);
+  });
+}
+
+function removerApar(i) {
+  _aparIdentificados.splice(i,1);
+  if (S.aparelhosOCR) S.aparelhosOCR.splice(i,1);
+  renderAparOCRList();
+}
+
+// Processa 1 ou múltiplas fotos em paralelo (máx 10)
+async function processarFotos(input) {
+  if (!input.files || input.files.length === 0) return;
+  if (_ocrRodando) return;
+  _ocrRodando = true;
+
+  // Sem limite — aceita quantas fotos a usuária selecionar
+  var files     = Array.from(input.files);
+  var total     = files.length;
+  var LOTE      = 3; // máximo de chamadas simultâneas por vez
+  var status    = document.getElementById('ocr-status');
+  var statusTxt = document.getElementById('ocr-status-txt');
+  var progBar   = document.getElementById('ocr-progress-bar');
+  var progFill  = document.getElementById('ocr-progress-fill');
+
+  status.style.display  = 'block';
+  progBar.style.display = total > 1 ? 'block' : 'none';
+  progFill.style.width  = '0%';
+  statusTxt.textContent = total > 1 ? 'Preparando ' + total + ' fotos...' : 'Lendo rótulos...';
+
+  var concluidos = 0;
+  var novos = 0;
+  var falhas = 0;
+
+  try {
+    // Converter todas para base64 primeiro
+    var b64s = await Promise.all(files.map(fileToBase64));
+
+    // Processar em lotes de LOTE para não sobrecarregar a API
+    for (var i = 0; i < b64s.length; i += LOTE) {
+      var lote = b64s.slice(i, i + LOTE);
+      statusTxt.textContent = 'Lendo fotos ' + (i+1) + '-' + Math.min(i+LOTE, total) + ' de ' + total + '...';
+
+      var resultados = await Promise.allSettled(lote.map(async function(b64) {
+        // Retry automático uma vez em caso de falha
+        var prods = null;
+        for (var tentativa = 0; tentativa < 2; tentativa++) {
+          try {
+            prods = await ocrUmaFoto(b64);
+            break;
+          } catch(e) {
+            if (tentativa === 0) {
+              // Aguarda 2s antes de tentar de novo
+              await new Promise(function(r) { setTimeout(r, 2000); });
+            }
+          }
+        }
+        return prods || [];
+      }));
+
+      resultados.forEach(function(r) {
+        concluidos++;
+        progFill.style.width = Math.round((concluidos / total) * 100) + '%';
+        if (r.status === 'fulfilled' && r.value.length > 0) {
+          r.value.forEach(function(p) { _produtosOCR.push(p); novos++; });
+        } else {
+          falhas++;
+        }
+      });
+
+      // Atualiza lista a cada lote para dar feedback imediato
+      if (novos > 0) renderProdList();
+
+      // Pausa entre lotes para não saturar a API
+      if (i + LOTE < b64s.length) {
+        statusTxt.textContent = novos + ' produtos encontrados, continuando...';
+        await new Promise(function(r) { setTimeout(r, 800); });
+      }
+    }
+
+    status.style.display = 'none';
+
+    if (novos === 0) {
+      statusTxt.textContent = '⚠️ Não consegui ler os rótulos. Tente com mais luz.';
+      status.style.display = 'block';
+      setTimeout(function() { status.style.display = 'none'; }, 3000);
+    } else {
+      var msg = '✅ ' + novos + ' produtos encontrados';
+      if (falhas > 0) msg += ' (' + falhas + ' foto(s) não lidas)';
+      statusTxt.textContent = msg;
+      setTimeout(function() { status.style.display = 'none'; }, 2500);
+      renderProdList();
+    }
+
+  } catch(e) {
+    statusTxt.textContent = '⚠️ Erro inesperado: ' + e.message;
+    status.style.display  = 'block';
+    setTimeout(function() { status.style.display = 'none'; }, 4000);
+  }
+
+  _ocrRodando = false;
+  input.value = '';
+}
+
+// Mantido por compatibilidade (protocolo.html usa addFotoProd via "adicionar produto novo")
+async function addFotoProd(input) {
+  return processarFotos(input);
+}
+
+
+// ── TITLE CASE helper ────────────────────────────────────────────────────────
+function toTitleCase(str) {
+  if (!str) return str;
+  // Words to keep lowercase (prepositions/articles)
+  var lower = ['de','da','do','das','dos','e','a','o','as','os','em','com','por','para','no','na','nos','nas','um','uma'];
+  return str.toLowerCase().replace(/[^\s-]+/g, function(word, idx) {
+    // Always capitalize first word, or if not in lower list
+    return (idx === 0 || lower.indexOf(word) === -1)
+      ? word.charAt(0).toUpperCase() + word.slice(1)
+      : word;
+  });
+}
+
+function renderProdList() {
+  var list = document.getElementById('prod-list');
+  if (!list) return;
+  list.innerHTML = '';
+  _produtosOCR.forEach(function(p, i) {
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;margin-bottom:8px';
+    var catIcon = {limpeza:'🧴',tônico:'💧',sérum:'✨',hidratante:'💦',protetor:'☀️',aparelho:'🔌',outro:'🧴'};
+    d.innerHTML =
+      '<div style="width:36px;height:36px;border-radius:8px;background:rgba(160,112,64,.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:14px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
+        '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + p.categoria + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
+      '</div>' +
+      '<button onclick="removerProd(' + i + ')" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;line-height:1;font-size:18px">×</button>';
+    list.appendChild(d);
+  });
+  var temProd = _produtosOCR.length > 0;
+  document.getElementById('prod-list-wrap').style.display  = temProd ? 'block' : 'none';
+  document.getElementById('btn-prod-criar').style.display  = temProd ? 'block' : 'none';
+  document.getElementById('prod-hint').style.display       = temProd ? 'block' : 'none';
+}
+
+function removerProd(i) {
+  _produtosOCR.splice(i, 1);
+  _fotosBase64.splice(i, 1);
+  renderProdList();
+}
+
+// -- GERAR PROTOCOLO --
+
+// ── GEMINI: analisa foto do rosto ────────────────────────────────────────────
+async async function analisarFotoGemini(b64) {
+  // Detectar mime type real
+  var mime = 'image/jpeg';
+  if (b64.startsWith('iVBOR')) mime = 'image/png';
+  else if (b64.startsWith('UklGR')) mime = 'image/webp';
+  try {
+    var resp = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: mime, data: b64 } },
+              { text: 'Analise esta foto do rosto com o olhar detalhado de uma especialista em cosmetologia: observe e classifique cada característica visual da pele com precisão. Retorne APENAS JSON válido sem markdown:\n{"oleosidade":"baixa/média/alta/muito alta","zona_t":"sim/não","textura":"lisa/levemente irregular/irregular/muito irregular","poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis","manchas":"nenhuma/poucas/moderadas/muitas","vermelhidao":"nenhuma/leve/moderada/intensa","hidratacao":"muito hidratada/hidratada/levemente desidratada/desidratada","tom":"uniforme/levemente irregular/irregular","linhas":"nenhuma/finas/moderadas","brilho":"opaca/normal/brilhante","observacoes":"2-3 frases específicas e detalhadas sobre o que você observa nesta foto — mencione áreas específicas do rosto, padrões visíveis de oleosidade ou ressecamento, e qualquer característica marcante da pele"}' }
+            ]
+          }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 500 }
+        })
+      }
+    );
+    var data = await resp.json();
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] ? data.candidates[0].content.parts[0].text : '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    console.warn('Gemini analysis failed:', e.message);
+    return null;
+  }
+}
+
+function formatGeminiDiag(g) {
+  if (!g) return '';
+  return 'ANÁLISE VISUAL DA FOTO DO ROSTO (por Gemini Vision):\n' +
+    '- Oleosidade: ' + (g.oleosidade||'') + (g.zona_t==='sim' ? ' (zona T mais oleosa)' : '') + '\n' +
+    '- Textura: ' + (g.textura||'') + '\n' +
+    '- Poros: ' + (g.poros||'') + '\n' +
+    '- Manchas: ' + (g.manchas||'') + '\n' +
+    '- Vermelhidão: ' + (g.vermelhidao||'') + '\n' +
+    '- Hidratação aparente: ' + (g.hidratacao||'') + '\n' +
+    '- Tom de pele: ' + (g.tom||'') + '\n' +
+    '- Linhas de expressão: ' + (g.linhas||'') + '\n' +
+    '- Brilho: ' + (g.brilho||'') + '\n' +
+    '- Observações: ' + (g.observacoes||'');
+}
+
+async function gerarProtocolo() {
+  // Collect all state
+  S.incomodos = getSel('q1');
+  S.tipoPele = getSel('q2')[0] || '';
+  S.aparelhos = getSel('q3');
+  S.investimento = getSel('q4')[0] || '';
+  S.sol = getSel('q5a')[0] || '';
+  S.sono = getSel('q5b')[0] || '';
+  S.estresse = getSel('q5c')[0] || '';
+  S.agua = getSel('q5d')[0] || '';
+  S.sensibilidade = getSel('q5e')[0] || '';
+  S.rotina = getSel('q6')[0] || '';
+  S.gestante = getSel('q7')[0] || '';
+  S.ativos    = getSel('q8')[0] || '';
+  S.maquiagem = getSel('q9')[0] || '';
+  S.exercicio = getSel('q10')[0] || '';
+  S.objetivo  = getSel('q11').join(', ') || '';
+  S.rotina_atual = getSel('q12')[0] || '';
+  S.ciclo     = getSel('q13')[0] || '';
+  S.textura   = getSel('q14')[0] || '';
+  S.alimentacao = getSel('q15')[0] || '';
+  if (S.modoProd === 'manual') S.prodTxt = document.getElementById('txt-prod').value;
+  // Montar texto de produtos a partir do OCR acumulado (múltiplas fotos)
+  if (S.modoProd === 'foto' && _produtosOCR.length > 0) {
+    // Limita a 20 produtos mais relevantes para não estourar o contexto da IA
+    var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
+    var prodOrdenados = _produtosOCR.slice().sort(function(a,b) {
+      var ia = ordemCateg.indexOf(a.categoria); var ib = ordemCateg.indexOf(b.categoria);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    var prodParaIA = prodOrdenados.slice(0, 20);
+    S.prodTxt = prodParaIA.map(function(p) {
+      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
+    }).join('\n');
+    if (_produtosOCR.length > 20) {
+      S.prodTxt += '\n[+ ' + (_produtosOCR.length - 20) + ' outros produtos identificados — disponíveis para consulta]';
+    }
+    S.fotosProds = _fotosBase64;
+  }
+
+  go('s-gen');
+
+  // ETAPA 1: Identificar produtos da foto primeiro (se tiver foto)
+  if (S.fotoProd) {
+    try {
+      document.getElementById('gen-msg').textContent = 'Identificando seus produtos...';
+      var idResp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: 'Você é especialista em identificar produtos cosméticos em fotos. Leia os rótulos com precisão absoluta. Retorne APENAS JSON válido, sem texto fora do JSON.',
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: S.fotoProd } },
+              { type: 'text', text: 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO da marca e do produto como está escrito na embalagem. NÃO invente, NÃO substitua por produtos similares. Se não conseguir ler, descreva o que vê. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/etc", "ativo": "ativo principal se visível"}]}' }
+            ]
+          }]
+        })
+      });
+      if (idResp.ok) {
+        var idData = await idResp.json();
+        var idRaw = idData.content && idData.content[0] ? idData.content[0].text : '';
+        var idClean = idRaw.replace(/```json|```/g,'').trim();
+        var idJson = JSON.parse(idClean);
+        if (idJson.produtos && idJson.produtos.length > 0) {
+          var prodList = idJson.produtos.map(function(p) { return p.nome + (p.categoria ? ' (' + p.categoria + ')' : '') + (p.ativo ? ' — ' + p.ativo : ''); }).join('\n');
+          S.prodTxt = prodList;
+          S.produtosIdentificados = idJson.produtos;
+        }
+      }
+    } catch(e) {
+      console.error('Erro ao identificar produtos:', e);
+    }
+  }
+
+  // Gemini analisa foto do rosto
+  var geminiDiag = '';
+  if (S.fotoRosto) {
+    document.getElementById('gen-msg').textContent = 'Analisando sua pele com IA...';
+    var gResult = await analisarFotoGemini(S.fotoRosto);
+    geminiDiag = formatGeminiDiag(gResult);
+    S.geminiDiag = geminiDiag;
+  }
+
+  var msgs = ['Cruzando com seus hábitos','Montando rotina manhã e noite','Criando calendário semanal','Adicionando protocolos especiais','Finalizando protocolo detalhado'];
+  var mi = 0;
+  var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
+
+
+  // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
+  // Limita lista de produtos a 25 mais relevantes para não estourar o contexto
+  var prodListaLimitada = S.prodTxt || ''; // já limitado a 20 ao ser montado
+
+  var perfil_txt = (S.geminiDiag||'SEM FOTO — baseie o diagnóstico no questionário.') +
+    '\n\nPERFIL DA CLIENTE:\n' +
+    '- Nome: '+S.nome+'\n' +
+    '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
+    '- Tipo de pele: '+S.tipoPele+'\n' +
+    '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
+    '- Aparelhos: '+(S.aparelhos.join(', ')||'nenhum')+(S.aparelhosExtras&&S.aparelhosExtras.length?' + extras: '+S.aparelhosExtras.join(', '):'')+'\n' +
+    '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+'\n' +
+    '- Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
+    '- Orçamento mensal total: '+S.investimento+'\n' +
+    '- Tempo de rotina: '+S.rotina+'\n' +
+    '- Sol: '+S.sol+' | Sono: '+S.sono+' | Estresse: '+S.estresse+'\n' +
+    '- Água: '+S.agua+' | Sensibilidade: '+S.sensibilidade+'\n' +
+    '- Gestante: '+S.gestante+' | Exercício: '+S.exercicio+'\n' +
+    '- Ativos: '+S.ativos+' | Maquiagem: '+S.maquiagem+'\n' +
+    '- Objetivo: '+S.objetivo+' | Textura: '+S.textura+'\n' +
+    '- Ciclo: '+S.ciclo+' | Alimentação: '+S.alimentacao+'\n\n' +
+    'PRODUTOS IDENTIFICADOS (USE NOMES EXATOS NA ROTINA):\n' + prodListaLimitada;
+
+  var prompt1 = 'Especialista sênior em cosmetologia e K-Beauty com profundo conhecimento de ingredientes ativos, combinações de produtos e rotinas de cuidado. Crie uma rotina ULTRA PERSONALIZADA.\n\n' +
+    perfil_txt + '\n\n' +
+    'REGRAS:\n' +
+    '1. ' + (S.modoProd==="zero" ? 'Cliente NÃO TEM PRODUTOS. Para cada passo: campo "produto"=null, preencha "categoria" (ex: Gel de limpeza) e "ativo_ideal" (ex: Ácido salicílico 0,5%) mas NUNCA invente marca real. A rotina deve mostrar o TIPO de produto e o ativo ideal, não uma marca específica.' : 'Use APENAS os produtos listados pelos nomes exatos.') + ' Campo "tempo" = mesmo valor mencionado em "como".\n' +
+    '2. Aparelhos DEVEM aparecer na rotina com: modo, minutos por zona, movimentos, frequência.\n' +
+    '3. Adaptação: semana 1 suave → semana 4 completa.\n' +
+    '4. Tom caloroso e encorajador na análise personalizada — como amiga especialista em cosmetologia.\n' +
+    '5. Score da pele 0-100: 0-40=Início da jornada, 41-70=Em Evolução, 71-90=Pele em dia, 91-100=Pele radiante. Seja encorajadora.\n' +
+    (S.gestante !== 'Não' ? '6. GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
+    '\nRetorne APENAS JSON válido:\n' +
+    '{"nome_cliente":"'+S.nome+'","diagnostico":"3-4 frases calorosas e motivadoras sobre a pele — como amiga especialista, sem termos médicos","tipo_pele":"tipo","tags":["tag1","tag2","tag3"],' +
+    '"fase_adaptacao":"semana a semana detalhada",' +
+    '"sem_produto":'+(S.modoProd==="zero"?'true':'false')+',"rotina_manha":[{"passo":1,"produto":"nome exato ou null se sem produto","categoria":"tipo do produto","ativo_ideal":"ativo recomendado para o perfil","como":"instrução de como aplicar","icone":"emoji","tempo":"Xs ou X min"}],' +
+    '"rotina_noite":[{"passo":1,"produto":"nome","como":"instrução","icone":"emoji","tempo":"X min"}],' +
+    '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
+    '"score_pele":72,' +
+    '"produtos_identificados":[]}';
+
+  var prompt2_base = 'Especialista em cosmetologia com profundo conhecimento de ingredientes e combinações de produtos. Com base neste perfil, gere as rotinas especiais e sugestões de produtos.\n\n' +
+    'PERFIL RESUMIDO:\n' +
+    '- Tipo de pele: '+S.tipoPele+' | Cidade: '+(S.cidade||'não informado')+'\n' +
+    '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+' | Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
+    '- Orçamento mensal total: '+S.investimento+'\n' +
+    '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
+    '- Gestante: '+S.gestante+'\n\n' +
+    'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
+    'REGRAS SUGESTÕES: Orçamento é MENSAL TOTAL. Opção econômica não pode ultrapassar o orçamento sozinha.\n' +
+    'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (farmácias, Sephora BR, ML, YesStyle)')+'\n' +
+    (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
+    '\nRetorne APENAS JSON válido:\n' +
+    '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}],' +
+    '"protocolo_espinha":"resumo",' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"tratamento pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"proibidos":["item"]},' +
+    '"protocolo_praia":"resumo",' +
+    '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
+    '"dicas_maquiagem":"resumo",' +
+    '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]},' +
+    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}]}';
+
+  var prompt = prompt1; // usado pela chamada principal abaixo
+
+
+  try {
+    // Claude API
+    // Claude recebe apenas texto — análise visual já foi feita pelo Gemini
+    // Claude recebe apenas texto — OCR já foi feito, fotos não são necessárias
+    // Isso evita timeout com 40+ produtos (fotos = MB de dados desnecessários)
+    var claudeParts = [{"type":"text","text":prompt}];
+
+    // Timeout de 60s
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 180000); // 3 min para protocolos grandes
+
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      signal: controller.signal,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 8192,
+        system: 'Você é uma especialista sênior em cosmetologia, formulação cosmética e K-Beauty com domínio profundo de ingredientes ativos, combinações de produtos, tipos de pele e rotinas de cuidado. Conhece extensamente: ativos como ácido hialurônico, niacinamida, retinol, AHA/BHA, vitamina C, ceramidas, peptídeos e SPF; marcas brasileiras, europeias e coreanas; interações entre ingredientes que podem irritar ou potencializar resultados; e a ordem correta de aplicação de cada tipo de produto. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens — lê o texto EXATO das embalagens, reconhece marcas internacionais e brasileiras, e NUNCA substitui um produto por outro similar. Se vê "Anua Heartleaf" escrito, escreve "Anua Heartleaf". Se vê "Medicube Reedle Shot", escreve exatamente isso. Cria rotinas ultra detalhadas e personalizadas com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.',
+        messages: [{role: 'user', content: claudeParts}]
+      })
+    });
+
+    clearInterval(iv);
+    clearTimeout(timeoutId);
+
+    if (!resp.ok) {
+      var ed = await resp.json();
+      throw new Error('API ' + resp.status + ': ' + (ed.error && ed.error.message ? ed.error.message : JSON.stringify(ed)));
+    }
+
+    var data = await resp.json();
+    var raw = data.content && data.content[0] ? data.content[0].text : null;
+    if (!raw) throw new Error('Resposta vazia da IA');
+
+    var clean = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+    var parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch(e1) {
+      var jsonStart = clean.indexOf('{');
+      var jsonEnd = clean.lastIndexOf('}');
+      if (jsonStart !== -1 && jsonEnd !== -1) {
+        try {
+          parsed = JSON.parse(clean.substring(jsonStart, jsonEnd+1));
+        } catch(e2) {
+          throw new Error('JSON invalido: ' + e2.message);
+        }
+      } else {
+        throw new Error('JSON nao encontrado na resposta');
+      }
+    }
+
+        S.protocolo = parsed;
+
+    // ── CHAMADA 2: Protocolos especiais + Sugestões ────────────────────────
+    document.getElementById('gen-msg').textContent = 'Criando protocolos especiais e sugestões...';
+    try {
+      var controller2 = new AbortController();
+      var timeoutId2 = setTimeout(function() { controller2.abort(); }, 180000);
+      var resp2 = await fetch('https://api.anthropic.com/v1/messages', {
+        signal: controller2.signal,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': getKey(),
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 6000,
+          system: 'Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
+          messages: [{role: 'user', content: prompt2_base}]
+        })
+      });
+      clearTimeout(timeoutId2);
+      if (resp2.ok) {
+        var data2 = await resp2.json();
+        var raw2 = data2.content && data2.content[0] ? data2.content[0].text : '';
+        var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
+        try {
+          var parsed2 = JSON.parse(clean2);
+          // Merge call 2 into protocolo
+          Object.assign(S.protocolo, parsed2);
+        } catch(e) {
+          var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
+          if (j2s !== -1 && j2e !== -1) {
+            try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
+          }
+        }
+      }
+    } catch(e) {
+      console.warn('Chamada 2 falhou (não crítico):', e.message);
+      // Protocolo básico ainda funciona sem os protocolos especiais
+    }
+
+    var diagText = typeof S.protocolo.diagnostico === 'object'
+      ? Object.values(S.protocolo.diagnostico).join(' ')
+      : (S.protocolo.diagnostico || '');
+    document.getElementById('conf-txt').innerHTML = '<strong>Tipo de pele:</strong> ' + (S.protocolo.tipo_pele || '') + '<br><br>' + diagText;
+    var confNome = document.getElementById('conf-nome');
+    if (confNome) confNome.textContent = S.nome || '';
+    go('s-conf');
+
+  } catch(e) {
+    clearInterval(iv);
+    console.error('Gemini error:', e);
+    go('s-prod');
+    setTimeout(function(){ alert('Erro ao criar protocolo:\n' + e.message + '\n\nVerifique sua conexão e tente novamente.'); }, 400);
+  }
+}
+
+// -- CONFIRMAR --
+async function confirmProto() {
+  if (!S.protocolo) return;
+  const perfil = {
+    nome: S.nome,
+    tipoPele: S.protocolo.tipo_pele,
+    tags: S.protocolo.tags || [],
+    incomodos: S.incomodos,
+    aparelhos: S.aparelhos,
+    investimento: S.investimento,
+      pais: window._sbpPais || 'BR',
+      sem_produto: S.modoProd === 'zero',
+    rotina: S.rotina,
+    gestante: S.gestante
+  };
+  // Salvar local sempre
+  localStorage.setItem('sbp_protocolo', JSON.stringify(S.protocolo));
+  localStorage.setItem('sbp_ativo', 'true');
+  localStorage.setItem('sbp_perfil', JSON.stringify(perfil));
+  // Salvar no Firebase se logado
+  try {
+    var _u = window._currentUser || (window._fbAuth && window._fbAuth.currentUser);
+    if (_u && window._fbDb) {
+      await window._fbDb.collection('protocolos').doc(_u.uid).set({protocolo: S.protocolo, perfil: perfil, atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()});
+    }
+  } catch(e) {
+    console.error('Firebase save error:', e);
+    // Não bloquear o fluxo — localStorage já salvou
+  }
+  window.location.href = 'protocolo.html';
+}
+
+// -- INIT --
+(function() {
+  try {
+    var hasProto = localStorage.getItem('sbp_protocolo');
+    var isAtivo = localStorage.getItem('sbp_ativo');
+    var noReset = !window.location.search.includes('reset');
+    if (hasProto && isAtivo && noReset) {
+      window.location.href = 'protocolo.html';
+      return;
+    }
+  } catch(e) {}
+  try {
+    var first = document.getElementById('s-cad');
+    if (first) first.style.display = 'flex';
+  } catch(e) {}
+})();
+
+// -- PWA --
+var _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _deferredPrompt = e;
+  setTimeout(function() {
+    var b = document.getElementById('pwa-banner');
+    if (b) b.style.display = 'flex';
+  }, 4000);
+});
+window.addEventListener('appinstalled', function() {
+  var b = document.getElementById('pwa-banner');
+  if (b) b.style.display = 'none';
+  _deferredPrompt = null;
+});
+function installPWA() {
+  if (!_deferredPrompt) return;
+  _deferredPrompt.prompt();
+  _deferredPrompt.userChoice.then(function() {
+    _deferredPrompt = null;
+    var b = document.getElementById('pwa-banner');
+    if (b) b.style.display = 'none';
+  });
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for (var r of registrations) { r.unregister(); }
+  });
+  if (window.caches) {
+    caches.keys().then(function(keys) {
+      keys.forEach(function(key) { caches.delete(key); });
+    });
+  }
+}
+</script>
+  <!-- TensorFlow + Face Detection (carregado depois do app) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.1/dist/face-detection.min.js"></script>
+</body>
+</html>
