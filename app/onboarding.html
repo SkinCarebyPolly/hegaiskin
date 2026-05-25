@@ -2261,13 +2261,9 @@ async function analisarFotoGemini(b64) {
     var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
               data.candidates[0].content.parts && data.candidates[0].content.parts[0]
               ? data.candidates[0].content.parts[0].text : '{}';
-    console.log('[Gemini] Resposta recebida:', raw.substring(0, 120) + '...');
     var result = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    // VALIDAÇÃO TEMPORÁRIA — remover depois de confirmar que funciona
-    alert('✅ GEMINI OK!\nOleosidade: ' + (result.oleosidade||'—') + '\nAcne: ' + (result.acne_ativa||'—') + '\nTextura: ' + (result.textura||'—'));
     return result;
   } catch(e) {
-    if (!String(e).includes('GEMINI ERRO')) alert('❌ GEMINI FALHOU:\n' + e.message);
     console.error('[Gemini] analisarFotoGemini erro:', e);
     return null;
   }
@@ -2441,7 +2437,7 @@ async function gerarProtocolo() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 8192,
+        max_tokens: 16000,
         system: 'Você é uma especialista sênior em cosmetologia, formulação cosmética e K-Beauty com domínio profundo de ingredientes ativos, combinações de produtos, tipos de pele e rotinas de cuidado. Conhece extensamente: ativos como ácido hialurônico, niacinamida, retinol, AHA/BHA, vitamina C, ceramidas, peptídeos e SPF; marcas brasileiras, europeias e coreanas; interações entre ingredientes que podem irritar ou potencializar resultados; e a ordem correta de aplicação de cada tipo de produto. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens — lê o texto EXATO das embalagens, reconhece marcas internacionais e brasileiras, e NUNCA substitui um produto por outro similar. Se vê "Anua Heartleaf" escrito, escreve "Anua Heartleaf". Se vê "Medicube Reedle Shot", escreve exatamente isso. Cria rotinas ultra detalhadas e personalizadas com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.',
         messages: [{role: 'user', content: claudeParts}]
       })
@@ -2464,13 +2460,26 @@ async function gerarProtocolo() {
     try {
       parsed = JSON.parse(clean);
     } catch(e1) {
+      // Tenta extrair JSON entre { e }
       var jsonStart = clean.indexOf('{');
       var jsonEnd = clean.lastIndexOf('}');
       if (jsonStart !== -1 && jsonEnd !== -1) {
         try {
           parsed = JSON.parse(clean.substring(jsonStart, jsonEnd+1));
         } catch(e2) {
-          throw new Error('JSON invalido: ' + e2.message);
+          // JSON truncado — tenta fechar chaves/colchetes que faltam
+          var partial = clean.substring(jsonStart);
+          var opens = (partial.match(/{/g)||[]).length - (partial.match(/}/g)||[]).length;
+          var arrOpen = (partial.match(/\[/g)||[]).length - (partial.match(/\]/g)||[]).length;
+          // Remove vírgulas e campos incompletos no final
+          partial = partial.replace(/,\s*$/, '').replace(/,\s*"[^"]*"?\s*:\s*[^,}\]]*$/, '');
+          for (var ai = 0; ai < arrOpen; ai++) partial += ']';
+          for (var oi = 0; oi < opens; oi++) partial += '}';
+          try {
+            parsed = JSON.parse(partial);
+          } catch(e3) {
+            throw new Error('JSON invalido mesmo após recuperação');
+          }
         }
       } else {
         throw new Error('JSON nao encontrado na resposta');
