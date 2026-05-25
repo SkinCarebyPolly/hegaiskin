@@ -920,16 +920,16 @@ function renderApp() {
   }
 
   // ══ ESPINHA ══
-  renderEspinha(protocolo);
+  try { renderEspinha(protocolo); } catch(err) { console.warn('renderEspinha:', err); }
 
   // ══ PRAIA ══
-  renderPraia(protocolo);
+  try { renderPraia(protocolo); } catch(err) { console.warn('renderPraia:', err); }
 
   // ══ MAKE ══
-  renderMake(protocolo);
+  try { renderMake(protocolo); } catch(err) { console.warn('renderMake:', err); }
 
   // ── Sugestões em 3 tiers ──────────────────────────────────────────────
-  renderSugestoes();
+  try { renderSugestoes(); } catch(err) { console.warn('renderSugestoes:', err); }
 }
 
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
@@ -2099,8 +2099,9 @@ function tocarBeep(freq, dur) {
 function renderEspinha(p) {
   const root = document.getElementById('content-espinha-root');
   if (!root) return;
-  const e = p.protocolo_espinha_detalhado || {};
-
+  // Support legacy format where protocolo_espinha was the structured object
+  var legacy = p.protocolo_espinha && typeof p.protocolo_espinha === 'object' ? p.protocolo_espinha : null;
+  const e = p.protocolo_espinha_detalhado || legacy || {};
 
   let html = '';
 
@@ -2139,7 +2140,7 @@ function renderEspinha(p) {
     </div>`;
   }
 
-  if (!html && p.protocolo_espinha) {
+  if (!html && p.protocolo_espinha && typeof p.protocolo_espinha === 'string') {
     html = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">🚨 Protocolo de Emergência</div>
       <div class="alert-text">${p.protocolo_espinha.replace(/\n/g,'<br>')}</div>
@@ -2153,7 +2154,8 @@ function renderEspinha(p) {
 function renderPraia(p) {
   const root = document.getElementById('content-praia-root');
   if (!root) return;
-  const e = p.protocolo_praia_detalhado || {};
+  var legacyPraia = p.protocolo_praia && typeof p.protocolo_praia === 'object' ? p.protocolo_praia : null;
+  const e = p.protocolo_praia_detalhado || legacyPraia || {};
 
 
   let html = '';
@@ -2193,7 +2195,7 @@ function renderPraia(p) {
     </div>`;
   }
 
-  if (!html && p.protocolo_praia) {
+  if (!html && p.protocolo_praia && typeof p.protocolo_praia === 'string') {
     html = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">☀️ Rotina Praia</div>
       <div class="alert-text">${p.protocolo_praia.replace(/\n/g,'<br>')}</div>
@@ -2207,7 +2209,8 @@ function renderPraia(p) {
 function renderMake(p) {
   const root = document.getElementById('content-make-root');
   if (!root) return;
-  const e = p.dicas_maquiagem_detalhado || {};
+  var legacyMake = p.dicas_maquiagem && typeof p.dicas_maquiagem === 'object' ? p.dicas_maquiagem : null;
+  const e = p.dicas_maquiagem_detalhado || legacyMake || {};
 
 
 
@@ -2241,7 +2244,7 @@ function renderMake(p) {
     </div>`;
   }
 
-  if (!html && p.dicas_maquiagem) {
+  if (!html && p.dicas_maquiagem && typeof p.dicas_maquiagem === 'string') {
     html = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">💄 Skincare + Maquiagem</div>
       <div class="alert-text">${p.dicas_maquiagem.replace(/\n/g,'<br>')}</div>
