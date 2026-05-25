@@ -655,9 +655,9 @@ input[type="file"] { display:none; }
 // ── AFILIADOS (preencha seus IDs aqui) ──────────────────────────────────────
 var AFILIADOS = {
   BR: {
-    amazon:       { url: 'https://www.amazon.com.br/s?k=',                        tag: 'COLOQUE_TAG_BR',       label: 'Amazon' },
-    yesstyle:     { url: 'https://www.yesstyle.com/pt/search.html#/search?query=', tag: 'COLOQUE_TAG_YESSTYLE', label: 'YesStyle' },
-    mercadolivre: { url: 'https://lista.mercadolivre.com.br/',                    tag: '',                     label: 'Mercado Livre' }
+    amazon:       { url: 'https://www.amazon.com.br/s?k=',           tag: 'COLOQUE_TAG_BR', label: 'Amazon' },
+    farmacia:     { url: 'https://www.drogariapacheco.com.br/search?q=', tag: '',           label: 'Pacheco' },
+    mercadolivre: { url: 'https://lista.mercadolivre.com.br/',        tag: '',              label: 'Mercado Livre' }
   },
   PT: {
     amazon:   { url: 'https://www.amazon.es/s?k=',                                tag: 'COLOQUE_TAG_ES',       label: 'Amazon.es' },
@@ -719,44 +719,32 @@ function buildTierContent(s, tier, af) {
   // ── Smart affiliate links ────────────────────────────────────────────────
   var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
-  // Detect if K-Beauty brand (prioritize YesStyle)
-  var kbeautyBrands = ['anua','cosrx','medicube','some by mi','innisfree','dear klairs','klairs','beauty of joseon','numbuzin','isntree','tocobo','round lab','purito','axis-y','skin1004','dr.jart','missha','etude','laneige','sulwhasoo','the ordinary','cerave','la roche-posay','bioderma','vichy','garnier','neutrogena'];
-  var marcaLower = (t.marca || '').toLowerCase();
-  var isKbeauty = kbeautyBrands.some(function(b) { return marcaLower.indexOf(b) !== -1; });
-
-  // Search query: brand + exact product name only (no category — it dilutes results)
+  // Search query: brand + product name
   var queryBase = (t.marca ? t.marca + ' ' : '') + (t.produto || '');
   var queryEnc = encodeURIComponent(queryBase);
 
-  // Amazon: add beauty category filter + sort by reviews
+  // Amazon: beauty category + sort by reviews
   var amazonTag = af.amazon && af.amazon.tag && af.amazon.tag !== 'COLOQUE_TAG_BR' && af.amazon.tag !== 'COLOQUE_TAG_ES' ? '&tag=' + af.amazon.tag : '';
   var amazonUrl = af.amazon ? af.amazon.url + queryEnc + '&i=beauty&s=review-rank' + amazonTag : null;
 
-  // YesStyle: brand + product
+  // Farmácia (BR) or YesStyle (PT)
+  var farmaciaUrl = af.farmacia ? af.farmacia.url + queryEnc : null;
   var ysTag = af.yesstyle && af.yesstyle.tag && af.yesstyle.tag !== 'COLOQUE_TAG_YESSTYLE' ? '&ref=' + af.yesstyle.tag : '';
   var ysUrl = af.yesstyle ? af.yesstyle.url + queryEnc + ysTag : null;
 
-  // Mercado Livre: brand + product
-  var mlUrl = af.mercadolivre ? af.mercadolivre.url + encodeURIComponent(queryBase) : null;
-
-  // Notino: brand + product
-  var notinoUrl = af.notino ? af.notino.url + queryEnc : null;
+  // Mercado Livre / Notino
+  var mlUrl      = af.mercadolivre ? af.mercadolivre.url + encodeURIComponent(queryBase) : null;
+  var notinoUrl  = af.notino ? af.notino.url + queryEnc : null;
 
   var btns = '';
 
-  // K-Beauty: show YesStyle first, Amazon second
-  if (isKbeauty) {
-    if (ysUrl)      btns += '<a href="' + ysUrl      + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
-    if (amazonUrl)  btns += '<a href="' + amazonUrl  + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
-    if (mlUrl)      btns += '<a href="' + mlUrl      + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
-    if (notinoUrl)  btns += '<a href="' + notinoUrl  + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
-  } else {
-    // Non K-Beauty: Amazon first, then YesStyle, then ML/Notino
-    if (amazonUrl)  btns += '<a href="' + amazonUrl  + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
-    if (ysUrl)      btns += '<a href="' + ysUrl      + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
-    if (mlUrl)      btns += '<a href="' + mlUrl      + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
-    if (notinoUrl)  btns += '<a href="' + notinoUrl  + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label   + '</a>';
-  }
+  // Farmácia primeiro (BR), depois Amazon, depois ML
+  if (farmaciaUrl) btns += '<a href="' + farmaciaUrl + '" target="_blank" style="' + btnStyle + '">💊 ' + af.farmacia.label + '</a>';
+  if (amazonUrl)   btns += '<a href="' + amazonUrl   + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
+  if (mlUrl)       btns += '<a href="' + mlUrl       + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
+  // PT: YesStyle + Notino
+  if (ysUrl)       btns += '<a href="' + ysUrl       + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label  + '</a>';
+  if (notinoUrl)   btns += '<a href="' + notinoUrl   + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label    + '</a>';
 
   return '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
            '<div>' +
@@ -995,7 +983,7 @@ async function converterListaParaSugestoes(listaCompras) {
 
   var pais    = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
   var moeda   = pais === 'PT' ? 'euros (€)' : 'reais (R$)';
-  var mercado = pais === 'PT' ? 'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)' : 'Brasil (farmácias, Sephora, Mercado Livre)';
+  var mercado = pais === 'PT' ? 'Portugal (Notino, YesStyle, Amazon.es)' : 'Brasil (Drogaria Pacheco, Amazon, Mercado Livre)';
 
   var listaTexto = listaCompras.join('\n');
 
