@@ -2162,14 +2162,27 @@ function renderRevisaoList() {
   var catIcon = {limpeza:'🧴',tônico:'💧',sérum:'✨',hidratante:'💦',protetor:'☀️',aparelho:'🔌',outro:'🧴'};
   _produtosPendentes.forEach(function(p, i) {
     var d = document.createElement('div');
-    d.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:9px;margin-bottom:7px';
+    d.id = 'rev-item-' + i;
+    d.style.cssText = 'padding:10px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:9px;margin-bottom:7px';
     d.innerHTML =
-      '<div style="font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
-      '<div style="flex:1;min-width:0">' +
-        '<div style="font-size:13px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
-        '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + (p.categoria||'') + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:13px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
+          '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + (p.categoria||'') + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
+        '</div>' +
+        '<button onclick="abrirEdicao(' + i + ')" style="background:none;border:none;color:var(--gold);cursor:pointer;padding:4px 6px;font-size:16px;line-height:1" title="Editar">✏️</button>' +
+        '<button onclick="removerPendente(' + i + ')" style="background:none;border:none;color:#c0392b;cursor:pointer;padding:4px;font-size:18px;line-height:1" title="Remover">×</button>' +
       '</div>' +
-      '<button onclick="removerPendente(' + i + ')" style="background:none;border:none;color:#c0392b;cursor:pointer;padding:4px;font-size:18px;line-height:1" title="Remover">×</button>';
+      '<div id="rev-edit-' + i + '" style="display:none;margin-top:8px;display:none">' +
+        '<input id="rev-input-' + i + '" type="text" value="' + p.nome.replace(/"/g,'&quot;') + '" ' +
+          'style="width:100%;padding:8px 10px;border:1px solid rgba(160,112,64,.4);border-radius:7px;font-family:inherit;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box" ' +
+          'onkeydown="if(event.key===\'Enter\')salvarEdicao(' + i + ')">' +
+        '<div style="display:flex;gap:8px;margin-top:6px">' +
+          '<button onclick="salvarEdicao(' + i + ')" style="flex:1;padding:7px;background:var(--gold);color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">✓ Salvar</button>' +
+          '<button onclick="fecharEdicao(' + i + ')" style="padding:7px 12px;background:none;border:1px solid rgba(160,112,64,.3);border-radius:7px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Cancelar</button>' +
+        '</div>' +
+      '</div>';
     list.appendChild(d);
   });
   if (_produtosPendentes.length === 0) {
@@ -2177,6 +2190,22 @@ function renderRevisaoList() {
     var btn = document.getElementById('btn-confirmar-revisao');
     if (btn) btn.style.display = 'none';
   }
+}
+
+function abrirEdicao(i) {
+  var ed = document.getElementById('rev-edit-' + i);
+  if (ed) { ed.style.display = 'block'; var inp = document.getElementById('rev-input-' + i); if (inp) { inp.focus(); inp.select(); } }
+}
+
+function fecharEdicao(i) {
+  var ed = document.getElementById('rev-edit-' + i);
+  if (ed) ed.style.display = 'none';
+}
+
+function salvarEdicao(i) {
+  var inp = document.getElementById('rev-input-' + i);
+  if (inp && inp.value.trim()) _produtosPendentes[i].nome = inp.value.trim();
+  renderRevisaoList();
 }
 
 function removerPendente(i) {
@@ -2268,7 +2297,7 @@ async function analisarFotoGemini(b64) {
       '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
 
     console.log('[Gemini] Iniciando análise do rosto via Google Gemini Vision...');
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
     var resp = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
