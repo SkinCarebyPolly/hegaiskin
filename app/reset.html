@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hegai Skin · Reiniciando...</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0e0c0b; font-family:'Georgia',serif; color:#f5f0e8; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; text-align:center; }
+.gold { color:#c9a96e; }
+p { font-size:13px; color:#7a6e68; margin-top:12px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="gold" style="font-size:32px;margin-bottom:20px">✦</div>
+<div style="font-size:18px;font-style:italic">A reiniciar...</div>
+<p>A limpar os dados anteriores</p>
+
+<script>
+// 1. Limpa todo o localStorage
+try { localStorage.clear(); } catch(e) {}
+
+// 2. Limpa todos os caches do service worker
+if (window.caches) {
+  caches.keys().then(function(keys) {
+    keys.forEach(function(k) { caches.delete(k); });
+  });
+}
+
+// 3. Remove service workers registados
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(r) { r.unregister(); });
+  });
+}
+
+// 4. Limpa IndexedDB do Firebase (onde guarda a sessão)
+var dbsToDelete = ['firebaseLocalStorageDb', 'firebase-heartbeat-database', 'firebase-installations-database'];
+dbsToDelete.forEach(function(db) {
+  try { indexedDB.deleteDatabase(db); } catch(e) {}
+});
+
+// 5. Redireciona para onboarding após 1.5s (tempo para o IndexedDB terminar)
+setTimeout(function() {
+  window.location.replace('onboarding.html');
+}, 1500);
+</script>
+</body>
+</html>
