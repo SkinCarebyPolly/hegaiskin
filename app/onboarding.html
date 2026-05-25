@@ -757,7 +757,16 @@ input[type=file]{display:none}
         </div>
       </div>
 
-      <!-- Lista de produtos identificados -->
+      <!-- Revisão antes de confirmar -->
+      <div id="ocr-revisao-wrap" style="display:none;margin-bottom:14px;padding:16px;background:rgba(160,112,64,.06);border:1px solid rgba(160,112,64,.2);border-radius:12px">
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Confirme os produtos</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Remova os que estiverem errados antes de confirmar.</p>
+        <div id="ocr-revisao-list"></div>
+        <button id="btn-confirmar-revisao" onclick="confirmarRevisao()" class="btn" style="margin-top:14px;margin-bottom:8px">Confirmar</button>
+        <button onclick="cancelarRevisao()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;padding:0;display:block;margin:0 auto">Cancelar e tirar novas fotos</button>
+      </div>
+
+      <!-- Lista de produtos confirmados -->
       <div id="prod-list-wrap" style="display:none;margin-bottom:14px">
         <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">✦ Produtos identificados</div>
         <div id="prod-list"></div>
@@ -1777,9 +1786,10 @@ function prevFotoGaleria(e) {
 
 // -- PRODUTOS --
 // ── Produtos: OCR múltiplas fotos ──────────────────────────────────────
-var _produtosOCR = [];
-var _fotosBase64 = [];
-var _ocrRodando  = false;
+var _produtosOCR      = [];
+var _produtosPendentes = [];
+var _fotosBase64      = [];
+var _ocrRodando       = false;
 
 function enterProd() {
   _produtosOCR = [];
@@ -1973,10 +1983,17 @@ async function geminiVision(b64, prompt, maxTokens) {
 
 async function ocrUmaFoto(b64) {
   var raw = await geminiVision(b64,
-    'Leia TODOS os rótulos visíveis nesta foto com precisão absoluta. Use o nome EXATO da embalagem. NÃO invente. NÃO substitua por similares. Retorne APENAS JSON válido sem markdown: {"produtos":[{"nome":"nome exato do produto","categoria":"limpeza/tônico/sérum/hidratante/protetor/aparelho/outro","ativo":"ativo principal ou vazio"}]}',
-    800
+    'Identifique os produtos de skincare nesta foto. Para cada embalagem visível leia APENAS a MARCA + NOME DO PRODUTO exatamente como aparece na frente da embalagem. ' +
+    'IGNORE completamente: listas de ingredientes, claims de marketing ("dermatologicamente testado", "sem parabenos", etc.), modo de uso, textos laterais/traseiros, preços e códigos. ' +
+    'Se o texto não estiver claramente legível, omita esse produto — prefira omitir a inventar. ' +
+    'Retorne APENAS JSON sem markdown: {"produtos":[{"nome":"Marca NomeProduto","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal ou vazio","confianca":"alta/media/baixa"}]}. ' +
+    'Se nenhum produto for claramente legível retorne: {"produtos":[]}',
+    1000
   );
-  try { return JSON.parse(raw).produtos || []; } catch(e) { return []; }
+  try {
+    var lista = JSON.parse(raw).produtos || [];
+    return lista.filter(function(p) { return p.confianca !== 'baixa'; });
+  } catch(e) { return []; }
 }
 
 
@@ -2089,14 +2106,11 @@ async function processarFotos(input) {
         concluidos++;
         progFill.style.width = Math.round((concluidos / total) * 100) + '%';
         if (r.status === 'fulfilled' && r.value.length > 0) {
-          r.value.forEach(function(p) { _produtosOCR.push(p); novos++; });
+          r.value.forEach(function(p) { _produtosPendentes.push(p); novos++; });
         } else {
           falhas++;
         }
       });
-
-      // Atualiza lista a cada lote para dar feedback imediato
-      if (novos > 0) renderProdList();
 
       // Pausa entre lotes para não saturar a API
       if (i + LOTE < b64s.length) {
@@ -2112,11 +2126,7 @@ async function processarFotos(input) {
       status.style.display = 'block';
       setTimeout(function() { status.style.display = 'none'; }, 3000);
     } else {
-      var msg = '✅ ' + novos + ' produtos encontrados';
-      if (falhas > 0) msg += ' (' + falhas + ' foto(s) não lidas)';
-      statusTxt.textContent = msg;
-      setTimeout(function() { status.style.display = 'none'; }, 2500);
-      renderProdList();
+      mostrarRevisao(falhas);
     }
 
   } catch(e) {
@@ -2134,6 +2144,62 @@ async function addFotoProd(input) {
   return processarFotos(input);
 }
 
+
+// ── Revisão de produtos OCR ───────────────────────────────────────────────────
+function mostrarRevisao(falhas) {
+  var wrap = document.getElementById('ocr-revisao-wrap');
+  if (!wrap) { confirmarRevisao(); return; }
+  renderRevisaoList();
+  wrap.style.display = 'block';
+  var btn = document.getElementById('btn-confirmar-revisao');
+  if (btn) btn.textContent = 'Confirmar (' + _produtosPendentes.length + ' produto' + (_produtosPendentes.length !== 1 ? 's' : '') + ')';
+}
+
+function renderRevisaoList() {
+  var list = document.getElementById('ocr-revisao-list');
+  if (!list) return;
+  list.innerHTML = '';
+  var catIcon = {limpeza:'🧴',tônico:'💧',sérum:'✨',hidratante:'💦',protetor:'☀️',aparelho:'🔌',outro:'🧴'};
+  _produtosPendentes.forEach(function(p, i) {
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:9px;margin-bottom:7px';
+    d.innerHTML =
+      '<div style="font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:13px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
+        '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + (p.categoria||'') + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
+      '</div>' +
+      '<button onclick="removerPendente(' + i + ')" style="background:none;border:none;color:#c0392b;cursor:pointer;padding:4px;font-size:18px;line-height:1" title="Remover">×</button>';
+    list.appendChild(d);
+  });
+  if (_produtosPendentes.length === 0) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">Nenhum produto para confirmar.<br>Cancele e tente novas fotos.</p>';
+    var btn = document.getElementById('btn-confirmar-revisao');
+    if (btn) btn.style.display = 'none';
+  }
+}
+
+function removerPendente(i) {
+  _produtosPendentes.splice(i, 1);
+  renderRevisaoList();
+  var btn = document.getElementById('btn-confirmar-revisao');
+  if (btn) {
+    btn.textContent = 'Confirmar (' + _produtosPendentes.length + ' produto' + (_produtosPendentes.length !== 1 ? 's' : '') + ')';
+    btn.style.display = _produtosPendentes.length > 0 ? 'block' : 'none';
+  }
+}
+
+function confirmarRevisao() {
+  _produtosPendentes.forEach(function(p) { _produtosOCR.push(p); });
+  _produtosPendentes = [];
+  document.getElementById('ocr-revisao-wrap').style.display = 'none';
+  renderProdList();
+}
+
+function cancelarRevisao() {
+  _produtosPendentes = [];
+  document.getElementById('ocr-revisao-wrap').style.display = 'none';
+}
 
 // ── TITLE CASE helper ────────────────────────────────────────────────────────
 function toTitleCase(str) {
