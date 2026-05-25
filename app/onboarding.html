@@ -80,11 +80,23 @@ input[type=file]{display:none}
 .popt-icon{font-size:26px;flex-shrink:0}
 .popt-t{font-size:15px;font-weight:500;color:var(--dark);margin-bottom:2px}
 .popt-s{font-size:13px;color:var(--muted)}
-/* SPINNER */
+/* SPINNER / AI ANIMATION */
 .spin-wrap{text-align:center;padding:40px 0}
-.spinner{width:56px;height:56px;border:2px solid rgba(160,112,64,.15);border-top-color:var(--gold);border-radius:50%;margin:0 auto 22px;animation:sp 1s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:7px}
+.ai-gem{position:relative;width:80px;height:80px;margin:0 auto 28px}
+.ai-gem-bg{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(201,169,122,0.14),transparent 70%);animation:gem-pulse 2.5s ease-in-out infinite}
+.ai-gem-ring{position:absolute;inset:6px;border:1.5px solid rgba(201,169,122,0.3);border-radius:50%;animation:gem-spin 7s linear infinite}
+.ai-gem-ring2{position:absolute;inset:14px;border:1px dashed rgba(201,169,122,0.15);border-radius:50%;animation:gem-spin 12s linear infinite reverse}
+.ai-gem-dot{position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;background:var(--gold);margin:-3.5px 0 0 -3.5px;transform-origin:-33px 0;opacity:.75}
+.ai-gem-dot:nth-child(4){animation:gem-orbit 7s linear infinite}
+.ai-gem-dot:nth-child(5){animation:gem-orbit 7s linear infinite;animation-delay:-2.33s;transform:rotate(120deg) translateX(-33px)}
+.ai-gem-dot:nth-child(6){animation:gem-orbit 7s linear infinite;animation-delay:-4.66s;transform:rotate(240deg) translateX(-33px)}
+.ai-gem-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);animation:gem-glow 2.5s ease-in-out infinite}
+@keyframes gem-pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.1);opacity:1}}
+@keyframes gem-spin{to{transform:rotate(360deg)}}
+@keyframes gem-glow{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes gem-orbit{to{transform:rotate(360deg) translateX(-33px)}}
+.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:6px}
+.spin-step{font-size:10px;letter-spacing:2px;color:rgba(201,169,122,0.45);text-transform:uppercase;margin-bottom:8px}
 .spin-s{font-size:13px;color:var(--muted)}
 .dots::after{content:'';animation:dt 1.5s infinite}
 @keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
@@ -757,16 +769,7 @@ input[type=file]{display:none}
         </div>
       </div>
 
-      <!-- Revisão antes de confirmar -->
-      <div id="ocr-revisao-wrap" style="display:none;margin-bottom:14px;padding:16px;background:rgba(160,112,64,.06);border:1px solid rgba(160,112,64,.2);border-radius:12px">
-        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Confirme os produtos</div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Remova os que estiverem errados antes de confirmar.</p>
-        <div id="ocr-revisao-list"></div>
-        <button id="btn-confirmar-revisao" onclick="confirmarRevisao()" class="btn" style="margin-top:14px;margin-bottom:8px">Confirmar</button>
-        <button onclick="cancelarRevisao()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;padding:0;display:block;margin:0 auto">Cancelar e tirar novas fotos</button>
-      </div>
-
-      <!-- Lista de produtos confirmados -->
+      <!-- Lista de produtos identificados -->
       <div id="prod-list-wrap" style="display:none;margin-bottom:14px">
         <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">✦ Produtos identificados</div>
         <div id="prod-list"></div>
@@ -799,10 +802,19 @@ input[type=file]{display:none}
 </div>
 
 <div class="scr" id="s-gen">
-  <div class="inner" style="text-align:center">
+  <div class="inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
     <div class="spin-wrap">
-      <div class="spinner"></div>
+      <div class="ai-gem">
+        <div class="ai-gem-bg"></div>
+        <div class="ai-gem-ring"></div>
+        <div class="ai-gem-ring2"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-icon">✦</div>
+      </div>
       <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
+      <p class="spin-step" id="gen-step">Analisando · Passo 1 de 2</p>
       <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
     </div>
   </div>
@@ -821,7 +833,7 @@ input[type=file]{display:none}
       <!-- Texto -->
       <div style="position:relative;z-index:1">
         <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@hegaiskin</div>
-        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
+        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda à<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
         <div style="display:flex;gap:6px;align-items:center">
           <div style="width:32px;height:2px;background:linear-gradient(90deg,#C9A97A,#A27540);border-radius:1px"></div>
           <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
@@ -831,9 +843,9 @@ input[type=file]{display:none}
 
     <!-- Conteúdo -->
     <div style="padding:20px">
-      <!-- Diagnóstico da IA -->
+      <!-- Análise personalizada -->
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
-        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Diagnóstico da sua pele</div>
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Sua análise personalizada</div>
         <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--dark);margin-bottom:12px"></div>
         <div id="conf-txt" style="font-size:13px;color:var(--cdim);line-height:1.8"></div>
       </div>
@@ -843,7 +855,7 @@ input[type=file]{display:none}
         "A pele que você quer começa com o protocolo certo. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
       </p>
 
-      <button class="btn" onclick="confirmProto()">Ver meu protocolo completo →</button>
+      <button class="btn" onclick="confirmProto()">Ver minha rotina completa →</button>
       <button class="btn2" onclick="go('s-q1')" style="margin-top:10px">← Refazer questionário</button>
     </div>
   </div>
@@ -856,7 +868,7 @@ input[type=file]{display:none}
     <div class="badge" style="justify-content:center">Pronto!</div>
     <h1 style="text-align:center">Seu protocolo<br><em>está criado.</em></h1>
     <p class="sub" style="text-align:center;margin:0 auto 36px">Rotina personalizada, calendário e guias — tudo pronto para começar hoje.</p>
-    <button class="btn" onclick="window.location.href='protocolo.html'">Ver meu protocolo completo →</button>
+    <button class="btn" onclick="window.location.href='protocolo.html'">Ver minha rotina completa →</button>
   </div>
 </div>
 
@@ -878,6 +890,13 @@ var AFILIADOS = {
 };
 
 // ── DETECÇÃO DE PAÍS ─────────────────────────────────────────────────────────
+// Apply URL param immediately (before async detection) so budget renders correctly
+(function() {
+  var urlParam = new URLSearchParams(window.location.search).get('pais');
+  if (urlParam === 'PT' || urlParam === 'BR') {
+    localStorage.setItem('sbp_pais', urlParam);
+  }
+})();
 window._sbpPais = localStorage.getItem('sbp_pais') || 'BR';
 
 function detectarPais() {
@@ -1088,6 +1107,41 @@ function salvarPlano(plano) {
 }
 
 // -- AUTH --
+async function loginComGoogle() {
+  try {
+    if (!window._fbAuth) { alert('Firebase não carregado. Tente email/senha.'); return; }
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var cred = await window._fbAuth.signInWithPopup(provider);
+    var user = cred.user;
+    window._currentUser = user;
+    localStorage.setItem('sbp_auth', user.uid);
+    S.nome = user.displayName || '';
+    
+    // Criar perfil se novo
+    var userSnap = await window._fbDb.collection('usuarios').doc(user.uid).get();
+    if (!userSnap.exists) {
+      await window._fbDb.collection('usuarios').doc(user.uid).set({
+        nome: user.displayName || '', email: user.email, plano: 'mensal',
+        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+        atualizacoes: { mes: '', usado: 0, limite: 3 }
+      });
+    }
+    
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    var dados = snap.exists ? snap.data() : null;
+    if (dados && dados.protocolo) {
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
+      window.location.href = 'protocolo.html';
+    } else {
+      go('s-lgpd');
+    }
+  } catch(e) {
+    alert('Erro ao entrar com Google: ' + e.message);
+  }
+}
+
 function authTab(t) {
   var isLog = t === 'log';
   document.getElementById('form-new').style.display = isLog ? 'none' : 'block';
@@ -1098,6 +1152,48 @@ function authTab(t) {
   if (tabLog) { tabLog.className = 'atab ' + (isLog ? 'on' : 'off'); }
 }
 
+
+async function doLoginGoogle() {
+  var err = document.getElementById('auth-err') || document.getElementById('auth-err-log');
+  try {
+    if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
+    var provider = new firebase.auth.GoogleAuthProvider();
+    var cred = await window._fbAuth.signInWithPopup(provider);
+    var user = cred.user;
+
+    // Verificar se já tem protocolo salvo
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    if (snap.exists) {
+      var dados = snap.data();
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
+      localStorage.setItem('sbp_auth', user.uid);
+      window.location.href = 'protocolo.html';
+      return;
+    }
+
+    // Novo usuário — salvar dados básicos e ir para onboarding
+    var nome = user.displayName || user.email.split('@')[0];
+    await window._fbDb.collection('usuarios').doc(user.uid).set({
+      nome: nome,
+      email: user.email,
+      plano: 'beta',
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+      atualizacoes: { mes: '', usado: 0, limite: 5 }
+    }, { merge: true });
+
+    localStorage.setItem('sbp_auth', user.uid);
+    localStorage.setItem('sbp_user', JSON.stringify({ nome, email: user.email, uid: user.uid }));
+    go('s-lgpd');
+
+  } catch(e) {
+    var msg = e.code === 'auth/popup-closed-by-user' ? 'Login cancelado.'
+            : e.code === 'auth/popup-blocked'        ? 'Popup bloqueado. Permita popups para este site.'
+            : e.message || 'Erro ao entrar com Google.';
+    if (err) { err.textContent = msg; err.style.display = 'block'; }
+  }
+}
 
 async function doAuth() {
   var isLog = document.getElementById('form-log').style.display !== 'none';
@@ -1203,6 +1299,40 @@ function tgPw(id, btn) {
   var el = document.getElementById(id);
   el.type = el.type === 'password' ? 'text' : 'password';
   btn.textContent = el.type === 'password' ? '👁' : '🙈';
+}
+
+function doCadastro() {
+  var nome = document.getElementById('inp-nome').value.trim();
+  var email = document.getElementById('inp-email').value.trim();
+  var pw = document.getElementById('inp-pw').value;
+  var err = document.getElementById('err-cad');
+  if (!nome || !email || !email.includes('@') || pw.length < 6) {
+    err.textContent = pw.length < 6 ? 'Senha: mínimo 6 caracteres.' : 'Preencha todos os campos.';
+    err.style.display='block'; return;
+  }
+  err.style.display='none';
+  S.nome = nome; S.email = email; S.senha = pw;
+  localStorage.setItem('sbp_user', JSON.stringify({nome:nome, email:email, senha:pw}));
+  localStorage.setItem('sbp_auth', nome);
+  document.getElementById('ok-cad').style.display = 'block';
+  setTimeout(function(){ go('s-lgpd'); }, 900);
+}
+
+function doLogin() {
+  var email = document.getElementById('log-email').value.trim();
+  var pw = document.getElementById('log-pw').value;
+  var err = document.getElementById('err-log');
+  var saved = JSON.parse(localStorage.getItem('sbp_user') || '{}');
+  if (saved.email === email && saved.senha === pw) {
+    localStorage.setItem('sbp_auth', saved.nome);
+    S.nome = saved.nome; S.email = saved.email;
+    if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
+      window.location.href = 'protocolo.html'; return;
+    }
+    go('s-lgpd');
+  } else {
+    err.textContent = 'Email ou senha incorrectos.'; err.style.display='block';
+  }
 }
 
 // -- LOCATION --
@@ -1675,10 +1805,9 @@ function prevFotoGaleria(e) {
 
 // -- PRODUTOS --
 // ── Produtos: OCR múltiplas fotos ──────────────────────────────────────
-var _produtosOCR      = [];
-var _produtosPendentes = [];
-var _fotosBase64      = [];
-var _ocrRodando       = false;
+var _produtosOCR = [];
+var _fotosBase64 = [];
+var _ocrRodando  = false;
 
 function enterProd() {
   _produtosOCR = [];
@@ -1839,47 +1968,52 @@ function fileToBase64(file) {
 
 // OCR de uma única imagem
 
-// ── GEMINI VISION helper (Google Gemini 2.5) ─────────────────────────────────
+// ── GEMINI helpers ────────────────────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
   var mime = 'image/jpeg';
   if (b64.startsWith('iVBOR')) mime = 'image/png';
   else if (b64.startsWith('R0lGO')) mime = 'image/gif';
   else if (b64.startsWith('UklGR')) mime = 'image/webp';
 
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
-  var resp = await fetch(url, {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: 'Você é especialista em identificar produtos e aparelhos de skincare. Retorne APENAS JSON válido sem markdown.' }] },
+      systemInstruction: { parts: [{ text: 'Você é especialista em identificar produtos e aparelhos de skincare. Retorne APENAS JSON válido.' }] },
       contents: [{ parts: [
         { inlineData: { mimeType: mime, data: b64 } },
         { text: prompt }
       ]}],
-      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 1024 }
+      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
     })
   });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro Gemini Vision');
-  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
-             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
-             ? data.candidates[0].content.parts[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  var text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   return text.replace(/```json|```/g, '').trim();
+}
+
+async function geminiChat(system, userMsg, maxTokens) {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+      generationConfig: { temperature: 0.4, maxOutputTokens: maxTokens || 2000 }
+    })
+  });
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  return (data.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json|```/g,'').trim();
 }
 
 async function ocrUmaFoto(b64) {
   var raw = await geminiVision(b64,
-    'Identifique os produtos de skincare nesta foto. Para cada embalagem visível leia APENAS a MARCA + NOME DO PRODUTO exatamente como aparece na frente da embalagem. ' +
-    'IGNORE completamente: listas de ingredientes, claims de marketing ("dermatologicamente testado", "sem parabenos", etc.), modo de uso, textos laterais/traseiros, preços e códigos. ' +
-    'Se o texto não estiver claramente legível, omita esse produto — prefira omitir a inventar. ' +
-    'Retorne APENAS JSON sem markdown: {"produtos":[{"nome":"Marca NomeProduto","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal ou vazio","confianca":"alta/media/baixa"}]}. ' +
-    'Se nenhum produto for claramente legível retorne: {"produtos":[]}',
-    1000
+    'Leia TODOS os rótulos visíveis nesta foto com precisão absoluta. Use o nome EXATO da embalagem. NÃO invente. NÃO substitua por similares. Retorne APENAS JSON válido sem markdown: {"produtos":[{"nome":"nome exato do produto","categoria":"limpeza/tônico/sérum/hidratante/protetor/aparelho/outro","ativo":"ativo principal ou vazio"}]}',
+    800
   );
-  try {
-    var lista = JSON.parse(raw).produtos || [];
-    return lista.filter(function(p) { return p.confianca !== 'baixa'; });
-  } catch(e) { return []; }
+  try { return JSON.parse(raw).produtos || []; } catch(e) { return []; }
 }
 
 
@@ -1992,11 +2126,14 @@ async function processarFotos(input) {
         concluidos++;
         progFill.style.width = Math.round((concluidos / total) * 100) + '%';
         if (r.status === 'fulfilled' && r.value.length > 0) {
-          r.value.forEach(function(p) { _produtosPendentes.push(p); novos++; });
+          r.value.forEach(function(p) { _produtosOCR.push(p); novos++; });
         } else {
           falhas++;
         }
       });
+
+      // Atualiza lista a cada lote para dar feedback imediato
+      if (novos > 0) renderProdList();
 
       // Pausa entre lotes para não saturar a API
       if (i + LOTE < b64s.length) {
@@ -2012,7 +2149,11 @@ async function processarFotos(input) {
       status.style.display = 'block';
       setTimeout(function() { status.style.display = 'none'; }, 3000);
     } else {
-      mostrarRevisao(falhas);
+      var msg = '✅ ' + novos + ' produtos encontrados';
+      if (falhas > 0) msg += ' (' + falhas + ' foto(s) não lidas)';
+      statusTxt.textContent = msg;
+      setTimeout(function() { status.style.display = 'none'; }, 2500);
+      renderProdList();
     }
 
   } catch(e) {
@@ -2025,90 +2166,11 @@ async function processarFotos(input) {
   input.value = '';
 }
 
-// ── Revisão de produtos OCR ───────────────────────────────────────────────────
-function mostrarRevisao(falhas) {
-  var wrap = document.getElementById('ocr-revisao-wrap');
-  if (!wrap) { confirmarRevisao(); return; }
-  renderRevisaoList();
-  wrap.style.display = 'block';
-  var btn = document.getElementById('btn-confirmar-revisao');
-  if (btn) btn.textContent = 'Confirmar (' + _produtosPendentes.length + ' produto' + (_produtosPendentes.length !== 1 ? 's' : '') + ')';
+// Mantido por compatibilidade (protocolo.html usa addFotoProd via "adicionar produto novo")
+async function addFotoProd(input) {
+  return processarFotos(input);
 }
 
-function renderRevisaoList() {
-  var list = document.getElementById('ocr-revisao-list');
-  if (!list) return;
-  list.innerHTML = '';
-  var catIcon = {limpeza:'🧴',tônico:'💧',sérum:'✨',hidratante:'💦',protetor:'☀️',aparelho:'🔌',outro:'🧴'};
-  _produtosPendentes.forEach(function(p, i) {
-    var d = document.createElement('div');
-    d.id = 'rev-item-' + i;
-    d.style.cssText = 'padding:10px 12px;background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:9px;margin-bottom:7px';
-    d.innerHTML =
-      '<div style="display:flex;align-items:center;gap:10px">' +
-        '<div style="font-size:18px;flex-shrink:0">' + (catIcon[p.categoria] || '🧴') + '</div>' +
-        '<div style="flex:1;min-width:0">' +
-          '<div style="font-size:13px;font-weight:500;color:var(--dark)">' + toTitleCase(p.nome) + '</div>' +
-          '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + (p.categoria||'') + (p.ativo ? ' · ' + p.ativo : '') + '</div>' +
-        '</div>' +
-        '<button onclick="abrirEdicao(' + i + ')" style="background:none;border:none;color:var(--gold);cursor:pointer;padding:4px 6px;font-size:16px;line-height:1" title="Editar">✏️</button>' +
-        '<button onclick="removerPendente(' + i + ')" style="background:none;border:none;color:#c0392b;cursor:pointer;padding:4px;font-size:18px;line-height:1" title="Remover">×</button>' +
-      '</div>' +
-      '<div id="rev-edit-' + i + '" style="display:none;margin-top:8px;display:none">' +
-        '<input id="rev-input-' + i + '" type="text" value="' + p.nome.replace(/"/g,'&quot;') + '" ' +
-          'style="width:100%;padding:8px 10px;border:1px solid rgba(160,112,64,.4);border-radius:7px;font-family:inherit;font-size:13px;color:var(--dark);outline:none;box-sizing:border-box" ' +
-          'onkeydown="if(event.key===\'Enter\')salvarEdicao(' + i + ')">' +
-        '<div style="display:flex;gap:8px;margin-top:6px">' +
-          '<button onclick="salvarEdicao(' + i + ')" style="flex:1;padding:7px;background:var(--gold);color:#fff;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">✓ Salvar</button>' +
-          '<button onclick="fecharEdicao(' + i + ')" style="padding:7px 12px;background:none;border:1px solid rgba(160,112,64,.3);border-radius:7px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Cancelar</button>' +
-        '</div>' +
-      '</div>';
-    list.appendChild(d);
-  });
-  if (_produtosPendentes.length === 0) {
-    list.innerHTML = '<p style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">Nenhum produto para confirmar.<br>Cancele e tente novas fotos.</p>';
-    var btn = document.getElementById('btn-confirmar-revisao');
-    if (btn) btn.style.display = 'none';
-  }
-}
-
-function abrirEdicao(i) {
-  var ed = document.getElementById('rev-edit-' + i);
-  if (ed) { ed.style.display = 'block'; var inp = document.getElementById('rev-input-' + i); if (inp) { inp.focus(); inp.select(); } }
-}
-
-function fecharEdicao(i) {
-  var ed = document.getElementById('rev-edit-' + i);
-  if (ed) ed.style.display = 'none';
-}
-
-function salvarEdicao(i) {
-  var inp = document.getElementById('rev-input-' + i);
-  if (inp && inp.value.trim()) _produtosPendentes[i].nome = inp.value.trim();
-  renderRevisaoList();
-}
-
-function removerPendente(i) {
-  _produtosPendentes.splice(i, 1);
-  renderRevisaoList();
-  var btn = document.getElementById('btn-confirmar-revisao');
-  if (btn) {
-    btn.textContent = 'Confirmar (' + _produtosPendentes.length + ' produto' + (_produtosPendentes.length !== 1 ? 's' : '') + ')';
-    btn.style.display = _produtosPendentes.length > 0 ? 'block' : 'none';
-  }
-}
-
-function confirmarRevisao() {
-  _produtosPendentes.forEach(function(p) { _produtosOCR.push(p); });
-  _produtosPendentes = [];
-  document.getElementById('ocr-revisao-wrap').style.display = 'none';
-  renderProdList();
-}
-
-function cancelarRevisao() {
-  _produtosPendentes = [];
-  document.getElementById('ocr-revisao-wrap').style.display = 'none';
-}
 
 // ── TITLE CASE helper ────────────────────────────────────────────────────────
 function toTitleCase(str) {
@@ -2176,9 +2238,7 @@ async function analisarFotoGemini(b64) {
       '"acne_ativa":"nenhuma/leve/moderada/intensa",' +
       '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
 
-    console.log('[Gemini] Iniciando análise do rosto via Google Gemini Vision...');
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
-    var resp = await fetch(url, {
+    var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2191,17 +2251,17 @@ async function analisarFotoGemini(b64) {
       })
     });
     var data = await resp.json();
-    if (data.error) {
-      console.error('[Gemini] API error:', data.error.message || 'Erro desconhecido');
-      throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
-    }
+    if (data.error) throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
     var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
               data.candidates[0].content.parts && data.candidates[0].content.parts[0]
               ? data.candidates[0].content.parts[0].text : '{}';
     console.log('[Gemini] Resposta recebida:', raw.substring(0, 120) + '...');
     var result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    // VALIDAÇÃO TEMPORÁRIA — remover depois de confirmar que funciona
+    alert('✅ GEMINI OK!\nOleosidade: ' + (result.oleosidade||'—') + '\nAcne: ' + (result.acne_ativa||'—') + '\nTextura: ' + (result.textura||'—'));
     return result;
   } catch(e) {
+    if (!String(e).includes('GEMINI ERRO')) alert('❌ GEMINI FALHOU:\n' + e.message);
     console.error('[Gemini] analisarFotoGemini erro:', e);
     return null;
   }
@@ -2246,61 +2306,23 @@ async function gerarProtocolo() {
   if (S.modoProd === 'manual') S.prodTxt = document.getElementById('txt-prod').value;
   // Montar texto de produtos a partir do OCR acumulado (múltiplas fotos)
   if (S.modoProd === 'foto' && _produtosOCR.length > 0) {
+    // Limita a 20 produtos mais relevantes para não estourar o contexto da IA
     var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
     var prodOrdenados = _produtosOCR.slice().sort(function(a,b) {
       var ia = ordemCateg.indexOf(a.categoria); var ib = ordemCateg.indexOf(b.categoria);
       return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
     });
-
-    if (_produtosOCR.length <= 15) {
-      // Lista completa detalhada para até 15 produtos
-      S.prodTxt = prodOrdenados.map(function(p) {
-        return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
-      }).join('\n');
-    } else {
-      // Mais de 15: agrupa por categoria para compactar o prompt
-      var grupos = {};
-      prodOrdenados.forEach(function(p) {
-        var cat = p.categoria || 'outro';
-        if (!grupos[cat]) grupos[cat] = [];
-        grupos[cat].push(p.nome);
-      });
-      var linhas = ['ARSENAL COMPLETO (' + _produtosOCR.length + ' produtos) — escolha os melhores para a rotina:'];
-      ordemCateg.forEach(function(cat) {
-        if (grupos[cat] && grupos[cat].length) {
-          linhas.push(cat.toUpperCase() + ' (' + grupos[cat].length + '): ' + grupos[cat].join(' | '));
-        }
-      });
-      // Categorias extras não previstas
-      Object.keys(grupos).forEach(function(cat) {
-        if (ordemCateg.indexOf(cat) < 0 && grupos[cat].length) {
-          linhas.push(cat.toUpperCase() + ' (' + grupos[cat].length + '): ' + grupos[cat].join(' | '));
-        }
-      });
-      S.prodTxt = linhas.join('\n');
+    var prodParaIA = prodOrdenados.slice(0, 20);
+    S.prodTxt = prodParaIA.map(function(p) {
+      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
+    }).join('\n');
+    if (_produtosOCR.length > 20) {
+      S.prodTxt += '\n[+ ' + (_produtosOCR.length - 20) + ' outros produtos identificados — disponíveis para consulta]';
     }
     S.fotosProds = _fotosBase64;
   }
 
   go('s-gen');
-
-  // ETAPA 1: Identificar produtos da foto primeiro (se tiver foto)
-  if (S.fotoProd) {
-    try {
-      document.getElementById('gen-msg').textContent = 'Identificando seus produtos...';
-      var idPrompt = 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO da marca e do produto como está escrito na embalagem. NÃO invente, NÃO substitua por produtos similares. Se não conseguir ler, descreva o que vê. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/etc", "ativo": "ativo principal se visível"}]}';
-      var idRaw = await geminiVision(S.fotoProd, idPrompt, 1000);
-      var idClean = idRaw.replace(/```json|```/g,'').trim();
-      var idJson = JSON.parse(idClean);
-      if (idJson.produtos && idJson.produtos.length > 0) {
-        var prodList = idJson.produtos.map(function(p) { return p.nome + (p.categoria ? ' (' + p.categoria + ')' : '') + (p.ativo ? ' — ' + p.ativo : ''); }).join('\n');
-        S.prodTxt = prodList;
-        S.produtosIdentificados = idJson.produtos;
-      }
-    } catch(e) {
-      console.error('Erro ao identificar produtos:', e);
-    }
-  }
 
   // Gemini analisa foto do rosto
   var geminiDiag = '';
@@ -2311,9 +2333,19 @@ async function gerarProtocolo() {
     S.geminiDiag = geminiDiag;
   }
 
-  var msgs = ['Cruzando com seus hábitos','Montando rotina manhã e noite','Criando calendário semanal','Adicionando protocolos especiais','Finalizando protocolo detalhado'];
+  var msgs = [
+    'Cruzando com seus hábitos de vida',
+    'Verificando compatibilidade dos ativos',
+    'Montando rotina manhã e noite',
+    'Definindo ordem de aplicação',
+    'Criando calendário semanal',
+    'Personalizando para o seu tipo de pele',
+    'Revisando interações entre produtos',
+    'Ajustando para o seu orçamento',
+    'Finalizando rotina detalhada'
+  ];
   var mi = 0;
-  var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
+  var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 3000);
 
 
   // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
@@ -2369,14 +2401,14 @@ async function gerarProtocolo() {
     'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (farmácias, Sephora BR, ML, YesStyle)')+'\n' +
     (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
     '\nRetorne APENAS JSON válido:\n' +
-    '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}],' +
+    '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}],' +
     '"protocolo_espinha":"resumo",' +
-    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"tratamento pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"proibidos":["item"]},' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"cuidado pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
     '"protocolo_praia":"resumo",' +
     '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
     '"dicas_maquiagem":"resumo",' +
     '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]},' +
-    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome","marca":"marca","preco":"~X","descricao":"1 frase"}}]}';
+    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}]}';
 
   var prompt = prompt1; // usado pela chamada principal abaixo
 
@@ -2442,53 +2474,39 @@ async function gerarProtocolo() {
         S.protocolo = parsed;
 
     // ── CHAMADA 2: Protocolos especiais + Sugestões ────────────────────────
-    document.getElementById('gen-msg').textContent = 'Criando protocolos especiais e sugestões...';
+    document.getElementById('gen-step').textContent = 'Finalizando · Passo 2 de 2';
+    document.getElementById('gen-msg').textContent = 'Criando guias e sugestões...';
     try {
-      var controller2 = new AbortController();
-      var timeoutId2 = setTimeout(function() { controller2.abort(); }, 180000);
-      var resp2 = await fetch('https://api.anthropic.com/v1/messages', {
-        signal: controller2.signal,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 6000,
-          system: 'Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
-          messages: [{role: 'user', content: prompt2_base}]
-        })
-      });
-      clearTimeout(timeoutId2);
-      if (resp2.ok) {
-        var data2 = await resp2.json();
-        var raw2 = data2.content && data2.content[0] ? data2.content[0].text : '';
-        var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
-        try {
-          var parsed2 = JSON.parse(clean2);
-          // Merge call 2 into protocolo
-          Object.assign(S.protocolo, parsed2);
-        } catch(e) {
-          var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
-          if (j2s !== -1 && j2e !== -1) {
-            try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
-          }
+      // Chamada 2 via Gemini (mais rápido e barato para protocolos especiais + sugestões)
+      var raw2 = await geminiChat(
+        'Especialista em skincare e cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
+        prompt2_base,
+        6000
+      );
+      var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
+      try {
+        var parsed2 = JSON.parse(clean2);
+        Object.assign(S.protocolo, parsed2);
+      } catch(e) {
+        var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
+        if (j2s !== -1 && j2e !== -1) {
+          try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
         }
       }
     } catch(e) {
       console.warn('Chamada 2 falhou (não crítico):', e.message);
-      // Protocolo básico ainda funciona sem os protocolos especiais
+      // Rotina principal funciona sem os guias especiais
     }
 
     var diagText = typeof S.protocolo.diagnostico === 'object'
       ? Object.values(S.protocolo.diagnostico).join(' ')
       : (S.protocolo.diagnostico || '');
-    document.getElementById('conf-txt').innerHTML = '<strong>Tipo de pele:</strong> ' + (S.protocolo.tipo_pele || '') + '<br><br>' + diagText;
+    var tipoPele = S.protocolo.tipo_pele || '';
+    document.getElementById('conf-txt').innerHTML =
+      (diagText ? '<div style="line-height:1.8;margin-bottom:14px">' + diagText + '</div>' : '') +
+      (tipoPele ? '<div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:4px">Tipo de pele</div><div style="font-size:13px;font-weight:500">' + tipoPele + '</div>' : '');
     var confNome = document.getElementById('conf-nome');
-    if (confNome) confNome.textContent = S.nome || '';
+    if (confNome) confNome.textContent = toTitleCase(S.nome) || '';
     go('s-conf');
 
   } catch(e) {
