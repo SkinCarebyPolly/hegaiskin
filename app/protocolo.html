@@ -436,13 +436,26 @@ input[type="file"] { display:none; }
 
 <!-- ══ SUGESTÕES ══ -->
 <div class="section" id="tab-sugestoes">
+
+  <!-- Banner alertas de validade (aparece quando há produtos sensíveis) -->
+  <div id="banner-validade" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(212,168,83,.5);border-radius:12px;margin:12px 0 4px;overflow:hidden">
+    <button onclick="toggleBannerValidade()" style="width:100%;background:none;border:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px;text-align:left;font-family:inherit">
+      <span style="font-size:16px;flex-shrink:0">⚠️</span>
+      <span style="flex:1;font-size:12px;font-weight:600;color:#8a6020">Verifique a validade dos seus produtos</span>
+      <span id="banner-validade-arrow" style="font-size:11px;color:var(--gold);transition:transform .2s">▾</span>
+    </button>
+    <div id="banner-validade-body" style="display:none;padding:0 14px 14px;border-top:0.5px solid rgba(212,168,83,.2);padding-top:10px"></div>
+  </div>
+
   <!-- Sub-tabs -->
-  <div style="display:flex;gap:8px;padding:16px 0 8px">
+  <div style="display:flex;gap:8px;padding:12px 0 8px;flex-wrap:wrap">
     <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #D4A853;background:#D4A853;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
     <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(212,168,83,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
+    <button id="subtab-trocas" onclick="switchSubTab('trocas')" style="display:none;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(212,168,83,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">🔄 Trocas</button>
   </div>
   <div id="subtab-rotina-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px">Produtos para completar os passos da sua rotina</div>
   <div id="subtab-boosters-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none">Produtos para potencializar o que você já usa</div>
+  <div id="subtab-trocas-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none">Produtos que podem trabalhar contra os seus objectivos — sugestões de troca</div>
   <div id="content-sugestoes" style="margin-top:4px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
@@ -572,6 +585,26 @@ input[type="file"] { display:none; }
 </div>
 
 </div><!-- /app-content -->
+
+<!-- SMART SHELF MODAL -->
+<div id="smart-shelf-modal" style="display:none;position:fixed;inset:0;background:rgba(61,32,16,.55);z-index:500;align-items:flex-end;justify-content:center;padding-bottom:0">
+  <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:24px 20px 32px;position:relative">
+    <div style="width:40px;height:3px;background:rgba(212,168,83,.25);border-radius:2px;margin:0 auto 20px"></div>
+    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:6px">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(212,168,83,.15),rgba(212,168,83,.08));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔍</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--dark)">Análise da sua prateleira</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5">A IA identificou produtos que podem trabalhar contra os seus objetivos de pele</div>
+      </div>
+    </div>
+    <div id="smart-shelf-content" style="margin-top:16px"></div>
+    <div id="smart-shelf-validade" style="display:none;margin-top:4px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
+      <button onclick="irParaTrocas()" style="width:100%;padding:14px;background:linear-gradient(135deg,#D4A853,#b8923d);border:none;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.5px">🔄 Ver sugestões de troca</button>
+      <button onclick="fecharSmartShelf()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:12px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Ok, já vi — seguir para a rotina</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
@@ -1074,18 +1107,32 @@ function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
   if (!sugEl) return;
 
-  var semProd = protocolo.sem_produto === true;
-  var subTab  = window._subTabAtivo || (semProd ? 'rotina' : 'boosters');
+  var semProd    = protocolo.sem_produto === true;
+  var trocas     = protocolo.sugestoes_substituicoes || [];
+  var temTrocas  = trocas.length > 0;
+  var subTab     = window._subTabAtivo || (semProd ? 'rotina' : 'boosters');
 
-  // Hide "Da rotina" tab if user has products
+  // Mostrar / ocultar subtabs conforme contexto
   var btnR = document.getElementById('subtab-rotina');
+  var btnT = document.getElementById('subtab-trocas');
   if (btnR) btnR.style.display = semProd ? 'inline-block' : 'none';
   var descR = document.getElementById('subtab-rotina-desc');
   if (descR && !semProd) descR.style.display = 'none';
+  if (btnT) btnT.style.display = temTrocas ? 'inline-block' : 'none';
+
+  // Renderizar banner de alertas de validade
+  renderAlertasValidade();
 
   if (!window._subTabAtivo) {
     window._subTabAtivo = semProd ? 'rotina' : 'boosters';
     switchSubTab(window._subTabAtivo);
+    return;
+  }
+
+  // Se subtab Trocas — delegar para renderer específico
+  if (subTab === 'trocas') {
+    sugEl.innerHTML = '';
+    renderSubstituicoes(sugEl);
     return;
   }
 
@@ -1731,6 +1778,155 @@ function renderSteps(steps, rotinaTipo) {
 }
 
 
+// ── SMART SHELF ────────────────────────────────────────────────────────────
+
+function renderAlertasValidade() {
+  var alertas = protocolo.alertas_validade || [];
+  var banner  = document.getElementById('banner-validade');
+  var body    = document.getElementById('banner-validade-body');
+  if (!banner || !body) return;
+  if (!alertas.length) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  body.innerHTML = alertas.map(function(a) {
+    return '<div style="display:flex;gap:8px;margin-bottom:10px;last-child:margin-bottom:0">' +
+      '<span style="font-size:14px;flex-shrink:0;margin-top:1px">🧴</span>' +
+      '<div>' +
+        '<div style="font-size:12px;font-weight:600;color:#7a5010;margin-bottom:2px">' + (a.produto||'') + '</div>' +
+        '<div style="font-size:12px;color:#8a6020;line-height:1.5">' + (a.alerta||'') + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function toggleBannerValidade() {
+  var body  = document.getElementById('banner-validade-body');
+  var arrow = document.getElementById('banner-validade-arrow');
+  if (!body) return;
+  var open = body.style.display !== 'none';
+  body.style.display  = open ? 'none' : 'block';
+  if (arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function renderSubstituicoes(container) {
+  var trocas = protocolo.sugestoes_substituicoes || [];
+  var af     = getAfiliados();
+  if (!trocas.length) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Nenhuma substituição identificada — todos os seus produtos estão alinhados com os seus objetivos! 🎉</p>';
+    return;
+  }
+
+  trocas.forEach(function(s, si) {
+    var cardId    = 'troca-card-' + si;
+    var bodyId    = 'troca-body-' + si;
+    var tabsId    = 'troca-tabs-' + si;
+    var contId    = 'troca-cont-' + si;
+    var tiers = [
+      { key:'economica',     emoji:'💚', label:'Econômica',    sub:'dentro do seu orçamento' },
+      { key:'intermediaria', emoji:'💛', label:'Intermediária',sub:'melhor resultado' },
+      { key:'premium',       emoji:'💎', label:'Premium',      sub:'o melhor para você' }
+    ];
+
+    var html =
+      '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.2);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+
+        // Cabeçalho
+        '<div id="hdr-'+bodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">' +
+          '<div style="display:flex;align-items:flex-start;gap:12px;flex:1">' +
+            '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (s.icone||'🔄') + '</div>' +
+            '<div style="flex:1">' +
+              '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + toTitleCase(s.produto_atual||'') + (s.marca_atual ? ' · ' + s.marca_atual : '') + '</div>' +
+              '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.conflito||'') + '</div>' +
+              '<div style="margin-top:6px;font-size:11px;color:var(--green);font-weight:500">→ ' + (s.falta||s.motivo||'') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div id="'+cardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s;margin-top:2px">▼</div>' +
+        '</div>' +
+
+        // Corpo expandível
+        '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
+          '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
+            tiers.map(function(t, ti) {
+              return '<button data-tabs="'+tabsId+'" data-cont="'+contId+'" data-ti="'+ti+'" ' +
+                'onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" ' +
+                'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(212,168,83,.08)':'transparent') + ';' +
+                'color:' + (ti===0?'var(--gold)':'var(--muted)') + ';cursor:pointer;' +
+                'border-bottom:2px solid ' + (ti===0?'var(--gold)':'transparent') + ';' +
+                'font-family:inherit;transition:all .15s">' +
+                t.emoji + ' ' + t.label +
+              '</button>';
+            }).join('') +
+          '</div>' +
+          '<div id="'+contId+'" style="padding:16px">' + buildTierContent(s, tiers[0], af) + '</div>' +
+        '</div>' +
+      '</div>';
+
+    container.insertAdjacentHTML('beforeend', html);
+  });
+
+  // Abrir o primeiro card automaticamente
+  var primeiro = document.getElementById('troca-body-0');
+  if (primeiro) { primeiro.style.display = 'block'; var ch = document.getElementById('troca-card-0-chevron'); if(ch) ch.style.transform='rotate(180deg)'; }
+}
+
+function mostrarSmartShelf() {
+  var trocas  = protocolo.sugestoes_substituicoes || [];
+  var alertas = protocolo.alertas_validade || [];
+  if (!trocas.length && !alertas.length) return;
+  if (sessionStorage.getItem('sbp_shelf_shown')) return;
+  sessionStorage.setItem('sbp_shelf_shown', '1');
+
+  // Preencher conteúdo de incompatibilidades
+  var contentEl = document.getElementById('smart-shelf-content');
+  if (contentEl && trocas.length) {
+    contentEl.innerHTML = trocas.map(function(t) {
+      return '<div style="display:flex;gap:10px;padding:12px;background:rgba(212,168,83,.05);border-radius:10px;margin-bottom:8px;border:0.5px solid rgba(212,168,83,.15)">' +
+        '<span style="font-size:18px;flex-shrink:0">' + (t.icone||'🔄') + '</span>' +
+        '<div>' +
+          '<div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">' + toTitleCase(t.produto_atual||'') + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);line-height:1.5">' + (t.conflito||'') + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } else if (contentEl) {
+    contentEl.style.display = 'none';
+  }
+
+  // Alertas de validade no modal
+  var validadeEl = document.getElementById('smart-shelf-validade');
+  if (validadeEl && alertas.length) {
+    validadeEl.style.display = 'block';
+    validadeEl.innerHTML =
+      '<div style="background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(212,168,83,.4);border-radius:10px;padding:12px 14px">' +
+      '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8a6020;margin-bottom:8px">⚠️ Verifique a validade</div>' +
+      alertas.map(function(a) {
+        return '<div style="font-size:12px;color:#7a5010;margin-bottom:6px;line-height:1.5">• <strong>' + (a.produto||'') + '</strong> — ' + (a.alerta||'') + '</div>';
+      }).join('') +
+      '</div>';
+  }
+
+  var modal = document.getElementById('smart-shelf-modal');
+  if (modal) { modal.style.display = 'flex'; }
+}
+
+function fecharSmartShelf() {
+  var modal = document.getElementById('smart-shelf-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function irParaTrocas() {
+  fecharSmartShelf();
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  var tabSug = document.querySelector('.tab[data-tab="sugestoes"]');
+  var secSug = document.getElementById('tab-sugestoes');
+  if (tabSug) tabSug.classList.add('active');
+  if (secSug) secSug.classList.add('active');
+  window._subTabAtivo = 'trocas';
+  switchSubTab('trocas');
+}
+
+// ── PRODUTO PENDENTE ────────────────────────────────────────────────────────
+
 function ativarProdutoPendente(uid) {
   // uid = 'step-manha-2' ou 'step-noite-0'
   var parts = uid.split('-');
@@ -1766,15 +1962,26 @@ function ativarProdutoPendente(uid) {
 }
 
 function switchSubTab(tab) {
-  var isRotina = tab === 'rotina';
   var btnR = document.getElementById('subtab-rotina');
   var btnB = document.getElementById('subtab-boosters');
+  var btnT = document.getElementById('subtab-trocas');
   var descR = document.getElementById('subtab-rotina-desc');
   var descB = document.getElementById('subtab-boosters-desc');
-  if (btnR) { btnR.style.background = isRotina ? 'var(--gold)' : 'transparent'; btnR.style.color = isRotina ? '#fff' : '#9a8878'; btnR.style.borderColor = isRotina ? 'var(--gold)' : 'rgba(212,168,83,.25)'; }
-  if (btnB) { btnB.style.background = !isRotina ? 'var(--gold)' : 'transparent'; btnB.style.color = !isRotina ? '#fff' : '#9a8878'; btnB.style.borderColor = !isRotina ? 'var(--gold)' : 'rgba(212,168,83,.25)'; }
-  if (descR) descR.style.display = isRotina ? 'block' : 'none';
-  if (descB) descB.style.display = !isRotina ? 'block' : 'none';
+  var descT = document.getElementById('subtab-trocas-desc');
+
+  function styleBtn(btn, active) {
+    if (!btn) return;
+    btn.style.background = active ? 'var(--gold)' : 'transparent';
+    btn.style.color = active ? '#fff' : '#9a8878';
+    btn.style.borderColor = active ? 'var(--gold)' : 'rgba(212,168,83,.25)';
+  }
+  styleBtn(btnR, tab === 'rotina');
+  styleBtn(btnB, tab === 'boosters');
+  styleBtn(btnT, tab === 'trocas');
+  if (descR) descR.style.display = tab === 'rotina'   ? 'block' : 'none';
+  if (descB) descB.style.display = tab === 'boosters' ? 'block' : 'none';
+  if (descT) descT.style.display = tab === 'trocas'   ? 'block' : 'none';
+
   window._subTabAtivo = tab;
   renderSugestoes();
 }
@@ -2409,6 +2616,7 @@ if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.t
   // Tem dados locais suficientes - renderizar imediatamente
   renderApp();
   setTimeout(buscarImagensSugestoes, 500);
+  setTimeout(mostrarSmartShelf, 800);
 } else if (auth) {
   // Tem sessão mas sem dados locais - aguardar Firebase (máx 10s)
   var _initTimeout = setTimeout(function() {
