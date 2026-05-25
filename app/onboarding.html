@@ -2268,7 +2268,7 @@ async function analisarFotoGemini(b64) {
       '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
 
     console.log('[Gemini] Iniciando análise do rosto via Google Gemini Vision...');
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY;
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
     var resp = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
