@@ -401,9 +401,10 @@ input[type="file"] { display:none; }
   <!-- Cuidado extra do dia -->
   <div id="rotina-tratamento-dia" style="display:none"></div>
   <!-- Controles de áudio -->
-  <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
     <button id="toggle-som" onclick="toggleAudio('som')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🎵 Som</button>
+    <span style="font-size:10px;color:var(--muted);flex:1;text-align:right">No iOS, desative o modo silencioso para ouvir</span>
   </div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
@@ -1410,38 +1411,35 @@ async function handleEvoPhoto(e) {
     area.classList.add('has-photo');
     document.getElementById('evo-loading').style.display = 'flex';
 
-    // Buscar foto anterior para comparar
     const fotoAnterior = historico.length > 0 ? historico[historico.length-1] : null;
 
     try {
-      const claudeParts = [];
+      var promptTexto = 'Perfil: pele ' + (perfil.tipoPele||'não informado') + ', preocupações: ' + ((perfil.incomodos||[]).join(', ')||'não informadas') + '. ' +
+        (fotoAnterior
+          ? 'A primeira imagem é do mês anterior (' + getMesLabel(fotoAnterior.mes) + '). A segunda é do mês atual (' + getMesLabel(mesAtual) + '). Compare as duas e destaque as melhorias visíveis e o que ainda precisa de atenção.'
+          : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.') +
+        ' Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.';
 
-      if (fotoAnterior) {
-        claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:fotoAnterior.foto.split(',')[1]}});
-        claudeParts.push({type:'text', text:'Esta é a foto do mês anterior (' + getMesLabel(fotoAnterior.mes) + ').'});
+      // Montar parts com 1 ou 2 imagens
+      var parts = [];
+      if (fotoAnterior && fotoAnterior.foto) {
+        parts.push({ inlineData: { mimeType: 'image/jpeg', data: fotoAnterior.foto.split(',')[1] } });
       }
+      parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
+      parts.push({ text: promptTexto });
 
-      claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}});
-      claudeParts.push({type:'text', text:`Esta é a foto do mês atual (${getMesLabel(mesAtual)}).
-Perfil: ${perfil.tipoPele || 'não informado'}, preocupações: ${(perfil.incomodos||[]).join(', ') || 'não informadas'}.
-${fotoAnterior ? 'Compare as duas fotos e destaque as melhorias visíveis e o que ainda precisa de atenção.' : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.'}
-Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
-
-      const res = { json: async () => {
-        // claudeParts tem imagens + texto - extrair para Gemini
-        var imgPart = claudeParts.find(function(p){ return p.type === 'image'; });
-        var txtParts = claudeParts.filter(function(p){ return p.type === 'text'; }).map(function(p){ return p.text; }).join('\n');
-        var raw;
-        if (imgPart && imgPart.source && imgPart.source.data) {
-          raw = await geminiVisionChat(imgPart.source.data, imgPart.source.media_type || 'image/jpeg', txtParts, 600);
-        } else {
-          raw = await geminiChat('Especialista em cosmetologia. Analisa fotos e dá feedback motivador em português.', txtParts, 600);
-        }
-        return { content: [{ text: raw }] };
-      }, ok: true };
-
-      const data = await res.json();
-      const texto = data.content && data.content[0] ? data.content[0].text : '';
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: parts }],
+          systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Analisa fotos de pele e dá feedback motivador em português.' }] },
+          generationConfig: { maxOutputTokens: 800 }
+        })
+      });
+      var respData = await resp.json();
+      if (respData.error) throw new Error(respData.error.message || 'Erro API');
+      var texto = respData.candidates && respData.candidates[0] ? (respData.candidates[0].content.parts[0].text || '') : '';
 
       // Salvar no histórico
       const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString() };
