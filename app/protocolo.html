@@ -666,7 +666,7 @@ input[type="file"] { display:none; }
 var AFILIADOS = {
   BR: {
     amazon:       { url: 'https://www.amazon.com.br/s?k=',           tag: 'COLOQUE_TAG_BR', label: 'Amazon' },
-    farmacia:     { url: 'https://www.drogariapacheco.com.br/search?q=', tag: '',           label: 'Pacheco' },
+    farmacia:     { url: 'https://www.drogaraia.com.br/catalogsearch/result/?q=', tag: '',  label: 'Droga Raia' },
     mercadolivre: { url: 'https://lista.mercadolivre.com.br/',        tag: '',              label: 'Mercado Livre' }
   },
   PT: {
@@ -1002,7 +1002,7 @@ async function converterListaParaSugestoes(listaCompras) {
 
   var pais    = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
   var moeda   = pais === 'PT' ? 'euros (€)' : 'reais (R$)';
-  var mercado = pais === 'PT' ? 'Portugal (Notino, YesStyle, Amazon.es)' : 'Brasil (Drogaria Pacheco, Amazon, Mercado Livre)';
+  var mercado = pais === 'PT' ? 'Portugal (Notino, YesStyle, Amazon.es)' : 'Brasil (Droga Raia, Amazon, Mercado Livre)';
 
   var listaTexto = listaCompras.join('\n');
 

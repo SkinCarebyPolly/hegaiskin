@@ -913,7 +913,7 @@ input[type=file]{display:none}
         <div style="font-size:27px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda à<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
         <div style="display:flex;gap:6px;align-items:center">
           <div style="width:32px;height:2px;background:linear-gradient(90deg,#e0bc76,#A27540);border-radius:1px"></div>
-          <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
+          <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">rotina exclusiva</div>
         </div>
       </div>
     </div>
@@ -929,7 +929,7 @@ input[type=file]{display:none}
 
       <!-- Mensagem fixa -->
       <p style="font-size:13px;color:var(--cdim);line-height:1.8;margin-bottom:20px;font-style:italic">
-        "A pele que você quer começa com o protocolo certo. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
+        "A pele que você quer começa com a rotina certa. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
       </p>
 
       <button class="btn" onclick="confirmProto()">Ver minha rotina completa →</button>
@@ -2471,7 +2471,7 @@ async function gerarProtocolo() {
     '"sugestoes_substituicoes":[{"produto_atual":"nome exato do produto que a cliente TEM","marca_atual":"marca","icone":"🔄","falta":"o que este produto deveria fazer","conflito":"1 frase amigável — por que trabalha contra o objetivo","motivo":"benefício concreto da troca","economica":{"produto":"nome exato substituto","marca":"nome exato","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"}}],' +
     '"alertas_validade":[{"produto":"nome do produto","alerta":"1 frase sobre risco de degradação"}]}' +
     '\n\nANÁLISE OBRIGATÓRIA:\n' +
-    '• sugestoes: liste TODAS as categorias essenciais ausentes da rotina (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). Uma entrada por categoria faltando. Orçamento mensal: ' + S.investimento + '. Produtos disponíveis em ' + (window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Drogaria Pacheco, farmácias, Sephora BR, Mercado Livre) — preços em R$') + '.\n' +
+    '• sugestoes: liste TODAS as categorias essenciais ausentes da rotina (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). Uma entrada por categoria faltando. Orçamento mensal: ' + S.investimento + '. Produtos disponíveis em ' + (window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Droga Raia, farmácias, Sephora BR, Mercado Livre) — preços em R$') + '.\n' +
     '• sugestoes_substituicoes: APENAS produtos que a cliente JÁ TEM e contradizem diretamente seus objetivos de pele. Se todos compatíveis → retorne [].\n' +
     '• alertas_validade: produtos sensíveis a luz, calor ou com prazo curto após abertos.';
   var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere apenas os protocolos especiais.\n\n' +
