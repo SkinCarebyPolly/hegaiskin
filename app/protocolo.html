@@ -704,7 +704,10 @@ function buildTierContent(s, tier, af) {
          (function() {
            var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
            window[key] = t;
-           return '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key])" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">+ Já comprei — adicionar à minha rotina</button>';
+           return '<div style="display:flex;flex-direction:column;gap:8px">' +
+             '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],false)" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">✓ Já tenho — adicionar à rotina</button>' +
+             '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],true)" style="width:100%;padding:11px;background:transparent;border:0.5px solid rgba(212,168,83,.4);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer">📦 Encomendei — a caminho</button>' +
+           '</div>';
          })();
 }
 
@@ -975,18 +978,17 @@ async function converterListaParaSugestoes(listaCompras) {
 
 
 // ── ADICIONAR SUGESTÃO À ROTINA ──────────────────────────────────────────────
-async function adicionarSugestaoRotina(produto) {
+async function adicionarSugestaoRotina(produto, pendente) {
   var nome = produto.produto || '';
   var marca = produto.marca || '';
   var nomeFull = nome + (marca ? ' (' + marca + ')' : '');
 
-  // Show loading feedback on the button
   var overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.4);z-index:300;display:flex;align-items:center;justify-content:center';
   overlay.innerHTML =
     '<div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center">' +
       '<div style="width:36px;height:36px;border:2px solid rgba(212,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
-      '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">Integrando à sua rotina...</div>' +
+      '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">' + (pendente ? 'Reservando na rotina...' : 'Integrando à sua rotina...') + '</div>' +
       '<div style="font-size:12px;color:var(--muted)">A IA está encontrando o melhor lugar para ' + nomeFull + '</div>' +
     '</div>';
   document.body.appendChild(overlay);
@@ -997,24 +999,41 @@ async function adicionarSugestaoRotina(produto) {
       rotina_noite: protocolo.rotina_noite || []
     });
 
-    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}' ;
+    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
 
-    var resp = { json: async () => {
-      var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', prompt, 2000);
-      return { content: [{ text: raw }] };
-    }, ok: true };
-
-    var data = await resp.json();
-    var text = (data.content && data.content[0] && data.content[0].text) || '';
-    var clean = text.replace(/```json|```/g, '').trim();
+    var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', prompt, 2000);
+    var clean = raw.replace(/```json|```/g, '').trim();
     var novaRotina = JSON.parse(clean);
 
-    // Update protocolo and save
+    // Se for pendente, marca o passo recém-adicionado
+    if (pendente) {
+      var nomeLower = nome.toLowerCase();
+      ['rotina_manha', 'rotina_noite'].forEach(function(k) {
+        if (novaRotina[k]) {
+          novaRotina[k].forEach(function(step) {
+            if (step.produto && step.produto.toLowerCase().indexOf(nomeLower) !== -1) {
+              step.pendente = true;
+            }
+          });
+        }
+      });
+    }
+
+    // Actualiza e guarda
     if (novaRotina.rotina_manha) protocolo.rotina_manha = novaRotina.rotina_manha;
     if (novaRotina.rotina_noite) protocolo.rotina_noite = novaRotina.rotina_noite;
     localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
 
-    // Re-render rotina
+    // Sincroniza com Firestore se disponível
+    if (window._currentUser && window._fbDb) {
+      try {
+        window._fbDb.collection('users').doc(window._currentUser.uid).set(
+          { protocolo: protocolo }, { merge: true }
+        );
+      } catch(e) {}
+    }
+
+    // Re-renderiza rotina
     var manhaEl = document.getElementById('content-manha');
     var noiteEl = document.getElementById('content-noite');
     if (manhaEl) manhaEl.innerHTML = renderSteps(protocolo.rotina_manha, 'manha');
@@ -1022,20 +1041,28 @@ async function adicionarSugestaoRotina(produto) {
 
     document.body.removeChild(overlay);
 
-    // Success toast
     var toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap';
-    toast.textContent = '✓ ' + nomeFull + ' adicionado à sua rotina!';
-    document.body.appendChild(toast);
-    setTimeout(function() { document.body.removeChild(toast); }, 3000);
+    toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.15)';
 
-    // Switch to rotina tab
-    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-    var tabRotina = document.querySelector('.tab[data-tab="rotina"]');
-    var secRotina = document.getElementById('tab-rotina');
-    if (tabRotina) tabRotina.classList.add('active');
-    if (secRotina) secRotina.classList.add('active');
+    if (pendente) {
+      toast.style.background = '#7a8a6e';
+      toast.textContent = '📦 ' + nomeFull + ' reservado — activar quando chegar!';
+      document.body.appendChild(toast);
+      setTimeout(function() { if (toast.parentNode) document.body.removeChild(toast); }, 3500);
+      // Fica na aba Sugestões
+    } else {
+      toast.style.background = 'var(--gold)';
+      toast.textContent = '✓ ' + nomeFull + ' adicionado à sua rotina!';
+      document.body.appendChild(toast);
+      setTimeout(function() { if (toast.parentNode) document.body.removeChild(toast); }, 3000);
+      // Vai para aba Rotina
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+      var tabRotina = document.querySelector('.tab[data-tab="rotina"]');
+      var secRotina = document.getElementById('tab-rotina');
+      if (tabRotina) tabRotina.classList.add('active');
+      if (secRotina) secRotina.classList.add('active');
+    }
 
   } catch(e) {
     document.body.removeChild(overlay);
@@ -1661,6 +1688,23 @@ function renderSteps(steps, rotinaTipo) {
       '</div>';
     }
 
+    // ── Produto encomendado, ainda não chegou ──
+    if (s.pendente) {
+      return '<div class="step-item" id="'+uid+'" style="opacity:0.8">' +
+        '<div class="step-num" style="background:rgba(122,138,110,.12);color:#7a8a6e;font-size:16px">📦</div>' +
+        '<div class="step-content">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
+            '<div class="step-product">'+toTitleCase(s.produto||s.nome||'')+'</div>' +
+            '<span style="font-size:10px;background:rgba(122,138,110,.1);color:#7a8a6e;border:0.5px solid rgba(122,138,110,.35);border-radius:20px;padding:3px 8px;white-space:nowrap;flex-shrink:0">⏳ A caminho</span>' +
+          '</div>' +
+          '<div class="step-how" style="color:var(--muted)">'+( s.como||s.instrucao||'')+'</div>' +
+          '<div style="margin-top:12px">' +
+            '<button data-uid="'+uid+'" onclick="ativarProdutoPendente(this.dataset.uid)" style="width:100%;padding:10px;background:linear-gradient(135deg,rgba(122,138,110,.15),rgba(122,138,110,.08));border:0.5px solid rgba(122,138,110,.4);border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#6a7a5e;cursor:pointer;letter-spacing:.5px">✓ Chegou! Activar agora</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
@@ -1686,6 +1730,40 @@ function renderSteps(steps, rotinaTipo) {
   }).join('');
 }
 
+
+function ativarProdutoPendente(uid) {
+  // uid = 'step-manha-2' ou 'step-noite-0'
+  var parts = uid.split('-');
+  var tipoIdx = parts[1];
+  var stepIdx = parseInt(parts[2]);
+  var tipoKey = 'rotina_' + tipoIdx;
+
+  if (!protocolo[tipoKey] || !protocolo[tipoKey][stepIdx]) return;
+
+  delete protocolo[tipoKey][stepIdx].pendente;
+  localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+
+  // Sincroniza com Firestore se disponível
+  if (window._currentUser && window._fbDb) {
+    try {
+      window._fbDb.collection('users').doc(window._currentUser.uid).set(
+        { protocolo: protocolo }, { merge: true }
+      );
+    } catch(e) {}
+  }
+
+  // Re-renderiza a secção correcta
+  var secEl = document.getElementById('content-' + tipoIdx);
+  if (secEl) secEl.innerHTML = renderSteps(protocolo[tipoKey], tipoIdx);
+
+  // Toast de confirmação
+  var nome = protocolo[tipoKey][stepIdx].produto || 'Produto';
+  var toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(212,168,83,.35)';
+  toast.textContent = '✓ ' + toTitleCase(nome) + ' activado na rotina!';
+  document.body.appendChild(toast);
+  setTimeout(function() { if (toast.parentNode) document.body.removeChild(toast); }, 3000);
+}
 
 function switchSubTab(tab) {
   var isRotina = tab === 'rotina';
