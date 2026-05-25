@@ -845,11 +845,18 @@ function renderApp() {
   })();
 
   // Adaptação
-  if (protocolo.fase_adaptacao) {
-    document.getElementById('content-adaptacao').innerHTML = `
-      <div class="alert-title">⚠️ Leia antes de começar</div>
-      <div class="alert-text">${protocolo.fase_adaptacao.replace(/\n/g,'<br>')}</div>`;
-  }
+  try {
+    var faEl = document.getElementById('content-adaptacao');
+    if (faEl && protocolo.fase_adaptacao) {
+      var faVal = protocolo.fase_adaptacao;
+      var faText = typeof faVal === 'string'
+        ? faVal
+        : Object.entries(faVal).map(function(kv) { return '<strong>' + kv[0].replace(/_/g,' ') + ':</strong> ' + kv[1]; }).join('<br><br>');
+      faEl.innerHTML = '<div class="alert-title">⚠️ Leia antes de começar</div><div class="alert-text">' + faText.replace(/\n/g,'<br>') + '</div>';
+    } else if (faEl) {
+      faEl.innerHTML = '<div class="alert-text" style="color:var(--muted)">Siga a rotina normalmente nas primeiras semanas e observe como sua pele responde.</div>';
+    }
+  } catch(e) { console.warn('fase_adaptacao render error:', e); }
 
   // Produtos identificados
   var prodEl = document.getElementById('content-produtos');
