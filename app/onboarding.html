@@ -2366,18 +2366,38 @@ async function gerarProtocolo() {
   if (S.modoProd === 'manual') S.prodTxt = document.getElementById('txt-prod').value;
   // Montar texto de produtos a partir do OCR acumulado (múltiplas fotos)
   if (S.modoProd === 'foto' && _produtosOCR.length > 0) {
-    // Limita a 20 produtos mais relevantes para não estourar o contexto da IA
     var ordemCateg = ['protetor','limpeza','sérum','tônico','hidratante','aparelho','outro'];
     var prodOrdenados = _produtosOCR.slice().sort(function(a,b) {
       var ia = ordemCateg.indexOf(a.categoria); var ib = ordemCateg.indexOf(b.categoria);
       return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
     });
-    var prodParaIA = prodOrdenados.slice(0, 20);
-    S.prodTxt = prodParaIA.map(function(p) {
-      return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
-    }).join('\n');
-    if (_produtosOCR.length > 20) {
-      S.prodTxt += '\n[+ ' + (_produtosOCR.length - 20) + ' outros produtos identificados — disponíveis para consulta]';
+
+    if (_produtosOCR.length <= 15) {
+      // Lista completa detalhada para até 15 produtos
+      S.prodTxt = prodOrdenados.map(function(p) {
+        return '- ' + p.nome + ' (' + p.categoria + (p.ativo ? ', ativo: ' + p.ativo : '') + ')';
+      }).join('\n');
+    } else {
+      // Mais de 15: agrupa por categoria para compactar o prompt
+      var grupos = {};
+      prodOrdenados.forEach(function(p) {
+        var cat = p.categoria || 'outro';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(p.nome);
+      });
+      var linhas = ['ARSENAL COMPLETO (' + _produtosOCR.length + ' produtos) — escolha os melhores para a rotina:'];
+      ordemCateg.forEach(function(cat) {
+        if (grupos[cat] && grupos[cat].length) {
+          linhas.push(cat.toUpperCase() + ' (' + grupos[cat].length + '): ' + grupos[cat].join(' | '));
+        }
+      });
+      // Categorias extras não previstas
+      Object.keys(grupos).forEach(function(cat) {
+        if (ordemCateg.indexOf(cat) < 0 && grupos[cat].length) {
+          linhas.push(cat.toUpperCase() + ' (' + grupos[cat].length + '): ' + grupos[cat].join(' | '));
+        }
+      });
+      S.prodTxt = linhas.join('\n');
     }
     S.fotosProds = _fotosBase64;
   }

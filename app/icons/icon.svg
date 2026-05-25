@@ -9,12 +9,9 @@
       <stop offset="100%" style="stop-color:#c9a96e"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <!-- Decorative circle -->
-  <circle cx="256" cy="256" r="180" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.3"/>
-  <circle cx="256" cy="256" r="155" fill="none" stroke="url(#gold)" stroke-width="0.8" opacity="0.2"/>
-  <!-- S letter elegant -->
-  <text x="256" y="310" font-family="Georgia, serif" font-size="200" font-weight="400" font-style="italic" text-anchor="middle" fill="url(#gold)">S</text>
-  <!-- Bottom text -->
-  <text x="256" y="410" font-family="Georgia, serif" font-size="28" font-weight="400" letter-spacing="8" text-anchor="middle" fill="url(#gold)" opacity="0.7">SKINCARE</text>
+  <rect width="512" height="512" rx="102" fill="url(#bg)"/>
+  <rect x="20" y="20" width="472" height="472" rx="88" fill="none" stroke="url(#gold)" stroke-width="1.5" opacity="0.25"/>
+  <text x="256" y="330" font-family="Georgia,serif" font-size="270" font-weight="700" text-anchor="middle" fill="url(#gold)">HS</text>
+  <line x1="156" y1="368" x2="356" y2="368" stroke="url(#gold)" stroke-width="1" opacity="0.4"/>
+  <text x="256" y="415" font-family="Georgia,serif" font-size="46" font-weight="400" letter-spacing="6" text-anchor="middle" fill="url(#gold)" opacity="0.75">HegaiSkin</text>
 </svg>
