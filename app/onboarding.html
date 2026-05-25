@@ -808,7 +808,7 @@ input[type=file]{display:none}
 
 <div class="scr" id="s-gen">
   <div class="inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
-    <div class="spin-wrap">
+    <div class="spin-wrap" id="gen-spin-wrap">
       <div class="ai-gem">
         <div class="ai-gem-bg"></div>
         <div class="ai-gem-ring"></div>
@@ -821,6 +821,14 @@ input[type=file]{display:none}
       <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
       <p class="spin-step" id="gen-step">Analisando · Passo 1 de 2</p>
       <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
+      <p id="gen-patience" style="display:none;font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;max-width:240px;margin-left:auto;margin-right:auto">Com muitos produtos a IA leva até 1 minuto — não feche a página ☕</p>
+    </div>
+    <div id="gen-error" style="display:none;padding:24px 20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:12px">⏱</div>
+      <div style="font-size:15px;font-weight:600;color:var(--dark);margin-bottom:8px">Demorou mais do que esperado</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px" id="gen-error-msg">A IA está sobrecarregada. Tente novamente em alguns segundos.</div>
+      <button class="btn" onclick="gerarProtocolo()" style="margin-bottom:10px">↺ Tentar novamente</button>
+      <button class="btn2" onclick="go('s-prod')">← Voltar aos produtos</button>
     </div>
   </div>
 </div>
@@ -1942,8 +1950,11 @@ async function geminiVision(b64, prompt, maxTokens) {
   else if (b64.startsWith('R0lGO')) mime = 'image/gif';
   else if (b64.startsWith('UklGR')) mime = 'image/webp';
 
+  var ctrl = new AbortController();
+  var tid = setTimeout(function(){ ctrl.abort(); }, 60000);
   var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
+    signal: ctrl.signal,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: 'Você é especialista em identificar produtos e aparelhos de skincare. Retorne APENAS JSON válido.' }] },
@@ -1951,9 +1962,10 @@ async function geminiVision(b64, prompt, maxTokens) {
         { inlineData: { mimeType: mime, data: b64 } },
         { text: prompt }
       ]}],
-      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
+      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800, thinkingConfig: { thinkingBudget: 0 } }
     })
   });
+  clearTimeout(tid);
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro Gemini');
   var text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
@@ -1961,15 +1973,19 @@ async function geminiVision(b64, prompt, maxTokens) {
 }
 
 async function geminiChat(system, userMsg, maxTokens) {
+  var ctrl = new AbortController();
+  var tid = setTimeout(function(){ ctrl.abort(); }, 120000);
   var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
+    signal: ctrl.signal,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: [{ role: 'user', parts: [{ text: userMsg }] }],
-      generationConfig: { temperature: 0.4, maxOutputTokens: maxTokens || 2000 }
+      generationConfig: { temperature: 0.4, maxOutputTokens: maxTokens || 2000, thinkingConfig: { thinkingBudget: 0 } }
     })
   });
+  clearTimeout(tid);
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro Gemini');
   return (data.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json|```/g,'').trim();
@@ -2296,6 +2312,10 @@ async function gerarProtocolo() {
     S.geminiDiag = geminiDiag;
   }
 
+  document.getElementById('gen-spin-wrap').style.display = '';
+  document.getElementById('gen-error').style.display = 'none';
+  document.getElementById('gen-patience').style.display = 'none';
+
   var msgs = [
     'Cruzando com seus hábitos de vida',
     'Verificando compatibilidade dos ativos',
@@ -2309,6 +2329,7 @@ async function gerarProtocolo() {
   ];
   var mi = 0;
   var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 3000);
+  var patienceTimer = setTimeout(function(){ document.getElementById('gen-patience').style.display = 'block'; }, 35000);
 
 
   // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
@@ -2383,8 +2404,9 @@ async function gerarProtocolo() {
 
   try {
     // Gemini 2.5 Flash — muito mais rápido que Claude para protocolos grandes
-    var raw1 = await geminiChat(system1, prompt1, 16000);
+    var raw1 = await geminiChat(system1, prompt1, 8000);
     clearInterval(iv);
+    clearTimeout(patienceTimer);
 
     var clean = raw1.replace(/```json/gi,'').replace(/```/g,'').trim();
     var parsed;
@@ -2457,9 +2479,14 @@ async function gerarProtocolo() {
 
   } catch(e) {
     clearInterval(iv);
+    clearTimeout(patienceTimer);
     console.error('Gemini error:', e);
-    go('s-prod');
-    setTimeout(function(){ alert('Erro ao criar protocolo:\n' + e.message + '\n\nVerifique sua conexão e tente novamente.'); }, 400);
+    document.getElementById('gen-spin-wrap').style.display = 'none';
+    document.getElementById('gen-error').style.display = 'block';
+    var isTimeout = e.name === 'AbortError' || (e.message && e.message.toLowerCase().indexOf('abort') !== -1);
+    document.getElementById('gen-error-msg').textContent = isTimeout
+      ? 'A IA demorou mais de 2 minutos. Isso acontece quando há muitos produtos. Tente novamente — costuma funcionar na segunda tentativa.'
+      : 'Erro: ' + e.message + '. Verifique a conexão e tente novamente.';
   }
 }
 
