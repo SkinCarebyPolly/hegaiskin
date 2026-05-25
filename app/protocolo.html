@@ -2184,18 +2184,36 @@ function fazerLogout() {
 }
 
 // -- INIT --
-if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
+// ?reset=1 limpa tudo e volta ao onboarding (útil quando dados ficam corrompidos)
+if (new URLSearchParams(window.location.search).get('reset') === '1') {
+  ['sbp_protocolo','sbp_ativo','sbp_perfil','sbp_user','sbp_auth',
+   'sbp_evo_historico','sbp_foto_rosto','sbp_pais'].forEach(function(k){ localStorage.removeItem(k); });
+  window.location.href = 'onboarding.html';
+} else if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
   // Tem dados locais suficientes - renderizar imediatamente
-  renderApp();
-  setTimeout(buscarImagensSugestoes, 500);
+  try {
+    renderApp();
+    setTimeout(buscarImagensSugestoes, 500);
+  } catch(e) {
+    console.error('renderApp falhou:', e);
+    // Dados corrompidos — limpa e redireciona com aviso
+    localStorage.removeItem('sbp_protocolo');
+    localStorage.removeItem('sbp_ativo');
+    document.getElementById('app-loading').innerHTML =
+      '<div style="text-align:center;padding:40px 24px">' +
+      '<div style="font-size:32px;margin-bottom:16px">⚠️</div>' +
+      '<div style="font-size:15px;font-weight:500;margin-bottom:8px;color:#2B1206">Erro ao carregar rotina</div>' +
+      '<div style="font-size:13px;color:#7a6e68;margin-bottom:24px">Os dados ficaram incompletos. Vamos criar sua rotina novamente.</div>' +
+      '<a href="onboarding.html" style="display:inline-block;padding:14px 28px;background:#C9A97A;color:#fff;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none">Recomeçar →</a>' +
+      '</div>';
+  }
 } else if (auth) {
-  // Tem sessão mas sem dados locais - aguardar Firebase (máx 10s)
+  // Tem sessão mas sem dados locais - aguardar Firebase (máx 8s)
   var _initTimeout = setTimeout(function() {
-    // Limpar localStorage corrompido e redirecionar
     localStorage.removeItem('sbp_protocolo');
     localStorage.removeItem('sbp_ativo');
     window.location.href = 'onboarding.html';
-  }, 10000);
+  }, 8000);
   window._initTimeout = _initTimeout;
 } else {
   // Sem sessão - ir para onboarding
