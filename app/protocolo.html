@@ -1588,6 +1588,9 @@ function getTratamentoEmoji(dow) {
 
 // ══ BUSCAR IMAGEM PRODUTO ══
 async function buscarImagemProduto(nomeProduto, imgId) {
+  // ML image search only makes sense for BR — skip for PT
+  var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  if (_pais !== 'BR') return;
   try {
     const query = encodeURIComponent(nomeProduto);
     const resp = await fetch('https://api.mercadolibre.com/sites/MLB/search?q='+query+'&limit=1');

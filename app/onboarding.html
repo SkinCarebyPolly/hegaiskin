@@ -869,6 +869,13 @@ var AFILIADOS = {
 };
 
 // ── DETECÇÃO DE PAÍS ─────────────────────────────────────────────────────────
+// Apply URL param immediately (before async detection) so budget renders correctly
+(function() {
+  var urlParam = new URLSearchParams(window.location.search).get('pais');
+  if (urlParam === 'PT' || urlParam === 'BR') {
+    localStorage.setItem('sbp_pais', urlParam);
+  }
+})();
 window._sbpPais = localStorage.getItem('sbp_pais') || 'BR';
 
 function detectarPais() {
