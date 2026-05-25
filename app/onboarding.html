@@ -7,6 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#FDF8F0">
 <title>Hegai Skin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#D4A853;--gold-light:#e0bc76;--gold-dim:rgba(212,168,83,0.10);--dark:#3D2010;--dark2:#2a1508;--cream:#FDF8F0;--surface:#FAFAFA;--surface2:#FDF8F0;--cdim:rgba(61,32,16,0.55);--muted:#9a8878;--green:#AAB29A;--red:#b85a50}
@@ -1473,6 +1476,21 @@ var _faceData = {};
 
 async function loadFaceDetector() {
   try {
+    // Lazy load TF.js + face-detection (~2MB) apenas quando a câmera abre
+    if (typeof tf === 'undefined' || typeof faceDetection === 'undefined') {
+      await new Promise(function(resolve, reject) {
+        var s1 = document.createElement('script');
+        s1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js';
+        s1.onload = function() {
+          var s2 = document.createElement('script');
+          s2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.1/dist/face-detection.min.js';
+          s2.onload = resolve; s2.onerror = reject;
+          document.head.appendChild(s2);
+        };
+        s1.onerror = reject;
+        document.head.appendChild(s1);
+      });
+    }
     var model = faceDetection.SupportedModels.MediaPipeFaceDetector;
     var config = { runtime: 'tfjs', modelType: 'short' };
     _faceDetector = await faceDetection.createDetector(model, config);
@@ -2647,8 +2665,5 @@ if ('serviceWorker' in navigator) {
   }
 }
 </script>
-  <!-- TensorFlow + Face Detection (carregado depois do app) -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@1.0.1/dist/face-detection.min.js"></script>
 </body>
 </html>

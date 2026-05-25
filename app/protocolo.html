@@ -10,6 +10,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#FDF8F0">
 <title>Hegai Skin · Minha Rotina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -326,7 +329,6 @@ input[type="file"] { display:none; }
       }
     });
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
@@ -2322,6 +2324,15 @@ function desativarNotificacoes() {
 
 // ── COMPARTILHAR PROTOCOLO ───────────────────────────────────────────────────
 async function compartilharProtocolo() {
+  // Lazy load html2canvas apenas quando necessário (1.4MB poupados no carregamento inicial)
+  if (typeof html2canvas === 'undefined') {
+    await new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
   var nome  = protocolo.nome_cliente || user.nome || 'Eu';
   var tipo  = protocolo.tipo_pele || '';
   var score = protocolo.score_pele || '';

@@ -1,13 +1,26 @@
-// Hegai Skin — Service Worker v2
-// Minimal SW: apenas para PWA ser instalável. Sem cache agressivo.
-const CACHE = 'hegai-v2';
+// Hegai Skin — Service Worker v3
+const CACHE = 'hegai-v3';
+const SHELL = [
+  './',
+  './onboarding.html',
+  './protocolo.html',
+  './chat.html',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
+];
 
+// Install: pré-cache do app shell
 self.addEventListener('install', function(e) {
-  self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(function(c) { return c.addAll(SHELL); })
+      .then(function() { return self.skipWaiting(); })
+  );
 });
 
+// Activate: limpa caches antigas
 self.addEventListener('activate', function(e) {
-  // Limpa caches antigos
   e.waitUntil(
     caches.keys().then(function(keys) {
       return Promise.all(
@@ -18,11 +31,23 @@ self.addEventListener('activate', function(e) {
   );
 });
 
-// Network first — sempre busca a versão mais recente do servidor
+// Fetch: cache-first para assets locais, network para externos
 self.addEventListener('fetch', function(e) {
+  var url = new URL(e.request.url);
+
+  // Passa direto para APIs externas (Firebase, Gemini, Google Fonts CDN)
+  if (url.origin !== self.location.origin) return;
+
+  // Cache-first com revalidação em background (stale-while-revalidate)
   e.respondWith(
-    fetch(e.request).catch(function() {
-      return caches.match(e.request);
+    caches.open(CACHE).then(function(cache) {
+      return cache.match(e.request).then(function(cached) {
+        var network = fetch(e.request).then(function(fresh) {
+          cache.put(e.request, fresh.clone());
+          return fresh;
+        }).catch(function() { return cached; });
+        return cached || network;
+      });
     })
   );
 });
