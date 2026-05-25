@@ -1490,12 +1490,33 @@ async function addNewProduct(e) {
     document.getElementById('new-product-loading').style.display = 'flex';
 
     try {
-      var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
+      var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/maquiagem/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
       var text = await geminiVisionChat(b64, 'image/jpeg', _prompt4, 600);
       document.getElementById('new-product-loading').style.display = 'none';
-      openModal('Produto Integrado! ✨', 'Como usar no sua rotina', text.replace(/\n/g,'<br>'));
+
+      // Parsear JSON da resposta
+      var prod = null;
+      try {
+        var _c = text.replace(/```json|```/g,'').trim();
+        var _js = _c.indexOf('{'), _je = _c.lastIndexOf('}');
+        prod = JSON.parse(_js !== -1 ? _c.substring(_js, _je+1) : _c);
+      } catch(pe) {}
+
+      if (!prod || !prod.nome) {
+        openModal('⚠️ Não identificado', 'Tente uma foto mais nítida do rótulo', '<p style="font-size:13px;color:var(--muted);line-height:1.6">Certifique-se que o nome do produto está bem visível e iluminado.</p>');
+        return;
+      }
+
+      // Integrar na rotina via Gemini
+      await adicionarSugestaoRotina({
+        produto: prod.nome,
+        marca: '',
+        descricao: [prod.ativo, prod.como_usar].filter(Boolean).join('. ')
+      }, false);
+
     } catch(err) {
       document.getElementById('new-product-loading').style.display = 'none';
+      openModal('⚠️ Erro', 'Não foi possível processar a foto', '<p style="font-size:13px;color:var(--muted)">Verifique a conexão e tente novamente.</p>');
     }
   };
   reader.readAsDataURL(file);
