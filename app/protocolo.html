@@ -387,6 +387,7 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="praia">🏖 Praia</button>
   <button class="tab" data-tab="make">💄 Make</button>
   <button class="tab" data-tab="evolucao">📸 Evolução</button>
+  <button class="tab" data-tab="polly">✦ Polly</button>
   <button class="tab" data-tab="config">⚙️ Config</button>
 </div>
 
@@ -432,6 +433,12 @@ input[type="file"] { display:none; }
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
   <!-- Cuidado extra do dia -->
   <div id="rotina-tratamento-dia" style="display:none"></div>
+  <!-- Controles de áudio -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
+    <button id="toggle-som" onclick="toggleAudio('som')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🎵 Som</button>
+    <span style="font-size:10px;color:var(--muted);flex:1;text-align:right">No iOS, desative o modo silencioso para ouvir</span>
+  </div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
     <div class="step-list" id="content-manha"></div>
@@ -558,7 +565,11 @@ input[type="file"] { display:none; }
   </div>
 </div>
 
-<!-- ══ CABELO K-BEAUTY ══ -->
+<!-- ══ POLLY IA ══ -->
+<div class="section" id="tab-polly" style="padding:0;overflow:hidden">
+  <iframe id="polly-iframe" src="" style="width:100%;height:calc(100vh - 96px);border:none;display:block" loading="lazy" allowfullscreen></iframe>
+</div>
+
 <!-- ══ CONFIG ══ -->
 <div class="section" id="tab-config">
   <div class="card">
@@ -610,8 +621,7 @@ input[type="file"] { display:none; }
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar sua rotina.</p>
       <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar minha rotina</button>
     </div>
-    <button onclick="window.location.href='chat.html'" style="width:100%;background:linear-gradient(135deg,rgba(212,168,83,.15),rgba(212,168,83,.08));border:0.5px solid rgba(212,168,83,.4);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">✦ Perguntar à IA <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:4px">1× por semana</span></button>
-    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
+<button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
     <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
@@ -633,7 +643,7 @@ input[type="file"] { display:none; }
     <div id="smart-shelf-content" style="margin-top:16px"></div>
     <div id="smart-shelf-validade" style="display:none;margin-top:4px"></div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
-      <button onclick="irParaTrocas()" style="width:100%;padding:14px;background:linear-gradient(135deg,#D4A853,#b8923d);border:none;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.5px">🔄 Ver sugestões de troca</button>
+      <button id="btn-ver-trocas" onclick="irParaTrocas()" style="display:none;width:100%;padding:14px;background:linear-gradient(135deg,#D4A853,#b8923d);border:none;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.5px">🔄 Ver sugestões de troca</button>
       <button onclick="fecharSmartShelf()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:12px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Ok, já vi — seguir para a rotina</button>
     </div>
   </div>
@@ -702,6 +712,10 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
     this.classList.add('active');
     const tabId = this.getAttribute('data-tab');
     document.getElementById('tab-' + tabId).classList.add('active');
+    if (tabId === 'polly') {
+      var iframe = document.getElementById('polly-iframe');
+      if (!iframe.src || iframe.src === window.location.href) iframe.src = 'chat.html?embed=1';
+    }
     if (tabId === 'evolucao') initEvolucao();
     if (tabId === 'sugestoes') {
       renderSugestoes();
@@ -857,16 +871,18 @@ function renderApp() {
   })();
 
   // Adaptação
-  var adaptEl = document.getElementById('content-adaptacao');
-  if (protocolo.fase_adaptacao) {
-    adaptEl.innerHTML = `
-      <div class="alert-title">⚠️ Leia antes de começar</div>
-      <div class="alert-text">${protocolo.fase_adaptacao.replace(/\n/g,'<br>')}</div>`;
-  } else {
-    adaptEl.innerHTML = `
-      <div class="alert-title" style="color:var(--muted)">Rotina não gerada ainda</div>
-      <div class="alert-text" style="margin-top:6px">Vá em ⚙️ Config → <strong>Atualizar minha rotina</strong> para gerar sua rotina completa.</div>`;
-  }
+  try {
+    var faEl = document.getElementById('content-adaptacao');
+    if (faEl && protocolo.fase_adaptacao) {
+      var faVal = protocolo.fase_adaptacao;
+      var faText = typeof faVal === 'string'
+        ? faVal
+        : Object.entries(faVal).map(function(kv) { return '<strong>' + kv[0].replace(/_/g,' ') + ':</strong> ' + kv[1]; }).join('<br><br>');
+      faEl.innerHTML = '<div class="alert-title">⚠️ Leia antes de começar</div><div class="alert-text">' + faText.replace(/\n/g,'<br>') + '</div>';
+    } else if (faEl) {
+      faEl.innerHTML = '<div class="alert-text" style="color:var(--muted)">Siga a rotina normalmente nas primeiras semanas e observe como sua pele responde.</div>';
+    }
+  } catch(e) { console.warn('fase_adaptacao render error:', e); }
 
   // Produtos identificados
   var prodEl = document.getElementById('content-produtos');
@@ -1435,38 +1451,35 @@ async function handleEvoPhoto(e) {
     area.classList.add('has-photo');
     document.getElementById('evo-loading').style.display = 'flex';
 
-    // Buscar foto anterior para comparar
     const fotoAnterior = historico.length > 0 ? historico[historico.length-1] : null;
 
     try {
-      const claudeParts = [];
+      var promptTexto = 'Perfil: pele ' + (perfil.tipoPele||'não informado') + ', preocupações: ' + ((perfil.incomodos||[]).join(', ')||'não informadas') + '. ' +
+        (fotoAnterior
+          ? 'A primeira imagem é do mês anterior (' + getMesLabel(fotoAnterior.mes) + '). A segunda é do mês atual (' + getMesLabel(mesAtual) + '). Compare as duas e destaque as melhorias visíveis e o que ainda precisa de atenção.'
+          : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.') +
+        ' Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.';
 
-      if (fotoAnterior) {
-        claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:fotoAnterior.foto.split(',')[1]}});
-        claudeParts.push({type:'text', text:'Esta é a foto do mês anterior (' + getMesLabel(fotoAnterior.mes) + ').'});
+      // Montar parts com 1 ou 2 imagens
+      var parts = [];
+      if (fotoAnterior && fotoAnterior.foto) {
+        parts.push({ inlineData: { mimeType: 'image/jpeg', data: fotoAnterior.foto.split(',')[1] } });
       }
+      parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
+      parts.push({ text: promptTexto });
 
-      claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}});
-      claudeParts.push({type:'text', text:`Esta é a foto do mês atual (${getMesLabel(mesAtual)}).
-Perfil: ${perfil.tipoPele || 'não informado'}, preocupações: ${(perfil.incomodos||[]).join(', ') || 'não informadas'}.
-${fotoAnterior ? 'Compare as duas fotos e destaque as melhorias visíveis e o que ainda precisa de atenção.' : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.'}
-Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
-
-      const res = { json: async () => {
-        // claudeParts tem imagens + texto - extrair para Gemini
-        var imgPart = claudeParts.find(function(p){ return p.type === 'image'; });
-        var txtParts = claudeParts.filter(function(p){ return p.type === 'text'; }).map(function(p){ return p.text; }).join('\n');
-        var raw;
-        if (imgPart && imgPart.source && imgPart.source.data) {
-          raw = await geminiVisionChat(imgPart.source.data, imgPart.source.media_type || 'image/jpeg', txtParts, 600);
-        } else {
-          raw = await geminiChat('Especialista em cosmetologia. Analisa fotos e dá feedback motivador em português.', txtParts, 600);
-        }
-        return { content: [{ text: raw }] };
-      }, ok: true };
-
-      const data = await res.json();
-      const texto = data.content && data.content[0] ? data.content[0].text : '';
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: parts }],
+          systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Analisa fotos de pele e dá feedback motivador em português.' }] },
+          generationConfig: { maxOutputTokens: 800 }
+        })
+      });
+      var respData = await resp.json();
+      if (respData.error) throw new Error(respData.error.message || 'Erro API');
+      var texto = respData.candidates && respData.candidates[0] ? (respData.candidates[0].content.parts[0].text || '') : '';
 
       // Salvar no histórico
       const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString() };
@@ -1515,12 +1528,33 @@ async function addNewProduct(e) {
     document.getElementById('new-product-loading').style.display = 'flex';
 
     try {
-      var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
+      var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/maquiagem/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
       var text = await geminiVisionChat(b64, 'image/jpeg', _prompt4, 600);
       document.getElementById('new-product-loading').style.display = 'none';
-      openModal('Produto Integrado! ✨', 'Como usar no sua rotina', text.replace(/\n/g,'<br>'));
+
+      // Parsear JSON da resposta
+      var prod = null;
+      try {
+        var _c = text.replace(/```json|```/g,'').trim();
+        var _js = _c.indexOf('{'), _je = _c.lastIndexOf('}');
+        prod = JSON.parse(_js !== -1 ? _c.substring(_js, _je+1) : _c);
+      } catch(pe) {}
+
+      if (!prod || !prod.nome) {
+        openModal('⚠️ Não identificado', 'Tente uma foto mais nítida do rótulo', '<p style="font-size:13px;color:var(--muted);line-height:1.6">Certifique-se que o nome do produto está bem visível e iluminado.</p>');
+        return;
+      }
+
+      // Integrar na rotina via Gemini
+      await adicionarSugestaoRotina({
+        produto: prod.nome,
+        marca: '',
+        descricao: [prod.ativo, prod.como_usar].filter(Boolean).join('. ')
+      }, false);
+
     } catch(err) {
       document.getElementById('new-product-loading').style.display = 'none';
+      openModal('⚠️ Erro', 'Não foi possível processar a foto', '<p style="font-size:13px;color:var(--muted)">Verifique a conexão e tente novamente.</p>');
     }
   };
   reader.readAsDataURL(file);
@@ -1785,6 +1819,7 @@ function renderSteps(steps, rotinaTipo) {
       '</div>';
     }
 
+    _stepTexts[uid] = 'Passo '+(i+1)+'. '+toTitleCase(s.produto||s.nome||'')+'. '+(s.como||s.instrucao||'');
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
@@ -1937,6 +1972,9 @@ function mostrarSmartShelf() {
       '</div>';
   }
 
+  var btnTrocas = document.getElementById('btn-ver-trocas');
+  if (btnTrocas) btnTrocas.style.display = trocas.length ? 'block' : 'none';
+
   var modal = document.getElementById('smart-shelf-modal');
   if (modal) { modal.style.display = 'flex'; }
 }
@@ -2037,6 +2075,55 @@ function parseTempoSeg(tempoStr) {
 }
 
 var _timers = {};
+var _stepTexts = {};
+
+// ── Preferências de áudio (persistidas) ─────────────────────────────────────
+var _audioPrefs = (function() {
+  try { return JSON.parse(localStorage.getItem('sbp_audio') || '{"voz":true,"som":true}'); }
+  catch(e) { return {voz:true, som:true}; }
+})();
+function _salvarAudioPrefs() {
+  try { localStorage.setItem('sbp_audio', JSON.stringify(_audioPrefs)); } catch(e) {}
+}
+function toggleAudio(tipo) {
+  _audioPrefs[tipo] = !_audioPrefs[tipo];
+  _salvarAudioPrefs();
+  _atualizarToggleUI();
+}
+function _atualizarToggleUI() {
+  var bVoz = document.getElementById('toggle-voz');
+  var bSom = document.getElementById('toggle-som');
+  if (bVoz) {
+    bVoz.style.background = _audioPrefs.voz ? 'var(--gold)' : 'transparent';
+    bVoz.style.color = _audioPrefs.voz ? '#fff' : 'var(--gold)';
+  }
+  if (bSom) {
+    bSom.style.background = _audioPrefs.som ? 'var(--gold)' : 'transparent';
+    bSom.style.color = _audioPrefs.som ? '#fff' : 'var(--gold)';
+  }
+}
+
+function lerPasso(texto) {
+  if (!_audioPrefs.voz || !window.speechSynthesis || !texto) return;
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(texto);
+  utt.lang = 'pt-BR';
+  utt.rate = 0.88;
+  utt.pitch = 1.05;
+  utt.volume = 1.0;
+  window.speechSynthesis.speak(utt);
+}
+
+function tocarJingle(tipo) {
+  if (!_audioPrefs.som) return;
+  // tipo: 'inicio' → 3 notas ascendentes suaves; 'fim' → acorde de conclusão
+  var notas = tipo === 'inicio'
+    ? [{f:523,t:0},{f:659,t:0.18},{f:784,t:0.36}]
+    : [{f:784,t:0},{f:1047,t:0.2},{f:1319,t:0.4}];
+  notas.forEach(function(n) {
+    tocarBeep(n.f, 0.55, n.t);
+  });
+}
 
 function iniciarTimer(uid, segundos) {
   if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
@@ -2046,7 +2133,8 @@ function iniciarTimer(uid, segundos) {
   timerEl.style.display = 'block';
   var restante = segundos;
   timeEl.textContent = formatTimer(restante);
-  tocarBeep(440, 0.1);
+  tocarJingle('inicio');
+  lerPasso(_stepTexts[uid] || '');
   _timers[uid] = setInterval(function() {
     restante--;
     timeEl.textContent = formatTimer(restante);
@@ -2054,8 +2142,7 @@ function iniciarTimer(uid, segundos) {
       clearInterval(_timers[uid]);
       delete _timers[uid];
       timeEl.textContent = '✓ Concluído';
-      tocarBeep(523, 0.3);
-      setTimeout(function() { tocarBeep(659, 0.3); }, 350);
+      tocarJingle('fim');
     }
   }, 1000);
 }
@@ -2081,11 +2168,10 @@ function marcarFeito(uid) {
 }
 
 var _audioCtx = null;
-function tocarBeep(freq, dur) {
+function tocarBeep(freq, dur, delay) {
   try {
     if (!_audioCtx) {
       _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      // Prevent Android media session takeover
       if (navigator.mediaSession) {
         navigator.mediaSession.metadata = null;
         navigator.mediaSession.setActionHandler('play', null);
@@ -2093,15 +2179,17 @@ function tocarBeep(freq, dur) {
       }
     }
     if (_audioCtx.state === 'suspended') _audioCtx.resume();
+    var t = _audioCtx.currentTime + (delay || 0);
     var o = _audioCtx.createOscillator();
     var g = _audioCtx.createGain();
     o.connect(g); g.connect(_audioCtx.destination);
     o.frequency.value = freq;
     o.type = 'sine';
-    g.gain.setValueAtTime(0.12, _audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + dur);
-    o.start(_audioCtx.currentTime);
-    o.stop(_audioCtx.currentTime + dur);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.14, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.start(t);
+    o.stop(t + dur);
   } catch(e) {}
 }
 
@@ -2686,6 +2774,7 @@ setTimeout(function() {
 if (protocolo && Object.keys(protocolo).length > 0) {
   // Tem dados locais — renderiza sempre, mesmo offline ou sem auth
   renderApp();
+  _atualizarToggleUI();
   setTimeout(buscarImagensSugestoes, 500);
   setTimeout(mostrarSmartShelf, 800);
 } else if (auth) {
