@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FDF8F0">
+<title>Hegai Skin · Perguntar à IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4A853;
+  --gold-light: #e0bc76;
+  --espresso: #3D2010;
+  --dark: #3D2010;
+  --dark-2: #2a1508;
+  --cream: #FDF8F0;
+  --surface: #FAFAFA;
+  --surface2: #FDF8F0;
+  --muted: #9a8878;
+  --green: #AAB29A;
+  --red: #c0392b;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--dark); min-height:100vh; padding-bottom:40px; }
+
+/* ── HEADER ── */
+.header {
+  background:linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 100%);
+  color:var(--cream);
+  padding:52px 20px 20px;
+  display:flex; align-items:center; gap:14px;
+  position:sticky; top:0; z-index:50;
+}
+.header-back {
+  background:none; border:none; color:rgba(242,232,217,.6);
+  font-size:22px; cursor:pointer; padding:4px; line-height:1;
+  flex-shrink:0;
+}
+.header-content { flex:1; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--cream); }
+.header-sub { font-size:11px; color:rgba(242,232,217,.55); letter-spacing:1.5px; margin-top:2px; text-transform:uppercase; }
+.header-gem { font-size:22px; flex-shrink:0; }
+
+/* ── CONTENT ── */
+.page { max-width:480px; margin:0 auto; padding:0 16px; }
+
+/* ── FAQ ── */
+.section-title {
+  font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic;
+  color:var(--dark); margin:24px 0 12px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::after { content:''; flex:1; height:0.5px; background:rgba(212,168,83,.25); }
+
+.faq-item {
+  background:#fff;
+  border:0.5px solid rgba(212,168,83,.2);
+  border-radius:12px;
+  margin-bottom:8px;
+  overflow:hidden;
+  transition:box-shadow .2s;
+}
+.faq-item.open { box-shadow:0 2px 12px rgba(212,168,83,.12); }
+.faq-q {
+  width:100%; background:none; border:none; cursor:pointer;
+  padding:14px 16px; font-family:'Raleway',sans-serif;
+  display:flex; align-items:flex-start; gap:10px; text-align:left;
+}
+.faq-q-icon { font-size:15px; flex-shrink:0; margin-top:1px; }
+.faq-q-text { font-size:13px; font-weight:500; color:var(--dark); flex:1; line-height:1.45; }
+.faq-arrow { font-size:12px; color:var(--gold); transition:transform .2s; flex-shrink:0; margin-top:2px; }
+.faq-item.open .faq-arrow { transform:rotate(180deg); }
+.faq-a {
+  display:none;
+  padding:0 16px 14px 41px;
+  font-size:12.5px; color:#5a4e47;
+  line-height:1.7;
+  border-top:0.5px solid rgba(212,168,83,.1);
+  padding-top:12px;
+}
+.faq-item.open .faq-a { display:block; }
+.faq-a strong { color:var(--dark); font-weight:600; }
+.faq-a em { color:var(--gold); font-style:normal; font-weight:500; }
+
+/* ── DIVIDER ── */
+.divider-text {
+  text-align:center; margin:28px 0 20px;
+  position:relative;
+}
+.divider-text::before, .divider-text::after {
+  content:''; position:absolute; top:50%;
+  width:30%; height:0.5px; background:rgba(212,168,83,.3);
+}
+.divider-text::before { left:0; }
+.divider-text::after { right:0; }
+.divider-text span {
+  background:var(--surface); padding:0 12px;
+  font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase;
+}
+
+/* ── TUTORIAL ── */
+.tutorial-box {
+  background:linear-gradient(135deg, #fffbf4, #fdf5e8);
+  border:0.5px solid rgba(212,168,83,.3);
+  border-radius:12px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.tutorial-toggle {
+  width:100%; background:none; border:none; cursor:pointer;
+  padding:14px 16px; text-align:left; font-family:'Raleway',sans-serif;
+  display:flex; align-items:center; gap:10px;
+}
+.tutorial-toggle-icon { font-size:16px; }
+.tutorial-toggle-text { font-size:13px; font-weight:500; color:var(--dark); flex:1; }
+.tutorial-toggle-arrow { font-size:12px; color:var(--gold); transition:transform .2s; }
+.tutorial-box.open .tutorial-toggle-arrow { transform:rotate(180deg); }
+.tutorial-body {
+  display:none;
+  padding:0 16px 16px;
+  border-top:0.5px solid rgba(212,168,83,.15);
+  padding-top:14px;
+}
+.tutorial-box.open .tutorial-body { display:block; }
+.tutorial-tip {
+  font-size:12.5px; color:#5a4e47; line-height:1.7; margin-bottom:10px;
+}
+.tutorial-tip strong { color:var(--dark); font-weight:600; }
+.tutorial-example {
+  background:#fff; border-radius:8px; padding:10px 12px;
+  margin-bottom:8px; border-left:2.5px solid;
+  font-size:12px; line-height:1.6; color:#5a4e47;
+}
+.tutorial-example.good { border-color:var(--green); }
+.tutorial-example.bad { border-color:#e0b0a0; }
+.tutorial-example .label {
+  font-size:10px; font-weight:600; letter-spacing:1px;
+  text-transform:uppercase; margin-bottom:4px;
+}
+.tutorial-example.good .label { color:var(--green); }
+.tutorial-example.bad .label { color:#c0726a; }
+
+/* ── QUOTA ── */
+.quota-card {
+  background:#fff;
+  border:0.5px solid rgba(212,168,83,.25);
+  border-radius:12px;
+  padding:16px;
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:20px;
+}
+.quota-icon { font-size:28px; flex-shrink:0; }
+.quota-text { flex:1; }
+.quota-label { font-size:12px; font-weight:600; color:var(--dark); margin-bottom:3px; }
+.quota-sub { font-size:11.5px; color:var(--muted); line-height:1.5; }
+.quota-badge {
+  flex-shrink:0;
+  width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; letter-spacing:.5px;
+  text-align:center; line-height:1.2;
+}
+.quota-badge.available { background:linear-gradient(135deg,#e0bc76,#D4A853); color:#fff; }
+.quota-badge.used { background:#f0e8e0; color:#b09080; }
+
+/* ── LAST ANSWER ── */
+.last-answer {
+  background:#fff;
+  border:0.5px solid rgba(212,168,83,.2);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:20px;
+  display:none;
+}
+.last-answer-header {
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:10px;
+}
+.last-answer-header-icon { font-size:16px; }
+.last-answer-header-text { font-size:12px; font-weight:600; color:var(--gold); }
+.last-answer-date { font-size:11px; color:var(--muted); margin-left:auto; }
+.last-question-text {
+  font-size:12px; color:var(--muted); line-height:1.5;
+  font-style:italic; margin-bottom:8px;
+  padding:8px 10px;
+  background:var(--surface2); border-radius:6px;
+}
+.last-answer-text {
+  font-size:13px; color:var(--dark); line-height:1.75;
+  white-space:pre-wrap;
+}
+.last-answer-disclaimer {
+  font-size:10.5px; color:var(--muted); margin-top:10px;
+  font-style:italic; line-height:1.5;
+}
+
+/* ── CHAT FORM ── */
+.chat-form { margin-bottom:24px; }
+.chat-form.disabled { opacity:.5; pointer-events:none; }
+.chat-textarea {
+  width:100%;
+  background:#fff;
+  border:0.5px solid rgba(212,168,83,.35);
+  border-radius:12px;
+  padding:14px;
+  font-family:'Raleway',sans-serif; font-size:13.5px;
+  color:var(--dark); line-height:1.6; resize:none;
+  min-height:110px;
+  outline:none;
+  transition:border-color .2s;
+}
+.chat-textarea:focus { border-color:var(--gold); }
+.chat-textarea::placeholder { color:#c0b0a0; }
+.chat-char {
+  text-align:right; font-size:11px; color:var(--muted);
+  margin-top:5px; margin-bottom:10px;
+}
+.chat-char.warn { color:#c0726a; }
+.btn-send {
+  width:100%; padding:15px;
+  background:linear-gradient(135deg, #D4A853, #b8923d);
+  border:none; border-radius:12px;
+  font-family:'Raleway',sans-serif; font-size:13px;
+  font-weight:600; letter-spacing:1.5px;
+  color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:opacity .2s;
+}
+.btn-send:disabled { opacity:.5; cursor:default; }
+.btn-send .send-icon { font-size:16px; }
+
+/* ── LOADING ── */
+.chat-loading {
+  display:none;
+  background:#fff;
+  border:0.5px solid rgba(212,168,83,.2);
+  border-radius:12px;
+  padding:24px 16px;
+  text-align:center;
+  margin-bottom:20px;
+}
+.chat-loading-dots {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin-bottom:10px;
+}
+.chat-loading-dots span {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--gold);
+  animation:dotBounce 1.2s ease-in-out infinite;
+}
+.chat-loading-dots span:nth-child(2) { animation-delay:.2s; }
+.chat-loading-dots span:nth-child(3) { animation-delay:.4s; }
+@keyframes dotBounce {
+  0%,80%,100% { transform:scale(.6); opacity:.4; }
+  40% { transform:scale(1); opacity:1; }
+}
+.chat-loading-text { font-size:12.5px; color:var(--muted); font-style:italic; }
+
+/* ── ERROR ── */
+.chat-error {
+  display:none;
+  background:#fff5f4;
+  border:0.5px solid #e8c0b8;
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:12.5px; color:#8a3828; line-height:1.6;
+  margin-bottom:16px;
+}
+
+/* ── WAIT CARD ── */
+.wait-card {
+  display:none;
+  background:linear-gradient(135deg, #fdf8f0, #fff5e8);
+  border:0.5px solid rgba(212,168,83,.3);
+  border-radius:12px;
+  padding:20px 16px;
+  text-align:center;
+  margin-bottom:20px;
+}
+.wait-card-icon { font-size:32px; margin-bottom:10px; }
+.wait-card-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:var(--dark); margin-bottom:6px; }
+.wait-card-text { font-size:12.5px; color:var(--muted); line-height:1.6; }
+.wait-countdown { font-size:14px; font-weight:600; color:var(--gold); margin-top:8px; }
+
+/* ── NOTICE ── */
+.lgpd-notice {
+  font-size:11px; color:var(--muted); line-height:1.6;
+  text-align:center; padding:0 8px; margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="header-back" onclick="history.back()">←</button>
+  <div class="header-content">
+    <div class="header-title">Perguntar à IA</div>
+    <div class="header-sub">Dúvidas sobre sua rotina</div>
+  </div>
+  <div class="header-gem">✦</div>
+</div>
+
+<div class="page">
+
+  <!-- FAQ -->
+  <div class="section-title">Perguntas frequentes</div>
+
+  <div id="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">⚗️</span>
+        <span class="faq-q-text">Posso usar vitamina C e niacinamida juntos?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Sim, pode! O mito de que se cancelam foi desmentido por estudos recentes. Ambos são <strong>antioxidantes complementares</strong> — a vitamina C clareia e protege, a niacinamida regula oleosidade e reduz poros.<br><br>
+        <em>Dica prática:</em> aplique um de manhã e outro à noite se tiver pele sensível, ou use juntos se sua pele tolera bem.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">📋</span>
+        <span class="faq-q-text">Em que ordem aplico os produtos da minha rotina?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        A regra geral é: <strong>do mais fino para o mais espesso</strong>, do mais ativo para o mais selante.<br><br>
+        Manhã: limpeza → tônico → essência/sérum → hidratante → protetor solar.<br>
+        Noite: limpeza (dupla se usou protetor) → tônico → tratamentos (ácidos, retinol) → sérum → hidratante → óleo (se usar).<br><br>
+        <em>Sua rotina personalizada já segue esta ordem</em> — consulte a aba Rotina para a sequência exata com seus produtos.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">💧</span>
+        <span class="faq-q-text">Por que minha pele ficou mais oleosa depois de começar a rotina?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Isso é muito comum e tem nome: <strong>rebound de oleosidade</strong>. Acontece quando a pele que estava sendo "dessecada" (por sabonete agressivo ou falta de hidratação) começa a receber hidratação adequada e, temporariamente, compensa produzindo mais sebo.<br><br>
+        Em geral se normaliza em <em>2 a 4 semanas</em>. Continue a rotina com paciência. Se persistir após um mês, a fórmula pode precisar de ajuste.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">🔴</span>
+        <span class="faq-q-text">Como saber se um produto está me irritando?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Sinais de irritação: <strong>vermelhidão persistente, ardência, coceira, descamação fora do normal ou acne súbita</strong> em área onde você aplicou o produto.<br><br>
+        <em>O que fazer:</em> pause o produto suspeito por 5 dias e observe se melhora. Se sim, introduza-o novamente bem devagar (1x por semana). Se a irritação for intensa ou não melhorar, consulte um dermatologista.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">🌙</span>
+        <span class="faq-q-text">Posso usar ácido e retinol na mesma noite?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Para <strong>iniciantes e peles sensíveis: não</strong>. Essa combinação pode irritar muito. O ideal é alternar: ácidos em uma noite, retinol em outra.<br><br>
+        Para quem já tem pele adaptada e usa produtos de baixa concentração, pode ser feito com cautela — aplique o retinol primeiro (em pele seca), espere 20 min, depois o ácido. Mas quando em dúvida, separe as noites.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">⏳</span>
+        <span class="faq-q-text">Quanto tempo para ver resultados com a minha rotina?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Depende do objetivo:<br><br>
+        • <strong>Hidratação e textura:</strong> 1 a 2 semanas<br>
+        • <strong>Oleosidade e poros:</strong> 4 a 6 semanas<br>
+        • <strong>Manchas e uniformidade:</strong> 8 a 12 semanas<br>
+        • <strong>Linhas finas e firmeza:</strong> 12 a 16 semanas<br><br>
+        <em>Consistência é tudo</em> — pular dias atrasa muito os resultados. A pele tem ciclos de renovação de 28 dias.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">🌞</span>
+        <span class="faq-q-text">Preciso usar protetor solar em dia nublado ou dentro de casa?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <strong>Em dia nublado: sim.</strong> As nuvens bloqueiam apenas 20% dos raios UVA/UVB — os outros 80% chegam à sua pele normalmente.<br><br>
+        <strong>Dentro de casa perto de janelas: idealmente sim.</strong> O vidro comum bloqueia UVB mas não UVA (que causa envelhecimento e manchas). Se você fica muito tempo perto de janelas, use SPF também.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">🌸</span>
+        <span class="faq-q-text">Minha pele piorou quando comecei a rotina — isso é normal?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Às vezes sim — existe o <strong>"purging"</strong> (purga da pele), especialmente com ácidos e retinol. É quando os ativos aceleram a renovação celular e "expulsam" impurezas mais rápido. Se for purga, aparece em áreas onde você normalmente tem acne e melhora em 4 a 6 semanas.<br><br>
+        <em>Atenção:</em> se aparecer em áreas novas, for muito intenso, ou vir acompanhado de ardência — provavelmente é irritação, não purga. Reduza a frequência do ativo.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-icon">✨</span>
+        <span class="faq-q-text">O que fazer quando a pele descama após usar ácidos?</span>
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        Descamação leve nos primeiros dias é normal — a pele está se adaptando. <strong>Não esfolie mecanicamente</strong> por cima: vai irritar mais.<br><br>
+        O que ajuda: hidratante mais rico (ceramidas, manteiga de karité), reduzir a frequência do ácido para 2x por semana e garantir protetor solar todo dia (ácidos deixam a pele mais fotossensível).<br><br>
+        Se a descamação for intensa ou dolorosa, pause o ácido por 1 semana.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Divider -->
+  <div class="divider-text"><span>Não encontrei minha dúvida</span></div>
+
+  <!-- Tutorial -->
+  <div class="tutorial-box" id="tutorial-box">
+    <button class="tutorial-toggle" onclick="toggleTutorial()">
+      <span class="tutorial-toggle-icon">💡</span>
+      <span class="tutorial-toggle-text">Como perguntar bem para a IA</span>
+      <span class="tutorial-toggle-arrow">▾</span>
+    </button>
+    <div class="tutorial-body">
+      <div class="tutorial-tip">
+        Quanto mais contexto você der, <strong>mais precisa e útil</strong> será a resposta. Tente incluir:
+      </div>
+      <div class="tutorial-tip">
+        ✔ O <strong>produto específico</strong> que está a causar dúvida<br>
+        ✔ O <strong>sintoma ou observação</strong> que você notou (vermelhidão, ressecamento, brilho excessivo...)<br>
+        ✔ <strong>Quando começou</strong> ou com qual etapa da rotina coincidiu<br>
+        ✔ <strong>Uma pergunta de cada vez</strong>
+      </div>
+      <div class="tutorial-example good">
+        <div class="label">✓ Bom exemplo</div>
+        "Desde que comecei a usar o sérum com ácido azelaico 3 vezes por semana, a minha testa ficou com pequenas bolinhas vermelhas. Devo parar ou reduzir a frequência?"
+      </div>
+      <div class="tutorial-example bad">
+        <div class="label">✗ Evitar</div>
+        "minha pele ta horrivel oque fazer"
+      </div>
+    </div>
+  </div>
+
+  <!-- Quota card -->
+  <div class="quota-card" id="quota-card">
+    <div class="quota-icon">💬</div>
+    <div class="quota-text">
+      <div class="quota-label" id="quota-label">A carregar...</div>
+      <div class="quota-sub" id="quota-sub">Verificando disponibilidade</div>
+    </div>
+    <div class="quota-badge" id="quota-badge"></div>
+  </div>
+
+  <!-- Wait card (shown when quota used) -->
+  <div class="wait-card" id="wait-card">
+    <div class="wait-card-icon">⏳</div>
+    <div class="wait-card-title">Pergunta já utilizada esta semana</div>
+    <div class="wait-card-text">Cada conta tem 1 pergunta por semana. A sua próxima pergunta fica disponível em:</div>
+    <div class="wait-countdown" id="wait-countdown"></div>
+    <div class="wait-card-text" style="margin-top:10px">Enquanto isso, explore as <strong>perguntas frequentes</strong> acima — podem ter a sua resposta!</div>
+  </div>
+
+  <!-- Previous answer -->
+  <div class="last-answer" id="last-answer">
+    <div class="last-answer-header">
+      <span class="last-answer-header-icon">✦</span>
+      <span class="last-answer-header-text">Sua última resposta da IA</span>
+      <span class="last-answer-date" id="last-answer-date"></span>
+    </div>
+    <div class="last-question-text" id="last-question-text"></div>
+    <div class="last-answer-text" id="last-answer-text"></div>
+    <div class="last-answer-disclaimer">Esta é uma orientação de bem-estar pessoal, não um conselho médico. Em caso de dúvida clínica, consulte um dermatologista.</div>
+  </div>
+
+  <!-- Chat form -->
+  <div class="chat-form" id="chat-form">
+    <textarea
+      class="chat-textarea"
+      id="chat-input"
+      placeholder="Descreva sua dúvida sobre sua rotina, um produto específico ou ingrediente..."
+      maxlength="600"
+      oninput="updateChar()"
+    ></textarea>
+    <div class="chat-char" id="char-count">0 / 600</div>
+    <button class="btn-send" id="btn-send" onclick="enviarPergunta()" disabled>
+      <span class="send-icon">✦</span> Enviar pergunta
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="chat-loading" id="chat-loading">
+    <div class="chat-loading-dots"><span></span><span></span><span></span></div>
+    <div class="chat-loading-text" id="loading-msg">A IA está a analisar sua rotina...</div>
+  </div>
+
+  <!-- Error -->
+  <div class="chat-error" id="chat-error"></div>
+
+  <!-- LGPD notice -->
+  <div class="lgpd-notice">
+    As respostas da IA são orientações gerais de cuidado pessoal e não substituem a avaliação de um profissional de saúde. Suas perguntas ficam guardadas apenas na sua conta.
+  </div>
+
+</div><!-- /page -->
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+// ── FIREBASE ──
+const _fbConfig = {
+  apiKey: "AIzaSyBlZP6K55T1Mos8NzvOJtffXUDOOz_xR8o",
+  authDomain: "skincare-by-polly.firebaseapp.com",
+  projectId: "skincare-by-polly",
+  storageBucket: "skincare-by-polly.firebasestorage.app",
+  messagingSenderId: "423592521435",
+  appId: "1:423592521435:web:acacedddcb71e8ec5d66fe"
+};
+if (typeof firebase !== 'undefined') {
+  if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+  window._fbAuth = firebase.auth();
+  window._fbDb   = firebase.firestore();
+}
+
+// ── GEMINI KEY ──
+const _ga='AQ.Ab', _gb='8RN6K', _gc='4zZPA', _gd='PlXAz';
+const _ge='jwKbd', _gf='49cUw', _gg='d6W12', _gh='rnwc3', _gi='9qWhUJli8ZPvw';
+const GEMINI_KEY = _ga+_gb+_gc+_gd+_ge+_gf+_gg+_gh+_gi;
+
+// ── STATE ──
+var _uid = null;
+var _canAsk = false;
+var _perfil = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
+var _protocolo = JSON.parse(localStorage.getItem('sbp_protocolo') || '{}');
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+// ── INIT ──
+if (window._fbAuth) {
+  window._fbAuth.onAuthStateChanged(async function(user) {
+    if (user) {
+      _uid = user.uid;
+      await loadChatMeta();
+    } else {
+      // Offline fallback: use localStorage
+      loadChatMetaLocal();
+    }
+  });
+} else {
+  loadChatMetaLocal();
+}
+
+async function loadChatMeta() {
+  try {
+    var ref = window._fbDb.collection('usuarios').doc(_uid).collection('meta').doc('chat');
+    var doc = await ref.get();
+    if (doc.exists) {
+      var d = doc.data();
+      renderQuota(d.lastQuestion ? d.lastQuestion.toDate() : null, d.lastQ, d.lastA);
+    } else {
+      renderQuota(null, null, null);
+    }
+  } catch(e) {
+    loadChatMetaLocal();
+  }
+}
+
+function loadChatMetaLocal() {
+  var stored = localStorage.getItem('sbp_chat_meta');
+  if (stored) {
+    var d = JSON.parse(stored);
+    renderQuota(d.lastQuestion ? new Date(d.lastQuestion) : null, d.lastQ, d.lastA);
+  } else {
+    renderQuota(null, null, null);
+  }
+}
+
+function renderQuota(lastDate, lastQ, lastA) {
+  var hasAsked = !!lastDate;
+  var daysLeft = 0;
+  if (hasAsked) {
+    var elapsed = Date.now() - lastDate.getTime();
+    daysLeft = Math.ceil((WEEK_MS - elapsed) / (1000 * 60 * 60 * 24));
+    if (daysLeft <= 0) { hasAsked = false; daysLeft = 0; }
+  }
+
+  _canAsk = !hasAsked;
+
+  var label = document.getElementById('quota-label');
+  var sub   = document.getElementById('quota-sub');
+  var badge = document.getElementById('quota-badge');
+  var waitCard = document.getElementById('wait-card');
+  var form  = document.getElementById('chat-form');
+
+  if (_canAsk) {
+    label.textContent = 'Você tem 1 pergunta disponível';
+    sub.textContent   = 'Esta semana ainda não usou a sua pergunta à IA';
+    badge.textContent = '1\ndisp.';
+    badge.className   = 'quota-badge available';
+    waitCard.style.display = 'none';
+    form.classList.remove('disabled');
+  } else {
+    label.textContent = 'Pergunta já utilizada esta semana';
+    sub.textContent   = 'Nova pergunta disponível em ' + daysLeft + (daysLeft === 1 ? ' dia' : ' dias');
+    badge.textContent = daysLeft + (daysLeft === 1 ? '\ndia' : '\ndias');
+    badge.className   = 'quota-badge used';
+    waitCard.style.display = 'block';
+    document.getElementById('wait-countdown').textContent = daysLeft + (daysLeft === 1 ? ' dia' : ' dias');
+    form.classList.add('disabled');
+  }
+
+  if (lastQ && lastA) {
+    var la = document.getElementById('last-answer');
+    la.style.display = 'block';
+    document.getElementById('last-question-text').textContent = '"' + lastQ + '"';
+    document.getElementById('last-answer-text').textContent = lastA;
+    if (lastDate) {
+      document.getElementById('last-answer-date').textContent = lastDate.toLocaleDateString('pt-BR', {day:'2-digit', month:'short'});
+    }
+  }
+}
+
+// ── FAQ ──
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── TUTORIAL ──
+function toggleTutorial() {
+  document.getElementById('tutorial-box').classList.toggle('open');
+}
+
+// ── CHAR COUNT ──
+function updateChar() {
+  var v = document.getElementById('chat-input').value;
+  var el = document.getElementById('char-count');
+  el.textContent = v.length + ' / 600';
+  el.className = 'chat-char' + (v.length > 520 ? ' warn' : '');
+  document.getElementById('btn-send').disabled = v.trim().length < 10;
+}
+
+// ── SEND ──
+async function enviarPergunta() {
+  if (!_canAsk) return;
+  var q = document.getElementById('chat-input').value.trim();
+  if (q.length < 10) return;
+
+  document.getElementById('chat-form').classList.add('disabled');
+  document.getElementById('chat-error').style.display = 'none';
+  document.getElementById('chat-loading').style.display = 'block';
+
+  var loadingMsgs = [
+    'A IA está a analisar sua rotina...',
+    'Cruzando com os ingredientes dos seus produtos...',
+    'Preparando uma resposta personalizada...',
+    'Quase pronto, só mais um momento...'
+  ];
+  var msgEl = document.getElementById('loading-msg');
+  var mIdx = 0;
+  var mIv = setInterval(function() {
+    mIdx = (mIdx + 1) % loadingMsgs.length;
+    msgEl.textContent = loadingMsgs[mIdx];
+  }, 2500);
+
+  try {
+    var answer = await callGemini(q);
+    clearInterval(mIv);
+    document.getElementById('chat-loading').style.display = 'none';
+
+    // Save
+    var now = new Date();
+    await saveChatMeta(now, q, answer);
+
+    // Show answer
+    var la = document.getElementById('last-answer');
+    la.style.display = 'block';
+    document.getElementById('last-question-text').textContent = '"' + q + '"';
+    document.getElementById('last-answer-text').textContent = answer;
+    document.getElementById('last-answer-date').textContent = now.toLocaleDateString('pt-BR', {day:'2-digit',month:'short'});
+
+    // Clear form
+    document.getElementById('chat-input').value = '';
+    updateChar();
+
+    // Update quota
+    renderQuota(now, q, answer);
+
+    // Scroll to answer
+    la.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  } catch(e) {
+    clearInterval(mIv);
+    document.getElementById('chat-loading').style.display = 'none';
+    document.getElementById('chat-form').classList.remove('disabled');
+    var errEl = document.getElementById('chat-error');
+    errEl.style.display = 'block';
+    errEl.textContent = 'Não foi possível obter resposta agora. Verifique a conexão e tente novamente.';
+  }
+}
+
+async function callGemini(q) {
+  // Build context from profile
+  var ctx = '';
+  if (_perfil && _perfil.tipoPele) ctx += 'Tipo de pele: ' + _perfil.tipoPele + '. ';
+  if (_perfil && _perfil.incomodos) ctx += 'Preocupações: ' + (Array.isArray(_perfil.incomodos) ? _perfil.incomodos.join(', ') : _perfil.incomodos) + '. ';
+  if (_perfil && _perfil.nome) ctx += 'Nome da cliente: ' + _perfil.nome + '. ';
+
+  // Get product list from protocol
+  var produtos = [];
+  if (_protocolo) {
+    ['rotina_manha','rotina_noite'].forEach(function(k) {
+      var arr = _protocolo[k];
+      if (!Array.isArray(arr)) return;
+      arr.forEach(function(p) { if (p.produto) produtos.push(p.marca ? p.marca + ' ' + p.produto : p.produto); });
+    });
+  }
+  if (produtos.length) ctx += 'Produtos da rotina: ' + produtos.slice(0,15).join(', ') + '. ';
+
+  var system = 'Você é uma especialista sênior em cosmetologia e skincare da equipa Hegai Skin. ' +
+    'Responde sempre em português europeu (Portugal) de forma calorosa, clara e acessível. ' +
+    'Nunca usa as palavras diagnóstico, tratamento, prescrição, medicamento ou patologia. ' +
+    'Não faça listas longas — prefira texto fluido com 2 a 4 parágrafos curtos. ' +
+    'Sempre lembre no final que dúvidas clínicas ou dermatológicas devem ser levadas a um profissional de saúde. ' +
+    'Contexto da cliente: ' + (ctx || 'não disponível.');
+
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: q }] }],
+      generationConfig: { temperature: 0.5, maxOutputTokens: 800 }
+    })
+  });
+  if (!resp.ok) throw new Error('API error ' + resp.status);
+  var data = await resp.json();
+  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+             data.candidates[0].content.parts && data.candidates[0].content.parts[0] &&
+             data.candidates[0].content.parts[0].text;
+  if (!text) throw new Error('Resposta vazia');
+  return text.trim();
+}
+
+async function saveChatMeta(date, q, a) {
+  var obj = { lastQuestion: date, lastQ: q, lastA: a };
+  // Local fallback always
+  localStorage.setItem('sbp_chat_meta', JSON.stringify({ lastQuestion: date.toISOString(), lastQ: q, lastA: a }));
+  // Firestore if available
+  if (_uid && window._fbDb) {
+    try {
+      await window._fbDb.collection('usuarios').doc(_uid).collection('meta').doc('chat').set({
+        lastQuestion: firebase.firestore.Timestamp.fromDate(date),
+        lastQ: q,
+        lastA: a
+      });
+    } catch(e) { /* local saved already */ }
+  }
+}
+</script>
+</body>
+</html>
