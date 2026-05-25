@@ -747,7 +747,7 @@ function buildTierContent(s, tier, af) {
 function toggleSug(bodyId) {
   var body = document.getElementById(bodyId);
   if (!body) return;
-  var cardId = bodyId.replace('sug-body-', 'sug-card-');
+  var cardId = bodyId.replace('sug-body-', 'sug-card-').replace('troca-body-', 'troca-card-');
   var chevron = document.getElementById(cardId + '-chevron');
   var open = body.style.display !== 'none';
   body.style.display = open ? 'none' : 'block';
@@ -893,50 +893,37 @@ function renderApp() {
   
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
 async function geminiChat(systemPrompt, userPrompt, maxTokens) {
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 2000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }]
+      contents: [{ parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }],
+      generationConfig: { maxOutputTokens: maxTokens || 2000 }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
 // ── Helper: Gemini para imagem + texto ───────────────────────────────────
 async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 800,
-      system: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido.',
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mimeType || 'image/jpeg', data: b64 } },
-        { type: 'text',  text: prompt }
-      ]}]
+      contents: [{ parts: [
+        { inlineData: { mimeType: mimeType || 'image/jpeg', data: b64 } },
+        { text: prompt }
+      ]}],
+      systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido.' }] },
+      generationConfig: { maxOutputTokens: maxTokens || 800 }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
@@ -972,13 +959,8 @@ async function converterListaParaSugestoes(listaCompras) {
     '[{"falta":"NOME CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas por que ela precisa","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}]';
 
   try {
-    var resp = { json: async () => {
-      var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', promptConv, 2000);
-      return { content: [{ text: raw }] };
-    }, ok: true };
-    var data = await resp.json();
-    var text = (data.content && data.content[0] && data.content[0].text) || '';
-    var clean = text.replace(/```json|```/g, '').trim();
+    var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', promptConv, 2000);
+    var clean = raw.replace(/```json|```/g, '').trim();
     var sugestoesConv = JSON.parse(clean);
 
     // Save converted sugestoes back to localStorage
@@ -1060,7 +1042,7 @@ async function adicionarSugestaoRotina(produto, pendente) {
     // Sincroniza com Firestore se disponível
     if (window._currentUser && window._fbDb) {
       try {
-        window._fbDb.collection('users').doc(window._currentUser.uid).set(
+        window._fbDb.collection('protocolos').doc(window._currentUser.uid).set(
           { protocolo: protocolo }, { merge: true }
         );
       } catch(e) {}
@@ -1495,13 +1477,8 @@ async function addNewProduct(e) {
     document.getElementById('new-product-loading').style.display = 'flex';
 
     try {
-      const res = { json: async () => {
-        var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
-        var raw4 = await geminiVisionChat(b64, 'image/jpeg', _prompt4, 600);
-        return { content: [{ text: raw4 }] };
-      } 
-      const data = await res.json();
-      const text = data.content[0].text;
+      var _prompt4 = `Identifique este produto de skincare. Perfil: pele ${perfil.tipoPele}, preocupações: ${(perfil.incomodos||[]).join(', ')}. Retorne JSON: {"nome":"nome exato","categoria":"limpeza/tônico/sérum/hidratante/protetor/outro","ativo":"ativo principal","como_usar":"instrução curta de uso","compativel":true}`;
+      var text = await geminiVisionChat(b64, 'image/jpeg', _prompt4, 600);
       document.getElementById('new-product-loading').style.display = 'none';
       openModal('Produto Integrado! ✨', 'Como usar no sua rotina', text.replace(/\n/g,'<br>'));
     } catch(err) {
@@ -1942,7 +1919,7 @@ function ativarProdutoPendente(uid) {
   // Sincroniza com Firestore se disponível
   if (window._currentUser && window._fbDb) {
     try {
-      window._fbDb.collection('users').doc(window._currentUser.uid).set(
+      window._fbDb.collection('protocolos').doc(window._currentUser.uid).set(
         { protocolo: protocolo }, { merge: true }
       );
     } catch(e) {}
@@ -2525,32 +2502,26 @@ function renderEvolucaoFotos() {
 }
 
 
-// ── VISION helper (Claude) ───────────────────────────────────────────────────
+// ── VISION helper (Gemini) ───────────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
   var mime = 'image/jpeg';
   if (b64.startsWith('iVBOR')) mime = 'image/png';
   else if (b64.startsWith('UklGR')) mime = 'image/webp';
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 800,
-      system: 'Especialista em cosmetologia. Retorne APENAS JSON válido.',
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-        { type: 'text',  text: prompt }
-      ]}]
+      contents: [{ parts: [
+        { inlineData: { mimeType: mime, data: b64 } },
+        { text: prompt }
+      ]}],
+      systemInstruction: { parts: [{ text: 'Especialista em cosmetologia. Retorne APENAS JSON válido.' }] },
+      generationConfig: { maxOutputTokens: maxTokens || 800 }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
   return text.replace(/```json|```/g, '').trim();
 }
 

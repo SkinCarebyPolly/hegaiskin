@@ -965,7 +965,7 @@ const _ga='AIzaSyCFx14', _gb='wl_3F_SL8k', _gc='fFj-xEBdv-I', _gd='Bi00Buw';
 const GEMINI_KEY = _ga+_gb+_gc+_gd;
 
 // -- STATE --
-const S = {
+var S = {
   nome:'', email:'', senha:'', cidade:'', loc:null,
   fotoRosto:'', fotoProd:'', fotosProds:[], prodTxt:'', modoProd:'',
   ativos:'', maquiagem:'', exercicio:'', objetivo:'', rotina_atual:'', ciclo:'', textura:'', alimentacao:'',
@@ -1256,45 +1256,6 @@ async function doAuth() {
               e.code === 'auth/weak-password' ? 'Senha muito fraca (mínimo 6 caracteres).' :
               'Erro: ' + e.message;
     if(err){err.textContent=msg;err.style.display='block';}
-  }
-}
-
-async function doLoginGoogle() {
-  try {
-    if (!window._fbAuth) throw new Error('Firebase não carregado.');
-    var provider = new firebase.auth.GoogleAuthProvider();
-    var cred2 = await window._fbAuth.signInWithPopup(provider);
-    var user = cred2.user;
-    window._currentUser = user;
-    S.nome = user.displayName || '';
-    S.email = user.email || '';
-    localStorage.setItem('sbp_user', JSON.stringify({nome:S.nome, email:S.email, uid:user.uid}));
-    localStorage.setItem('sbp_auth', user.uid);
-    
-    // Criar perfil se novo usuario
-    var userSnap = await window._fbDb.collection('usuarios').doc(user.uid).get();
-    if (!userSnap.exists) {
-      await window._fbDb.collection('usuarios').doc(user.uid).set({
-        nome: S.nome, email: S.email, plano: 'mensal',
-        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
-        atualizacoes: { mes: '', usado: 0, limite: 3 }
-      });
-    }
-    
-    // Buscar protocolo existente
-    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
-    if (snap.exists) {
-      var dados = snap.data();
-      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
-      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
-      localStorage.setItem('sbp_ativo', 'true');
-      window.location.href = 'protocolo.html';
-      return;
-    }
-    go('s-lgpd');
-  } catch(e) {
-    var errEl = document.getElementById('auth-err');
-    if(errEl){errEl.textContent='Erro Google: ' + e.message;errEl.classList.add('on');}
   }
 }
 

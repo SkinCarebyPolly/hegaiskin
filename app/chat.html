@@ -722,14 +722,14 @@ async function enviarPergunta() {
 async function callGemini(q) {
   // Build context from profile
   var ctx = '';
-  if (_perfil && _perfil.tipo_pele) ctx += 'Tipo de pele: ' + _perfil.tipo_pele + '. ';
-  if (_perfil && _perfil.preocupacoes) ctx += 'Preocupações: ' + (Array.isArray(_perfil.preocupacoes) ? _perfil.preocupacoes.join(', ') : _perfil.preocupacoes) + '. ';
+  if (_perfil && _perfil.tipoPele) ctx += 'Tipo de pele: ' + _perfil.tipoPele + '. ';
+  if (_perfil && _perfil.incomodos) ctx += 'Preocupações: ' + (Array.isArray(_perfil.incomodos) ? _perfil.incomodos.join(', ') : _perfil.incomodos) + '. ';
   if (_perfil && _perfil.nome) ctx += 'Nome da cliente: ' + _perfil.nome + '. ';
 
   // Get product list from protocol
   var produtos = [];
   if (_protocolo) {
-    ['rotina_manha','rotina_noite','rotina_semana'].forEach(function(k) {
+    ['rotina_manha','rotina_noite'].forEach(function(k) {
       var arr = _protocolo[k];
       if (!Array.isArray(arr)) return;
       arr.forEach(function(p) { if (p.produto) produtos.push(p.marca ? p.marca + ' ' + p.produto : p.produto); });
