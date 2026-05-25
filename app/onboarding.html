@@ -2307,7 +2307,7 @@ async function analisarFotoGemini(b64) {
           { inlineData: { mimeType: mime, data: b64 } },
           { text: prompt }
         ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 }
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 }
       })
     });
     var data = await resp.json();
