@@ -612,10 +612,6 @@ function linkAfiliado(plataforma, query) {
   return p.tag ? base + (base.includes('?') ? '&' : '?') + 'tag=' + p.tag : base;
 }
 
-// -- API KEY --
-const _a = 'sk-ant-api03-V', _b = 'gU93q4z1crUe6TnHbP1j';
-const _c = '0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d = 'tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
-function getKey() { return _a+_b+_c+_d; }
 // -- GEMINI KEY --
 const _ga='AIzaSyCFx14', _gb='wl_3F_SL8k', _gc='fFj-xEBdv-I', _gd='Bi00Buw';
 const GEMINI_KEY = _ga+_gb+_gc+_gd;
@@ -1201,81 +1197,6 @@ function seedFotoInicial() {
   saveEvoHistorico(historico);
 }
 
-// -- CALENDAR --
-let calDate = new Date();
-
-function renderCalendar() {
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  document.getElementById('cal-month-label').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
-
-  const firstDay = new Date(calDate.getFullYear(), calDate.getMonth(), 1).getDay();
-  const daysInMonth = new Date(calDate.getFullYear(), calDate.getMonth()+1, 0).getDate();
-  const today = new Date();
-  const semana = protocolo.semana || {};
-
-  // Day-of-week events based on protocol
-  function getDayEvent(date) {
-    const dow = date.getDay(); // 0=sun,1=mon,...
-    if (dow === 1 || dow === 4) return semana.seg_qui || '';
-    if (dow === 2 || dow === 5) return semana.ter_sex || '';
-    if (dow === 3 || dow === 6) return semana.qua_sab || '';
-    if (dow === 0) return semana.dom || '';
-    return '';
-  }
-
-  const grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-
-  // Day headers
-  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d => {
-    grid.innerHTML += `<div class="cal-dow">${d}</div>`;
-  });
-
-  // Empty cells
-  for (let i=0; i<firstDay; i++) {
-    grid.innerHTML += `<div class="cal-day empty"></div>`;
-  }
-
-  // Days
-  for (let d=1; d<=daysInMonth; d++) {
-    const date = new Date(calDate.getFullYear(), calDate.getMonth(), d);
-    const isToday = date.toDateString() === today.toDateString();
-    const event = getDayEvent(date);
-    const hasEvent = !!event;
-    grid.innerHTML += `
-      <div class="cal-day ${isToday?'today':''} ${hasEvent?'has-event':''}" 
-           onclick="openDayModal(${d})">
-        <div class="cal-day-num">${d}</div>
-      </div>`;
-  }
-}
-
-function changeMonth(dir) {
-  calDate = new Date(calDate.getFullYear(), calDate.getMonth()+dir, 1);
-  renderCalendar();
-}
-
-function openDayModal(day) {
-  const date = new Date(calDate.getFullYear(), calDate.getMonth(), day);
-  const dow = date.getDay();
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const semana = protocolo.semana || {};
-
-  let event = '';
-  if (dow===1||dow===4) event = semana.seg_qui;
-  else if (dow===2||dow===5) event = semana.ter_sex;
-  else if (dow===3||dow===6) event = semana.qua_sab;
-  else event = semana.dom;
-
-  document.getElementById('modal-title').textContent = days[dow] + ', ' + day + ' de ' + months[calDate.getMonth()];
-  document.getElementById('modal-sub').textContent = 'Tratamento do dia';
-  document.getElementById('modal-body').innerHTML = event
-    ? `<p style="margin-bottom:12px">${event}</p><div class="alert alert-green"><div class="alert-title">Rotina do dia</div><div class="alert-text">Não esqueça a rotina manhã e noite todos os dias!</div></div>`
-    : `<div class="alert alert-green"><div class="alert-title">Rotina do dia</div><div class="alert-text">Hoje é dia de rotina básica manhã e noite. Sem cuidados adicionais.</div></div>`;
-  document.getElementById('modal').classList.add('open');
-}
-
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
 }
@@ -1478,95 +1399,6 @@ function openModal(title, sub, body) {
   document.getElementById('modal-body').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${body}</p>`;
   document.getElementById('modal').classList.add('open');
 }
-
-// -- HAIRCARE --
-function initHaircare() {
-  var plano = localStorage.getItem('sbp_plano') || 'basico';
-  var temPlus = plano === 'premium' || plano === 'anual';
-  
-  // Check if has hair protocol
-  var hairProtocolo = JSON.parse(localStorage.getItem('sbp_cabelo') || 'null');
-  
-  if (!temPlus) {
-    document.getElementById('cabelo-locked').style.display = 'block';
-    document.getElementById('cabelo-content').style.display = 'none';
-    return;
-  }
-  
-  document.getElementById('cabelo-locked').style.display = 'none';
-  document.getElementById('cabelo-content').style.display = 'block';
-  
-  if (hairProtocolo) renderHairProtocolo(hairProtocolo);
-}
-
-function renderHairProtocolo(p) {
-  if (p.diagnostico) {
-    document.getElementById('hair-diagnostico').innerHTML =
-      '<div class="alert-title">🌿 Análise do seu cabelo</div><div class="alert-text">'+p.diagnostico+'</div>';
-  }
-  
-  var lavEl = document.getElementById('hair-lavagem');
-  (p.rotina_lavagem || []).forEach(function(s) {
-    lavEl.innerHTML += '<div class="step-item"><div class="step-num">'+s.passo+'</div><div class="step-content"><div class="step-product">'+(s.icone||'')+'  '+s.produto+'</div><div class="step-how">'+s.como+'</div>'+(s.tempo?'<span class="step-time">⏱ '+s.tempo+'</span>':'')+'</div></div>';
-  });
-  
-  var tratEl = document.getElementById('hair-tratamentos');
-  (p.tratamentos_semanais || []).forEach(function(t) {
-    tratEl.innerHTML += '<div class="step-item"><div class="step-num">'+t.dia+'</div><div class="step-content"><div class="step-product">'+t.tratamento+'</div><div class="step-how">'+t.como+'</div></div></div>';
-  });
-  
-  var prodEl = document.getElementById('hair-produtos');
-  (p.produtos_kbeauty || []).forEach(function(p) {
-    prodEl.innerHTML += '<div class="suggestion-item"><div class="suggestion-dot"></div><div class="suggestion-text">'+p+'</div></div>';
-  });
-}
-
-async function gerarProtocoloCapilar(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = async function(ev) {
-    var b64 = ev.target.result.split(',')[1];
-    var area = document.getElementById('hair-photo-area');
-    area.innerHTML = '<img src="'+ev.target.result+'" style="max-height:200px;width:100%;object-fit:cover;border-radius:11px">';
-    document.getElementById('hair-loading').style.display = 'flex';
-    
-    // Resize
-    var img = new Image();
-    img.onload = async function() {
-      var canvas = document.createElement('canvas');
-      var ratio = Math.min(800/img.width, 800/img.height, 1);
-      canvas.width = Math.round(img.width*ratio);
-      canvas.height = Math.round(img.height*ratio);
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      var resized = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
-      
-      var perfil = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
-      var prompt = 'Você é especialista em K-Beauty e cuidados capilares. Analise o cabelo nesta foto e crie uma rotina K-Beauty personalizado. Perfil: '+JSON.stringify(perfil)+'. Retorne APENAS JSON: {"diagnostico":"análise do cabelo","tipo_cabelo":"tipo identificado","rotina_lavagem":[{"passo":1,"produto":"nome","como":"instrução detalhada","icone":"emoji","tempo":"X min"}],"tratamentos_semanais":[{"dia":"Seg/Qui","tratamento":"nome","como":"instrução"}],"produtos_kbeauty":["produto coreano — benefício e como usar"]}';
-      
-      try {
-        var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+GEMINI_KEY, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({"contents":[{"parts":[{"inline_data":{"mime_type":"image/jpeg","data":resized}},{"text":prompt}]}],"generationConfig":{"responseMimeType":"application/json","maxOutputTokens":2000}})
-        });
-        var data = await resp.json();
-        var raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        var hairP = JSON.parse(raw.replace(/```json|```/g,'').trim());
-        localStorage.setItem('sbp_cabelo', JSON.stringify(hairP));
-        renderHairProtocolo(hairP);
-      } catch(err) {
-        console.error(err);
-        alert('Erro ao gerar protocolo capilar. Tente novamente.');
-      }
-      document.getElementById('hair-loading').style.display = 'none';
-    };
-    img.src = 'data:image/jpeg;base64,'+b64;
-  };
-  reader.readAsDataURL(file);
-}
-
-
 
 // ══ ROTINA DO DIA ══
 function renderRotinaDia() {
@@ -2242,25 +2074,9 @@ function mostrarToast(msg) {
   setTimeout(function() { if(t.parentNode) t.parentNode.removeChild(t); }, 3000);
 }
 
-// ── EVOLUÇÃO ANTES/DEPOIS ────────────────────────────────────────────────────
-function salvarFotoEvolucao(b64, feedback) {
-  var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
-  var entrada = {
-    data: new Date().toISOString(),
-    semana: Math.ceil(historico.length + 1),
-    foto: b64,
-    score: protocolo.score_pele || null,
-    feedback: feedback || ''
-  };
-  historico.push(entrada);
-  // Manter máximo 12 fotos
-  if (historico.length > 12) historico = historico.slice(-12);
-  localStorage.setItem('sbp_evolucao', JSON.stringify(historico));
-  return entrada;
-}
-
 function renderEvolucaoFotos() {
-  var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
+  // Use the new EVO_KEY system; filter out the seeded onboarding photo (inicio: true)
+  var historico = getEvoHistorico().filter(function(h) { return !h.inicio; });
   var root = document.getElementById('content-evolucao-fotos');
   if (!root) return;
 
@@ -2269,18 +2085,18 @@ function renderEvolucaoFotos() {
       '<div style="text-align:center;padding:32px 20px">' +
         '<div style="font-size:40px;margin-bottom:12px">📸</div>' +
         '<div style="font-size:15px;font-weight:500;color:var(--dark);margin-bottom:6px">Registre sua evolução</div>' +
-        '<div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
+        '<div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação mês a mês</div>' +
         '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.06);border:0.5px solid rgba(160,112,64,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
           '🔒 <strong style="color:var(--dark)">Sua foto fica apenas neste dispositivo.</strong> Não é enviada, armazenada em servidores ou compartilhada com ninguém. Somente a análise textual da pele é processada pela IA.' +
         '</div>' +
-        '<button onclick="tirarFotoEvolucao()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar semana 1</button>' +
+        '<button onclick="document.getElementById(\'evo-photo-input\').click()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar mês 1</button>' +
       '</div>';
     return;
   }
 
   var html = '<div style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">' +
     '<div style="font-size:13px;color:var(--muted)">' + historico.length + ' registros</div>' +
-    '<button onclick="tirarFotoEvolucao()" style="padding:8px 16px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">+ Nova foto</button>' +
+    '<button onclick="document.getElementById(\'evo-photo-input\').click()" style="padding:8px 16px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">+ Nova foto</button>' +
   '</div>';
 
   // Antes/Depois se tiver 2+ fotos
@@ -2292,18 +2108,16 @@ function renderEvolucaoFotos() {
         '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px">Sua transformação</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
           '<div style="text-align:center">' +
-            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Semana ' + primeira.semana + '</div>' +
-            '<img src="data:image/jpeg;base64,' + primeira.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
-            (primeira.score ? '<div style="font-size:11px;color:var(--gold);margin-top:4px">Score ' + primeira.score + '</div>' : '') +
+            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">' + (primeira.label || getMesLabel(primeira.mes)) + '</div>' +
+            '<img src="' + primeira.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
           '</div>' +
           '<div style="text-align:center">' +
-            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Semana ' + ultima.semana + ' ✨</div>' +
-            '<img src="data:image/jpeg;base64,' + ultima.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
-            (ultima.score ? '<div style="font-size:11px;color:var(--gold);margin-top:4px">Score ' + ultima.score + '</div>' : '') +
+            '<div style="font-size:11px;color:var(--muted);margin-bottom:6px">' + (ultima.label || getMesLabel(ultima.mes)) + ' ✨</div>' +
+            '<img src="' + ultima.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover">' +
           '</div>' +
         '</div>' +
       '</div>' +
-      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
+      (ultima.analise ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3);margin-bottom:12px">' + ultima.analise + '</div>' : '') +
       '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.04);border:0.5px solid rgba(160,112,64,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
         '🔒 Suas fotos ficam <strong style="color:var(--dark)">apenas neste dispositivo</strong> — não são enviadas nem armazenadas em nenhum servidor.' +
       '</div>';
@@ -2313,13 +2127,11 @@ function renderEvolucaoFotos() {
   html += '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:10px">Histórico</div>';
   html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
   historico.forEach(function(h) {
-    var dt = new Date(h.data);
-    var label = dt.getDate() + '/' + (dt.getMonth()+1);
+    var label = h.label || getMesLabel(h.mes);
     html +=
       '<div style="text-align:center">' +
-        '<img src="data:image/jpeg;base64,' + h.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover;margin-bottom:4px">' +
+        '<img src="' + h.foto + '" style="width:100%;border-radius:8px;aspect-ratio:3/4;object-fit:cover;margin-bottom:4px">' +
         '<div style="font-size:10px;color:var(--muted)">' + label + '</div>' +
-        (h.score ? '<div style="font-size:10px;color:var(--gold)">' + h.score + '</div>' : '') +
       '</div>';
   });
   html += '</div>';
@@ -2351,42 +2163,6 @@ async function geminiVision(b64, prompt, maxTokens) {
              data.candidates[0].content.parts && data.candidates[0].content.parts[0]
              ? data.candidates[0].content.parts[0].text : '';
   return text.replace(/```json|```/g, '').trim();
-}
-
-function tirarFotoEvolucao() {
-  var inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'image/*';
-  inp.onchange = async function() {
-    if (!inp.files || !inp.files[0]) return;
-    var file = inp.files[0];
-    var b64 = await new Promise(function(res) {
-      var r = new FileReader();
-      r.onload = function(e) { res(e.target.result.split(',')[1]); };
-      r.readAsDataURL(file);
-    });
-
-    // Show analyzing state
-    mostrarToast('Analisando sua pele...');
-
-    // Gemini analisa a foto de evolução
-    var feedback = '';
-    try {
-      var historico = JSON.parse(localStorage.getItem('sbp_evolucao') || '[]');
-      var isPrimeira = historico.length === 0;
-      var promptEvo = isPrimeira
-        ? 'Analise esta foto de pele com olhar encorajador de especialista em cosmetologia. Dê um feedback caloroso sobre o estado atual da pele, destacando pontos positivos e o potencial de melhora com uma rotina consistente. Máximo 2 frases, tom motivador. Retorne APENAS o texto, sem JSON.'
-        : 'Analise esta foto de pele. Dê um feedback encorajador sobre o estado atual, focando em aspectos positivos visíveis. Compare mentalmente com uma pele que está em evolução de rotina. Máximo 2 frases. Retorne APENAS o texto, sem JSON.';
-      feedback = await geminiVision(b64, promptEvo, 200);
-    } catch(e) {
-      feedback = '';
-    }
-
-    salvarFotoEvolucao(b64, feedback);
-    renderEvolucaoFotos();
-    mostrarToast('📸 Foto registrada!');
-  };
-  inp.click();
 }
 
 // -- LOGOUT --

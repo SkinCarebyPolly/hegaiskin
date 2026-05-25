@@ -1088,41 +1088,6 @@ function salvarPlano(plano) {
 }
 
 // -- AUTH --
-async function loginComGoogle() {
-  try {
-    if (!window._fbAuth) { alert('Firebase não carregado. Tente email/senha.'); return; }
-    var provider = new firebase.auth.GoogleAuthProvider();
-    var cred = await window._fbAuth.signInWithPopup(provider);
-    var user = cred.user;
-    window._currentUser = user;
-    localStorage.setItem('sbp_auth', user.uid);
-    S.nome = user.displayName || '';
-    
-    // Criar perfil se novo
-    var userSnap = await window._fbDb.collection('usuarios').doc(user.uid).get();
-    if (!userSnap.exists) {
-      await window._fbDb.collection('usuarios').doc(user.uid).set({
-        nome: user.displayName || '', email: user.email, plano: 'mensal',
-        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
-        atualizacoes: { mes: '', usado: 0, limite: 3 }
-      });
-    }
-    
-    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
-    var dados = snap.exists ? snap.data() : null;
-    if (dados && dados.protocolo) {
-      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
-      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
-      localStorage.setItem('sbp_ativo', 'true');
-      window.location.href = 'protocolo.html';
-    } else {
-      go('s-lgpd');
-    }
-  } catch(e) {
-    alert('Erro ao entrar com Google: ' + e.message);
-  }
-}
-
 function authTab(t) {
   var isLog = t === 'log';
   document.getElementById('form-new').style.display = isLog ? 'none' : 'block';
@@ -2323,37 +2288,14 @@ async function gerarProtocolo() {
   if (S.fotoProd) {
     try {
       document.getElementById('gen-msg').textContent = 'Identificando seus produtos...';
-      var idResp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: 'Você é especialista em identificar produtos cosméticos em fotos. Leia os rótulos com precisão absoluta. Retorne APENAS JSON válido, sem texto fora do JSON.',
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: S.fotoProd } },
-              { type: 'text', text: 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO da marca e do produto como está escrito na embalagem. NÃO invente, NÃO substitua por produtos similares. Se não conseguir ler, descreva o que vê. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/etc", "ativo": "ativo principal se visível"}]}' }
-            ]
-          }]
-        })
-      });
-      if (idResp.ok) {
-        var idData = await idResp.json();
-        var idRaw = idData.content && idData.content[0] ? idData.content[0].text : '';
-        var idClean = idRaw.replace(/```json|```/g,'').trim();
-        var idJson = JSON.parse(idClean);
-        if (idJson.produtos && idJson.produtos.length > 0) {
-          var prodList = idJson.produtos.map(function(p) { return p.nome + (p.categoria ? ' (' + p.categoria + ')' : '') + (p.ativo ? ' — ' + p.ativo : ''); }).join('\n');
-          S.prodTxt = prodList;
-          S.produtosIdentificados = idJson.produtos;
-        }
+      var idPrompt = 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO da marca e do produto como está escrito na embalagem. NÃO invente, NÃO substitua por produtos similares. Se não conseguir ler, descreva o que vê. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/etc", "ativo": "ativo principal se visível"}]}';
+      var idRaw = await geminiVision(S.fotoProd, idPrompt, 1000);
+      var idClean = idRaw.replace(/```json|```/g,'').trim();
+      var idJson = JSON.parse(idClean);
+      if (idJson.produtos && idJson.produtos.length > 0) {
+        var prodList = idJson.produtos.map(function(p) { return p.nome + (p.categoria ? ' (' + p.categoria + ')' : '') + (p.ativo ? ' — ' + p.ativo : ''); }).join('\n');
+        S.prodTxt = prodList;
+        S.produtosIdentificados = idJson.produtos;
       }
     } catch(e) {
       console.error('Erro ao identificar produtos:', e);
