@@ -308,23 +308,32 @@ input[type="file"] { display:none; }
     } else {
       console.warn('Firebase SDK nao carregado — modo offline ativo.');
     }
-    // Carregar protocolo do Firebase se não estiver local
+    // Auth state: só sincroniza dados, NUNCA bloqueia o acesso
     if (window._fbAuth) window._fbAuth.onAuthStateChanged(async function(user) {
       if (user) {
         window._currentUser = user;
+        clearTimeout(window._initTimeout);
         try {
           var localProto = localStorage.getItem('sbp_protocolo');
           if (!localProto) {
+            // Sem dados locais — busca no Firestore
             var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
             if (snap.exists) {
               var dados = snap.data();
               localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
               localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
               localStorage.setItem('sbp_ativo', 'true');
-              clearTimeout(window._initTimeout);
-              location.reload();
+              // Atualiza variáveis em memória e renderiza sem reload
+              protocolo = dados.protocolo || {};
+              perfil    = dados.perfil    || {};
+              renderApp();
+              setTimeout(buscarImagensSugestoes, 500);
+              setTimeout(mostrarSmartShelf, 800);
+            } else {
+              window.location.href = 'onboarding.html';
             }
           }
+          // Se já tem dados locais, o init block já chamou renderApp() — nada a fazer
         } catch(e) { console.error('Firebase load error:', e); }
       }
     });
@@ -2650,22 +2659,20 @@ setTimeout(function() {
 })();
 
 // -- INIT --
-if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
-  // Tem dados locais suficientes - renderizar imediatamente
+if (protocolo && Object.keys(protocolo).length > 0) {
+  // Tem dados locais — renderiza sempre, mesmo offline ou sem auth
   renderApp();
   setTimeout(buscarImagensSugestoes, 500);
   setTimeout(mostrarSmartShelf, 800);
 } else if (auth) {
-  // Tem sessão mas sem dados locais - aguardar Firebase (máx 10s)
+  // Tem sessão mas sem dados locais — aguarda Firebase recuperar (máx 20s)
+  // NUNCA apaga localStorage — apenas redireciona se não vier nada
   var _initTimeout = setTimeout(function() {
-    // Limpar localStorage corrompido e redirecionar
-    localStorage.removeItem('sbp_protocolo');
-    localStorage.removeItem('sbp_ativo');
     window.location.href = 'onboarding.html';
-  }, 10000);
+  }, 20000);
   window._initTimeout = _initTimeout;
 } else {
-  // Sem sessão - ir para onboarding
+  // Sem sessão e sem dados — ir para onboarding
   window.location.href = 'onboarding.html';
 }
 
