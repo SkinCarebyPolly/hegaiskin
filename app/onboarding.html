@@ -1259,6 +1259,9 @@ async function doLoginGoogle() {
 
     localStorage.setItem('sbp_auth', user.uid);
     localStorage.setItem('sbp_user', JSON.stringify({ nome, email: user.email, uid: user.uid }));
+    window._currentUser = user;
+    S.nome  = nome;
+    S.email = user.email;
     go('s-lgpd');
 
   } catch(e) {
