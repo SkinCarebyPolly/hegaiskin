@@ -570,7 +570,7 @@ if (window._fbAuth) {
 
 async function loadChatMeta() {
   try {
-    var ref = window._fbDb.collection('users').doc(_uid).collection('meta').doc('chat');
+    var ref = window._fbDb.collection('usuarios').doc(_uid).collection('meta').doc('chat');
     var doc = await ref.get();
     if (doc.exists) {
       var d = doc.data();
@@ -769,7 +769,7 @@ async function saveChatMeta(date, q, a) {
   // Firestore if available
   if (_uid && window._fbDb) {
     try {
-      await window._fbDb.collection('users').doc(_uid).collection('meta').doc('chat').set({
+      await window._fbDb.collection('usuarios').doc(_uid).collection('meta').doc('chat').set({
         lastQuestion: firebase.firestore.Timestamp.fromDate(date),
         lastQ: q,
         lastA: a
