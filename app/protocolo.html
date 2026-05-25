@@ -617,9 +617,8 @@ const _a = 'sk-ant-api03-V', _b = 'gU93q4z1crUe6TnHbP1j';
 const _c = '0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d = 'tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
 function getKey() { return _a+_b+_c+_d; }
 // -- GEMINI KEY --
-const _ga='AQ.Ab', _gb='8RN6K', _gc='4zZPA', _gd='PlXAz';
-const _ge='jwKbd', _gf='49cUw', _gg='d6W12', _gh='rnwc3', _gi='9qWhUJli8ZPvw';
-const GEMINI_KEY = _ga+_gb+_gc+_gd+_ge+_gf+_gg+_gh+_gi;
+const _ga='AIzaSyCFx14', _gb='wl_3F_SL8k', _gc='fFj-xEBdv-I', _gd='Bi00Buw';
+const GEMINI_KEY = _ga+_gb+_gc+_gd;
 
 // -- LOAD DATA --
 var perfil    = JSON.parse(localStorage.getItem('sbp_perfil') || '{}');
@@ -883,29 +882,26 @@ async function geminiChat(systemPrompt, userPrompt, maxTokens) {
   return text.replace(/```json|```/g, '').trim();
 }
 
-// ── Helper: Gemini para imagem + texto ───────────────────────────────────
+// ── Helper: Gemini Vision para imagem + texto (Google Gemini) ────────────────
 async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
+  var resp = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 800,
-      system: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido.',
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mimeType || 'image/jpeg', data: b64 } },
-        { type: 'text',  text: prompt }
-      ]}]
+      systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido sem markdown.' }] },
+      contents: [{ parts: [
+        { inlineData: { mimeType: mimeType || 'image/jpeg', data: b64 } },
+        { text: prompt }
+      ]}],
+      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 1024 }
     })
   });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini Vision');
+  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '{}';
   return text.replace(/```json|```/g, '').trim();
 }
 
@@ -2242,32 +2238,29 @@ function renderEvolucaoFotos() {
 }
 
 
-// ── VISION helper (Claude) ───────────────────────────────────────────────────
+// ── VISION helper (Google Gemini) ────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
   var mime = 'image/jpeg';
   if (b64.startsWith('iVBOR')) mime = 'image/png';
   else if (b64.startsWith('UklGR')) mime = 'image/webp';
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
+  var resp = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 800,
-      system: 'Especialista em cosmetologia. Retorne APENAS JSON válido.',
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-        { type: 'text',  text: prompt }
-      ]}]
+      systemInstruction: { parts: [{ text: 'Especialista em cosmetologia. Responde em português.' }] },
+      contents: [{ parts: [
+        { inlineData: { mimeType: mime, data: b64 } },
+        { text: prompt }
+      ]}],
+      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 512 }
     })
   });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini Vision');
+  var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+             data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+             ? data.candidates[0].content.parts[0].text : '';
   return text.replace(/```json|```/g, '').trim();
 }
 
