@@ -80,11 +80,23 @@ input[type=file]{display:none}
 .popt-icon{font-size:26px;flex-shrink:0}
 .popt-t{font-size:15px;font-weight:500;color:var(--dark);margin-bottom:2px}
 .popt-s{font-size:13px;color:var(--muted)}
-/* SPINNER */
+/* SPINNER / AI ANIMATION */
 .spin-wrap{text-align:center;padding:40px 0}
-.spinner{width:56px;height:56px;border:2px solid rgba(160,112,64,.15);border-top-color:var(--gold);border-radius:50%;margin:0 auto 22px;animation:sp 1s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:7px}
+.ai-gem{position:relative;width:80px;height:80px;margin:0 auto 28px}
+.ai-gem-bg{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(201,169,122,0.14),transparent 70%);animation:gem-pulse 2.5s ease-in-out infinite}
+.ai-gem-ring{position:absolute;inset:6px;border:1.5px solid rgba(201,169,122,0.3);border-radius:50%;animation:gem-spin 7s linear infinite}
+.ai-gem-ring2{position:absolute;inset:14px;border:1px dashed rgba(201,169,122,0.15);border-radius:50%;animation:gem-spin 12s linear infinite reverse}
+.ai-gem-dot{position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;background:var(--gold);margin:-3.5px 0 0 -3.5px;transform-origin:-33px 0;opacity:.75}
+.ai-gem-dot:nth-child(4){animation:gem-orbit 7s linear infinite}
+.ai-gem-dot:nth-child(5){animation:gem-orbit 7s linear infinite;animation-delay:-2.33s;transform:rotate(120deg) translateX(-33px)}
+.ai-gem-dot:nth-child(6){animation:gem-orbit 7s linear infinite;animation-delay:-4.66s;transform:rotate(240deg) translateX(-33px)}
+.ai-gem-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);animation:gem-glow 2.5s ease-in-out infinite}
+@keyframes gem-pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.1);opacity:1}}
+@keyframes gem-spin{to{transform:rotate(360deg)}}
+@keyframes gem-glow{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes gem-orbit{to{transform:rotate(360deg) translateX(-33px)}}
+.spin-t{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:6px}
+.spin-step{font-size:10px;letter-spacing:2px;color:rgba(201,169,122,0.45);text-transform:uppercase;margin-bottom:8px}
 .spin-s{font-size:13px;color:var(--muted)}
 .dots::after{content:'';animation:dt 1.5s infinite}
 @keyframes dt{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
@@ -790,10 +802,19 @@ input[type=file]{display:none}
 </div>
 
 <div class="scr" id="s-gen">
-  <div class="inner" style="text-align:center">
+  <div class="inner" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
     <div class="spin-wrap">
-      <div class="spinner"></div>
+      <div class="ai-gem">
+        <div class="ai-gem-bg"></div>
+        <div class="ai-gem-ring"></div>
+        <div class="ai-gem-ring2"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-dot"></div>
+        <div class="ai-gem-icon">✦</div>
+      </div>
       <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
+      <p class="spin-step" id="gen-step">Analisando · Passo 1 de 2</p>
       <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
     </div>
   </div>
@@ -812,7 +833,7 @@ input[type=file]{display:none}
       <!-- Texto -->
       <div style="position:relative;z-index:1">
         <div style="font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;opacity:.8">@hegaiskin</div>
-        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda ao<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
+        <div style="font-size:27px;font-family:'Playfair Display',serif;font-style:italic;color:var(--cream);line-height:1.3;margin-bottom:16px">Bem-vinda à<br><em style="color:var(--gold)">sua rotina 🌸</em></div>
         <div style="display:flex;gap:6px;align-items:center">
           <div style="width:32px;height:2px;background:linear-gradient(90deg,#C9A97A,#A27540);border-radius:1px"></div>
           <div style="font-size:11px;color:rgba(242,232,217,.5);letter-spacing:1px">protocolo exclusivo</div>
@@ -822,9 +843,9 @@ input[type=file]{display:none}
 
     <!-- Conteúdo -->
     <div style="padding:20px">
-      <!-- Diagnóstico da IA -->
+      <!-- Análise personalizada -->
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
-        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Diagnóstico da sua pele</div>
+        <div style="font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">✦ Sua análise personalizada</div>
         <div id="conf-nome" style="font-size:18px;font-family:'Playfair Display',serif;font-style:italic;color:var(--dark);margin-bottom:12px"></div>
         <div id="conf-txt" style="font-size:13px;color:var(--cdim);line-height:1.8"></div>
       </div>
@@ -834,7 +855,7 @@ input[type=file]{display:none}
         "A pele que você quer começa com o protocolo certo. A partir de hoje, cada passo tem um motivo — e você vai sentir a diferença."
       </p>
 
-      <button class="btn" onclick="confirmProto()">Ver meu protocolo completo →</button>
+      <button class="btn" onclick="confirmProto()">Ver minha rotina completa →</button>
       <button class="btn2" onclick="go('s-q1')" style="margin-top:10px">← Refazer questionário</button>
     </div>
   </div>
@@ -847,7 +868,7 @@ input[type=file]{display:none}
     <div class="badge" style="justify-content:center">Pronto!</div>
     <h1 style="text-align:center">Seu protocolo<br><em>está criado.</em></h1>
     <p class="sub" style="text-align:center;margin:0 auto 36px">Rotina personalizada, calendário e guias — tudo pronto para começar hoje.</p>
-    <button class="btn" onclick="window.location.href='protocolo.html'">Ver meu protocolo completo →</button>
+    <button class="btn" onclick="window.location.href='protocolo.html'">Ver minha rotina completa →</button>
   </div>
 </div>
 
@@ -1947,35 +1968,44 @@ function fileToBase64(file) {
 
 // OCR de uma única imagem
 
-// ── GEMINI VISION helper ─────────────────────────────────────────────────────
+// ── GEMINI helpers ────────────────────────────────────────────────────────────
 async function geminiVision(b64, prompt, maxTokens) {
   var mime = 'image/jpeg';
   if (b64.startsWith('iVBOR')) mime = 'image/png';
   else if (b64.startsWith('R0lGO')) mime = 'image/gif';
   else if (b64.startsWith('UklGR')) mime = 'image/webp';
 
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 800,
-      system: 'Você é especialista em identificar produtos e aparelhos de skincare. Retorne APENAS JSON válido.',
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-        { type: 'text',  text: prompt }
-      ]}]
+      systemInstruction: { parts: [{ text: 'Você é especialista em identificar produtos e aparelhos de skincare. Retorne APENAS JSON válido.' }] },
+      contents: [{ parts: [
+        { inlineData: { mimeType: mime, data: b64 } },
+        { text: prompt }
+      ]}],
+      generationConfig: { temperature: 0.1, maxOutputTokens: maxTokens || 800 }
     })
   });
   var data = await resp.json();
-  if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.content && data.content[0] ? data.content[0].text : '';
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  var text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   return text.replace(/```json|```/g, '').trim();
+}
+
+async function geminiChat(system, userMsg, maxTokens) {
+  var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+      generationConfig: { temperature: 0.4, maxOutputTokens: maxTokens || 2000 }
+    })
+  });
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  return (data.candidates?.[0]?.content?.parts?.[0]?.text || '').replace(/```json|```/g,'').trim();
 }
 
 async function ocrUmaFoto(b64) {
@@ -2208,9 +2238,7 @@ async function analisarFotoGemini(b64) {
       '"acne_ativa":"nenhuma/leve/moderada/intensa",' +
       '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
 
-    console.log('[Gemini] Iniciando análise do rosto via Google Gemini Vision...');
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY;
-    var resp = await fetch(url, {
+    var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2219,14 +2247,11 @@ async function analisarFotoGemini(b64) {
           { inlineData: { mimeType: mime, data: b64 } },
           { text: prompt }
         ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 }
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 }
       })
     });
     var data = await resp.json();
-    if (data.error) {
-      alert('❌ GEMINI ERRO:\n' + (data.error.message || 'Erro desconhecido'));
-      throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
-    }
+    if (data.error) throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
     var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
               data.candidates[0].content.parts && data.candidates[0].content.parts[0]
               ? data.candidates[0].content.parts[0].text : '{}';
@@ -2299,47 +2324,6 @@ async function gerarProtocolo() {
 
   go('s-gen');
 
-  // ETAPA 1: Identificar produtos da foto primeiro (se tiver foto)
-  if (S.fotoProd) {
-    try {
-      document.getElementById('gen-msg').textContent = 'Identificando seus produtos...';
-      var idResp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: 'Você é especialista em identificar produtos cosméticos em fotos. Leia os rótulos com precisão absoluta. Retorne APENAS JSON válido, sem texto fora do JSON.',
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: S.fotoProd } },
-              { type: 'text', text: 'Leia TODOS os rótulos visíveis nesta foto. Para cada produto, leia o nome EXATO da marca e do produto como está escrito na embalagem. NÃO invente, NÃO substitua por produtos similares. Se não conseguir ler, descreva o que vê. Retorne JSON: {"produtos": [{"nome": "nome exato da marca + produto", "categoria": "limpeza/tônico/sérum/hidratante/protetor/aparelho/etc", "ativo": "ativo principal se visível"}]}' }
-            ]
-          }]
-        })
-      });
-      if (idResp.ok) {
-        var idData = await idResp.json();
-        var idRaw = idData.content && idData.content[0] ? idData.content[0].text : '';
-        var idClean = idRaw.replace(/```json|```/g,'').trim();
-        var idJson = JSON.parse(idClean);
-        if (idJson.produtos && idJson.produtos.length > 0) {
-          var prodList = idJson.produtos.map(function(p) { return p.nome + (p.categoria ? ' (' + p.categoria + ')' : '') + (p.ativo ? ' — ' + p.ativo : ''); }).join('\n');
-          S.prodTxt = prodList;
-          S.produtosIdentificados = idJson.produtos;
-        }
-      }
-    } catch(e) {
-      console.error('Erro ao identificar produtos:', e);
-    }
-  }
-
   // Gemini analisa foto do rosto
   var geminiDiag = '';
   if (S.fotoRosto) {
@@ -2349,9 +2333,19 @@ async function gerarProtocolo() {
     S.geminiDiag = geminiDiag;
   }
 
-  var msgs = ['Cruzando com seus hábitos','Montando rotina manhã e noite','Criando calendário semanal','Adicionando protocolos especiais','Finalizando protocolo detalhado'];
+  var msgs = [
+    'Cruzando com seus hábitos de vida',
+    'Verificando compatibilidade dos ativos',
+    'Montando rotina manhã e noite',
+    'Definindo ordem de aplicação',
+    'Criando calendário semanal',
+    'Personalizando para o seu tipo de pele',
+    'Revisando interações entre produtos',
+    'Ajustando para o seu orçamento',
+    'Finalizando rotina detalhada'
+  ];
   var mi = 0;
-  var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 2500);
+  var iv = setInterval(function(){ mi = (mi+1)%msgs.length; document.getElementById('gen-msg').textContent = msgs[mi]; }, 3000);
 
 
   // ── PROMPT 1: Rotina principal (usa os produtos) ───────────────────────────
@@ -2409,7 +2403,7 @@ async function gerarProtocolo() {
     '\nRetorne APENAS JSON válido:\n' +
     '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}],' +
     '"protocolo_espinha":"resumo",' +
-    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"tratamento pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","alerta":""}],"proibidos":["item"]},' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"cuidado pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
     '"protocolo_praia":"resumo",' +
     '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
     '"dicas_maquiagem":"resumo",' +
@@ -2480,53 +2474,39 @@ async function gerarProtocolo() {
         S.protocolo = parsed;
 
     // ── CHAMADA 2: Protocolos especiais + Sugestões ────────────────────────
-    document.getElementById('gen-msg').textContent = 'Criando protocolos especiais e sugestões...';
+    document.getElementById('gen-step').textContent = 'Finalizando · Passo 2 de 2';
+    document.getElementById('gen-msg').textContent = 'Criando guias e sugestões...';
     try {
-      var controller2 = new AbortController();
-      var timeoutId2 = setTimeout(function() { controller2.abort(); }, 180000);
-      var resp2 = await fetch('https://api.anthropic.com/v1/messages', {
-        signal: controller2.signal,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': getKey(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 6000,
-          system: 'Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
-          messages: [{role: 'user', content: prompt2_base}]
-        })
-      });
-      clearTimeout(timeoutId2);
-      if (resp2.ok) {
-        var data2 = await resp2.json();
-        var raw2 = data2.content && data2.content[0] ? data2.content[0].text : '';
-        var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
-        try {
-          var parsed2 = JSON.parse(clean2);
-          // Merge call 2 into protocolo
-          Object.assign(S.protocolo, parsed2);
-        } catch(e) {
-          var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
-          if (j2s !== -1 && j2e !== -1) {
-            try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
-          }
+      // Chamada 2 via Gemini (mais rápido e barato para protocolos especiais + sugestões)
+      var raw2 = await geminiChat(
+        'Especialista em skincare e cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
+        prompt2_base,
+        6000
+      );
+      var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
+      try {
+        var parsed2 = JSON.parse(clean2);
+        Object.assign(S.protocolo, parsed2);
+      } catch(e) {
+        var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
+        if (j2s !== -1 && j2e !== -1) {
+          try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
         }
       }
     } catch(e) {
       console.warn('Chamada 2 falhou (não crítico):', e.message);
-      // Protocolo básico ainda funciona sem os protocolos especiais
+      // Rotina principal funciona sem os guias especiais
     }
 
     var diagText = typeof S.protocolo.diagnostico === 'object'
       ? Object.values(S.protocolo.diagnostico).join(' ')
       : (S.protocolo.diagnostico || '');
-    document.getElementById('conf-txt').innerHTML = '<strong>Tipo de pele:</strong> ' + (S.protocolo.tipo_pele || '') + '<br><br>' + diagText;
+    var tipoPele = S.protocolo.tipo_pele || '';
+    document.getElementById('conf-txt').innerHTML =
+      (diagText ? '<div style="line-height:1.8;margin-bottom:14px">' + diagText + '</div>' : '') +
+      (tipoPele ? '<div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:4px">Tipo de pele</div><div style="font-size:13px;font-weight:500">' + tipoPele + '</div>' : '');
     var confNome = document.getElementById('conf-nome');
-    if (confNome) confNome.textContent = S.nome || '';
+    if (confNome) confNome.textContent = toTitleCase(S.nome) || '';
     go('s-conf');
 
   } catch(e) {
