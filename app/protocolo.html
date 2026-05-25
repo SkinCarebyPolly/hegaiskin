@@ -806,6 +806,11 @@ function switchSugTab(tabsId, conteudoId, tiIdx) {
 }
 
 function renderApp() {
+  // Mostra o app imediatamente — erros parciais não travam o loading
+  if (window._ldInterval) clearInterval(window._ldInterval);
+  document.getElementById('app-loading').style.display = 'none';
+  document.getElementById('app-content').style.display = 'block';
+
   // Hero
   var nomeExibir = protocolo.nome_cliente || perfil.nome || user.nome || '';
   document.getElementById('hero-nome').textContent = nomeExibir;
@@ -1225,10 +1230,6 @@ function renderSugestoes() {
   document.getElementById('cfg-pele').textContent = perfil.tipoPele || '';
   document.getElementById('cfg-investimento').textContent = perfil.investimento || '';
 
-  // Show app
-  if (window._ldInterval) clearInterval(window._ldInterval);
-  document.getElementById('app-loading').style.display = 'none';
-  document.getElementById('app-content').style.display = 'block';
   // Render evolução
   renderEvolucaoFotos();
 }
@@ -2604,6 +2605,17 @@ function fazerLogout() {
   if (window._fbAuth) window._fbAuth.signOut().catch(function(){});
   window.location.href = 'onboarding.html';
 }
+
+// -- SAFETY: nunca deixar o loading preso --
+setTimeout(function() {
+  var ld = document.getElementById('app-loading');
+  var ct = document.getElementById('app-content');
+  if (ld && ld.style.display !== 'none') {
+    if (window._ldInterval) clearInterval(window._ldInterval);
+    ld.style.display = 'none';
+    if (ct) ct.style.display = 'block';
+  }
+}, 4000);
 
 // -- LOADING MESSAGES --
 (function() {
