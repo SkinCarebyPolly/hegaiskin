@@ -436,7 +436,6 @@ input[type="file"] { display:none; }
   <!-- Controles de áudio -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
-    <button id="toggle-som" onclick="toggleAudio('som')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🎵 Som</button>
     <span style="font-size:10px;color:var(--muted);flex:1;text-align:right">No iOS, desative o modo silencioso para ouvir</span>
   </div>
   <div class="card">
@@ -2079,8 +2078,8 @@ var _stepTexts = {};
 
 // ── Preferências de áudio (persistidas) ─────────────────────────────────────
 var _audioPrefs = (function() {
-  try { return JSON.parse(localStorage.getItem('sbp_audio') || '{"voz":true,"som":true}'); }
-  catch(e) { return {voz:true, som:true}; }
+  try { return JSON.parse(localStorage.getItem('sbp_audio') || '{"voz":true}'); }
+  catch(e) { return {voz:true}; }
 })();
 function _salvarAudioPrefs() {
   try { localStorage.setItem('sbp_audio', JSON.stringify(_audioPrefs)); } catch(e) {}
@@ -2092,14 +2091,9 @@ function toggleAudio(tipo) {
 }
 function _atualizarToggleUI() {
   var bVoz = document.getElementById('toggle-voz');
-  var bSom = document.getElementById('toggle-som');
   if (bVoz) {
     bVoz.style.background = _audioPrefs.voz ? 'var(--gold)' : 'transparent';
     bVoz.style.color = _audioPrefs.voz ? '#fff' : 'var(--gold)';
-  }
-  if (bSom) {
-    bSom.style.background = _audioPrefs.som ? 'var(--gold)' : 'transparent';
-    bSom.style.color = _audioPrefs.som ? '#fff' : 'var(--gold)';
   }
 }
 
@@ -2114,17 +2108,6 @@ function lerPasso(texto) {
   window.speechSynthesis.speak(utt);
 }
 
-function tocarJingle(tipo) {
-  if (!_audioPrefs.som) return;
-  // tipo: 'inicio' → 3 notas ascendentes suaves; 'fim' → acorde de conclusão
-  var notas = tipo === 'inicio'
-    ? [{f:523,t:0},{f:659,t:0.18},{f:784,t:0.36}]
-    : [{f:784,t:0},{f:1047,t:0.2},{f:1319,t:0.4}];
-  notas.forEach(function(n) {
-    tocarBeep(n.f, 0.55, n.t);
-  });
-}
-
 function iniciarTimer(uid, segundos) {
   if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
   var timerEl = document.getElementById(uid + '-timer');
@@ -2133,7 +2116,6 @@ function iniciarTimer(uid, segundos) {
   timerEl.style.display = 'block';
   var restante = segundos;
   timeEl.textContent = formatTimer(restante);
-  tocarJingle('inicio');
   lerPasso(_stepTexts[uid] || '');
   _timers[uid] = setInterval(function() {
     restante--;
@@ -2142,7 +2124,6 @@ function iniciarTimer(uid, segundos) {
       clearInterval(_timers[uid]);
       delete _timers[uid];
       timeEl.textContent = '✓ Concluído';
-      tocarJingle('fim');
     }
   }, 1000);
 }
@@ -2167,31 +2148,6 @@ function marcarFeito(uid) {
   pararTimer(uid);
 }
 
-var _audioCtx = null;
-function tocarBeep(freq, dur, delay) {
-  try {
-    if (!_audioCtx) {
-      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (navigator.mediaSession) {
-        navigator.mediaSession.metadata = null;
-        navigator.mediaSession.setActionHandler('play', null);
-        navigator.mediaSession.setActionHandler('pause', null);
-      }
-    }
-    if (_audioCtx.state === 'suspended') _audioCtx.resume();
-    var t = _audioCtx.currentTime + (delay || 0);
-    var o = _audioCtx.createOscillator();
-    var g = _audioCtx.createGain();
-    o.connect(g); g.connect(_audioCtx.destination);
-    o.frequency.value = freq;
-    o.type = 'sine';
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.14, t + 0.04);
-    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-    o.start(t);
-    o.stop(t + dur);
-  } catch(e) {}
-}
 
 // ══ RENDER ESPINHA ══
 function renderEspinha(p) {
