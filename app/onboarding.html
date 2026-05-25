@@ -1870,7 +1870,7 @@ async function processarFotoAparelhos(input) {
         'microagulhamento': 'Microagulhamento',
         'outro': null
       };
-      // Track aparelhos extras (tipo 'outro' ou não mapeado)
+      // Auto-select matching checkboxes + preservar nome específico
       var extrasManual = [];
       todosAparelhos.forEach(function(a) {
         var label = tipoMap[a.tipo];
@@ -1881,8 +1881,9 @@ async function processarFotoAparelhos(input) {
               if (!opt.classList.contains('on')) togM(opt);
             }
           });
+          // Preservar nome específico do modelo (ex: "NEWA", não só "Radiofrequência")
+          if (a.nome) extrasManual.push(a);
         } else if (a.nome) {
-          // Aparelho identificado mas não na lista — guarda para mostrar
           extrasManual.push(a);
         }
       });
@@ -2345,7 +2346,7 @@ async function gerarProtocolo() {
     '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
     '- Tipo de pele: '+S.tipoPele+'\n' +
     '- Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
-    '- Aparelhos: '+(S.aparelhos.join(', ')||'nenhum')+(S.aparelhosExtras&&S.aparelhosExtras.length?' + extras: '+S.aparelhosExtras.join(', '):'')+'\n' +
+    '- Aparelhos: '+(function(){var _a=(S.aparelhos||[]).concat(S.aparelhosExtras||[]).concat(S.aparelhosOCR||[]);var _u=_a.filter(function(x,i,arr){return x&&arr.indexOf(x)===i;});return _u.length?_u.join(', '):'nenhum';}())+'\n' +
     '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+'\n' +
     '- Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
     '- Orçamento mensal total: '+S.investimento+'\n' +
