@@ -8,33 +8,33 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#F2E8D9">
+<meta name="theme-color" content="#FDF8F0">
 <title>Hegai Skin · Minha Rotina</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #A07040;
-  --gold-amber: #7A5020;
-  --espresso: #5C3518;
-  --mahogany: #4A2208;
-  --gold-light: #C9A97A;
-  --gold-dim: rgba(160,112,64,0.10);
-  --dark: #2B1206;
-  --dark-2: #3D1A08;
-  --dark-3: #4F2510;
-  --cream: #F2E8D9;
-  --cream-dim: rgba(43,18,6,0.55);
-  --surface: #FFFAF5;
-  --surface2: #FAF3E8;
+  --gold: #D4A853;
+  --gold-amber: #b8923d;
+  --espresso: #3D2010;
+  --mahogany: #1e0e04;
+  --gold-light: #e0bc76;
+  --gold-dim: rgba(212,168,83,0.10);
+  --dark: #3D2010;
+  --dark-2: #2a1508;
+  --dark-3: #1e0e04;
+  --cream: #FDF8F0;
+  --cream-dim: rgba(61,32,16,0.55);
+  --surface: #FAFAFA;
+  --surface2: #FDF8F0;
   --muted: #9a8878;
-  --green: #5a8a6e;
+  --green: #AAB29A;
   --green-dim: rgba(90,138,110,0.10);
   --red: #b85a50;
   --blue: #5a7a9f;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark); min-height:100vh; overflow-x:hidden; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--dark); min-height:100vh; overflow-x:hidden; }
 
 /* -- HERO -- */
 .hero {
@@ -47,10 +47,10 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   content:'';
   position:absolute; top:-60px; right:-60px;
   width:240px; height:240px; border-radius:50%;
-  background: radial-gradient(circle, rgba(160,112,64,0.12), transparent 70%);
+  background: radial-gradient(circle, rgba(212,168,83,0.12), transparent 70%);
 }
 .hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-light); margin-bottom:12px; }
-.hero-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; margin-bottom:4px; color:#F2E8D9; }
+.hero-name { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; margin-bottom:4px; color:#FDF8F0; }
 .hero-name em { font-style:italic; color:var(--gold-light); }
 .hero-sub { font-size:12px; color:rgba(242,232,217,0.6); letter-spacing:1px; margin-bottom:20px; }
 .hero-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
@@ -64,12 +64,12 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   display: flex;
   overflow-x: auto;
   background: var(--surface);
-  border-bottom: 1px solid rgba(160,112,64,0.12);
+  border-bottom: 1px solid rgba(212,168,83,0.12);
   position: sticky;
   top: 0;
   z-index: 50;
   scrollbar-width: none;
-  box-shadow: 0 2px 8px rgba(43,18,6,0.06);
+  box-shadow: 0 2px 8px rgba(61,32,16,0.06);
 }
 .tabs::-webkit-scrollbar { display:none; }
 .tab {
@@ -83,7 +83,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   background: none;
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
-  font-family: 'Jost', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 .tab.active { color:var(--gold); border-bottom-color:var(--gold); }
 .tab:hover { color:var(--dark); }
@@ -95,11 +95,11 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 /* -- CARDS -- */
 .card {
   background: var(--surface);
-  border: 1px solid rgba(160,112,64,0.12);
+  border: 1px solid rgba(212,168,83,0.12);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 4px rgba(43,18,6,0.05);
+  box-shadow: 0 1px 4px rgba(61,32,16,0.05);
 }
 .card-title {
   font-size:10px; letter-spacing:3px; text-transform:uppercase;
@@ -114,12 +114,12 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   display:flex; align-items:flex-start; gap:14px;
   padding:18px 16px;
   background: #fff;
-  border: 1px solid rgba(160,112,64,0.10);
+  border: 1px solid rgba(212,168,83,0.10);
   border-radius:10px;
 }
 .step-num {
   width:28px; height:28px; border-radius:50%;
-  background: var(--gold-dim); border:1px solid rgba(160,112,64,0.25);
+  background: var(--gold-dim); border:1px solid rgba(212,168,83,0.25);
   display:flex; align-items:center; justify-content:center;
   font-size:11px; color:var(--gold); flex-shrink:0;
   font-weight:500;
@@ -138,7 +138,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   display:flex; align-items:flex-start; gap:14px;
   padding:14px 16px;
   background: #fff;
-  border: 1px solid rgba(160,112,64,0.10);
+  border: 1px solid rgba(212,168,83,0.10);
   border-radius:10px;
 }
 .week-day {
@@ -149,8 +149,8 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 
 /* -- CALENDAR -- */
 .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.cal-month { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; color:var(--gold); }
-.cal-nav { background:none; border:1px solid rgba(160,112,64,0.25); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
+.cal-month { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--gold); }
+.cal-nav { background:none; border:1px solid rgba(212,168,83,0.25); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
 .cal-dow { text-align:center; font-size:9px; letter-spacing:2px; color:var(--muted); padding:6px 0; text-transform:uppercase; }
 .cal-day {
@@ -160,7 +160,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   transition: all 0.2s;
   flex-direction: column; gap:2px;
 }
-.cal-day:hover { background:var(--gold-dim); border-color:rgba(160,112,64,0.20); }
+.cal-day:hover { background:var(--gold-dim); border-color:rgba(212,168,83,0.20); }
 .cal-day.today { border-color:var(--gold); color:var(--gold); }
 .cal-day.has-event::after { content:''; width:4px; height:4px; border-radius:50%; background:var(--gold); }
 .cal-day.empty { cursor:default; }
@@ -181,7 +181,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 /* -- SUGGESTIONS -- */
 .suggestion-item {
   display:flex; gap:12px; align-items:flex-start;
-  padding:12px 0; border-bottom:1px solid rgba(160,112,64,0.08);
+  padding:12px 0; border-bottom:1px solid rgba(212,168,83,0.08);
 }
 .suggestion-item:last-child { border:none; }
 .suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
@@ -190,11 +190,11 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 
 /* -- EVOLUÇÃO -- */
 .evo-photo-area {
-  border:1px dashed rgba(160,112,64,0.25); border-radius:12px;
+  border:1px dashed rgba(212,168,83,0.25); border-radius:12px;
   padding:36px 20px; text-align:center; cursor:pointer; margin-bottom:16px;
-  transition:all 0.2s; background:rgba(160,112,64,0.04);
+  transition:all 0.2s; background:rgba(212,168,83,0.04);
 }
-.evo-photo-area:hover { border-color:rgba(160,112,64,0.5); background:rgba(160,112,64,0.07); }
+.evo-photo-area:hover { border-color:rgba(212,168,83,0.5); background:rgba(212,168,83,0.07); }
 .evo-photo-area.has-photo { padding:0; border-style:solid; }
 .evo-photo-area img { width:100%; max-height:280px; object-fit:cover; border-radius:11px; display:block; }
 .evo-icon { font-size:32px; margin-bottom:10px; }
@@ -204,7 +204,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 /* -- CONFIG -- */
 .config-item {
   display:flex; justify-content:space-between; align-items:center;
-  padding:16px 0; border-bottom:1px solid rgba(160,112,64,0.08);
+  padding:16px 0; border-bottom:1px solid rgba(212,168,83,0.08);
 }
 .config-item:last-child { border:none; }
 .config-label { font-size:13px; color:var(--muted); }
@@ -212,7 +212,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 
 .btn-danger {
   width:100%; background:transparent; border:1px solid rgba(184,90,80,0.3);
-  border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
+  border-radius:8px; padding:14px; font-family:'Raleway',sans-serif;
   font-size:11px; font-weight:500; letter-spacing:2px; text-transform:uppercase;
   color:var(--red); cursor:pointer; margin-top:8px; transition:all 0.2s;
 }
@@ -220,7 +220,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
 
 .btn-gold {
   width:100%; background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  border:none; border-radius:8px; padding:14px; font-family:'Jost',sans-serif;
+  border:none; border-radius:8px; padding:14px; font-family:'Raleway',sans-serif;
   font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
   color:#fff; cursor:pointer; margin-top:8px; transition:all 0.2s;
 }
@@ -232,34 +232,34 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--dark)
   background:var(--cream);
 }
 .loading-spinner {
-  width:48px; height:48px; border:2px solid rgba(160,112,64,0.15);
+  width:48px; height:48px; border:2px solid rgba(212,168,83,0.15);
   border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
 }
 @keyframes spin { to { transform:rotate(360deg); } }
-.loading-text { font-family:'Playfair Display',serif; font-style:italic; color:var(--gold); }
+.loading-text { font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--gold); }
 
 /* -- MODAL -- */
 .modal-overlay {
   display:none; position:fixed; inset:0;
-  background:rgba(43,18,6,0.6); z-index:200;
+  background:rgba(61,32,16,0.6); z-index:200;
   align-items:flex-end; backdrop-filter:blur(4px);
 }
 .modal-overlay.open { display:flex; }
 .modal {
-  background:var(--surface); border:1px solid rgba(160,112,64,0.18);
+  background:var(--surface); border:1px solid rgba(212,168,83,0.18);
   border-radius:20px 20px 0 0; width:100%; padding:24px 20px 48px;
   animation:slideUp 0.3s ease;
 }
 @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.modal-handle { width:40px; height:3px; background:rgba(160,112,64,0.2); border-radius:2px; margin:0 auto 16px; }
-.modal-title { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--gold); margin-bottom:4px; }
+.modal-handle { width:40px; height:3px; background:rgba(212,168,83,0.2); border-radius:2px; margin:0 auto 16px; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:var(--gold); margin-bottom:4px; }
 .modal-sub { font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:1px; }
 .modal-body { font-size:13px; color:var(--muted); line-height:1.8; }
-.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(160,112,64,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(212,168,83,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
 
 /* -- AI ANALYSIS -- */
 .ai-loading-bar { display:flex; align-items:center; gap:12px; padding:16px; background:var(--gold-dim); border-radius:10px; margin-top:12px; }
-.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(160,112,64,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(212,168,83,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
 .ai-loading-text { font-size:12px; color:var(--gold); }
 
 input[type="file"] { display:none; }
@@ -318,13 +318,13 @@ input[type="file"] { display:none; }
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FFFAF5;border:1px solid #C9A97A;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FAFAFA;border:1px solid #e0bc76;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
     <div style="font-size:13px;color:var(--dark);font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#C9A97A,#E8D5B0);border:none;border-radius:8px;padding:8px 14px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#e0bc76,#f0d898);border:none;border-radius:8px;padding:8px 14px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 
@@ -337,7 +337,7 @@ input[type="file"] { display:none; }
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Rotina Exclusiva</span></div>
+  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#e0bc76;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Rotina Exclusiva</span></div>
   <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
   <p class="hero-sub" id="hero-tipo"></p>
   <div class="hero-tags" id="hero-tags"></div>
@@ -369,12 +369,12 @@ input[type="file"] { display:none; }
       <span style="font-size:10px;color:var(--muted)">Pele em dia</span>
       <span style="font-size:10px;color:var(--muted)">Pele radiante</span>
     </div>
-    <div style="position:relative;height:22px;background:rgba(160,112,64,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
-      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
-      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
-      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(160,112,64,.2)"></div>
+    <div style="position:relative;height:22px;background:rgba(212,168,83,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
+      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
+      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
+      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
       <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:var(--gold);width:0%;transition:width 1.2s ease;position:relative">
-        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #C9A97A;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
+        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #e0bc76;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
       </div>
     </div>
     <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
@@ -438,8 +438,8 @@ input[type="file"] { display:none; }
 <div class="section" id="tab-sugestoes">
   <!-- Sub-tabs -->
   <div style="display:flex;gap:8px;padding:16px 0 8px">
-    <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #A07040;background:#A07040;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
-    <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(160,112,64,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
+    <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #D4A853;background:#D4A853;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
+    <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(212,168,83,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
   </div>
   <div id="subtab-rotina-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px">Produtos para completar os passos da sua rotina</div>
   <div id="subtab-boosters-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none">Produtos para potencializar o que você já usa</div>
@@ -564,9 +564,9 @@ input[type="file"] { display:none; }
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar sua rotina.</p>
       <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar minha rotina</button>
     </div>
-    <button onclick="window.location.href='chat.html'" style="width:100%;background:linear-gradient(135deg,rgba(160,112,64,.15),rgba(160,112,64,.08));border:0.5px solid rgba(160,112,64,.4);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">✦ Perguntar à IA <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:4px">1× por semana</span></button>
-    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
-    <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
+    <button onclick="window.location.href='chat.html'" style="width:100%;background:linear-gradient(135deg,rgba(212,168,83,.15),rgba(212,168,83,.08));border:0.5px solid rgba(212,168,83,.4);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">✦ Perguntar à IA <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:4px">1× por semana</span></button>
+    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
+    <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
 </div>
@@ -651,7 +651,7 @@ function buildTierContent(s, tier, af) {
   var t = s[tier.key];
   if (!t || !t.produto) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:8px">Sem sugestão para este nível.</p>';
   // ── Smart affiliate links ────────────────────────────────────────────────
-  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
+  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
   // Detect if K-Beauty brand (prioritize YesStyle)
   var kbeautyBrands = ['anua','cosrx','medicube','some by mi','innisfree','dear klairs','klairs','beauty of joseon','numbuzin','isntree','tocobo','round lab','purito','axis-y','skin1004','dr.jart','missha','etude','laneige','sulwhasoo','the ordinary','cerave','la roche-posay','bioderma','vichy','garnier','neutrogena'];
@@ -699,7 +699,7 @@ function buildTierContent(s, tier, af) {
            '</div>' +
            '<div style="font-size:15px;font-weight:500;color:var(--gold);white-space:nowrap;margin-left:8px">' + (t.preco || '') + '</div>' +
          '</div>' +
-         (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3)">"' + t.descricao + '"</div>' : '') +
+         (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(212,168,83,.06);border-radius:8px;border-left:2px solid rgba(212,168,83,.3)">"' + t.descricao + '"</div>' : '') +
          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' + btns + '</div>' +
          (function() {
            var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
@@ -730,7 +730,7 @@ function switchSugTab(tabsId, conteudoId, tiIdx) {
     var btns = tabsEl.querySelectorAll('button');
     btns.forEach(function(b, i) {
       var active = (i === tiIdx);
-      b.style.background    = active ? 'rgba(160,112,64,.08)' : 'transparent';
+      b.style.background    = active ? 'rgba(212,168,83,.08)' : 'transparent';
       b.style.color         = active ? 'var(--gold)' : 'var(--muted)';
       b.style.borderBottom  = active ? '2px solid var(--gold)' : '2px solid transparent';
     });
@@ -807,9 +807,9 @@ function renderApp() {
     prodEl.innerHTML = '';
     (protocolo.produtos_identificados || []).forEach(function(p, i) {
       var div = document.createElement('div');
-      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;margin-bottom:8px';
+      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(212,168,83,.12);border-radius:10px;margin-bottom:8px';
       div.innerHTML =
-        '<div style="width:32px;height:32px;border-radius:50%;background:rgba(160,112,64,.1);border:1px solid rgba(160,112,64,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
+        '<div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
         '<div style="font-size:14px;font-weight:500;color:var(--dark);flex:1">' + p + '</div>';
       prodEl.appendChild(div);
     });
@@ -916,8 +916,8 @@ async function converterListaParaSugestoes(listaCompras) {
 
   // Loading state
   sugEl.innerHTML =
-    '<div style="display:flex;align-items:center;gap:12px;padding:20px 16px;background:rgba(160,112,64,.06);border-radius:10px">' +
-      '<div style="width:20px;height:20px;border:2px solid rgba(160,112,64,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>' +
+    '<div style="display:flex;align-items:center;gap:12px;padding:20px 16px;background:rgba(212,168,83,.06);border-radius:10px">' +
+      '<div style="width:20px;height:20px;border:2px solid rgba(212,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>' +
       '<div style="font-size:13px;color:var(--gold)">Enriquecendo suas sugestões com a IA...</div>' +
     '</div>';
 
@@ -961,7 +961,7 @@ async function converterListaParaSugestoes(listaCompras) {
       var nome  = (parts[0] || s).trim();
       var resto = parts.slice(1).join('—').trim();
       var div   = document.createElement('div');
-      div.style.cssText = 'background:#fff;border:0.5px solid rgba(160,112,64,.12);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px';
+      div.style.cssText = 'background:#fff;border:0.5px solid rgba(212,168,83,.12);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px';
       div.innerHTML =
         '<div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div>' +
         '<div>' +
@@ -982,10 +982,10 @@ async function adicionarSugestaoRotina(produto) {
 
   // Show loading feedback on the button
   var overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(43,18,6,.4);z-index:300;display:flex;align-items:center;justify-content:center';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.4);z-index:300;display:flex;align-items:center;justify-content:center';
   overlay.innerHTML =
     '<div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center">' +
-      '<div style="width:36px;height:36px;border:2px solid rgba(160,112,64,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
+      '<div style="width:36px;height:36px;border:2px solid rgba(212,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
       '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">Integrando à sua rotina...</div>' +
       '<div style="font-size:12px;color:var(--muted)">A IA está encontrando o melhor lugar para ' + nomeFull + '</div>' +
     '</div>';
@@ -1083,12 +1083,12 @@ function renderSugestoes() {
       // Build card HTML
       var icone = s.icone || '🧴';
       var html =
-        '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(160,112,64,.18);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+        '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.18);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
 
           // ── Cabeçalho (clicável para expand/collapse)
           '<div id="hdr-'+bodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
             '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
-              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(160,112,64,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
+              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
               '<div style="flex:1">' +
                 '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
                 '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
@@ -1098,14 +1098,14 @@ function renderSugestoes() {
           '</div>' +
 
           // ── Corpo (expandível)
-          '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(160,112,64,.12)">' +
+          '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
 
             // Tabs
-            '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(160,112,64,.12)">' +
+            '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
               tiers.map(function(t, ti){
                 return '<button data-tabs="'+tabsId+'" data-cont="'+conteudoId+'" data-ti="'+ti+'" ' +
                   'onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" ' +
-                  'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(160,112,64,.08)':'transparent') + ';' +
+                  'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(212,168,83,.08)':'transparent') + ';' +
                   'color:' + (ti===0?'var(--gold)':'var(--muted)') + ';cursor:pointer;' +
                   'border-bottom:2px solid ' + (ti===0?'var(--gold)':'transparent') + ';' +
                   'font-family:inherit;transition:all .15s" data-ti="'+ti+'">' +
@@ -1653,9 +1653,9 @@ function renderSteps(steps, rotinaTipo) {
           '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px">'+(s.categoria||'')+'</div>' +
           (s.ativo_ideal ? '<div style="font-size:13px;font-style:italic;color:var(--muted);margin-bottom:6px">'+(s.ativo_ideal||'')+'</div>' : '') +
           '<div class="step-how">'+(s.como||'')+'</div>' +
-          '<div style="margin-top:10px;padding:10px 14px;background:rgba(160,112,64,.06);border-radius:8px;border:0.5px solid rgba(160,112,64,.15);display:flex;align-items:center;justify-content:space-between">' +
+          '<div style="margin-top:10px;padding:10px 14px;background:rgba(212,168,83,.06);border-radius:8px;border:0.5px solid rgba(212,168,83,.15);display:flex;align-items:center;justify-content:space-between">' +
             '<div style="font-size:11px;color:var(--muted)">Você ainda não tem este produto</div>' +
-            '<button onclick="irParaSugestoesRotina()" style="font-size:10px;letter-spacing:1px;color:var(--gold);border:0.5px solid rgba(160,112,64,.3);border-radius:20px;padding:4px 12px;background:transparent;font-family:inherit;cursor:pointer">Ver →</button>' +
+            '<button onclick="irParaSugestoesRotina()" style="font-size:10px;letter-spacing:1px;color:var(--gold);border:0.5px solid rgba(212,168,83,.3);border-radius:20px;padding:4px 12px;background:transparent;font-family:inherit;cursor:pointer">Ver →</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -1674,9 +1674,9 @@ function renderSteps(steps, rotinaTipo) {
         '<div style="display:flex;align-items:center;gap:8px;margin-top:12px">' +
           (tempoSeg > 0 ?
             '<button data-uid="'+uid+'" data-seg="'+tempoSeg+'" onclick="iniciarTimer(this.dataset.uid,parseInt(this.dataset.seg))" style="display:flex;align-items:center;gap:5px;padding:8px 14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">▶ Iniciar timer</button>' : '') +
-          '<button data-uid="'+uid+'" onclick="marcarFeito(this.dataset.uid)" style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:transparent;border:0.5px solid rgba(160,112,64,.3);border-radius:8px;font-family:inherit;font-size:12px;color:var(--gold);cursor:pointer">✓ Feito</button>' +
+          '<button data-uid="'+uid+'" onclick="marcarFeito(this.dataset.uid)" style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;font-family:inherit;font-size:12px;color:var(--gold);cursor:pointer">✓ Feito</button>' +
         '</div>' +
-        '<div id="'+uid+'-timer" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(160,112,64,.08);border-radius:8px;text-align:center">' +
+        '<div id="'+uid+'-timer" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(212,168,83,.08);border-radius:8px;text-align:center">' +
           '<div id="'+uid+'-time" style="font-size:24px;font-weight:500;color:var(--gold);font-variant-numeric:tabular-nums">0:00</div>' +
           '<div style="font-size:11px;color:var(--muted);margin-top:2px">restante</div>' +
           '<button data-uid="'+uid+'" onclick="pararTimer(this.dataset.uid)" style="margin-top:8px;background:none;border:none;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline">parar</button>' +
@@ -1693,8 +1693,8 @@ function switchSubTab(tab) {
   var btnB = document.getElementById('subtab-boosters');
   var descR = document.getElementById('subtab-rotina-desc');
   var descB = document.getElementById('subtab-boosters-desc');
-  if (btnR) { btnR.style.background = isRotina ? 'var(--gold)' : 'transparent'; btnR.style.color = isRotina ? '#fff' : '#9a8878'; btnR.style.borderColor = isRotina ? 'var(--gold)' : 'rgba(160,112,64,.25)'; }
-  if (btnB) { btnB.style.background = !isRotina ? 'var(--gold)' : 'transparent'; btnB.style.color = !isRotina ? '#fff' : '#9a8878'; btnB.style.borderColor = !isRotina ? 'var(--gold)' : 'rgba(160,112,64,.25)'; }
+  if (btnR) { btnR.style.background = isRotina ? 'var(--gold)' : 'transparent'; btnR.style.color = isRotina ? '#fff' : '#9a8878'; btnR.style.borderColor = isRotina ? 'var(--gold)' : 'rgba(212,168,83,.25)'; }
+  if (btnB) { btnB.style.background = !isRotina ? 'var(--gold)' : 'transparent'; btnB.style.color = !isRotina ? '#fff' : '#9a8878'; btnB.style.borderColor = !isRotina ? 'var(--gold)' : 'rgba(212,168,83,.25)'; }
   if (descR) descR.style.display = isRotina ? 'block' : 'none';
   if (descB) descB.style.display = !isRotina ? 'block' : 'none';
   window._subTabAtivo = tab;
@@ -1873,7 +1873,7 @@ function renderPraia(p) {
 
   if (e.na_praia && e.na_praia.length) {
     html += `<div class="card">
-      <div class="card-title" style="color:#C9A97A"><span class="card-title-icon">🏖</span> Na Praia</div>
+      <div class="card-title" style="color:#e0bc76"><span class="card-title-icon">🏖</span> Na Praia</div>
       <div class="step-list">${renderSteps(e.na_praia)}</div>
     </div>`;
   }
@@ -1993,22 +1993,22 @@ function mostrarModalNotificacoes() {
   var noite  = localStorage.getItem('sbp_notif_noite')  || '21:00';
   var overlay = document.createElement('div');
   overlay.id = 'modal-notif';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(43,18,6,.5);z-index:400;display:flex;align-items:flex-end';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.5);z-index:400;display:flex;align-items:flex-end';
   overlay.innerHTML =
     '<div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:28px 24px 48px">' +
-      '<div style="width:40px;height:3px;background:rgba(160,112,64,.2);border-radius:2px;margin:0 auto 20px"></div>' +
+      '<div style="width:40px;height:3px;background:rgba(212,168,83,.2);border-radius:2px;margin:0 auto 20px"></div>' +
       '<div style="font-family:var(--font-serif,serif);font-size:20px;font-style:italic;color:var(--gold);margin-bottom:6px">Lembretes de rotina</div>' +
       '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">Receba uma notificação nos horários da sua rotina</div>' +
       '<div style="margin-bottom:14px">' +
         '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">☀️ Rotina da manhã</div>' +
-        '<input type="time" id="notif-manha" value="'+manha+'" style="width:100%;padding:12px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+        '<input type="time" id="notif-manha" value="'+manha+'" style="width:100%;padding:12px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
       '</div>' +
       '<div style="margin-bottom:24px">' +
         '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">🌙 Rotina da noite</div>' +
-        '<input type="time" id="notif-noite" value="'+noite+'" style="width:100%;padding:12px;border:0.5px solid rgba(160,112,64,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+        '<input type="time" id="notif-noite" value="'+noite+'" style="width:100%;padding:12px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
       '</div>' +
       '<button onclick="ativarNotificacoes()" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-bottom:10px">Ativar lembretes</button>' +
-      (jaAtivo ? '<button onclick="desativarNotificacoes()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(160,112,64,.2);border-radius:8px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:10px">Desativar lembretes</button>' : '') +
+      (jaAtivo ? '<button onclick="desativarNotificacoes()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(212,168,83,.2);border-radius:8px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:10px">Desativar lembretes</button>' : '') +
       '<button onclick="fecharModalNotif()" style="width:100%;padding:12px;background:transparent;border:none;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Fechar</button>' +
     '</div>';
   document.body.appendChild(overlay);
@@ -2049,48 +2049,48 @@ async function compartilharProtocolo() {
   var card = document.createElement('div');
   card.style.cssText = [
     'position:fixed', 'left:-9999px', 'top:0',
-    'width:360px', 'background:#2B1206',
+    'width:360px', 'background:#3D2010',
     'font-family:Georgia,serif', 'overflow:hidden',
     'border-radius:0', 'padding:0'
   ].join(';');
 
   card.innerHTML =
     // Header dark
-    '<div style="background:linear-gradient(160deg,#2B1206,#3D1A08);padding:36px 28px 28px">' +
-      '<div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#C9A97A;letter-spacing:.5px;margin-bottom:6px">Hegai Skin</div>' +
+    '<div style="background:linear-gradient(160deg,#3D2010,#2a1508);padding:36px 28px 28px">' +
+      '<div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#e0bc76;letter-spacing:.5px;margin-bottom:6px">Hegai Skin</div>' +
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">' +
         '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.8);border:0.5px solid rgba(201,169,122,.3);border-radius:20px;padding:2px 8px">versão beta</span>' +
         '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,169,122,.4)">· Rotina Exclusiva</span>' +
       '</div>' +
-      '<div style="font-family:Georgia,serif;font-size:24px;color:#F2E8D9;font-weight:400;margin-bottom:4px">Minha Rotina</div>' +
-      '<div style="font-family:Georgia,serif;font-size:26px;font-style:italic;color:#C9A97A;margin-bottom:6px">' + nome + '</div>' +
+      '<div style="font-family:Georgia,serif;font-size:24px;color:#FDF8F0;font-weight:400;margin-bottom:4px">Minha Rotina</div>' +
+      '<div style="font-family:Georgia,serif;font-size:26px;font-style:italic;color:#e0bc76;margin-bottom:6px">' + nome + '</div>' +
       (tipo ? '<div style="font-size:12px;color:rgba(242,232,217,.55);letter-spacing:1px">' + tipo + '</div>' : '') +
-      (tags.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">' + tags.map(function(t){ return '<span style="padding:3px 10px;border:0.5px solid rgba(201,169,122,.25);border-radius:20px;font-size:10px;color:#C9A97A;font-family:Georgia,serif">' + t + '</span>'; }).join('') + '</div>' : '') +
+      (tags.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">' + tags.map(function(t){ return '<span style="padding:3px 10px;border:0.5px solid rgba(201,169,122,.25);border-radius:20px;font-size:10px;color:#e0bc76;font-family:Georgia,serif">' + t + '</span>'; }).join('') + '</div>' : '') +
     '</div>' +
     // Stats light
-    '<div style="background:#F2E8D9;padding:24px 28px">' +
+    '<div style="background:#FDF8F0;padding:24px 28px">' +
       (score ? '<div style="margin-bottom:18px">' +
-        '<div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A07040;margin-bottom:8px">Estado da pele</div>' +
-        '<div style="height:6px;background:rgba(160,112,64,.15);border-radius:3px;overflow:hidden;margin-bottom:6px">' +
-          '<div style="height:100%;width:' + Math.min(score, 100) + '%;background:#A07040;border-radius:3px"></div>' +
+        '<div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#D4A853;margin-bottom:8px">Estado da pele</div>' +
+        '<div style="height:6px;background:rgba(212,168,83,.15);border-radius:3px;overflow:hidden;margin-bottom:6px">' +
+          '<div style="height:100%;width:' + Math.min(score, 100) + '%;background:#D4A853;border-radius:3px"></div>' +
         '</div>' +
-        '<div style="font-size:13px;font-weight:500;color:#2B1206">' + score + '/100</div>' +
+        '<div style="font-size:13px;font-weight:500;color:#3D2010">' + score + '/100</div>' +
       '</div>' : '') +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">' +
-        '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:10px;padding:14px">' +
-          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:4px">Manhã</div>' +
-          '<div style="font-size:22px;font-weight:400;color:#2B1206">' + passosManha + '</div>' +
+        '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:10px;padding:14px">' +
+          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#D4A853;margin-bottom:4px">Manhã</div>' +
+          '<div style="font-size:22px;font-weight:400;color:#3D2010">' + passosManha + '</div>' +
           '<div style="font-size:11px;color:#9a8878">passos</div>' +
         '</div>' +
-        '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:10px;padding:14px">' +
-          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07040;margin-bottom:4px">Noite</div>' +
-          '<div style="font-size:22px;font-weight:400;color:#2B1206">' + passosNoite + '</div>' +
+        '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:10px;padding:14px">' +
+          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#D4A853;margin-bottom:4px">Noite</div>' +
+          '<div style="font-size:22px;font-weight:400;color:#3D2010">' + passosNoite + '</div>' +
           '<div style="font-size:11px;color:#9a8878">passos</div>' +
         '</div>' +
       '</div>' +
       '<div style="text-align:center;padding-top:4px">' +
         '<div style="font-size:11px;color:#9a8878;margin-bottom:4px">Crie a sua rotina em</div>' +
-        '<div style="font-size:14px;font-weight:500;color:#A07040;letter-spacing:.5px">hegaiskin.app</div>' +
+        '<div style="font-size:14px;font-weight:500;color:#D4A853;letter-spacing:.5px">hegaiskin.app</div>' +
       '</div>' +
     '</div>';
 
@@ -2100,7 +2100,7 @@ async function compartilharProtocolo() {
     var canvas = await html2canvas(card, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#2B1206',
+      backgroundColor: '#3D2010',
       logging: false
     });
     document.body.removeChild(card);
@@ -2183,7 +2183,7 @@ function renderEvolucaoFotos() {
         '<div style="font-size:40px;margin-bottom:12px">📸</div>' +
         '<div style="font-size:15px;font-weight:500;color:var(--dark);margin-bottom:6px">Registre sua evolução</div>' +
         '<div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
-        '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.06);border:0.5px solid rgba(160,112,64,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
+        '<div style="font-size:11px;color:var(--muted);background:rgba(212,168,83,.06);border:0.5px solid rgba(212,168,83,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
           '🔒 <strong style="color:var(--dark)">Sua foto fica apenas neste dispositivo.</strong> Não é enviada, armazenada em servidores ou compartilhada com ninguém. Somente a análise textual da pele é processada pela IA.' +
         '</div>' +
         '<button onclick="tirarFotoEvolucao()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar semana 1</button>' +
@@ -2201,7 +2201,7 @@ function renderEvolucaoFotos() {
     var primeira = historico[0];
     var ultima   = historico[historico.length - 1];
     html +=
-      '<div style="background:#fff;border:0.5px solid rgba(160,112,64,.15);border-radius:12px;padding:16px;margin-bottom:16px">' +
+      '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:12px;padding:16px;margin-bottom:16px">' +
         '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px">Sua transformação</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
           '<div style="text-align:center">' +
@@ -2216,8 +2216,8 @@ function renderEvolucaoFotos() {
           '</div>' +
         '</div>' +
       '</div>' +
-      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(160,112,64,.06);border-radius:8px;border-left:2px solid rgba(160,112,64,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
-      '<div style="font-size:11px;color:var(--muted);background:rgba(160,112,64,.04);border:0.5px solid rgba(160,112,64,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
+      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(212,168,83,.06);border-radius:8px;border-left:2px solid rgba(212,168,83,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
+      '<div style="font-size:11px;color:var(--muted);background:rgba(212,168,83,.04);border:0.5px solid rgba(212,168,83,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
         '🔒 Suas fotos ficam <strong style="color:var(--dark)">apenas neste dispositivo</strong> — não são enviadas nem armazenadas em nenhum servidor.' +
       '</div>';
   }
