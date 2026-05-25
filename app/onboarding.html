@@ -928,7 +928,7 @@ detectarPais().then(function(pais){ configurarOrcamento(pais); });
 const _a='sk-ant-api03-V', _b='gU93q4z1crUe6TnHbP1j';
 const _c='0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d='tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
 function getKey() { return _a+_b+_c+_d; }
-const _ga='AIzaSyAFtB1p', _gb='2P2RIEY3uL3', _gc='9_kaJbPpDyV', _gd='1-gtA';
+const _ga='AIzaSyCFx14', _gb='wl_3F_SL8k', _gc='fFj-xEBdv-I', _gd='Bi00Buw';
 const GEMINI_KEY = _ga+_gb+_gc+_gd;
 
 // -- STATE --
@@ -2179,7 +2179,7 @@ function removerProd(i) {
 
 // -- GERAR PROTOCOLO --
 
-// ── GEMINI: analisa foto do rosto ────────────────────────────────────────────
+// ── GEMINI: analisa foto do rosto (Google Gemini Vision) ─────────────────────
 async function analisarFotoGemini(b64) {
   try {
     var mime = 'image/jpeg';
@@ -2201,30 +2201,29 @@ async function analisarFotoGemini(b64) {
       '"acne_ativa":"nenhuma/leve/moderada/intensa",' +
       '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
 
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    console.log('[Gemini] Iniciando análise do rosto via Google Gemini Vision...');
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY;
+    var resp = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': getKey(),
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: 'Você é especialista sênior em cosmetologia. Retorne APENAS JSON válido.',
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
-          { type: 'text',  text: prompt }
-        ]}]
+        systemInstruction: { parts: [{ text: 'Você é especialista sênior em cosmetologia. Retorne APENAS JSON válido sem markdown.' }] },
+        contents: [{ parts: [
+          { inlineData: { mimeType: mime, data: b64 } },
+          { text: prompt }
+        ]}],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 }
       })
     });
-    var data  = await resp.json();
-    if (data.error) throw new Error(data.error.message || 'Erro API');
-    var raw   = data.content && data.content[0] ? data.content[0].text : '{}';
+    var data = await resp.json();
+    if (data.error) throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
+    var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
+              data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+              ? data.candidates[0].content.parts[0].text : '{}';
+    console.log('[Gemini] Resposta recebida:', raw.substring(0, 120) + '...');
     return JSON.parse(raw.replace(/```json|```/g, '').trim());
   } catch(e) {
-    console.error('analisarFotoGemini erro:', e);
+    console.error('[Gemini] analisarFotoGemini erro:', e);
     return null;
   }
 }
