@@ -2216,13 +2216,20 @@ async function analisarFotoGemini(b64) {
       })
     });
     var data = await resp.json();
-    if (data.error) throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
+    if (data.error) {
+      alert('❌ GEMINI ERRO:\n' + (data.error.message || 'Erro desconhecido'));
+      throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
+    }
     var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
               data.candidates[0].content.parts && data.candidates[0].content.parts[0]
               ? data.candidates[0].content.parts[0].text : '{}';
     console.log('[Gemini] Resposta recebida:', raw.substring(0, 120) + '...');
-    return JSON.parse(raw.replace(/```json|```/g, '').trim());
+    var result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    // VALIDAÇÃO TEMPORÁRIA — remover depois de confirmar que funciona
+    alert('✅ GEMINI OK!\nOleosidade: ' + (result.oleosidade||'—') + '\nAcne: ' + (result.acne_ativa||'—') + '\nTextura: ' + (result.textura||'—'));
+    return result;
   } catch(e) {
+    if (!String(e).includes('GEMINI ERRO')) alert('❌ GEMINI FALHOU:\n' + e.message);
     console.error('[Gemini] analisarFotoGemini erro:', e);
     return null;
   }
