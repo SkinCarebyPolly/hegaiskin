@@ -857,10 +857,15 @@ function renderApp() {
   })();
 
   // Adaptação
+  var adaptEl = document.getElementById('content-adaptacao');
   if (protocolo.fase_adaptacao) {
-    document.getElementById('content-adaptacao').innerHTML = `
+    adaptEl.innerHTML = `
       <div class="alert-title">⚠️ Leia antes de começar</div>
       <div class="alert-text">${protocolo.fase_adaptacao.replace(/\n/g,'<br>')}</div>`;
+  } else {
+    adaptEl.innerHTML = `
+      <div class="alert-title" style="color:var(--muted)">Rotina não gerada ainda</div>
+      <div class="alert-text" style="margin-top:6px">Vá em ⚙️ Config → <strong>Atualizar minha rotina</strong> para gerar sua rotina completa.</div>`;
   }
 
   // Produtos identificados
@@ -883,17 +888,15 @@ function renderApp() {
   // Rotina manhã
   var manhaEl = document.getElementById('content-manha');
   if (manhaEl) {
-    manhaEl.innerHTML = protocolo.sem_produto === true
-      ? renderRotinaSemProduto()
-      : renderSteps(protocolo.rotina_manha, 'manha');
+    var manhaSteps = protocolo.sem_produto === true ? renderRotinaSemProduto() : renderSteps(protocolo.rotina_manha, 'manha');
+    manhaEl.innerHTML = manhaSteps || renderRotinaVazia();
   }
 
   // Rotina noite
   var noiteEl = document.getElementById('content-noite');
   if (noiteEl) {
-    noiteEl.innerHTML = protocolo.sem_produto === true
-      ? renderRotinaSemProduto()
-      : renderSteps(protocolo.rotina_noite, 'noite');
+    var noiteSteps = protocolo.sem_produto === true ? renderRotinaSemProduto() : renderSteps(protocolo.rotina_noite, 'noite');
+    noiteEl.innerHTML = noiteSteps || renderRotinaVazia();
   }
 
   // Semana
@@ -1232,11 +1235,9 @@ function renderSugestoes() {
   document.getElementById('cfg-nome').textContent = user.nome || '';
   document.getElementById('cfg-email').textContent = user.email || '';
 
-  // Botão de atualizar: apenas para admin
-  var ADMIN_EMAILS = ['polly.machado18@gmail.com']; // ← adicione aqui outros emails admin se precisar
-  var isAdmin = user.email && ADMIN_EMAILS.indexOf(user.email.toLowerCase().trim()) !== -1;
+  // Botão de atualizar: visível para todos os utilizadores autenticados
   var btnAtualizar = document.getElementById('btn-atualizar-wrap');
-  if (btnAtualizar) btnAtualizar.style.display = isAdmin ? 'block' : 'none';
+  if (btnAtualizar) btnAtualizar.style.display = 'block';
   document.getElementById('cfg-pele').textContent = perfil.tipoPele || '';
   document.getElementById('cfg-investimento').textContent = perfil.investimento || '';
 
@@ -1724,6 +1725,15 @@ function toTitleCase(str) {
       ? word.charAt(0).toUpperCase() + word.slice(1)
       : word;
   });
+}
+
+function renderRotinaVazia() {
+  return '<div style="text-align:center;padding:24px 20px">' +
+    '<div style="font-size:36px;margin-bottom:10px">📋</div>' +
+    '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">Rotina não gerada</div>' +
+    '<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px">Vai em ⚙️ Config e clica em <strong>Atualizar minha rotina</strong> para gerar os passos.</div>' +
+    '<button onclick="document.querySelector(\'.tab[data-tab=config]\').click()" style="padding:10px 20px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#fff;cursor:pointer">⚙️ Ir para Config</button>' +
+  '</div>';
 }
 
 function renderRotinaSemProduto() {
