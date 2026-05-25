@@ -2207,7 +2207,7 @@ async function analisarFotoGemini(b64) {
     else if (b64.startsWith('UklGR')) mime = 'image/webp';
 
     var prompt = 'Analise esta foto do rosto com o olhar de uma especialista em cosmetologia. ' +
-      'PRIMEIRO avalie a qualidade da foto. Depois analise a pele. ' +
+      'PRIMEIRO avalie a qualidade da foto. Depois analise a pele com atenção a cada detalhe visível. ' +
       'Retorne APENAS JSON válido sem markdown:\n' +
       '{"qualidade_ok":true,"problema":"ok/maquiagem/reflexo/escuro/rosto_nao_detectado/borrada",' +
       '"problema_titulo":"título curto amoroso","problema_msg":"1 frase sobre o problema","problema_dica":"1 dica de como corrigir",' +
@@ -2215,22 +2215,25 @@ async function analisarFotoGemini(b64) {
       '"textura":"lisa/levemente irregular/irregular/muito irregular",' +
       '"poros":"imperceptíveis/levemente visíveis/visíveis/muito visíveis",' +
       '"manchas":"nenhuma/poucas/moderadas/muitas",' +
+      '"tipo_manchas":"descreva brevemente se houver: melasma/sardas/pós-acne/tom irregular/nenhuma",' +
+      '"rugas":"nenhuma/linhas finas/moderadas/profundas",' +
+      '"areas_rugas":"onde estão as linhas: testa/olhos/nasolabial/boca/nenhuma",' +
       '"vermelhidao":"nenhuma/leve/moderada/intensa",' +
       '"hidratacao":"muito desidratada/desidratada/normal/bem hidratada",' +
       '"sensibilidade":"baixa/média/alta",' +
       '"acne_ativa":"nenhuma/leve/moderada/intensa",' +
-      '"obs":"observação detalhada e amorosa do que você vê nesta foto"}';
+      '"obs":"observação detalhada e amorosa do que você vê nesta foto — mencione especificamente manchas, rugas e poros observados"}';
 
     var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: 'Você é especialista sênior em cosmetologia. Retorne APENAS JSON válido sem markdown.' }] },
+        systemInstruction: { parts: [{ text: 'Você é especialista sênior em cosmetologia e dermatologia estética. Analise fotos de pele com máxima precisão. Retorne APENAS JSON válido sem markdown.' }] },
         contents: [{ parts: [
           { inlineData: { mimeType: mime, data: b64 } },
           { text: prompt }
         ]}],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 }
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 8192 } }
       })
     });
     var data = await resp.json();
@@ -2359,7 +2362,7 @@ async function gerarProtocolo() {
     perfil_txt + '\n\n' +
     'REGRAS:\n' +
     '1. ' + (S.modoProd==="zero" ? 'Cliente NÃO TEM PRODUTOS. Para cada passo: campo "produto"=null, preencha "categoria" (ex: Gel de limpeza) e "ativo_ideal" (ex: Ácido salicílico 0,5%) mas NUNCA invente marca real. A rotina deve mostrar o TIPO de produto e o ativo ideal, não uma marca específica.' : 'Use APENAS os produtos listados pelos nomes exatos.') + ' Campo "tempo" = mesmo valor mencionado em "como".\n' +
-    '2. Aparelhos DEVEM aparecer na rotina com: modo, minutos por zona, movimentos, frequência.\n' +
+    '2. Aparelhos DEVEM aparecer como passos dedicados em rotina_manha e/ou rotina_noite. No campo "como": modo de uso, tempo por zona, movimentos e frequência semanal (ex: "Passe em movimentos ascendentes por 3 min por zona, 3× por semana"). No campo "semana": anote os dias ideais para cada aparelho. NÃO omita nenhum aparelho listado.\n' +
     '3. Adaptação: semana 1 suave → semana 4 completa.\n' +
     '4. Tom caloroso e encorajador na análise personalizada — como amiga especialista em cosmetologia.\n' +
     '5. Score da pele 0-100: 0-40=Início da jornada, 41-70=Em Evolução, 71-90=Pele em dia, 91-100=Pele radiante. Seja encorajadora.\n' +
