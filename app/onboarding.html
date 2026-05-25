@@ -1134,48 +1134,6 @@ function authTab(t) {
 }
 
 
-async function doLoginGoogle() {
-  var err = document.getElementById('auth-err') || document.getElementById('auth-err-log');
-  try {
-    if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
-    var provider = new firebase.auth.GoogleAuthProvider();
-    var cred = await window._fbAuth.signInWithPopup(provider);
-    var user = cred.user;
-
-    // Verificar se já tem protocolo salvo
-    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
-    if (snap.exists) {
-      var dados = snap.data();
-      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
-      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
-      localStorage.setItem('sbp_ativo', 'true');
-      localStorage.setItem('sbp_auth', user.uid);
-      window.location.href = 'protocolo.html';
-      return;
-    }
-
-    // Novo usuário — salvar dados básicos e ir para onboarding
-    var nome = user.displayName || user.email.split('@')[0];
-    await window._fbDb.collection('usuarios').doc(user.uid).set({
-      nome: nome,
-      email: user.email,
-      plano: 'beta',
-      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
-      atualizacoes: { mes: '', usado: 0, limite: 5 }
-    }, { merge: true });
-
-    localStorage.setItem('sbp_auth', user.uid);
-    localStorage.setItem('sbp_user', JSON.stringify({ nome, email: user.email, uid: user.uid }));
-    go('s-lgpd');
-
-  } catch(e) {
-    var msg = e.code === 'auth/popup-closed-by-user' ? 'Login cancelado.'
-            : e.code === 'auth/popup-blocked'        ? 'Popup bloqueado. Permita popups para este site.'
-            : e.message || 'Erro ao entrar com Google.';
-    if (err) { err.textContent = msg; err.style.display = 'block'; }
-  }
-}
-
 async function doAuth() {
   var isLog = document.getElementById('form-log').style.display !== 'none';
   var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
@@ -1280,40 +1238,6 @@ function tgPw(id, btn) {
   var el = document.getElementById(id);
   el.type = el.type === 'password' ? 'text' : 'password';
   btn.textContent = el.type === 'password' ? '👁' : '🙈';
-}
-
-function doCadastro() {
-  var nome = document.getElementById('inp-nome').value.trim();
-  var email = document.getElementById('inp-email').value.trim();
-  var pw = document.getElementById('inp-pw').value;
-  var err = document.getElementById('err-cad');
-  if (!nome || !email || !email.includes('@') || pw.length < 6) {
-    err.textContent = pw.length < 6 ? 'Senha: mínimo 6 caracteres.' : 'Preencha todos os campos.';
-    err.style.display='block'; return;
-  }
-  err.style.display='none';
-  S.nome = nome; S.email = email; S.senha = pw;
-  localStorage.setItem('sbp_user', JSON.stringify({nome:nome, email:email, senha:pw}));
-  localStorage.setItem('sbp_auth', nome);
-  document.getElementById('ok-cad').style.display = 'block';
-  setTimeout(function(){ go('s-lgpd'); }, 900);
-}
-
-function doLogin() {
-  var email = document.getElementById('log-email').value.trim();
-  var pw = document.getElementById('log-pw').value;
-  var err = document.getElementById('err-log');
-  var saved = JSON.parse(localStorage.getItem('sbp_user') || '{}');
-  if (saved.email === email && saved.senha === pw) {
-    localStorage.setItem('sbp_auth', saved.nome);
-    S.nome = saved.nome; S.email = saved.email;
-    if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
-      window.location.href = 'protocolo.html'; return;
-    }
-    go('s-lgpd');
-  } else {
-    err.textContent = 'Email ou senha incorrectos.'; err.style.display='block';
-  }
 }
 
 // -- LOCATION --
@@ -2136,12 +2060,6 @@ async function processarFotos(input) {
   input.value = '';
 }
 
-// Mantido por compatibilidade (protocolo.html usa addFotoProd via "adicionar produto novo")
-async function addFotoProd(input) {
-  return processarFotos(input);
-}
-
-
 // ── Revisão de produtos OCR ───────────────────────────────────────────────────
 function mostrarRevisao(falhas) {
   var wrap = document.getElementById('ocr-revisao-wrap');
@@ -2309,7 +2227,7 @@ async function analisarFotoGemini(b64) {
     });
     var data = await resp.json();
     if (data.error) {
-      alert('❌ GEMINI ERRO:\n' + (data.error.message || 'Erro desconhecido'));
+      console.error('[Gemini] API error:', data.error.message || 'Erro desconhecido');
       throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
     }
     var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
@@ -2317,11 +2235,8 @@ async function analisarFotoGemini(b64) {
               ? data.candidates[0].content.parts[0].text : '{}';
     console.log('[Gemini] Resposta recebida:', raw.substring(0, 120) + '...');
     var result = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    // VALIDAÇÃO TEMPORÁRIA — remover depois de confirmar que funciona
-    alert('✅ GEMINI OK!\nOleosidade: ' + (result.oleosidade||'—') + '\nAcne: ' + (result.acne_ativa||'—') + '\nTextura: ' + (result.textura||'—'));
     return result;
   } catch(e) {
-    if (!String(e).includes('GEMINI ERRO')) alert('❌ GEMINI FALHOU:\n' + e.message);
     console.error('[Gemini] analisarFotoGemini erro:', e);
     return null;
   }
