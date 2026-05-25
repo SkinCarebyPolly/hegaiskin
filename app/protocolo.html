@@ -492,7 +492,7 @@ input[type="file"] { display:none; }
       <div class="evo-title" id="evo-photo-title">Tirar foto do mês</div>
       <div class="evo-sub" id="evo-photo-sub">Rosto limpo, boa iluminação</div>
     </div>
-    <input type="file" id="evo-photo-input" accept="image/*" capture="user" onchange="handleEvoPhoto(event)">
+    <input type="file" id="evo-photo-input" accept="image/*" onchange="handleEvoPhoto(event)">
     <div id="evo-loading" style="display:none" class="ai-loading-bar">
       <div class="ai-mini-spinner"></div>
       <div class="ai-loading-text">Analisando evolução da sua pele...</div>
@@ -879,6 +879,33 @@ async function geminiChat(systemPrompt, userPrompt, maxTokens) {
   return text.replace(/```json|```/g, '').trim();
 }
 
+// ── Gemini Vision: comparação ANTES + AGORA (duas imagens) ───────────────────
+async function geminiVisionComparar(b64Antes, b64Agora, labelAntes, labelAgora, perfil, maxTokens) {
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
+  var prompt = 'Foto ANTES (' + labelAntes + ') à esquerda, foto AGORA (' + labelAgora + ') à direita.\n' +
+    'Perfil: pele ' + (perfil.tipoPele||'') + ', preocupações: ' + ((perfil.incomodos||[]).join(', ')||'não informadas') + '.\n' +
+    'Compare as duas fotos com olhar de especialista em cosmetologia. Destaque as melhorias visíveis, celebre a evolução e aponte o que ainda pode melhorar. ' +
+    'Tom caloroso e motivador. Máximo 3 parágrafos curtos. Escreva em português.';
+  var resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: 'Especialista sênior em cosmetologia. Tom motivador e caloroso.' }] },
+      contents: [{ parts: [
+        { text: 'Foto ANTES (' + labelAntes + '):' },
+        { inlineData: { mimeType: 'image/jpeg', data: b64Antes } },
+        { text: 'Foto AGORA (' + labelAgora + '):' },
+        { inlineData: { mimeType: 'image/jpeg', data: b64Agora } },
+        { text: prompt }
+      ]}],
+      generationConfig: { temperature: 0.3, maxOutputTokens: maxTokens || 700 }
+    })
+  });
+  var data = await resp.json();
+  if (data.error) throw new Error(data.error.message || 'Erro Gemini');
+  return (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
+}
+
 // ── Helper: Gemini Vision para imagem + texto (Google Gemini) ────────────────
 async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
   var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY;
@@ -1148,8 +1175,30 @@ function renderSugestoes() {
   // Show app
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app-content').style.display = 'block';
+  // Seed foto inicial do onboarding → aparece automaticamente na evolução
+  seedFotoInicial();
   // Render evolução
   renderEvolucaoFotos();
+}
+
+function seedFotoInicial() {
+  var historico = getEvoHistorico();
+  if (historico.some(function(h){ return h.inicio; })) return; // já foi adicionada
+  var fotoB64 = localStorage.getItem('sbp_foto_rosto');
+  if (!fotoB64) return;
+  var dataProtocolo = protocolo.data_criacao || new Date().toISOString();
+  var mesKey = dataProtocolo.substring(0, 7); // "2025-05"
+  var entrada = {
+    mes: 'inicio',
+    foto: fotoB64.startsWith('data:') ? fotoB64 : 'data:image/jpeg;base64,' + fotoB64,
+    analise: 'Foto do início da jornada — tirada durante o diagnóstico inicial.',
+    data: dataProtocolo,
+    semana: 1,
+    inicio: true,
+    label: 'Início da Jornada · ' + getMesLabel(mesKey)
+  };
+  historico.unshift(entrada); // primeiro da lista
+  saveEvoHistorico(historico);
 }
 
 // -- CALENDAR --
@@ -1343,56 +1392,44 @@ async function handleEvoPhoto(e) {
     const fotoAnterior = historico.length > 0 ? historico[historico.length-1] : null;
 
     try {
-      const claudeParts = [];
+      var texto = '';
+      var fotoAnteriorDataUrl = null;
+      var labelAntes = 'Início';
 
       if (fotoAnterior) {
-        claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:fotoAnterior.foto.split(',')[1]}});
-        claudeParts.push({type:'text', text:'Esta é a foto do mês anterior (' + getMesLabel(fotoAnterior.mes) + ').'});
+        fotoAnteriorDataUrl = fotoAnterior.foto;
+        var b64Antes = fotoAnterior.foto.startsWith('data:') ? fotoAnterior.foto.split(',')[1] : fotoAnterior.foto;
+        labelAntes = fotoAnterior.label || (fotoAnterior.inicio ? 'Início da Jornada' : getMesLabel(fotoAnterior.mes));
+        // Comparação real com DUAS imagens
+        texto = await geminiVisionComparar(b64Antes, b64, labelAntes, getMesLabel(mesAtual), perfil, 700);
+      } else {
+        // Primeira foto de evolução — análise simples
+        var promptBase = 'Esta é a primeira foto de evolução (' + getMesLabel(mesAtual) + '). ' +
+          'Perfil: pele ' + (perfil.tipoPele||'') + '. ' +
+          'Estabeleça uma linha base calorosa e motivadora da pele. Máximo 2 parágrafos.';
+        texto = await geminiVisionChat(b64, 'image/jpeg', promptBase, 500);
       }
 
-      claudeParts.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}});
-      claudeParts.push({type:'text', text:`Esta é a foto do mês atual (${getMesLabel(mesAtual)}).
-Perfil: ${perfil.tipoPele || 'não informado'}, preocupações: ${(perfil.incomodos||[]).join(', ') || 'não informadas'}.
-${fotoAnterior ? 'Compare as duas fotos e destaque as melhorias visíveis e o que ainda precisa de atenção.' : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.'}
-Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.`});
-
-      const res = { json: async () => {
-        // claudeParts tem imagens + texto - extrair para Gemini
-        var imgPart = claudeParts.find(function(p){ return p.type === 'image'; });
-        var txtParts = claudeParts.filter(function(p){ return p.type === 'text'; }).map(function(p){ return p.text; }).join('\n');
-        var raw;
-        if (imgPart && imgPart.source && imgPart.source.data) {
-          raw = await geminiVisionChat(imgPart.source.data, imgPart.source.media_type || 'image/jpeg', txtParts, 600);
-        } else {
-          raw = await geminiChat('Especialista em cosmetologia. Analisa fotos e dá feedback motivador em português.', txtParts, 600);
-        }
-        return { content: [{ text: raw }] };
-      }, ok: true };
-
-      const data = await res.json();
-      const texto = data.content && data.content[0] ? data.content[0].text : '';
-
-      // Salvar no histórico
-      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString() };
+      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString(), label: getMesLabel(mesAtual) };
       historico.push(novaEntrada);
       saveEvoHistorico(historico);
 
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${texto.replace(/\n/g,'<br>')}</p>`;
+      document.getElementById('evo-analysis-text').innerHTML =
+        '<p style="font-size:13px;color:var(--muted);line-height:1.8">' + texto.replace(/\n/g,'<br>') + '</p>' +
+        (fotoAnteriorDataUrl ? '<button onclick="compartilharEvolucao(\'' + encodeURIComponent(fotoAnteriorDataUrl) + '\',\'' + encodeURIComponent(dataUrl) + '\',\'' + encodeURIComponent(texto.substring(0,200)) + '\',\'' + encodeURIComponent(labelAntes) + '\',\'' + encodeURIComponent(getMesLabel(mesAtual)) + '\')" style="margin-top:12px;width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:1px">✨ Partilhar evolução</button>' : '');
 
       const statusEl = document.getElementById('evo-mes-status');
-      if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
-
+      if (statusEl) statusEl.innerHTML = '<span style="color:var(--gold)">✅ Foto registada em ' + getMesLabel(mesAtual) + '</span>';
       renderHistorico(historico, mesAtual);
 
     } catch(err) {
       console.error('Evo error:', err);
-      // Salvar foto mesmo sem análise
-      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: '', data: new Date().toISOString() };
+      const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: '', data: new Date().toISOString(), label: getMesLabel(mesAtual) };
       historico.push(novaEntrada);
       saveEvoHistorico(historico);
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted)">Foto registada com sucesso!</p>`;
+      document.getElementById('evo-analysis-text').innerHTML = '<p style="font-size:13px;color:var(--muted)">Foto registada com sucesso!</p>';
     }
 
     document.getElementById('evo-loading').style.display = 'none';
@@ -2030,6 +2067,61 @@ function desativarNotificacoes() {
 }
 
 // ── COMPARTILHAR PROTOCOLO ───────────────────────────────────────────────────
+async function compartilharEvolucao(fotoAntesEnc, fotoAgoraEnc, analiseEnc, labelAntesEnc, labelAgoraEnc) {
+  var fotoAntes  = decodeURIComponent(fotoAntesEnc);
+  var fotoAgora  = decodeURIComponent(fotoAgoraEnc);
+  var analise    = decodeURIComponent(analiseEnc);
+  var labelAntes = decodeURIComponent(labelAntesEnc);
+  var labelAgora = decodeURIComponent(labelAgoraEnc);
+  var nome       = (protocolo.nome_cliente || perfil.nome || '').split(' ')[0];
+
+  var card = document.createElement('div');
+  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;background:#1a0e09;font-family:Georgia,serif;border-radius:16px;overflow:hidden';
+  card.innerHTML =
+    '<div style="padding:14px 16px;text-align:center;border-bottom:1px solid rgba(201,169,110,.2)">' +
+      '<div style="font-size:9px;letter-spacing:5px;color:#c9a96e;text-transform:uppercase">Hegai Skin</div>' +
+      '<div style="font-size:17px;color:#e8cfa0;margin-top:3px;font-style:italic">Evolução da Pele</div>' +
+      (nome ? '<div style="font-size:11px;color:#a08060;margin-top:2px">' + nome + '</div>' : '') +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(201,169,110,.15)">' +
+      '<div style="background:#1a0e09;padding:8px 6px 4px">' +
+        '<div style="font-size:8px;letter-spacing:3px;color:#c9a96e;text-align:center;margin-bottom:5px;text-transform:uppercase">Antes</div>' +
+        '<img src="' + fotoAntes + '" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block">' +
+        '<div style="font-size:9px;color:#806040;text-align:center;margin-top:4px;padding-bottom:4px">' + labelAntes + '</div>' +
+      '</div>' +
+      '<div style="background:#1a0e09;padding:8px 6px 4px">' +
+        '<div style="font-size:8px;letter-spacing:3px;color:#c9a96e;text-align:center;margin-bottom:5px;text-transform:uppercase">Agora</div>' +
+        '<img src="' + fotoAgora + '" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block">' +
+        '<div style="font-size:9px;color:#806040;text-align:center;margin-top:4px;padding-bottom:4px">' + labelAgora + '</div>' +
+      '</div>' +
+    '</div>' +
+    (analise ? '<div style="padding:12px 16px;font-size:10.5px;color:#c0a070;line-height:1.7;font-style:italic;border-top:1px solid rgba(201,169,110,.1)">"' + analise.replace(/"/g,'') + (analise.length >= 200 ? '…' : '') + '"</div>' : '') +
+    '<div style="padding:10px 16px;text-align:center;border-top:1px solid rgba(201,169,110,.1)">' +
+      '<div style="font-size:8px;letter-spacing:3px;color:rgba(201,169,110,.5);text-transform:uppercase">hegaiskin.app</div>' +
+    '</div>';
+  document.body.appendChild(card);
+
+  try {
+    mostrarToast('Gerando card...');
+    var canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#1a0e09', logging: false });
+    document.body.removeChild(card);
+    var dataUrl = canvas.toDataURL('image/png');
+    var blob = await (await fetch(dataUrl)).blob();
+    var file = new File([blob], 'hegaiskin-evolucao.png', { type: 'image/png' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: 'Minha evolução de pele · Hegai Skin' });
+    } else {
+      var a = document.createElement('a');
+      a.href = dataUrl; a.download = 'hegaiskin-evolucao.png'; a.click();
+      mostrarToast('Card salvo! 📥');
+    }
+  } catch(e) {
+    if (card.parentNode) document.body.removeChild(card);
+    console.error('compartilharEvolucao:', e);
+    mostrarToast('Erro ao gerar card');
+  }
+}
+
 async function compartilharProtocolo() {
   var nome  = protocolo.nome_cliente || user.nome || 'Eu';
   var tipo  = protocolo.tipo_pele || '';
