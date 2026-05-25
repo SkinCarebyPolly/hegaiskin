@@ -894,30 +894,42 @@ function renderApp() {
 
   // Rotina manhã
   var manhaEl = document.getElementById('content-manha');
-  if (manhaEl) manhaEl.innerHTML = renderSteps(protocolo.rotina_manha, 'manha');
+  if (manhaEl) {
+    manhaEl.innerHTML = protocolo.sem_produto === true
+      ? renderRotinaSemProduto()
+      : renderSteps(protocolo.rotina_manha, 'manha');
+  }
 
   // Rotina noite
   var noiteEl = document.getElementById('content-noite');
-  if (noiteEl) noiteEl.innerHTML = renderSteps(protocolo.rotina_noite, 'noite');
+  if (noiteEl) {
+    noiteEl.innerHTML = protocolo.sem_produto === true
+      ? renderRotinaSemProduto()
+      : renderSteps(protocolo.rotina_noite, 'noite');
+  }
 
   // Semana
   const semEl = document.getElementById('content-semana');
-  const semana = protocolo.semana || {};
-  const dias = [
-    { key:'seg_qui', label:'Seg/Qui' },
-    { key:'ter_sex', label:'Ter/Sex' },
-    { key:'qua_sab', label:'Qua/Sáb' },
-    { key:'dom',     label:'Dom' }
-  ];
-  dias.forEach(d => {
-    if (semana[d.key]) {
-      semEl.innerHTML += `
-        <div class="week-item">
-          <div class="week-day">${d.label}</div>
-          <div class="week-desc">${semana[d.key]}</div>
-        </div>`;
-    }
-  });
+  if (protocolo.sem_produto === true) {
+    semEl.innerHTML = renderRotinaSemProduto();
+  } else {
+    const semana = protocolo.semana || {};
+    const dias = [
+      { key:'seg_qui', label:'Seg/Qui' },
+      { key:'ter_sex', label:'Ter/Sex' },
+      { key:'qua_sab', label:'Qua/Sáb' },
+      { key:'dom',     label:'Dom' }
+    ];
+    dias.forEach(d => {
+      if (semana[d.key]) {
+        semEl.innerHTML += `
+          <div class="week-item">
+            <div class="week-day">${d.label}</div>
+            <div class="week-desc">${semana[d.key]}</div>
+          </div>`;
+      }
+    });
+  }
 
   // ══ ESPINHA ══
   renderEspinha(protocolo);
@@ -928,7 +940,10 @@ function renderApp() {
   // ══ MAKE ══
   renderMake(protocolo);
 
-  
+  // ── Sugestões em 3 tiers ──────────────────────────────────────────────
+  renderSugestoes();
+}
+
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
 async function geminiChat(systemPrompt, userPrompt, maxTokens) {
   var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
@@ -963,10 +978,6 @@ async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
   if (data.error) throw new Error(data.error.message || 'Erro API');
   var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
   return text.replace(/```json|```/g, '').trim();
-}
-
-// ── Sugestões em 3 tiers ──────────────────────────────────────────────
-  renderSugestoes();
 }
 
 
@@ -1352,7 +1363,10 @@ function initEvolucao() {
   const mesAtual    = getMesAtual();
   const fotoMes     = historico.find(h => h.mes === mesAtual);
   const fotoInicio  = historico.length > 0 ? historico[historico.length-1] : null;
-  const fotoOnboard = localStorage.getItem('sbp_foto_rosto');
+  const fotoOnboardRaw = localStorage.getItem('sbp_foto_rosto');
+  const fotoOnboard = fotoOnboardRaw
+    ? (fotoOnboardRaw.startsWith('data:') ? fotoOnboardRaw : 'data:image/jpeg;base64,' + fotoOnboardRaw)
+    : null;
 
   // Mostrar comparativo antes/depois
   const compEl   = document.getElementById('evo-comparativo');
@@ -1722,6 +1736,15 @@ function toTitleCase(str) {
       ? word.charAt(0).toUpperCase() + word.slice(1)
       : word;
   });
+}
+
+function renderRotinaSemProduto() {
+  return '<div style="text-align:center;padding:40px 20px 32px">' +
+    '<div style="font-size:48px;margin-bottom:14px">✨</div>' +
+    '<div style="font-size:16px;font-weight:600;color:var(--dark);margin-bottom:8px;font-family:\'Cormorant Garamond\',serif">A sua rotina começa aqui</div>' +
+    '<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;max-width:260px;margin-left:auto;margin-right:auto">Escolha os produtos das sugestões e eles aparecem aqui, organizados nos seus passos.</div>' +
+    '<button onclick="irParaSugestoesRotina()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--gold);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.3px">Ver sugestões de produtos →</button>' +
+  '</div>';
 }
 
 function renderSteps(steps, rotinaTipo) {
