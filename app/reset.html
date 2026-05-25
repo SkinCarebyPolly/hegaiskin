@@ -40,9 +40,9 @@ dbsToDelete.forEach(function(db) {
   try { indexedDB.deleteDatabase(db); } catch(e) {}
 });
 
-// 5. Redireciona para onboarding após 1.5s (tempo para o IndexedDB terminar)
+// 5. Redireciona para onboarding com ?fresh=1 para bloquear auto-redirect do Firebase
 setTimeout(function() {
-  window.location.replace('onboarding.html');
+  window.location.replace('onboarding.html?fresh=1');
 }, 1500);
 </script>
 </body>

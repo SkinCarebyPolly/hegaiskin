@@ -159,12 +159,13 @@ input[type=file]{display:none}
         window._fbAuth = firebase.auth();
         window._fbDb = firebase.firestore();
         window._fbAuth.onAuthStateChanged(async function(user) {
-          if (user) {
+          // ?fresh=1 → veio do reset, não redirecionar automaticamente
+          var isFresh = new URLSearchParams(window.location.search).get('fresh') === '1';
+          if (user && !isFresh) {
             window._currentUser = user;
             var hasLocal = localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo');
             var atualizando = localStorage.getItem('sbp_atualizando');
             if (atualizando) {
-              // Usuária veio do botão "Atualizar" — deixar fazer o quiz de novo
               localStorage.removeItem('sbp_atualizando');
             } else if (!hasLocal) {
               try {
@@ -179,6 +180,10 @@ input[type=file]{display:none}
                 }
               } catch(e) { console.error('Firebase fetch error:', e); }
             }
+          } else if (user && isFresh) {
+            // Fresh reset — faz logout do Firebase também
+            window._currentUser = user;
+            window._fbAuth.signOut().catch(function(){});
           }
         });
       } else {
@@ -1326,7 +1331,8 @@ function doLogin() {
   if (saved.email === email && saved.senha === pw) {
     localStorage.setItem('sbp_auth', saved.nome);
     S.nome = saved.nome; S.email = saved.email;
-    if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
+    var _isFresh = new URLSearchParams(window.location.search).get('fresh') === '1';
+    if (!_isFresh && localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
       window.location.href = 'protocolo.html'; return;
     }
     go('s-lgpd');
