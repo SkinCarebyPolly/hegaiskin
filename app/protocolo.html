@@ -2188,6 +2188,8 @@ function fazerLogout() {
 if (new URLSearchParams(window.location.search).get('reset') === '1') {
   ['sbp_protocolo','sbp_ativo','sbp_perfil','sbp_user','sbp_auth',
    'sbp_evo_historico','sbp_foto_rosto','sbp_pais'].forEach(function(k){ localStorage.removeItem(k); });
+  // Também faz logout do Firebase para limpar sessão do IndexedDB
+  try { if (window._fbAuth) window._fbAuth.signOut(); } catch(e) {}
   window.location.href = 'onboarding.html';
 } else if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
   // Tem dados locais suficientes - renderizar imediatamente
