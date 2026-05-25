@@ -2382,7 +2382,7 @@ async function gerarProtocolo() {
     '- Gestante: '+S.gestante+'\n\n' +
     'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
     'REGRAS SUGESTÕES: Orçamento é MENSAL TOTAL. Opção econômica não pode ultrapassar o orçamento sozinha.\n' +
-    'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (farmácias, Sephora BR, ML, YesStyle)')+'\n' +
+    'Produtos disponíveis em: '+(window._sbpPais==='PT'?'Portugal (farmácias PT, Notino, YesStyle, Amazon.es)':'Brasil (Drogaria Pacheco, farmácias, Sephora BR, ML)')+'\n' +
     (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n' : '') +
     '\nRetorne APENAS JSON válido:\n' +
     '{"lista_compras":["produto — ativo + preço"],"sugestoes_rotina":[{"falta":"CATEGORIA DA ROTINA","icone":"emoji","motivo":"por que este produto é essencial para completar a rotina","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}],' +
@@ -2403,8 +2403,33 @@ async function gerarProtocolo() {
   var system1 = 'Você é uma especialista sênior em cosmetologia, formulação cosmética e K-Beauty com domínio profundo de ingredientes ativos, combinações de produtos, tipos de pele e rotinas de cuidado. Conhece extensamente: ativos como ácido hialurônico, niacinamida, retinol, AHA/BHA, vitamina C, ceramidas, peptídeos e SPF; marcas brasileiras, europeias e coreanas; interações entre ingredientes que podem irritar ou potencializar resultados; e a ordem correta de aplicação de cada tipo de produto. Tem capacidade EXCEPCIONAL de leitura de rótulos e embalagens — reconhece marcas internacionais e brasileiras e NUNCA substitui um produto por outro similar. Cria rotinas ultra detalhadas e personalizadas com os produtos REAIS da cliente. Responde SEMPRE em português brasileiro. Responde EXCLUSIVAMENTE em JSON válido, sem texto fora do JSON.';
 
   try {
-    // Gemini 2.5 Flash — muito mais rápido que Claude para protocolos grandes
-    var raw1 = await geminiChat(system1, prompt1, 8000);
+    // Claude — geração da rotina principal
+    var claudeParts = [{"type":"text","text":prompt1}];
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 180000);
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      signal: controller.signal,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 8192,
+        system: system1,
+        messages: [{role: 'user', content: claudeParts}]
+      })
+    });
+    clearTimeout(timeoutId);
+    if (!resp.ok) {
+      var errBody = await resp.text();
+      throw new Error('Claude HTTP ' + resp.status + ': ' + errBody);
+    }
+    var respJson = await resp.json();
+    var raw1 = (respJson.content && respJson.content[0] && respJson.content[0].text) ? respJson.content[0].text : '';
     clearInterval(iv);
     clearTimeout(patienceTimer);
 
@@ -2480,7 +2505,7 @@ async function gerarProtocolo() {
   } catch(e) {
     clearInterval(iv);
     clearTimeout(patienceTimer);
-    console.error('Gemini error:', e);
+    console.error('Claude error:', e);
     document.getElementById('gen-spin-wrap').style.display = 'none';
     document.getElementById('gen-error').style.display = 'block';
     var isTimeout = e.name === 'AbortError' || (e.message && e.message.toLowerCase().indexOf('abort') !== -1);

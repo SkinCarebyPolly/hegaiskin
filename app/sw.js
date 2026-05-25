@@ -1,6 +1,6 @@
-// Hegai Skin — Service Worker v2
+// Hegai Skin — Service Worker v3
 // Minimal SW: apenas para PWA ser instalável. Sem cache agressivo.
-const CACHE = 'hegai-v2';
+const CACHE = 'hegai-v3';
 
 self.addEventListener('install', function(e) {
   self.skipWaiting();
