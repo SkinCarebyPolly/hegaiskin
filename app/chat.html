@@ -294,7 +294,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 </head>
 <body>
 
-<div class="header">
+<div class="header" id="chat-header">
   <button class="header-back" onclick="history.back()">←</button>
   <div class="header-content">
     <div class="header-title">Perguntar à IA</div>
@@ -538,6 +538,15 @@ if (typeof firebase !== 'undefined') {
   if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
   window._fbAuth = firebase.auth();
   window._fbDb   = firebase.firestore();
+}
+
+// ── EMBED MODE (quando carregado em iframe na aba Polly) ──
+if (new URLSearchParams(location.search).get('embed') === '1') {
+  document.addEventListener('DOMContentLoaded', function() {
+    var h = document.getElementById('chat-header');
+    if (h) h.style.display = 'none';
+    document.body.style.paddingBottom = '0';
+  });
 }
 
 // ── GEMINI KEY ──

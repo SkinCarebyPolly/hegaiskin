@@ -354,6 +354,7 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="praia">🏖 Praia</button>
   <button class="tab" data-tab="make">💄 Make</button>
   <button class="tab" data-tab="evolucao">📸 Evolução</button>
+  <button class="tab" data-tab="polly">✦ Polly</button>
   <button class="tab" data-tab="config">⚙️ Config</button>
 </div>
 
@@ -525,7 +526,11 @@ input[type="file"] { display:none; }
   </div>
 </div>
 
-<!-- ══ CABELO K-BEAUTY ══ -->
+<!-- ══ POLLY IA ══ -->
+<div class="section" id="tab-polly" style="padding:0;overflow:hidden">
+  <iframe id="polly-iframe" src="" style="width:100%;height:calc(100vh - 96px);border:none;display:block" loading="lazy" allowfullscreen></iframe>
+</div>
+
 <!-- ══ CONFIG ══ -->
 <div class="section" id="tab-config">
   <div class="card">
@@ -577,8 +582,7 @@ input[type="file"] { display:none; }
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar sua rotina.</p>
       <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar minha rotina</button>
     </div>
-    <button onclick="window.location.href='chat.html'" style="width:100%;background:linear-gradient(135deg,rgba(212,168,83,.15),rgba(212,168,83,.08));border:0.5px solid rgba(212,168,83,.4);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">✦ Perguntar à IA <span style="font-size:10px;font-weight:400;color:var(--muted);margin-left:4px">1× por semana</span></button>
-    <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
+<button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
     <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
@@ -669,6 +673,10 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
     this.classList.add('active');
     const tabId = this.getAttribute('data-tab');
     document.getElementById('tab-' + tabId).classList.add('active');
+    if (tabId === 'polly') {
+      var iframe = document.getElementById('polly-iframe');
+      if (!iframe.src || iframe.src === window.location.href) iframe.src = 'chat.html?embed=1';
+    }
     if (tabId === 'evolucao') initEvolucao();
     if (tabId === 'sugestoes') {
       renderSugestoes();
