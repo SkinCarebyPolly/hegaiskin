@@ -228,15 +228,27 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 /* -- LOADING -- */
 #app-loading {
   display:flex; align-items:center; justify-content:center;
-  min-height:100vh; flex-direction:column; gap:20px;
+  min-height:100vh; flex-direction:column; gap:0;
   background:var(--cream);
 }
-.loading-spinner {
-  width:48px; height:48px; border:2px solid rgba(212,168,83,0.15);
-  border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite;
-}
 @keyframes spin { to { transform:rotate(360deg); } }
-.loading-text { font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--gold); }
+@keyframes gem-pulse { 0%,100%{transform:scale(1);opacity:.7} 50%{transform:scale(1.12);opacity:1} }
+@keyframes gem-spin  { to { transform:rotate(360deg); } }
+@keyframes gem-orbit { to { transform:rotate(360deg) translateX(-33px); } }
+@keyframes gem-glow  { 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes dt { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
+.ld-gem { position:relative; width:80px; height:80px; margin:0 auto 28px; }
+.ld-gem-bg   { position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(212,168,83,0.14),transparent 70%);animation:gem-pulse 2.5s ease-in-out infinite; }
+.ld-gem-ring { position:absolute;inset:6px;border:1.5px solid rgba(212,168,83,0.3);border-radius:50%;animation:gem-spin 7s linear infinite; }
+.ld-gem-ring2{ position:absolute;inset:14px;border:1px dashed rgba(212,168,83,0.15);border-radius:50%;animation:gem-spin 12s linear infinite reverse; }
+.ld-gem-dot  { position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;background:var(--gold);margin:-3.5px 0 0 -3.5px;transform-origin:-33px 0;opacity:.75; }
+.ld-gem-dot:nth-child(4){ animation:gem-orbit 7s linear infinite; }
+.ld-gem-dot:nth-child(5){ animation:gem-orbit 7s linear infinite;animation-delay:-2.33s;transform:rotate(120deg) translateX(-33px); }
+.ld-gem-dot:nth-child(6){ animation:gem-orbit 7s linear infinite;animation-delay:-4.66s;transform:rotate(240deg) translateX(-33px); }
+.ld-gem-icon { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);animation:gem-glow 2.5s ease-in-out infinite; }
+.ld-title    { font-family:'Cormorant Garamond',serif;font-size:21px;font-style:italic;color:var(--gold);margin-bottom:6px; }
+.ld-msg      { font-size:13px;color:var(--muted);text-align:center;min-height:20px; }
+.ld-dots::after { content:''; animation:dt 1.5s infinite; }
 
 /* -- MODAL -- */
 .modal-overlay {
@@ -328,9 +340,19 @@ input[type="file"] { display:none; }
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 
-<div id="app-loading">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando sua rotina...</div>
+<div id="app-loading" style="text-align:center;padding:40px 24px">
+  <div class="ld-gem">
+    <div class="ld-gem-bg"></div>
+    <div class="ld-gem-ring"></div>
+    <div class="ld-gem-ring2"></div>
+    <div class="ld-gem-dot"></div>
+    <div class="ld-gem-dot"></div>
+    <div class="ld-gem-dot"></div>
+    <div class="ld-gem-icon">✦</div>
+  </div>
+  <div class="ld-title">A sua rotina<span class="ld-dots"></span></div>
+  <p class="ld-msg" id="ld-msg">A carregar os seus dados</p>
+  <p id="ld-patience" style="display:none;font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;max-width:240px;margin-left:auto;margin-right:auto">A sincronizar com a nuvem — pode demorar alguns segundos ☁️</p>
 </div>
 
 <div id="app-content" style="display:none">
@@ -1204,6 +1226,7 @@ function renderSugestoes() {
   document.getElementById('cfg-investimento').textContent = perfil.investimento || '';
 
   // Show app
+  if (window._ldInterval) clearInterval(window._ldInterval);
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app-content').style.display = 'block';
   // Render evolução
@@ -2581,6 +2604,27 @@ function fazerLogout() {
   if (window._fbAuth) window._fbAuth.signOut().catch(function(){});
   window.location.href = 'onboarding.html';
 }
+
+// -- LOADING MESSAGES --
+(function() {
+  var msgs = [
+    'A carregar os seus dados',
+    'Preparando a sua rotina personalizada',
+    'Verificando os seus produtos',
+    'Quase pronto'
+  ];
+  var mi = 0;
+  var ldEl = document.getElementById('ld-msg');
+  var ldIv = setInterval(function() {
+    mi = (mi + 1) % msgs.length;
+    if (ldEl) ldEl.textContent = msgs[mi];
+  }, 2500);
+  setTimeout(function() {
+    var p = document.getElementById('ld-patience');
+    if (p) p.style.display = 'block';
+  }, 5000);
+  window._ldInterval = ldIv;
+})();
 
 // -- INIT --
 if (protocolo && (protocolo.rotina_manha || protocolo.diagnostico || protocolo.tipo_pele)) {
