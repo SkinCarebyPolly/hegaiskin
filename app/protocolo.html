@@ -2105,8 +2105,8 @@ function _hojeStr() { return new Date().toISOString().slice(0, 10); }
 async function iniciarConteudoDiario() {
   var stored = JSON.parse(localStorage.getItem('sbp_daily_content') || 'null');
 
-  // Gerar se não existir ou se foi gerado com a versão antiga (menos de 25 itens)
-  if (!stored || !stored.dicas || !stored.frases || stored.dicas.length < 25) {
+  // Gerar se não existir, versão antiga (< 25 itens) ou versão do prompt desatualizada
+  if (!stored || !stored.dicas || !stored.frases || stored.dicas.length < 25 || (stored._v || 0) < 2) {
     stored = await gerarConteudoDiario();
     if (!stored) return;
   }
@@ -2142,8 +2142,22 @@ async function iniciarConteudoDiario() {
 async function gerarConteudoDiario() {
   try {
     var p = perfil || {};
+    var pais = (p.pais) || localStorage.getItem('sbp_pais') ||
+      (((navigator.language || '').toLowerCase().indexOf('pt-br') !== -1) ? 'BR' : 'PT');
+    var isBR = pais === 'BR';
+    var variedade = isBR ? 'português do Brasil' : 'português europeu (de Portugal)';
+    var voz = isBR ? 'como se você estivesse mandando mensagem para uma amiga' : 'como se estivesses a mandar mensagem para uma amiga';
+    var exemplos = isBR
+      ? '"Já trocou a fronha por uma de cetim? É suave para a pele e evita que o cabelo embarace durante a noite — dois problemas resolvidos de uma vez!"\n' +
+        '"Não se esqueça de aplicar protetor solar mesmo em dias nublados — a radiação UV passa pelas nuvens e é a principal causa de manchas."\n' +
+        '"Beba um copo de água antes do café da manhã. A pele hidratada por dentro reflete no brilho que você vê no espelho."'
+      : '"Já trocaste a fronha por uma de cetim? É suave para a pele e evita que o cabelo embarace durante a noite — dois problemas resolvidos de uma vez!"\n' +
+        '"Não te esqueças de aplicar o protetor solar mesmo em dias nublados — a radiação UV passa pelas nuvens e é a principal causa de manchas."\n' +
+        '"Bebe um copo de água antes do pequeno-almoço. A pele hidratada por dentro reflete-se no brilho que vês ao espelho."';
+
     var system = 'Especialista sênior em skincare e bem-estar feminino. Responde EXCLUSIVAMENTE em JSON válido.';
     var prompt = 'Cria conteúdo diário personalizado para uma app de skincare.\n\n' +
+      'IDIOMA OBRIGATÓRIO: ' + variedade + ' — usa este idioma de forma consistente em tudo, incluindo vocabulário e conjugações.\n\n' +
       'PERFIL DA UTILIZADORA:\n' +
       '- Tipo de pele: ' + (p.tipoPele || 'mista') + '\n' +
       '- Objetivos: ' + ((p.incomodos || []).join(', ') || 'hidratação, uniformidade') + '\n' +
@@ -2151,18 +2165,15 @@ async function gerarConteudoDiario() {
       '- Maquiagem: ' + (p.maquiagem || 'não informado') + '\n\n' +
       'Gera EXATAMENTE 30 "dicas" e 30 "frases".\n\n' +
       'REGRAS OBRIGATÓRIAS PARA AS DICAS:\n' +
-      '• Linguagem simples de amiga próxima — como se estivesses a mandar mensagem. NUNCA uses palavras técnicas como comedogénico, queratolítico, emoliente, oclusivo, humectante, seborreico, etc. Se precisares explicar um conceito, usa palavras do dia a dia.\n' +
+      '• Linguagem simples de amiga próxima — ' + voz + '. NUNCA uses palavras técnicas como comedogénico, queratolítico, emoliente, oclusivo, humectante, seborreico, etc. Se precisares explicar um conceito, usa palavras do dia a dia.\n' +
       '• Curtas e directas — 1 a 2 frases no máximo.\n' +
       '• Variadas — cobre: hidratação, protetor solar, sono, alimentação, stress, exercício, maquilhagem, remoção de maquilhagem, água, toque na cara, troca de toalha, limpeza do telemóvel, fronha de cetim (ótima tanto para evitar marcas de rugas como para o cabelo não embaraçar — menciona os dois benefícios), temperatura da água, etc.\n' +
       '• Personalizadas para o perfil acima.\n' +
       '• Todas diferentes entre si.\n\n' +
-      'EXEMPLOS DE DICAS BEM ESCRITAS:\n' +
-      '"Trocas a tua fronha por uma de cetim? É suave para a pele e evita que o cabelo embarace durante a noite — dois problemas resolvidos de uma vez!"\n' +
-      '"Não te esqueças de aplicar o protetor solar mesmo em dias nublados — a radiação UV passa pelas nuvens e é a principal causa de manchas."\n' +
-      '"Bebe um copo de água antes do café da manhã. A pele hidratada por dentro reflete-se no brilho que vês ao espelho."\n\n' +
+      'EXEMPLOS DE DICAS BEM ESCRITAS (no idioma correto):\n' + exemplos + '\n\n' +
       'REGRAS PARA AS FRASES:\n' +
       '• Frases de autoestima e motivação para a jornada de skincare.\n' +
-      '• Calorosas, curtas, inspiradoras. Em português europeu.\n' +
+      '• Calorosas, curtas, inspiradoras. Em ' + variedade + '.\n' +
       '• Todas diferentes entre si.\n\n' +
       'Retorne APENAS JSON: {"dicas":["...30 dicas..."],"frases":["...30 frases..."]}';
 
@@ -2172,6 +2183,7 @@ async function gerarConteudoDiario() {
     if (ji === -1 || je === -1) return null;
     var data = JSON.parse(clean.substring(ji, je + 1));
     if (!data.dicas || !data.frases) return null;
+    data._v = 2;
 
     localStorage.setItem('sbp_daily_content', JSON.stringify(data));
 
