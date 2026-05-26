@@ -275,7 +275,7 @@ input[type=file]{display:none}
 <!-- 2: Q1 INCOMODOS -->
 <div class="scr" id="s-q1">
   <div class="inner">
-    <div class="badge">Questionário · 1 de 15</div>
+    <div class="badge">Questionário · 1 de 16</div>
     <h1>O que mais te<br><em>incomoda na pele?</em></h1>
     <p class="sub">Pode selecionar mais de uma.</p>
     <div class="qopts" id="q1">
@@ -294,7 +294,7 @@ input[type=file]{display:none}
 <!-- 3: Q2 TIPO PELE -->
 <div class="scr" id="s-q2">
   <div class="inner">
-    <div class="badge">Questionário · 2 de 15</div>
+    <div class="badge">Questionário · 2 de 16</div>
     <h1>Como você descreveria<br><em>sua pele?</em></h1>
     <div class="qopts" id="q2">
       <div class="qopt" onclick="togS(this,'q2')"><div class="qcirc"></div><span class="qopt-icon">💦</span><div><div class="qopt-lbl">Oleosa</div><div class="qopt-sub">Brilha ao longo do dia</div></div></div>
@@ -312,7 +312,7 @@ input[type=file]{display:none}
 <!-- 4: Q3 APARELHOS -->
 <div class="scr" id="s-q3">
   <div class="inner">
-    <div class="badge">Questionário · 3 de 15</div>
+    <div class="badge">Questionário · 3 de 16</div>
     <h1>Tem aparelhos<br><em>de skincare?</em></h1>
 
     <!-- Foto dos aparelhos -->
@@ -375,7 +375,7 @@ input[type=file]{display:none}
 <!-- 5: Q4 INVESTIMENTO -->
 <div class="scr" id="s-q4">
   <div class="inner">
-    <div class="badge">Questionário · 4 de 15</div>
+    <div class="badge">Questionário · 4 de 16</div>
     <h1>Nível de<br><em>investimento?</em></h1>
     <p class="sub" style="margin-bottom:8px">Quanto você investe em skincare <strong>por mês no total</strong>, somando todos os produtos?</p>
     <div class="qopts" id="q4"></div>
@@ -387,7 +387,7 @@ input[type=file]{display:none}
 <!-- 6: Q5 HABITOS -->
 <div class="scr" id="s-q5">
   <div class="inner">
-    <div class="badge">Questionário · 5 de 15</div>
+    <div class="badge">Questionário · 5 de 16</div>
     <h1>Hábitos do<br><em>dia a dia.</em></h1>
     <p class="sub">Impactam directamente na sua pele.</p>
     <div class="ilbl" style="margin-bottom:8px">Exposição ao sol</div>
@@ -425,7 +425,7 @@ input[type=file]{display:none}
 <!-- 7: Q6 ROTINA -->
 <div class="scr" id="s-q6">
   <div class="inner">
-    <div class="badge">Questionário · 6 de 15</div>
+    <div class="badge">Questionário · 6 de 16</div>
     <h1>Tempo para<br><em>a rotina?</em></h1>
     <div class="qopts" id="q6">
       <div class="qopt" onclick="togS(this,'q6')"><div class="qcirc"></div><span class="qopt-icon">⚡</span><div><div class="qopt-lbl">Rápida — até 5 minutos</div></div></div>
@@ -440,7 +440,7 @@ input[type=file]{display:none}
 <!-- 7: Q7 GESTANTE/LACTANTE -->
 <div class="scr" id="s-q7">
   <div class="inner">
-    <div class="badge">Questionário · 7 de 15</div>
+    <div class="badge">Questionário · 7 de 16</div>
     <h1>Mais uma<br><em>informação importante.</em></h1>
     <p class="sub">Alguns ativos são contra-indicados em certas fases. Sua resposta garante um protocolo seguro para você.</p>
     <div class="qopts" id="q7">
@@ -452,8 +452,24 @@ input[type=file]{display:none}
     <div style="background:rgba(201,169,122,0.08);border:1px solid rgba(201,169,122,0.2);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--cdim);line-height:1.6">
       ⚠️ <strong style="color:var(--dark)">Atenção:</strong> Durante a gestação ou amamentação, confirme com seu médico antes de iniciar qualquer rotina com ativos.
     </div>
-    <button class="btn" onclick="goValidate('s-q8','q7','single')">Continuar →</button>
+    <button class="btn" onclick="goValidate('s-q-filhos','q7','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q6')">← Voltar</button>
+  </div>
+</div>
+
+
+<!-- Q7b: FILHOS PEQUENOS -->
+<div class="scr" id="s-q-filhos">
+  <div class="inner">
+    <div class="badge">Questionário · 8 de 16</div>
+    <h1>Tens filhos<br><em>menores de 6 anos?</em></h1>
+    <p class="sub">Alguns ativos aplicados na pele podem transferir-se por contacto e causar irritação em crianças pequenas.</p>
+    <div class="qopts" id="q-filhos">
+      <div class="qopt" onclick="togS(this,'q-filhos')"><div class="qcirc"></div><span class="qopt-icon">🙅‍♀️</span><div><div class="qopt-lbl">Não tenho filhos pequenos</div></div></div>
+      <div class="qopt" onclick="togS(this,'q-filhos')"><div class="qcirc"></div><span class="qopt-icon">👶</span><div><div class="qopt-lbl">Sim, tenho filhos menores de 6 anos</div><div class="qopt-sub">A rotina incluirá aviso de tempo seguro antes de pegar no bebé</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q8','q-filhos','single')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q7')">← Voltar</button>
   </div>
 </div>
 
@@ -461,7 +477,7 @@ input[type=file]{display:none}
 <!-- Q8: EXPERIÊNCIA COM ATIVOS -->
 <div class="scr" id="s-q8">
   <div class="inner">
-    <div class="badge">Questionário · 8 de 15</div>
+    <div class="badge">Questionário · 9 de 16</div>
     <h1>Já usou<br><em>ativos na pele?</em></h1>
     <p class="sub">Isso define sua fase de adaptação.</p>
     <div class="qopts" id="q8">
@@ -471,14 +487,14 @@ input[type=file]{display:none}
       <div class="qopt" onclick="togS(this,'q8')"><div class="qcirc"></div><span class="qopt-icon">🔬</span><div><div class="qopt-lbl">Uso avançado</div><div class="qopt-sub">Retinol, ácidos fortes, combinações</div></div></div>
     </div>
     <button class="btn" onclick="goValidate('s-q9','q8','single')">Continuar →</button>
-    <button class="btn2" onclick="go('s-q7')">← Voltar</button>
+    <button class="btn2" onclick="go('s-q-filhos')">← Voltar</button>
   </div>
 </div>
 
 <!-- Q9: MAQUIAGEM -->
 <div class="scr" id="s-q9">
   <div class="inner">
-    <div class="badge">Questionário · 9 de 15</div>
+    <div class="badge">Questionário · 10 de 16</div>
     <h1>Você usa<br><em>maquiagem?</em></h1>
     <div class="qopts" id="q9">
       <div class="qopt" onclick="togS(this,'q9')"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Não uso</div></div></div>
@@ -494,7 +510,7 @@ input[type=file]{display:none}
 <!-- Q10: EXERCÍCIO -->
 <div class="scr" id="s-q10">
   <div class="inner">
-    <div class="badge">Questionário · 10 de 15</div>
+    <div class="badge">Questionário · 11 de 16</div>
     <h1>Pratica<br><em>exercício físico?</em></h1>
     <div class="qopts" id="q10">
       <div class="qopt" onclick="togS(this,'q10')"><div class="qcirc"></div><span class="qopt-icon">🛋️</span><div><div class="qopt-lbl">Não pratico</div></div></div>
@@ -510,7 +526,7 @@ input[type=file]{display:none}
 <!-- Q11: OBJETIVO -->
 <div class="scr" id="s-q11">
   <div class="inner">
-    <div class="badge">Questionário · 11 de 15</div>
+    <div class="badge">Questionário · 12 de 16</div>
     <h1>Qual o seu<br><em>sonho para a pele?</em></h1>
     <p class="sub">Pode selecionar mais de uma.</p>
     <div class="qopts" id="q11">
@@ -528,7 +544,7 @@ input[type=file]{display:none}
 <!-- Q12: ROTINA ATUAL -->
 <div class="scr" id="s-q12">
   <div class="inner">
-    <div class="badge">Questionário · 12 de 15</div>
+    <div class="badge">Questionário · 13 de 16</div>
     <h1>Sua rotina<br><em>hoje é...</em></h1>
     <div class="qopts" id="q12">
       <div class="qopt" onclick="togS(this,'q12')"><div class="qcirc"></div><span class="qopt-icon">0️⃣</span><div><div class="qopt-lbl">Nenhuma</div><div class="qopt-sub">Não faço nada ainda</div></div></div>
@@ -544,7 +560,7 @@ input[type=file]{display:none}
 <!-- Q13: CICLO HORMONAL -->
 <div class="scr" id="s-q13">
   <div class="inner">
-    <div class="badge">Questionário · 13 de 15</div>
+    <div class="badge">Questionário · 14 de 16</div>
     <h1>Sua pele muda<br><em>no mês?</em></h1>
     <p class="sub">Hormônios impactam diretamente a pele.</p>
     <div class="qopts" id="q13">
@@ -561,7 +577,7 @@ input[type=file]{display:none}
 <!-- Q14: TEXTURA PREFERIDA -->
 <div class="scr" id="s-q14">
   <div class="inner">
-    <div class="badge">Questionário · 14 de 15</div>
+    <div class="badge">Questionário · 15 de 16</div>
     <h1>Prefere produtos<br><em>com qual textura?</em></h1>
     <div class="qopts" id="q14">
       <div class="qopt" onclick="togS(this,'q14')"><div class="qcirc"></div><span class="qopt-icon">💨</span><div><div class="qopt-lbl">Levíssima</div><div class="qopt-sub">Gel, água, sérum fluido</div></div></div>
@@ -577,7 +593,7 @@ input[type=file]{display:none}
 <!-- Q15: ALIMENTAÇÃO -->
 <div class="scr" id="s-q15">
   <div class="inner">
-    <div class="badge">Questionário · 15 de 15</div>
+    <div class="badge">Questionário · 16 de 16</div>
     <h1>Como é sua<br><em>alimentação?</em></h1>
     <p class="sub">Açúcar e inflamação afetam diretamente a pele.</p>
     <div class="qopts" id="q15">
@@ -1041,13 +1057,13 @@ var S = {
   nome:'', email:'', senha:'', cidade:'', loc:null,
   fotoRosto:'', fotoProd:'', fotosProds:[], prodTxt:'', modoProd:'',
   ativos:'', maquiagem:'', exercicio:'', objetivo:'', rotina_atual:'', ciclo:'', textura:'', alimentacao:'',
-  gestante:'',
+  gestante:'', filhosPequenos: false,
   protocolo: null
 };
 
 // -- SCREENS --
-const SCR_LIST = ['s-cad','s-lgpd','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-q8','s-q9','s-q10','s-q11','s-q12','s-q13','s-q14','s-q15','s-dicas','s-foto','s-prod','s-dicas-prod','s-gen','s-conf','s-ok'];
-const SCR_LABEL = {'s-lgpd':'Termos','s-cad':'Cadastro','s-q1':'1/15','s-q2':'2/15','s-q3':'3/15','s-q4':'4/15','s-q5':'5/15','s-q6':'6/15','s-q7':'7/15','s-q8':'8/15','s-q9':'9/15','s-q10':'10/15','s-q11':'11/15','s-q12':'12/15','s-q13':'13/15','s-q14':'14/15','s-q15':'15/15','s-dicas':'Dicas','s-foto':'Foto','s-prod':'Produtos','s-dicas-prod':'Dicas Foto','s-gen':'Gerando...','s-conf':'Confirmação','s-ok':'Concluído'};
+const SCR_LIST = ['s-cad','s-lgpd','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-q-filhos','s-q8','s-q9','s-q10','s-q11','s-q12','s-q13','s-q14','s-q15','s-dicas','s-foto','s-prod','s-dicas-prod','s-gen','s-conf','s-ok'];
+const SCR_LABEL = {'s-lgpd':'Termos','s-cad':'Cadastro','s-q1':'1/16','s-q2':'2/16','s-q3':'3/16','s-q4':'4/16','s-q5':'5/16','s-q6':'6/16','s-q7':'7/16','s-q-filhos':'8/16','s-q8':'9/16','s-q9':'10/16','s-q10':'11/16','s-q11':'12/16','s-q12':'13/16','s-q13':'14/16','s-q14':'15/16','s-q15':'16/16','s-dicas':'Dicas','s-foto':'Foto','s-prod':'Produtos','s-dicas-prod':'Dicas Foto','s-gen':'Gerando...','s-conf':'Confirmação','s-ok':'Concluído'};
 
 
 // -- VALIDAÇÃO OBRIGATÓRIA --
@@ -2380,6 +2396,7 @@ async function gerarProtocolo() {
   S.sensibilidade = getSel('q5e')[0] || '';
   S.rotina = getSel('q6')[0] || '';
   S.gestante = getSel('q7')[0] || '';
+  S.filhosPequenos = (getSel('q-filhos')[0] || '').indexOf('Sim') !== -1;
   S.ativos    = getSel('q8')[0] || '';
   S.maquiagem = getSel('q9')[0] || '';
   S.exercicio = getSel('q10')[0] || '';
@@ -2455,7 +2472,7 @@ async function gerarProtocolo() {
     '- Tempo de rotina: '+S.rotina+'\n' +
     '- Sol: '+S.sol+' | Sono: '+S.sono+' | Estresse: '+S.estresse+'\n' +
     '- Água: '+S.agua+' | Sensibilidade: '+S.sensibilidade+'\n' +
-    '- Gestante: '+S.gestante+' | Exercício: '+S.exercicio+'\n' +
+    '- Gestante: '+S.gestante+' | Filhos <6 anos em casa: '+(S.filhosPequenos?'Sim':'Não')+' | Exercício: '+S.exercicio+'\n' +
     '- Ativos: '+S.ativos+' | Maquiagem: '+S.maquiagem+'\n' +
     '- Objetivo: '+S.objetivo+' | Textura: '+S.textura+'\n' +
     '- Ciclo: '+S.ciclo+' | Alimentação: '+S.alimentacao+'\n\n' +
@@ -2483,14 +2500,16 @@ async function gerarProtocolo() {
     '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome comercial exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato","marca":"nome exato","preco":"~X","descricao":"1 frase"}}],' +
     '"sugestoes_substituicoes":[{"produto_atual":"nome exato do produto que a cliente TEM","marca_atual":"marca","icone":"🔄","falta":"o que este produto deveria fazer","conflito":"1 frase amigável — por que trabalha contra o objetivo","motivo":"benefício concreto da troca","economica":{"produto":"nome exato substituto","marca":"nome exato","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"}}],' +
     '"sugestoes_upgrade":[{"melhoria":"título curto do upgrade","icone":"emoji","motivo":"1-2 frases — por que este upgrade faria diferença concreta","economica":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome exato","marca":"nome exato","preco":"~X","descricao":"1 frase"}}],' +
-    '"alertas_validade":[{"produto":"nome do produto","alerta":"1 frase sobre risco de degradação"}]}' +
+    '"alertas_validade":[{"produto":"nome do produto","alerta":"1 frase sobre risco de degradação"}],' +
+    (S.filhosPequenos ? '"aviso_filhos":[{"produto":"nome do produto","ativo":"ativo preocupante","tempo_antes":"X minutos","aviso":"1 frase explicando o risco e o tempo seguro"}]}' : '"aviso_filhos":[]}') +
     '\n\nANÁLISE OBRIGATÓRIA:\n' +
     '• tags: máximo 6 tags descritivas em minúsculas COM HÍFEN onde necessário. Exemplos corretos: "anti-manchas", "anti-idade", "oleosidade", "acne", "K-beauty", "alta tecnologia", "hidratação". NUNCA escreva palavras coladas sem hífen.\n' +
     '• sugestoes: liste TODAS as categorias essenciais ausentes da rotina (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). Uma entrada por categoria faltando. Orçamento mensal: ' + S.investimento + '. Produtos disponíveis em ' + (window._sbpPais==='PT'?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$; também encontram em Droga Raia, Bel Cosméticos e farmácias') + '. Ao sugerir produtos nos 3 tiers, PRIORIZE marcas e linhas que a usuária já usa (ex: se usa COSRX, sugira outros COSRX antes de marcas desconhecidas).\n' +
     '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
     '• sugestoes_upgrade: EXATAMENTE 2 upgrades — produtos que elevariam a rotina ao próximo nível sem adicionar passos desnecessários (ex: booster vitamina C, retinol, péptidos, AHA noturno). Considere o tempo disponível (' + S.rotina + ') e os objetivos da pele. Sugira upgrades que cabem no tempo existente ou substituem um passo.\n' +
     '• sugestoes_substituicoes: APENAS produtos que a cliente JÁ TEM e contradizem diretamente seus objetivos de pele. Se todos compatíveis → retorne [].\n' +
-    '• alertas_validade: ' + (S.modoProd === 'zero' ? 'retorne [] — cliente não tem produtos próprios.' : 'APENAS produtos que a cliente realmente TEM e são sensíveis a luz, calor ou com prazo curto após abertos. Se cliente não tem produtos → retorne [].');
+    '• alertas_validade: ' + (S.modoProd === 'zero' ? 'retorne [] — cliente não tem produtos próprios.' : 'APENAS produtos que a cliente realmente TEM e são sensíveis a luz, calor ou com prazo curto após abertos. Se cliente não tem produtos → retorne [].') + '\n' +
+    (S.filhosPequenos ? '• aviso_filhos: para CADA produto da rotina que contenha ativos que possam ser perigosos por contacto com crianças menores de 6 anos (retinol, AHA/BHA, ácidos, óleos essenciais concentrados, vitamina A, álcool em alta concentração, parfum/fragrance), indique o tempo mínimo seguro a aguardar antes de pegar na criança. Base científica: retinol → 30 min; AHA/BHA → 20 min; vitamina C estabilizada → 10 min; óleos essenciais → 30 min. Se nenhum produto de risco → retorne [].' : '• aviso_filhos: retorne [] (cliente sem filhos pequenos).');
   var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere apenas os protocolos especiais.\n\n' +
     'PERFIL:\n' +
     '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
@@ -2636,7 +2655,8 @@ async function confirmProto() {
       pais: window._sbpPais || 'BR',
       sem_produto: S.modoProd === 'zero',
     rotina: S.rotina,
-    gestante: S.gestante
+    gestante: S.gestante,
+    filhos_pequenos: S.filhosPequenos
   };
   // Salvar local sempre
   localStorage.setItem('sbp_protocolo', JSON.stringify(S.protocolo));

@@ -377,6 +377,9 @@ input[type="file"] { display:none; }
   <button onclick="compartilharProtocolo()" style="margin-top:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;font-family:inherit;font-size:11px;color:rgba(242,232,217,.8);cursor:pointer;letter-spacing:1px">📤 Compartilhar</button>
 </div>
 
+<!-- AVISO FILHOS PEQUENOS -->
+<div id="aviso-filhos-banner" style="display:none;margin:12px 16px 0;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.4);border-radius:12px;padding:14px 16px"></div>
+
 <!-- TABS -->
 <div class="tabs">
   <button class="tab active" data-tab="adaptacao">🌱 Adaptação</button>
@@ -2072,6 +2075,28 @@ function fecharSmartShelf() {
   if (modal) modal.style.display = 'none';
 }
 
+function mostrarAvisoFilhos() {
+  var avisos = protocolo.aviso_filhos || [];
+  if (!avisos.length) return;
+  if (sessionStorage.getItem('sbp_filhos_shown')) return;
+  sessionStorage.setItem('sbp_filhos_shown', '1');
+
+  var el = document.getElementById('aviso-filhos-banner');
+  if (!el) return;
+  el.innerHTML =
+    '<div style="display:flex;align-items:flex-start;gap:12px">' +
+      '<span style="font-size:22px;flex-shrink:0">👶</span>' +
+      '<div style="flex:1">' +
+        '<div style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7a5010;margin-bottom:6px">Atenção — criança pequena em casa</div>' +
+        avisos.map(function(a) {
+          return '<div style="font-size:12px;color:#7a5010;line-height:1.6;margin-bottom:4px">• <strong>' + (a.produto||'') + '</strong> (' + (a.ativo||'') + ') — aguarda <strong>' + (a.tempo_antes||'') + '</strong> antes de pegar no bebé.</div>';
+        }).join('') +
+      '</div>' +
+      '<button onclick="this.closest(\'#aviso-filhos-banner\').style.display=\'none\'" style="background:none;border:none;font-size:18px;cursor:pointer;color:#9a8878;padding:0;flex-shrink:0">×</button>' +
+    '</div>';
+  el.style.display = 'block';
+}
+
 function irParaTrocas() {
   fecharSmartShelf();
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2895,6 +2920,7 @@ if (protocolo && Object.keys(protocolo).length > 0) {
   _atualizarToggleUI();
   setTimeout(buscarImagensSugestoes, 500);
   setTimeout(mostrarSmartShelf, 800);
+  setTimeout(mostrarAvisoFilhos, 1500);
 } else if (auth) {
   // Tem sessão mas sem dados locais — aguarda Firebase recuperar (máx 20s)
   // NUNCA apaga localStorage — apenas redireciona se não vier nada
