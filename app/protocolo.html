@@ -433,18 +433,38 @@ input[type="file"] { display:none; }
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
   <!-- Cuidado extra do dia -->
   <div id="rotina-tratamento-dia" style="display:none"></div>
-  <!-- Controles de áudio -->
+  <!-- Controles de áudio + Express toggle -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(188,154,79,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
+    <button id="toggle-express" onclick="toggleExpress()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(188,154,79,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">⚡ Express</button>
     <span style="font-size:10px;color:var(--muted);flex:1;text-align:right">No iOS, desative o modo silencioso para ouvir</span>
   </div>
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
-    <div class="step-list" id="content-manha"></div>
+  <!-- Banner express (oculto por padrão) -->
+  <div id="express-banner" style="display:none;background:linear-gradient(135deg,rgba(188,154,79,.12),rgba(188,154,79,.06));border:0.5px solid rgba(188,154,79,.35);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:none">
+    <div style="font-size:11px;font-weight:600;color:var(--gold);margin-bottom:2px">⚡ Modo Express ativo</div>
+    <div style="font-size:11px;color:var(--muted)">Passos que nunca podes saltar — mesmo nos dias de preguiça.</div>
   </div>
-  <div class="card">
-    <div class="card-title"><span class="card-title-icon">🌙</span> Noite</div>
-    <div class="step-list" id="content-noite"></div>
+  <!-- Rotina completa -->
+  <div id="rotina-completa">
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
+      <div class="step-list" id="content-manha"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🌙</span> Noite</div>
+      <div class="step-list" id="content-noite"></div>
+    </div>
+  </div>
+  <!-- Rotina express (oculta por padrão) -->
+  <div id="rotina-express" style="display:none">
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">☀️</span> Manhã Express</div>
+      <div class="step-list" id="content-express-manha"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🌙</span> Noite Express</div>
+      <div class="step-list" id="content-express-noite"></div>
+    </div>
   </div>
 </div>
 
@@ -2162,6 +2182,50 @@ function _atualizarToggleUI() {
   if (bVoz) {
     bVoz.style.background = _audioPrefs.voz ? 'var(--gold)' : 'transparent';
     bVoz.style.color = _audioPrefs.voz ? '#fff' : 'var(--gold)';
+  }
+}
+
+// ── Rotina Express ───────────────────────────────────────────────────────────
+var _expressAtivo = false;
+
+function _getExpressSteps(periodo) {
+  var key = 'rotina_express_' + periodo;
+  if (protocolo[key] && protocolo[key].length) return protocolo[key];
+  // Fallback: filtrar da rotina completa por categoria
+  var cats = periodo === 'manha'
+    ? /(limpez|protetor|solar|spf)/i
+    : /(limpez|hidrat|moistur)/i;
+  var full = protocolo['rotina_' + periodo] || [];
+  var filtered = full.filter(function(s) {
+    return cats.test(s.categoria || '') || cats.test(s.produto || '');
+  });
+  // Se nenhum match, pegar os 2 primeiros passos (limpeza é sempre o primeiro)
+  return filtered.length ? filtered : full.slice(0, 2);
+}
+
+function toggleExpress() {
+  _expressAtivo = !_expressAtivo;
+  var btn = document.getElementById('toggle-express');
+  var banner = document.getElementById('express-banner');
+  var completa = document.getElementById('rotina-completa');
+  var express = document.getElementById('rotina-express');
+
+  if (_expressAtivo) {
+    // Renderizar passos express
+    var emEl = document.getElementById('content-express-manha');
+    var enEl = document.getElementById('content-express-noite');
+    if (emEl) emEl.innerHTML = renderSteps(_getExpressSteps('manha'), 'express-manha');
+    if (enEl) enEl.innerHTML = renderSteps(_getExpressSteps('noite'), 'express-noite');
+
+    if (completa) completa.style.display = 'none';
+    if (express) express.style.display = 'block';
+    if (banner) banner.style.display = 'block';
+    if (btn) { btn.style.background = 'var(--gold)'; btn.style.color = '#fff'; }
+  } else {
+    if (completa) completa.style.display = 'block';
+    if (express) express.style.display = 'none';
+    if (banner) banner.style.display = 'none';
+    if (btn) { btn.style.background = 'transparent'; btn.style.color = 'var(--gold)'; }
   }
 }
 

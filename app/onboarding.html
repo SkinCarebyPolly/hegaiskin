@@ -2475,6 +2475,8 @@ async function gerarProtocolo() {
     '"fase_adaptacao":"semana a semana detalhada",' +
     '"sem_produto":'+(S.modoProd==="zero"?'true':'false')+',"rotina_manha":[{"passo":1,"produto":"nome exato ou null se sem produto","categoria":"tipo do produto","ativo_ideal":"ativo recomendado para o perfil","como":"instrução de como aplicar","icone":"emoji","tempo":"Xs ou X min"}],' +
     '"rotina_noite":[{"passo":1,"produto":"nome","como":"instrução","icone":"emoji","tempo":"X min"}],' +
+    '"rotina_express_manha":[{"passo":1,"produto":"nome","como":"instrução curta","icone":"emoji","tempo":"X min"}],' +
+    '"rotina_express_noite":[{"passo":1,"produto":"nome","como":"instrução curta","icone":"emoji","tempo":"X min"}],' +
     '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
     '"score_pele":72,' +
     '"produtos_identificados":[],' +
@@ -2485,6 +2487,7 @@ async function gerarProtocolo() {
     '\n\nANÁLISE OBRIGATÓRIA:\n' +
     '• tags: máximo 6 tags descritivas em minúsculas COM HÍFEN onde necessário. Exemplos corretos: "anti-manchas", "anti-idade", "oleosidade", "acne", "K-beauty", "alta tecnologia", "hidratação". NUNCA escreva palavras coladas sem hífen.\n' +
     '• sugestoes: liste TODAS as categorias essenciais ausentes da rotina (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). Uma entrada por categoria faltando. Orçamento mensal: ' + S.investimento + '. Produtos disponíveis em ' + (window._sbpPais==='PT'?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$; também encontram em Droga Raia, Bel Cosméticos e farmácias') + '. Ao sugerir produtos nos 3 tiers, PRIORIZE marcas e linhas que a usuária já usa (ex: se usa COSRX, sugira outros COSRX antes de marcas desconhecidas).\n' +
+    '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
     '• sugestoes_upgrade: EXATAMENTE 2 upgrades — produtos que elevariam a rotina ao próximo nível sem adicionar passos desnecessários (ex: booster vitamina C, retinol, péptidos, AHA noturno). Considere o tempo disponível (' + S.rotina + ') e os objetivos da pele. Sugira upgrades que cabem no tempo existente ou substituem um passo.\n' +
     '• sugestoes_substituicoes: APENAS produtos que a cliente JÁ TEM e contradizem diretamente seus objetivos de pele. Se todos compatíveis → retorne [].\n' +
     '• alertas_validade: produtos sensíveis a luz, calor ou com prazo curto após abertos.';
