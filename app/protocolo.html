@@ -1580,26 +1580,61 @@ async function handleEvoPhoto(e) {
 
   const reader = new FileReader();
   reader.onload = async (ev) => {
-    const b64 = ev.target.result.split(',')[1];
-    const dataUrl = ev.target.result;
+    // Comprimir imagem para máx 800px antes de enviar à API
+    const dataUrl = await new Promise(function(resolve) {
+      var img = new Image();
+      img.onload = function() {
+        var maxW = 800, maxH = 800;
+        var w = img.width, h = img.height;
+        if (w > maxW || h > maxH) {
+          var ratio = Math.min(maxW/w, maxH/h);
+          w = Math.round(w * ratio); h = Math.round(h * ratio);
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = ev.target.result;
+    });
+    const b64 = dataUrl.split(',')[1];
+
     const area = document.getElementById('evo-photo-area');
     area.innerHTML = `<img src="${dataUrl}" style="width:100%;border-radius:8px">`;
     area.classList.add('has-photo');
     document.getElementById('evo-loading').style.display = 'flex';
 
     const fotoAnterior = historico.length > 0 ? historico[historico.length-1] : null;
+    const fotoOnboardRaw = localStorage.getItem('sbp_foto_rosto');
+    const fotoBase = fotoAnterior
+      ? fotoAnterior.foto
+      : (fotoOnboardRaw ? (fotoOnboardRaw.startsWith('data:') ? fotoOnboardRaw : 'data:image/jpeg;base64,' + fotoOnboardRaw) : null);
 
     try {
-      var promptTexto = 'Perfil: pele ' + (perfil.tipoPele||'não informado') + ', preocupações: ' + ((perfil.incomodos||[]).join(', ')||'não informadas') + '. ' +
-        (fotoAnterior
-          ? 'A primeira imagem é do mês anterior (' + getMesLabel(fotoAnterior.mes) + '). A segunda é do mês atual (' + getMesLabel(mesAtual) + '). Compare as duas e destaque as melhorias visíveis e o que ainda precisa de atenção.'
-          : 'Esta é a primeira foto — estabeleça uma linha base detalhada da pele agora.') +
-        ' Seja específica, positiva e profissional. Máximo 3 parágrafos curtos.';
+      var temComparativo = !!fotoBase;
+      var promptTexto = temComparativo
+        ? 'Analisa estas duas fotos de pele da mesma pessoa.\n\n' +
+          'FOTO 1 (referência — ' + (fotoAnterior ? getMesLabel(fotoAnterior.mes) : 'início da jornada') + ')\n' +
+          'FOTO 2 (hoje — ' + getMesLabel(mesAtual) + ')\n\n' +
+          'Perfil: pele ' + (perfil.tipoPele||'não informada') + ', objetivos: ' + ((perfil.incomodos||[]).join(', ')||'não informados') + '.\n\n' +
+          'Escreve uma análise comparativa bonita e motivadora com estas 3 secções obrigatórias:\n\n' +
+          '✨ O QUE MELHOROU\nDescreve 2-3 melhorias visíveis de forma específica e positiva.\n\n' +
+          '🎯 O QUE AINDA PODES TRABALHAR\nAponta 1-2 áreas com sugestões práticas, sem ser negativa.\n\n' +
+          '💛 MENSAGEM DA POLLY\nUma frase calorosa e motivadora personalizada para ela continuar a jornada.\n\n' +
+          'Tom: amiga especialista, calorosa, positiva. Nunca use termos técnicos difíceis.'
+        : 'Esta é a primeira foto de evolução desta utilizadora.\n\n' +
+          'Perfil: pele ' + (perfil.tipoPele||'não informada') + ', objetivos: ' + ((perfil.incomodos||[]).join(', ')||'não informados') + '.\n\n' +
+          'Escreve uma análise inicial bonita com estas 3 secções obrigatórias:\n\n' +
+          '✨ A TUA PELE HOJE\nDescreve o estado atual da pele de forma específica e positiva — pontos fortes que já tem.\n\n' +
+          '🎯 O QUE VAMOS TRABALHAR\nMenciona 1-2 objetivos visíveis que a rotina vai melhorar.\n\n' +
+          '💛 MENSAGEM DA POLLY\nUma frase de boas-vindas calorosa — ela está a começar uma jornada incrível!\n\n' +
+          'Tom: amiga especialista, calorosa, encorajadora. Nunca use termos técnicos difíceis.';
 
       // Montar parts com 1 ou 2 imagens
       var parts = [];
-      if (fotoAnterior && fotoAnterior.foto) {
-        parts.push({ inlineData: { mimeType: 'image/jpeg', data: fotoAnterior.foto.split(',')[1] } });
+      if (temComparativo && fotoBase) {
+        var b64base = fotoBase.indexOf(',') !== -1 ? fotoBase.split(',')[1] : fotoBase;
+        parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64base } });
       }
       parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
       parts.push({ text: promptTexto });
@@ -1609,8 +1644,8 @@ async function handleEvoPhoto(e) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: parts }],
-          systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Analisa fotos de pele e dá feedback motivador em português.' }] },
-          generationConfig: { maxOutputTokens: 800, thinkingConfig: { thinkingBudget: 0 } }
+          systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Analisa fotos de pele com olhar profissional e empático. Responde sempre em português.' }] },
+          generationConfig: { maxOutputTokens: 1400 }
         })
       });
       var respData = await resp.json();
@@ -1623,7 +1658,10 @@ async function handleEvoPhoto(e) {
       saveEvoHistorico(historico);
 
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted);line-height:1.8">${texto.replace(/\n/g,'<br>')}</p>`;
+      document.getElementById('evo-analysis-text').innerHTML =
+        '<div style="font-size:14px;color:var(--dark);line-height:1.9">' +
+        texto.replace(/\n\n/g,'</p><p style="margin-top:14px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>' +
+        '</div>';
 
       const statusEl = document.getElementById('evo-mes-status');
       if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
