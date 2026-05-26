@@ -394,6 +394,20 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="config">⚙️ Config</button>
 </div>
 
+<!-- FRASE + DICA DO DIA -->
+<div id="daily-banner" style="display:none;padding:0 16px;margin-top:12px">
+  <div id="daily-frase-card" style="display:none;background:linear-gradient(135deg,#3D2010,#5a3018);border-radius:12px;padding:14px 16px;margin-bottom:8px;position:relative">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,180,140,.6);margin-bottom:6px">✨ Frase do dia</div>
+    <div id="daily-frase-txt" style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#f2e8d9;line-height:1.5"></div>
+    <button onclick="dispensarFraseDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.5);padding:0">×</button>
+  </div>
+  <div id="daily-dica-card" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.3);border-radius:12px;padding:14px 16px;position:relative">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px">💡 Dica do dia</div>
+    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6"></div>
+    <button onclick="dispensarDicaDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:0">×</button>
+  </div>
+</div>
+
 <!-- ══ ADAPTAÇÃO ══ -->
 <div class="section active" id="tab-adaptacao">
 
@@ -2076,6 +2090,101 @@ function mostrarSmartShelf() {
   if (modal) { modal.style.display = 'flex'; }
 }
 
+// ── CONTEÚDO DIÁRIO (frase + dica) ──────────────────────────────────────────
+
+function _diaDoAno() {
+  var now = new Date();
+  var start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now - start) / 86400000);
+}
+
+function _hojeStr() { return new Date().toISOString().slice(0, 10); }
+
+async function iniciarConteudoDiario() {
+  var stored = JSON.parse(localStorage.getItem('sbp_daily_content') || 'null');
+
+  // Gerar se não existir
+  if (!stored || !stored.dicas || !stored.frases) {
+    stored = await gerarConteudoDiario();
+    if (!stored) return;
+  }
+
+  var hoje = _hojeStr();
+  var dia = _diaDoAno();
+  var banner = document.getElementById('daily-banner');
+  if (banner) banner.style.display = 'block';
+
+  // Frase do dia
+  var fraseCard = document.getElementById('daily-frase-card');
+  var fraseTxt = document.getElementById('daily-frase-txt');
+  if (fraseCard && fraseTxt && stored.frases.length) {
+    var dispensadaFrase = localStorage.getItem('sbp_frase_dispensada');
+    if (dispensadaFrase !== hoje) {
+      fraseTxt.textContent = stored.frases[dia % stored.frases.length];
+      fraseCard.style.display = 'block';
+    }
+  }
+
+  // Dica do dia
+  var dicaCard = document.getElementById('daily-dica-card');
+  var dicaTxt = document.getElementById('daily-dica-txt');
+  if (dicaCard && dicaTxt && stored.dicas.length) {
+    var dispensadaDica = localStorage.getItem('sbp_dica_dispensada');
+    if (dispensadaDica !== hoje) {
+      dicaTxt.textContent = stored.dicas[dia % stored.dicas.length];
+      dicaCard.style.display = 'block';
+    }
+  }
+}
+
+async function gerarConteudoDiario() {
+  try {
+    var p = perfil || {};
+    var system = 'Especialista sênior em skincare e bem-estar feminino. Responde EXCLUSIVAMENTE em JSON válido.';
+    var prompt = 'Cria conteúdo diário personalizado para uma app de skincare.\n\n' +
+      'PERFIL:\n' +
+      '- Tipo de pele: ' + (p.tipoPele || 'mista') + '\n' +
+      '- Objetivos: ' + ((p.incomodos || []).join(', ') || 'hidratação, uniformidade') + '\n' +
+      '- Exercício: ' + (p.exercicio || 'não informado') + '\n' +
+      '- Maquiagem: ' + (p.maquiagem || 'não informado') + '\n\n' +
+      'Gera EXATAMENTE:\n' +
+      '• 10 "dicas" — dicas práticas de skincare e bem-estar personalizadas. INCLUI SEMPRE: dica de fronha/fronha de cetim (ótima para evitar rugas de expressão E para o cabelo não embaraçar — funciona para todas independente de como dormem). Outras dicas: hidratação, alimentação, protetor solar, exercício, maquiagem, sono, stress, etc. Curtas, 1-2 frases, em português europeu.\n' +
+      '• 10 "frases" — frases de autoestima e motivação para a jornada de skincare. Calorosas, inspiradoras, em português europeu. Ex: "A tua pele é o reflexo do amor que dás a ti mesma."\n\n' +
+      'Retorne APENAS JSON: {"dicas":["...","..."],"frases":["...","..."]}';
+
+    var raw = await geminiChat(system, prompt, 2000);
+    var clean = raw.replace(/```json|```/g, '').trim();
+    var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
+    if (ji === -1 || je === -1) return null;
+    var data = JSON.parse(clean.substring(ji, je + 1));
+    if (!data.dicas || !data.frases) return null;
+
+    localStorage.setItem('sbp_daily_content', JSON.stringify(data));
+
+    // Sincronizar com Firestore
+    try {
+      var u = window._currentUser || (window._fbAuth && window._fbAuth.currentUser);
+      if (u && window._fbDb) {
+        window._fbDb.collection('protocolos').doc(u.uid).set({ daily_content: data }, { merge: true });
+      }
+    } catch(e) {}
+
+    return data;
+  } catch(e) { return null; }
+}
+
+function dispensarFraseDia() {
+  localStorage.setItem('sbp_frase_dispensada', _hojeStr());
+  var el = document.getElementById('daily-frase-card');
+  if (el) el.style.display = 'none';
+}
+
+function dispensarDicaDia() {
+  localStorage.setItem('sbp_dica_dispensada', _hojeStr());
+  var el = document.getElementById('daily-dica-card');
+  if (el) el.style.display = 'none';
+}
+
 function fecharSmartShelf() {
   var modal = document.getElementById('smart-shelf-modal');
   if (modal) modal.style.display = 'none';
@@ -2994,6 +3103,7 @@ if (protocolo && Object.keys(protocolo).length > 0) {
   setTimeout(buscarImagensSugestoes, 500);
   setTimeout(mostrarSmartShelf, 800);
   setTimeout(mostrarAvisoFilhos, 1500);
+  setTimeout(iniciarConteudoDiario, 2000);
 } else if (auth) {
   // Tem sessão mas sem dados locais — aguarda Firebase recuperar (máx 20s)
   // NUNCA apaga localStorage — apenas redireciona se não vier nada
