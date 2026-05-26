@@ -539,6 +539,54 @@ Contexto da cliente: [perfil completo + lista de produtos do localStorage]
 
 ---
 
+### FLUXO K — Conteúdo Diário (Dica + Frase do dia)
+
+**Ficheiro:** `app/protocolo.html` · **Funções:** `iniciarConteudoDiario()` / `gerarConteudoDiario()`
+
+- **Motor:** Gemini 2.5 Flash (Text)
+- **Trigger:** Automático ao carregar protocolo — gerado **uma única vez**, depois servido do cache
+- **thinkingBudget:** 0 · **maxTokens:** 4000
+- **Regeneração:** Automática se conteúdo guardado tiver menos de 25 itens (versão antiga)
+
+**System prompt:**
+```
+Especialista sênior em skincare e bem-estar feminino. Responde EXCLUSIVAMENTE em JSON válido.
+```
+
+**User prompt:**
+```
+Cria conteúdo diário personalizado para uma app de skincare.
+
+PERFIL DA UTILIZADORA:
+- Tipo de pele: [tipo]
+- Objetivos: [lista de incômodos]
+- Exercício: [frequência]
+- Maquiagem: [uso]
+
+Gera EXATAMENTE 30 "dicas" e 30 "frases".
+
+REGRAS OBRIGATÓRIAS PARA AS DICAS:
+• Linguagem simples de amiga próxima. NUNCA uses termos técnicos como comedogénico,
+  queratolítico, emoliente, oclusivo, humectante, seborreico, etc.
+• Curtas — 1 a 2 frases. Todas diferentes entre si.
+• Inclui sempre: fronha de cetim (evita marcas de rugas E cabelo não embaraça),
+  protetor solar, hidratação, sono, exercício, maquilhagem, stress, alimentação, etc.
+• Personalizadas para o perfil acima.
+
+REGRAS PARA AS FRASES:
+• Autoestima e motivação para a jornada de skincare.
+• Calorosas, curtas, inspiradoras. Em português europeu. Todas diferentes.
+
+Retorne APENAS JSON: {"dicas":["...30 dicas..."],"frases":["...30 frases..."]}
+```
+
+**Resposta usada para:** Guardar em `localStorage` (`sbp_daily_content`) + Firestore (`daily_content`).
+Rotação por `dia_do_ano % 30`. Cada card descartável por dia com ×.
+
+**Visual:** Frase (fundo escuro) + Dica (fundo dourado), ambas abaixo das abas.
+
+---
+
 ## 4. MAPA COMPLETO DE CHAMADAS DE IA
 
 | # | Ficheiro | Motor | Modelo | Trigger | Função | maxTokens | Thinking |
@@ -555,6 +603,7 @@ Contexto da cliente: [perfil completo + lista de produtos do localStorage]
 | E | protocolo | Gemini | 2.5-flash | Upload foto cabelo | fetch inline | 2000 | 0 |
 | F | protocolo | Gemini | 2.5-flash | Pergunta aba Rotina | `geminiChat()` | 2000 | 0 |
 | G | chat | Gemini | 2.5-flash | Mensagem chat | `callGemini()` | 2048 | 0 |
+| K | protocolo | Gemini | 2.5-flash | 1ª abertura (sem cache) | `gerarConteudoDiario()` | 4000 | 0 |
 
 ---
 
@@ -620,7 +669,7 @@ CHAT POLLY (chat.html)
 | PWA cache versão | `hegai-v9` (Service Worker) |
 | Auth | Firebase Auth (email + Google OAuth) |
 | Database | Firestore → colecção `protocolos` → doc `{uid}` |
-| Dados locais | `localStorage` → `sbp_protocolo`, `sbp_perfil`, `sbp_ativo`, `sbp_cabelo`, `sbp_chat_meta` |
+| Dados locais | `localStorage` → `sbp_protocolo`, `sbp_perfil`, `sbp_ativo`, `sbp_cabelo`, `sbp_chat_meta`, `sbp_daily_content`, `sbp_frase_dispensada`, `sbp_dica_dispensada` |
 
 ---
 
