@@ -951,19 +951,25 @@ function renderApp() {
 }
 
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
+function _geminiText(data) {
+  if (!data.candidates || !data.candidates[0]) return '';
+  var parts = data.candidates[0].content.parts || [];
+  var p = parts.filter(function(x) { return !x.thought; }).pop() || parts[parts.length - 1] || {};
+  return (p.text || '').replace(/```json|```/g, '').trim();
+}
+
 async function geminiChat(systemPrompt, userPrompt, maxTokens) {
   var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: systemPrompt + '\n\n' + userPrompt }] }],
-      generationConfig: { maxOutputTokens: maxTokens || 2000 }
+      generationConfig: { maxOutputTokens: maxTokens || 2000, thinkingConfig: { thinkingBudget: 0 } }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
-  return text.replace(/```json|```/g, '').trim();
+  return _geminiText(data);
 }
 
 // ── Helper: Gemini para imagem + texto ───────────────────────────────────
@@ -977,13 +983,12 @@ async function geminiVisionChat(b64, mimeType, prompt, maxTokens) {
         { text: prompt }
       ]}],
       systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Retorne APENAS JSON válido.' }] },
-      generationConfig: { maxOutputTokens: maxTokens || 800 }
+      generationConfig: { maxOutputTokens: maxTokens || 800, thinkingConfig: { thinkingBudget: 0 } }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
-  return text.replace(/```json|```/g, '').trim();
+  return _geminiText(data);
 }
 
 
@@ -1473,12 +1478,12 @@ async function handleEvoPhoto(e) {
         body: JSON.stringify({
           contents: [{ parts: parts }],
           systemInstruction: { parts: [{ text: 'Especialista em cosmetologia e skincare. Analisa fotos de pele e dá feedback motivador em português.' }] },
-          generationConfig: { maxOutputTokens: 800 }
+          generationConfig: { maxOutputTokens: 800, thinkingConfig: { thinkingBudget: 0 } }
         })
       });
       var respData = await resp.json();
       if (respData.error) throw new Error(respData.error.message || 'Erro API');
-      var texto = respData.candidates && respData.candidates[0] ? (respData.candidates[0].content.parts[0].text || '') : '';
+      var texto = _geminiText(respData);
 
       // Salvar no histórico
       const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: texto, data: new Date().toISOString() };
@@ -1635,10 +1640,10 @@ async function gerarProtocoloCapilar(e) {
         var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+GEMINI_KEY, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({"contents":[{"parts":[{"inline_data":{"mime_type":"image/jpeg","data":resized}},{"text":prompt}]}],"generationConfig":{"responseMimeType":"application/json","maxOutputTokens":2000}})
+          body: JSON.stringify({"contents":[{"parts":[{"inline_data":{"mime_type":"image/jpeg","data":resized}},{"text":prompt}]}],"generationConfig":{"responseMimeType":"application/json","maxOutputTokens":2000,"thinkingConfig":{"thinkingBudget":0}}})
         });
         var data = await resp.json();
-        var raw = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        var raw = _geminiText(data);
         var hairP = JSON.parse(raw.replace(/```json|```/g,'').trim());
         localStorage.setItem('sbp_cabelo', JSON.stringify(hairP));
         renderHairProtocolo(hairP);
@@ -2628,13 +2633,12 @@ async function geminiVision(b64, prompt, maxTokens) {
         { text: prompt }
       ]}],
       systemInstruction: { parts: [{ text: 'Especialista em cosmetologia. Retorne APENAS JSON válido.' }] },
-      generationConfig: { maxOutputTokens: maxTokens || 800 }
+      generationConfig: { maxOutputTokens: maxTokens || 800, thinkingConfig: { thinkingBudget: 0 } }
     })
   });
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro API');
-  var text = data.candidates && data.candidates[0] ? (data.candidates[0].content.parts[0].text || '') : '';
-  return text.replace(/```json|```/g, '').trim();
+  return _geminiText(data);
 }
 
 function tirarFotoEvolucao() {

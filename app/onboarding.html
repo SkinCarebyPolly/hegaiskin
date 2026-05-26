@@ -2330,10 +2330,10 @@ async function analisarFotoGemini(b64) {
     });
     var data = await resp.json();
     if (data.error) throw new Error('[Gemini] ' + (data.error.message || 'Erro API Gemini'));
-    var raw = data.candidates && data.candidates[0] && data.candidates[0].content &&
-              data.candidates[0].content.parts && data.candidates[0].content.parts[0]
-              ? data.candidates[0].content.parts[0].text : '{}';
-    var result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    var _parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
+    var _tp = _parts.filter(function(x) { return !x.thought; }).pop() || _parts[_parts.length - 1] || {};
+    var raw = (_tp.text || '{}').replace(/```json|```/g, '').trim();
+    var result = JSON.parse(raw);
     return result;
   } catch(e) {
     console.error('[Gemini] analisarFotoGemini erro:', e);
