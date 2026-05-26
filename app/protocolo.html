@@ -1195,6 +1195,11 @@ async function adicionarSugestaoRotina(produto, pendente) {
   }
 }
 
+function _ehEssencial(s) {
+  var nome = ((s.falta || '') + ' ' + (s.categoria || '')).toLowerCase();
+  return /limpador|cleanser|protetor|sunscreen|hidratante|moistur|creme\s*(dia|noite)|b[áa]sico/.test(nome);
+}
+
 function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
   if (!sugEl) return;
@@ -1202,21 +1207,30 @@ function renderSugestoes() {
   var semProd    = protocolo.sem_produto === true;
   var trocas     = protocolo.sugestoes_substituicoes || [];
   var temTrocas  = trocas.length > 0;
-  var subTab     = window._subTabAtivo || (semProd ? 'rotina' : 'boosters');
+
+  // Classificar sugestões: essenciais (limpador, protetor, hidratante) vs extras (boosters)
+  var _todasSug     = protocolo.sugestoes || [];
+  var _sugEssenciais = semProd
+    ? (protocolo.sugestoes_rotina || _todasSug)
+    : _todasSug.filter(_ehEssencial);
+  var _sugBoosters  = semProd ? [] : _todasSug.filter(function(s){ return !_ehEssencial(s); });
+  var temEssenciais = _sugEssenciais.length > 0;
+
+  var subTab = window._subTabAtivo || (temEssenciais ? 'rotina' : 'boosters');
 
   // Mostrar / ocultar subtabs conforme contexto
   var btnR = document.getElementById('subtab-rotina');
   var btnT = document.getElementById('subtab-trocas');
-  if (btnR) btnR.style.display = semProd ? 'inline-block' : 'none';
+  if (btnR) btnR.style.display = temEssenciais ? 'inline-block' : 'none';
   var descR = document.getElementById('subtab-rotina-desc');
-  if (descR && !semProd) descR.style.display = 'none';
+  if (descR) descR.style.display = (subTab === 'rotina' && temEssenciais) ? 'block' : 'none';
   if (btnT) btnT.style.display = temTrocas ? 'inline-block' : 'none';
 
   // Renderizar banner de alertas de validade
   renderAlertasValidade();
 
   if (!window._subTabAtivo) {
-    window._subTabAtivo = semProd ? 'rotina' : 'boosters';
+    window._subTabAtivo = temEssenciais ? 'rotina' : 'boosters';
     switchSubTab(window._subTabAtivo);
     return;
   }
@@ -1228,7 +1242,7 @@ function renderSugestoes() {
     return;
   }
 
-  var sugestoes    = subTab === 'rotina' ? (protocolo.sugestoes_rotina || protocolo.sugestoes || []) : (protocolo.sugestoes || []);
+  var sugestoes = subTab === 'rotina' ? _sugEssenciais : _sugBoosters;
   var listaCompras = protocolo.lista_compras || [];
   var af           = getAfiliados();
   sugEl.innerHTML  = '';
@@ -1270,7 +1284,7 @@ function renderSugestoes() {
               '<div style="flex:1">' +
                 '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
                 '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
-                (_rotinaCheio ? '<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;background:rgba(255,193,7,.12);border-radius:20px;font-size:10px;color:#b8860b;font-weight:500">⏱ Pode exigir ajuste no tempo da sua rotina</div>' : '') +
+                (subTab !== 'rotina' && _rotinaCheio ? '<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;background:rgba(255,193,7,.12);border-radius:20px;font-size:10px;color:#b8860b;font-weight:500">⏱ Pode exigir ajuste no tempo da sua rotina</div>' : '') +
               '</div>' +
             '</div>' +
             '<div id="'+cardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
