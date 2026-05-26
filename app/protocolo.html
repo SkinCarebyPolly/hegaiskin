@@ -874,7 +874,9 @@ function renderApp() {
   document.getElementById('hero-tipo').textContent = perfil.tipoPele || '';
   const tagsEl = document.getElementById('hero-tags');
   (perfil.tags || []).forEach(function(tag) {
-    var t = (tag || '').replace(/^anti([a-záàâãéêíóôõúçA-Z])/u, 'anti-$1');
+    var t = (tag || '')
+      .replace(/^anti([a-záàâãéêíóôõúçA-Z])/u, 'anti-$1')
+      .replace(/anti-p(manchas|acne|idade|rugas)/i, 'anti-$1');
     const span = document.createElement('span');
     span.className = 'hero-tag';
     span.textContent = t;
@@ -2103,8 +2105,8 @@ function _hojeStr() { return new Date().toISOString().slice(0, 10); }
 async function iniciarConteudoDiario() {
   var stored = JSON.parse(localStorage.getItem('sbp_daily_content') || 'null');
 
-  // Gerar se não existir
-  if (!stored || !stored.dicas || !stored.frases) {
+  // Gerar se não existir ou se foi gerado com a versão antiga (menos de 25 itens)
+  if (!stored || !stored.dicas || !stored.frases || stored.dicas.length < 25) {
     stored = await gerarConteudoDiario();
     if (!stored) return;
   }
@@ -2142,17 +2144,29 @@ async function gerarConteudoDiario() {
     var p = perfil || {};
     var system = 'Especialista sênior em skincare e bem-estar feminino. Responde EXCLUSIVAMENTE em JSON válido.';
     var prompt = 'Cria conteúdo diário personalizado para uma app de skincare.\n\n' +
-      'PERFIL:\n' +
+      'PERFIL DA UTILIZADORA:\n' +
       '- Tipo de pele: ' + (p.tipoPele || 'mista') + '\n' +
       '- Objetivos: ' + ((p.incomodos || []).join(', ') || 'hidratação, uniformidade') + '\n' +
       '- Exercício: ' + (p.exercicio || 'não informado') + '\n' +
       '- Maquiagem: ' + (p.maquiagem || 'não informado') + '\n\n' +
-      'Gera EXATAMENTE:\n' +
-      '• 10 "dicas" — dicas práticas de skincare e bem-estar personalizadas. INCLUI SEMPRE: dica de fronha/fronha de cetim (ótima para evitar rugas de expressão E para o cabelo não embaraçar — funciona para todas independente de como dormem). Outras dicas: hidratação, alimentação, protetor solar, exercício, maquiagem, sono, stress, etc. Curtas, 1-2 frases, em português europeu.\n' +
-      '• 10 "frases" — frases de autoestima e motivação para a jornada de skincare. Calorosas, inspiradoras, em português europeu. Ex: "A tua pele é o reflexo do amor que dás a ti mesma."\n\n' +
-      'Retorne APENAS JSON: {"dicas":["...","..."],"frases":["...","..."]}';
+      'Gera EXATAMENTE 30 "dicas" e 30 "frases".\n\n' +
+      'REGRAS OBRIGATÓRIAS PARA AS DICAS:\n' +
+      '• Linguagem simples de amiga próxima — como se estivesses a mandar mensagem. NUNCA uses palavras técnicas como comedogénico, queratolítico, emoliente, oclusivo, humectante, seborreico, etc. Se precisares explicar um conceito, usa palavras do dia a dia.\n' +
+      '• Curtas e directas — 1 a 2 frases no máximo.\n' +
+      '• Variadas — cobre: hidratação, protetor solar, sono, alimentação, stress, exercício, maquilhagem, remoção de maquilhagem, água, toque na cara, troca de toalha, limpeza do telemóvel, fronha de cetim (ótima tanto para evitar marcas de rugas como para o cabelo não embaraçar — menciona os dois benefícios), temperatura da água, etc.\n' +
+      '• Personalizadas para o perfil acima.\n' +
+      '• Todas diferentes entre si.\n\n' +
+      'EXEMPLOS DE DICAS BEM ESCRITAS:\n' +
+      '"Trocas a tua fronha por uma de cetim? É suave para a pele e evita que o cabelo embarace durante a noite — dois problemas resolvidos de uma vez!"\n' +
+      '"Não te esqueças de aplicar o protetor solar mesmo em dias nublados — a radiação UV passa pelas nuvens e é a principal causa de manchas."\n' +
+      '"Bebe um copo de água antes do café da manhã. A pele hidratada por dentro reflete-se no brilho que vês ao espelho."\n\n' +
+      'REGRAS PARA AS FRASES:\n' +
+      '• Frases de autoestima e motivação para a jornada de skincare.\n' +
+      '• Calorosas, curtas, inspiradoras. Em português europeu.\n' +
+      '• Todas diferentes entre si.\n\n' +
+      'Retorne APENAS JSON: {"dicas":["...30 dicas..."],"frases":["...30 frases..."]}';
 
-    var raw = await geminiChat(system, prompt, 2000);
+    var raw = await geminiChat(system, prompt, 4000);
     var clean = raw.replace(/```json|```/g, '').trim();
     var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
     if (ji === -1 || je === -1) return null;
