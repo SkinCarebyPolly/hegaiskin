@@ -1524,7 +1524,12 @@ function initEvolucao() {
     const area = document.getElementById('evo-photo-area');
     area.innerHTML = `<img src="${fotoMes.foto}" style="width:100%;border-radius:8px">`;
     area.classList.add('has-photo');
-    if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
+    if (statusEl) {
+      var _devEmail = 'pollianna.machado@joinusit.pt';
+      var _isdev = window._currentUser && window._currentUser.email === _devEmail;
+      statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>` +
+        (_isdev ? ' <button onclick="apagarFotoMes()" style="margin-left:10px;font-size:11px;color:var(--red);background:none;border:0.5px solid rgba(184,90,80,.3);border-radius:20px;padding:3px 10px;cursor:pointer;font-family:inherit">🗑 Apagar</button>' : '');
+    }
 
     if (fotoMes.analise) {
       document.getElementById('evo-analysis').style.display = 'block';
@@ -1535,6 +1540,19 @@ function initEvolucao() {
   }
 
   renderHistorico(historico, mesAtual);
+}
+
+function apagarFotoMes() {
+  var historico = getEvoHistorico();
+  var mesAtual = getMesAtual();
+  var novo = historico.filter(function(h) { return h.mes !== mesAtual; });
+  saveEvoHistorico(novo);
+  initEvolucao();
+  document.getElementById('evo-analysis').style.display = 'none';
+  var placeholder = document.getElementById('evo-agora-placeholder');
+  var agoraImg = document.getElementById('evo-foto-agora');
+  if (placeholder) placeholder.style.display = 'flex';
+  if (agoraImg) { agoraImg.style.display = 'none'; agoraImg.src = ''; }
 }
 
 function renderHistorico(historico, mesAtual) {
