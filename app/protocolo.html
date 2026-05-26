@@ -751,13 +751,14 @@ function buildTierContent(s, tier, af) {
 
   var btns = '';
 
-  // Farmácia primeiro (BR), depois Amazon, depois ML
-  if (farmaciaUrl) btns += '<a href="' + farmaciaUrl + '" target="_blank" style="' + btnStyle + '">💊 ' + af.farmacia.label + '</a>';
+  // Amazon + ML (BR) | YesStyle + Notino (PT) — sem link de farmácia online
   if (amazonUrl)   btns += '<a href="' + amazonUrl   + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label   + '</a>';
   if (mlUrl)       btns += '<a href="' + mlUrl       + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
-  // PT: YesStyle + Notino
   if (ysUrl)       btns += '<a href="' + ysUrl       + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label  + '</a>';
   if (notinoUrl)   btns += '<a href="' + notinoUrl   + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label    + '</a>';
+  var _lojasFisicasHtml = af.farmacia
+    ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:10px">🏪 Encontre também em: <strong>Droga Raia</strong> · <strong>Bel Cosméticos</strong> · <strong>Sephora</strong></div>'
+    : '';
 
   return '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
            '<div>' +
@@ -767,7 +768,8 @@ function buildTierContent(s, tier, af) {
            '<div style="font-size:15px;font-weight:500;color:var(--gold);white-space:nowrap;margin-left:8px">' + (t.preco || '') + '</div>' +
          '</div>' +
          (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(212,168,83,.06);border-radius:8px;border-left:2px solid rgba(212,168,83,.3)">"' + t.descricao + '"</div>' : '') +
-         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">' + btns + '</div>' +
+         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' + btns + '</div>' +
+         _lojasFisicasHtml +
          (function() {
            var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
            window[key] = t;
@@ -1183,7 +1185,19 @@ function renderSugestoes() {
   var sugestoes    = subTab === 'rotina' ? (protocolo.sugestoes_rotina || protocolo.sugestoes || []) : (protocolo.sugestoes || []);
   var listaCompras = protocolo.lista_compras || [];
   var af           = getAfiliados();
+  sugEl.innerHTML  = '';
 
+  // Calcular se a rotina já está no limite de tempo
+  var _maxMin = (function() {
+    var r = perfil.rotina || '';
+    var m = r.match(/(\d+)(?:\s*a\s*(\d+))?\s*min/i);
+    return m ? parseInt(m[2] || m[1]) : 999;
+  })();
+  var _totalMin = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || []).reduce(function(acc, s) {
+    var m = (s.tempo || '').match(/(\d+)/g);
+    return acc + (m ? parseInt(m[m.length - 1]) : 1);
+  }, 0);
+  var _rotinaCheio = _totalMin >= _maxMin * 0.85;
 
   if (sugestoes.length > 0) {
     sugestoes.forEach(function(s, si) {
@@ -1210,6 +1224,7 @@ function renderSugestoes() {
               '<div style="flex:1">' +
                 '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
                 '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
+                (_rotinaCheio ? '<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;background:rgba(255,193,7,.12);border-radius:20px;font-size:10px;color:#b8860b;font-weight:500">⏱ Pode exigir ajuste no tempo da sua rotina</div>' : '') +
               '</div>' +
             '</div>' +
             '<div id="'+cardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
