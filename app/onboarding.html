@@ -200,11 +200,11 @@ input[type=file]{display:none}
 <!-- PWA INSTALL BANNER -->
 <div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FDF8F0;border:1px solid #e0bc76;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
-  <div style="flex:1">
+  <div id="pwa-banner-text" style="flex:1">
     <div style="font-size:13px;color:#3D2010;font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#e0bc76,#f0d898);border:none;border-radius:8px;padding:8px 14px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#3D2010;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button id="pwa-banner-btn" onclick="installPWA()" style="background:linear-gradient(135deg,#e0bc76,#f0d898);border:none;border-radius:8px;padding:8px 14px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#3D2010;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 <div class="pbar" id="pbar" style="width:0%"></div>
@@ -2668,12 +2668,18 @@ async function confirmProto() {
 
 // -- PWA --
 var _deferredPrompt = null;
+var _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+var _isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+// Android/Chrome: beforeinstallprompt
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
   _deferredPrompt = e;
   setTimeout(function() {
-    var b = document.getElementById('pwa-banner');
-    if (b) b.style.display = 'flex';
+    if (!_isStandalone) {
+      var b = document.getElementById('pwa-banner');
+      if (b) b.style.display = 'flex';
+    }
   }, 4000);
 });
 window.addEventListener('appinstalled', function() {
@@ -2682,6 +2688,10 @@ window.addEventListener('appinstalled', function() {
   _deferredPrompt = null;
 });
 function installPWA() {
+  if (_isIOS) {
+    // iOS: o botão não faz nada — o banner já mostra as instruções
+    return;
+  }
   if (!_deferredPrompt) return;
   _deferredPrompt.prompt();
   _deferredPrompt.userChoice.then(function() {
@@ -2690,15 +2700,22 @@ function installPWA() {
     if (b) b.style.display = 'none';
   });
 }
+// iOS Safari: mostrar banner com instruções manuais após 3s
+if (_isIOS && !_isStandalone) {
+  setTimeout(function() {
+    var b = document.getElementById('pwa-banner');
+    if (!b) return;
+    var txt = document.getElementById('pwa-banner-text');
+    var btn = document.getElementById('pwa-banner-btn');
+    if (txt) txt.innerHTML = '<div style="font-size:13px;color:#3D2010;font-weight:600;margin-bottom:4px">Adicionar à tela inicial</div><div style="font-size:11px;color:#7a6e68;line-height:1.5">Toque em <strong>Compartilhar</strong> (☐↑) no Safari<br>e depois em <strong>"Adicionar à Tela de Início"</strong></div>';
+    if (btn) btn.style.display = 'none';
+    b.style.display = 'flex';
+  }, 3000);
+}
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for (var r of registrations) { r.unregister(); }
-  });
-  if (window.caches) {
-    caches.keys().then(function(keys) {
-      keys.forEach(function(key) { caches.delete(key); });
-    });
-  }
+  navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+    .then(function(reg) { reg.update(); })
+    .catch(function(e) { console.log('SW:', e.message); });
 }
 </script>
 </body>
