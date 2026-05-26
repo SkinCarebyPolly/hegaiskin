@@ -1555,6 +1555,17 @@ function renderHistorico(historico, mesAtual) {
     </div>`).join('');
 }
 
+function _atualizarSlotAgora(dataUrl, mesLabel) {
+  var compEl = document.getElementById('evo-comparativo');
+  if (compEl) compEl.style.display = 'block';
+  var agoraImg = document.getElementById('evo-foto-agora');
+  var placeholder = document.getElementById('evo-agora-placeholder');
+  if (agoraImg) { agoraImg.src = dataUrl; agoraImg.style.display = 'block'; }
+  if (placeholder) placeholder.style.display = 'none';
+  var agoraLbl = document.getElementById('evo-data-agora');
+  if (agoraLbl) agoraLbl.textContent = getMesLabel(mesLabel);
+}
+
 async function handleEvoPhoto(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -1618,16 +1629,20 @@ async function handleEvoPhoto(e) {
       const statusEl = document.getElementById('evo-mes-status');
       if (statusEl) statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>`;
 
+      // Atualizar slot AGORA no comparativo
+      _atualizarSlotAgora(dataUrl, mesAtual);
       renderHistorico(historico, mesAtual);
 
     } catch(err) {
-      console.error('Evo error:', err);
+      console.error('Evo analysis error:', err);
       // Salvar foto mesmo sem análise
       const novaEntrada = { mes: mesAtual, foto: dataUrl, analise: '', data: new Date().toISOString() };
       historico.push(novaEntrada);
       saveEvoHistorico(historico);
       document.getElementById('evo-analysis').style.display = 'block';
-      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted)">Foto registada com sucesso!</p>`;
+      document.getElementById('evo-analysis-text').innerHTML = `<p style="font-size:13px;color:var(--muted)">Foto guardada! A análise não foi possível desta vez — tente novamente mais tarde.</p>`;
+      // Atualizar slot AGORA mesmo sem análise
+      _atualizarSlotAgora(dataUrl, mesAtual);
     }
 
     document.getElementById('evo-loading').style.display = 'none';
