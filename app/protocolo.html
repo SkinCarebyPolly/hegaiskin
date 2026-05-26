@@ -830,10 +830,11 @@ function renderApp() {
   document.getElementById('hero-nome').textContent = nomeExibir;
   document.getElementById('hero-tipo').textContent = perfil.tipoPele || '';
   const tagsEl = document.getElementById('hero-tags');
-  (perfil.tags || []).forEach(tag => {
+  (perfil.tags || []).forEach(function(tag) {
+    var t = (tag || '').replace(/^anti([a-záàâãéêíóôõúçA-Z])/u, 'anti-$1');
     const span = document.createElement('span');
     span.className = 'hero-tag';
-    span.textContent = tag;
+    span.textContent = t;
     tagsEl.appendChild(span);
   });
 
@@ -1260,6 +1261,51 @@ function renderSugestoes() {
     // Abrir o primeiro card automaticamente
     var primeiro = document.getElementById('sug-body-0');
     if (primeiro) { primeiro.style.display = 'block'; var ch = document.getElementById('sug-card-0-chevron'); if(ch) ch.style.transform='rotate(180deg)'; }
+
+    // Upgrades
+    var upgrades = protocolo.sugestoes_upgrade || [];
+    if (upgrades.length > 0 && subTab !== 'rotina') {
+      sugEl.insertAdjacentHTML('beforeend',
+        '<div style="margin:20px 0 8px;display:flex;align-items:center;gap:8px">' +
+          '<div style="flex:1;height:0.5px;background:rgba(212,168,83,.2)"></div>' +
+          '<span style="font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:500;text-transform:uppercase">⬆ Upgrades</span>' +
+          '<div style="flex:1;height:0.5px;background:rgba(212,168,83,.2)"></div>' +
+        '</div>'
+      );
+      upgrades.forEach(function(u, ui) {
+        var uCardId = 'upg-card-' + ui;
+        var uBodyId = 'upg-body-' + ui;
+        var uTabsId = 'upg-tabs-' + ui;
+        var uContId = 'upg-cont-' + ui;
+        var tiers = [
+          { key:'economica',     emoji:'💚', label:'Econômica' },
+          { key:'intermediaria', emoji:'💛', label:'Intermediária' },
+          { key:'premium',       emoji:'💎', label:'Premium' }
+        ];
+        var upgHtml =
+          '<div id="'+uCardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.25);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+            '<div id="hdr-'+uBodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
+              '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
+                '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (u.icone || '⬆️') + '</div>' +
+                '<div style="flex:1">' +
+                  '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (u.melhoria || '') + '</div>' +
+                  '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (u.motivo || '') + '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div id="'+uCardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
+            '</div>' +
+            '<div id="'+uBodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
+              '<div id="'+uTabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
+                tiers.map(function(t,ti){
+                  return '<button data-tabs="'+uTabsId+'" data-cont="'+uContId+'" data-ti="'+ti+'" onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:'+(ti===0?'rgba(212,168,83,.08)':'transparent')+';color:'+(ti===0?'var(--gold)':'var(--muted)')+';cursor:pointer;border-bottom:2px solid '+(ti===0?'var(--gold)':'transparent')+';font-family:inherit;transition:all .15s">'+t.emoji+' '+t.label+'</button>';
+                }).join('') +
+              '</div>' +
+              '<div id="'+uContId+'" style="padding:16px">' + buildTierContent(u, tiers[0], af) + '</div>' +
+            '</div>' +
+          '</div>';
+        sugEl.insertAdjacentHTML('beforeend', upgHtml);
+      });
+    }
 
   } else if (listaCompras.length > 0) {
     // Converter lista_compras antiga para sugestoes ricas via IA
