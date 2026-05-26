@@ -6,19 +6,19 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#FDF8F0">
+<meta name="theme-color" content="#FCFBF5">
 <title>Hegai Skin · Perguntar à IA</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #D4A853;
-  --gold-light: #e0bc76;
+  --gold: #BC9A4F;
+  --gold-light: #d4b472;
   --espresso: #3D2010;
   --dark: #3D2010;
   --dark-2: #2a1508;
-  --cream: #FDF8F0;
+  --cream: #FCFBF5;
   --surface: #FAFAFA;
-  --surface2: #FDF8F0;
+  --surface2: #FCFBF5;
   --muted: #9a8878;
   --green: #AAB29A;
   --red: #c0392b;
@@ -53,17 +53,17 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
   color:var(--dark); margin:24px 0 12px;
   display:flex; align-items:center; gap:8px;
 }
-.section-title::after { content:''; flex:1; height:0.5px; background:rgba(212,168,83,.25); }
+.section-title::after { content:''; flex:1; height:0.5px; background:rgba(188,154,79,.25); }
 
 .faq-item {
   background:#fff;
-  border:0.5px solid rgba(212,168,83,.2);
+  border:0.5px solid rgba(188,154,79,.2);
   border-radius:12px;
   margin-bottom:8px;
   overflow:hidden;
   transition:box-shadow .2s;
 }
-.faq-item.open { box-shadow:0 2px 12px rgba(212,168,83,.12); }
+.faq-item.open { box-shadow:0 2px 12px rgba(188,154,79,.12); }
 .faq-q {
   width:100%; background:none; border:none; cursor:pointer;
   padding:14px 16px; font-family:'Raleway',sans-serif;
@@ -78,7 +78,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
   padding:0 16px 14px 41px;
   font-size:12.5px; color:#5a4e47;
   line-height:1.7;
-  border-top:0.5px solid rgba(212,168,83,.1);
+  border-top:0.5px solid rgba(188,154,79,.1);
   padding-top:12px;
 }
 .faq-item.open .faq-a { display:block; }
@@ -92,7 +92,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 }
 .divider-text::before, .divider-text::after {
   content:''; position:absolute; top:50%;
-  width:30%; height:0.5px; background:rgba(212,168,83,.3);
+  width:30%; height:0.5px; background:rgba(188,154,79,.3);
 }
 .divider-text::before { left:0; }
 .divider-text::after { right:0; }
@@ -104,7 +104,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 /* ── TUTORIAL ── */
 .tutorial-box {
   background:linear-gradient(135deg, #fffbf4, #fdf5e8);
-  border:0.5px solid rgba(212,168,83,.3);
+  border:0.5px solid rgba(188,154,79,.3);
   border-radius:12px;
   margin-bottom:20px;
   overflow:hidden;
@@ -121,7 +121,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 .tutorial-body {
   display:none;
   padding:0 16px 16px;
-  border-top:0.5px solid rgba(212,168,83,.15);
+  border-top:0.5px solid rgba(188,154,79,.15);
   padding-top:14px;
 }
 .tutorial-box.open .tutorial-body { display:block; }
@@ -146,7 +146,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 /* ── QUOTA ── */
 .quota-card {
   background:#fff;
-  border:0.5px solid rgba(212,168,83,.25);
+  border:0.5px solid rgba(188,154,79,.25);
   border-radius:12px;
   padding:16px;
   display:flex; align-items:center; gap:14px;
@@ -163,13 +163,13 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
   font-size:11px; font-weight:700; letter-spacing:.5px;
   text-align:center; line-height:1.2;
 }
-.quota-badge.available { background:linear-gradient(135deg,#e0bc76,#D4A853); color:#fff; }
+.quota-badge.available { background:linear-gradient(135deg,#d4b472,#BC9A4F); color:#fff; }
 .quota-badge.used { background:#f0e8e0; color:#b09080; }
 
 /* ── LAST ANSWER ── */
 .last-answer {
   background:#fff;
-  border:0.5px solid rgba(212,168,83,.2);
+  border:0.5px solid rgba(188,154,79,.2);
   border-radius:12px;
   padding:16px;
   margin-bottom:20px;
@@ -203,7 +203,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 .chat-textarea {
   width:100%;
   background:#fff;
-  border:0.5px solid rgba(212,168,83,.35);
+  border:0.5px solid rgba(188,154,79,.35);
   border-radius:12px;
   padding:14px;
   font-family:'Raleway',sans-serif; font-size:13.5px;
@@ -221,7 +221,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 .chat-char.warn { color:#c0726a; }
 .btn-send {
   width:100%; padding:15px;
-  background:linear-gradient(135deg, #D4A853, #b8923d);
+  background:linear-gradient(135deg, #BC9A4F, #b8923d);
   border:none; border-radius:12px;
   font-family:'Raleway',sans-serif; font-size:13px;
   font-weight:600; letter-spacing:1.5px;
@@ -236,7 +236,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 .chat-loading {
   display:none;
   background:#fff;
-  border:0.5px solid rgba(212,168,83,.2);
+  border:0.5px solid rgba(188,154,79,.2);
   border-radius:12px;
   padding:24px 16px;
   text-align:center;
@@ -274,7 +274,7 @@ body { background:var(--surface); font-family:'Raleway',sans-serif; color:var(--
 .wait-card {
   display:none;
   background:linear-gradient(135deg, #fdf8f0, #fff5e8);
-  border:0.5px solid rgba(212,168,83,.3);
+  border:0.5px solid rgba(188,154,79,.3);
   border-radius:12px;
   padding:20px 16px;
   text-align:center;

@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#FDF8F0">
+<meta name="theme-color" content="#FCFBF5">
 <title>Hegai Skin · Minha Rotina</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,19 +16,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #D4A853;
-  --gold-amber: #b8923d;
+  --gold: #BC9A4F;
+  --gold-amber: #9a7a35;
   --espresso: #3D2010;
   --mahogany: #1e0e04;
-  --gold-light: #e0bc76;
-  --gold-dim: rgba(212,168,83,0.10);
+  --gold-light: #d4b472;
+  --gold-dim: rgba(188,154,79,0.10);
   --dark: #3D2010;
   --dark-2: #2a1508;
   --dark-3: #1e0e04;
-  --cream: #FDF8F0;
+  --cream: #FCFBF5;
   --cream-dim: rgba(61,32,16,0.55);
   --surface: #FAFAFA;
-  --surface2: #FDF8F0;
+  --surface2: #FCFBF5;
   --muted: #9a8878;
   --green: #AAB29A;
   --green-dim: rgba(90,138,110,0.10);
@@ -50,10 +50,10 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
   content:'';
   position:absolute; top:-60px; right:-60px;
   width:240px; height:240px; border-radius:50%;
-  background: radial-gradient(circle, rgba(212,168,83,0.12), transparent 70%);
+  background: radial-gradient(circle, rgba(188,154,79,0.12), transparent 70%);
 }
 .hero-badge { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-light); margin-bottom:12px; }
-.hero-name { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; margin-bottom:4px; color:#FDF8F0; }
+.hero-name { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; margin-bottom:4px; color:#FCFBF5; }
 .hero-name em { font-style:italic; color:var(--gold-light); }
 .hero-sub { font-size:12px; color:rgba(242,232,217,0.6); letter-spacing:1px; margin-bottom:20px; }
 .hero-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
@@ -67,7 +67,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
   display: flex;
   overflow-x: auto;
   background: var(--surface);
-  border-bottom: 1px solid rgba(212,168,83,0.12);
+  border-bottom: 1px solid rgba(188,154,79,0.12);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -98,7 +98,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 /* -- CARDS -- */
 .card {
   background: var(--surface);
-  border: 1px solid rgba(212,168,83,0.12);
+  border: 1px solid rgba(188,154,79,0.12);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
@@ -117,12 +117,12 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
   display:flex; align-items:flex-start; gap:14px;
   padding:18px 16px;
   background: #fff;
-  border: 1px solid rgba(212,168,83,0.10);
+  border: 1px solid rgba(188,154,79,0.10);
   border-radius:10px;
 }
 .step-num {
   width:28px; height:28px; border-radius:50%;
-  background: var(--gold-dim); border:1px solid rgba(212,168,83,0.25);
+  background: var(--gold-dim); border:1px solid rgba(188,154,79,0.25);
   display:flex; align-items:center; justify-content:center;
   font-size:11px; color:var(--gold); flex-shrink:0;
   font-weight:500;
@@ -141,7 +141,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
   display:flex; align-items:flex-start; gap:14px;
   padding:14px 16px;
   background: #fff;
-  border: 1px solid rgba(212,168,83,0.10);
+  border: 1px solid rgba(188,154,79,0.10);
   border-radius:10px;
 }
 .week-day {
@@ -153,7 +153,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 /* -- CALENDAR -- */
 .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 .cal-month { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--gold); }
-.cal-nav { background:none; border:1px solid rgba(212,168,83,0.25); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
+.cal-nav { background:none; border:1px solid rgba(188,154,79,0.25); color:var(--gold); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:14px; }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
 .cal-dow { text-align:center; font-size:9px; letter-spacing:2px; color:var(--muted); padding:6px 0; text-transform:uppercase; }
 .cal-day {
@@ -163,7 +163,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
   transition: all 0.2s;
   flex-direction: column; gap:2px;
 }
-.cal-day:hover { background:var(--gold-dim); border-color:rgba(212,168,83,0.20); }
+.cal-day:hover { background:var(--gold-dim); border-color:rgba(188,154,79,0.20); }
 .cal-day.today { border-color:var(--gold); color:var(--gold); }
 .cal-day.has-event::after { content:''; width:4px; height:4px; border-radius:50%; background:var(--gold); }
 .cal-day.empty { cursor:default; }
@@ -184,7 +184,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 /* -- SUGGESTIONS -- */
 .suggestion-item {
   display:flex; gap:12px; align-items:flex-start;
-  padding:12px 0; border-bottom:1px solid rgba(212,168,83,0.08);
+  padding:12px 0; border-bottom:1px solid rgba(188,154,79,0.08);
 }
 .suggestion-item:last-child { border:none; }
 .suggestion-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:6px; flex-shrink:0; }
@@ -193,11 +193,11 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 
 /* -- EVOLUÇÃO -- */
 .evo-photo-area {
-  border:1px dashed rgba(212,168,83,0.25); border-radius:12px;
+  border:1px dashed rgba(188,154,79,0.25); border-radius:12px;
   padding:36px 20px; text-align:center; cursor:pointer; margin-bottom:16px;
-  transition:all 0.2s; background:rgba(212,168,83,0.04);
+  transition:all 0.2s; background:rgba(188,154,79,0.04);
 }
-.evo-photo-area:hover { border-color:rgba(212,168,83,0.5); background:rgba(212,168,83,0.07); }
+.evo-photo-area:hover { border-color:rgba(188,154,79,0.5); background:rgba(188,154,79,0.07); }
 .evo-photo-area.has-photo { padding:0; border-style:solid; }
 .evo-photo-area img { width:100%; max-height:280px; object-fit:cover; border-radius:11px; display:block; }
 .evo-icon { font-size:32px; margin-bottom:10px; }
@@ -207,7 +207,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 /* -- CONFIG -- */
 .config-item {
   display:flex; justify-content:space-between; align-items:center;
-  padding:16px 0; border-bottom:1px solid rgba(212,168,83,0.08);
+  padding:16px 0; border-bottom:1px solid rgba(188,154,79,0.08);
 }
 .config-item:last-child { border:none; }
 .config-label { font-size:13px; color:var(--muted); }
@@ -241,9 +241,9 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 @keyframes gem-glow  { 0%,100%{opacity:.6} 50%{opacity:1} }
 @keyframes dt { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
 .ld-gem { position:relative; width:80px; height:80px; margin:0 auto 28px; }
-.ld-gem-bg   { position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(212,168,83,0.14),transparent 70%);animation:gem-pulse 2.5s ease-in-out infinite; }
-.ld-gem-ring { position:absolute;inset:6px;border:1.5px solid rgba(212,168,83,0.3);border-radius:50%;animation:gem-spin 7s linear infinite; }
-.ld-gem-ring2{ position:absolute;inset:14px;border:1px dashed rgba(212,168,83,0.15);border-radius:50%;animation:gem-spin 12s linear infinite reverse; }
+.ld-gem-bg   { position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(188,154,79,0.14),transparent 70%);animation:gem-pulse 2.5s ease-in-out infinite; }
+.ld-gem-ring { position:absolute;inset:6px;border:1.5px solid rgba(188,154,79,0.3);border-radius:50%;animation:gem-spin 7s linear infinite; }
+.ld-gem-ring2{ position:absolute;inset:14px;border:1px dashed rgba(188,154,79,0.15);border-radius:50%;animation:gem-spin 12s linear infinite reverse; }
 .ld-gem-dot  { position:absolute;top:50%;left:50%;width:7px;height:7px;border-radius:50%;background:var(--gold);margin:-3.5px 0 0 -3.5px;transform-origin:-33px 0;opacity:.75; }
 .ld-gem-dot:nth-child(4){ animation:gem-orbit 7s linear infinite; }
 .ld-gem-dot:nth-child(5){ animation:gem-orbit 7s linear infinite;animation-delay:-2.33s;transform:rotate(120deg) translateX(-33px); }
@@ -261,20 +261,20 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--da
 }
 .modal-overlay.open { display:flex; }
 .modal {
-  background:var(--surface); border:1px solid rgba(212,168,83,0.18);
+  background:var(--surface); border:1px solid rgba(188,154,79,0.18);
   border-radius:20px 20px 0 0; width:100%; padding:24px 20px 48px;
   animation:slideUp 0.3s ease;
 }
 @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.modal-handle { width:40px; height:3px; background:rgba(212,168,83,0.2); border-radius:2px; margin:0 auto 16px; }
+.modal-handle { width:40px; height:3px; background:rgba(188,154,79,0.2); border-radius:2px; margin:0 auto 16px; }
 .modal-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:var(--gold); margin-bottom:4px; }
 .modal-sub { font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:1px; }
 .modal-body { font-size:13px; color:var(--muted); line-height:1.8; }
-.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(212,168,83,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:1px solid rgba(188,154,79,0.2); border-radius:50%; width:28px; height:28px; font-size:13px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; }
 
 /* -- AI ANALYSIS -- */
 .ai-loading-bar { display:flex; align-items:center; gap:12px; padding:16px; background:var(--gold-dim); border-radius:10px; margin-top:12px; }
-.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(212,168,83,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
+.ai-mini-spinner { width:20px; height:20px; border:2px solid rgba(188,154,79,0.20); border-top-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; flex-shrink:0; }
 .ai-loading-text { font-size:12px; color:var(--gold); }
 
 input[type="file"] { display:none; }
@@ -341,13 +341,13 @@ input[type="file"] { display:none; }
 </head>
 <body>
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FAFAFA;border:1px solid #e0bc76;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+<div id="pwa-banner" style="display:none;position:fixed;bottom:20px;left:16px;right:16px;background:#FAFAFA;border:1px solid #d4b472;border-radius:16px;padding:14px 18px;z-index:999;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
   <div style="font-size:24px;flex-shrink:0">📲</div>
   <div style="flex:1">
     <div style="font-size:13px;color:var(--dark);font-weight:600;margin-bottom:2px">Adicionar à tela inicial</div>
     <div style="font-size:11px;color:#7a6e68">Acesse como um app, sem abrir o browser</div>
   </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#e0bc76,#f0d898);border:none;border-radius:8px;padding:8px 14px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;cursor:pointer;white-space:nowrap">Instalar</button>
+  <button onclick="installPWA()" style="background:linear-gradient(135deg,#d4b472,#f0d898);border:none;border-radius:8px;padding:8px 14px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;cursor:pointer;white-space:nowrap">Instalar</button>
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:#7a6e68;cursor:pointer;font-size:18px;padding:4px;flex-shrink:0">✕</button>
 </div>
 
@@ -370,7 +370,7 @@ input[type="file"] { display:none; }
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#e0bc76;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Rotina Exclusiva</span></div>
+  <div class="hero-badge" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#d4b472;letter-spacing:.5px">Hegai Skin</span><span style="font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.9);border:0.5px solid rgba(201,169,122,.35);border-radius:20px;padding:2px 9px">versão beta</span><span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,169,122,.45)">· Rotina Exclusiva</span></div>
   <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
   <p class="hero-sub" id="hero-tipo"></p>
   <div class="hero-tags" id="hero-tags"></div>
@@ -403,12 +403,12 @@ input[type="file"] { display:none; }
       <span style="font-size:10px;color:var(--muted)">Pele em dia</span>
       <span style="font-size:10px;color:var(--muted)">Pele radiante</span>
     </div>
-    <div style="position:relative;height:22px;background:rgba(212,168,83,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
-      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
-      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
-      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(212,168,83,.2)"></div>
+    <div style="position:relative;height:22px;background:rgba(188,154,79,.12);border-radius:11px;overflow:visible;margin-bottom:10px">
+      <div style="position:absolute;left:40%;top:0;bottom:0;width:1px;background:rgba(188,154,79,.2)"></div>
+      <div style="position:absolute;left:70%;top:0;bottom:0;width:1px;background:rgba(188,154,79,.2)"></div>
+      <div style="position:absolute;left:91%;top:0;bottom:0;width:1px;background:rgba(188,154,79,.2)"></div>
       <div id="skin-bar-fill" style="height:100%;border-radius:11px;background:var(--gold);width:0%;transition:width 1.2s ease;position:relative">
-        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #e0bc76;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
+        <div id="skin-bar-dot" style="position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#fff;border-radius:50%;border:3px solid #d4b472;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
       </div>
     </div>
     <div id="skin-score-label" style="text-align:center;font-size:14px;color:var(--gold);font-weight:600;margin-bottom:4px"></div>
@@ -435,7 +435,7 @@ input[type="file"] { display:none; }
   <div id="rotina-tratamento-dia" style="display:none"></div>
   <!-- Controles de áudio -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-    <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(212,168,83,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
+    <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(188,154,79,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
     <span style="font-size:10px;color:var(--muted);flex:1;text-align:right">No iOS, desative o modo silencioso para ouvir</span>
   </div>
   <div class="card">
@@ -477,20 +477,20 @@ input[type="file"] { display:none; }
 <div class="section" id="tab-sugestoes">
 
   <!-- Banner alertas de validade (aparece quando há produtos sensíveis) -->
-  <div id="banner-validade" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(212,168,83,.5);border-radius:12px;margin:12px 0 4px;overflow:hidden">
+  <div id="banner-validade" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(188,154,79,.5);border-radius:12px;margin:12px 0 4px;overflow:hidden">
     <button onclick="toggleBannerValidade()" style="width:100%;background:none;border:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px;text-align:left;font-family:inherit">
       <span style="font-size:16px;flex-shrink:0">⚠️</span>
       <span style="flex:1;font-size:12px;font-weight:600;color:#8a6020">Verifique a validade dos seus produtos</span>
       <span id="banner-validade-arrow" style="font-size:11px;color:var(--gold);transition:transform .2s">▾</span>
     </button>
-    <div id="banner-validade-body" style="display:none;padding:0 14px 14px;border-top:0.5px solid rgba(212,168,83,.2);padding-top:10px"></div>
+    <div id="banner-validade-body" style="display:none;padding:0 14px 14px;border-top:0.5px solid rgba(188,154,79,.2);padding-top:10px"></div>
   </div>
 
   <!-- Sub-tabs -->
   <div style="display:flex;gap:8px;padding:12px 0 8px;flex-wrap:wrap">
-    <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #D4A853;background:#D4A853;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
-    <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(212,168,83,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
-    <button id="subtab-trocas" onclick="switchSubTab('trocas')" style="display:none;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(212,168,83,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">🔄 Trocas</button>
+    <button id="subtab-rotina" onclick="switchSubTab('rotina')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid #BC9A4F;background:#BC9A4F;color:#fff;font-family:inherit;cursor:pointer">Da rotina</button>
+    <button id="subtab-boosters" onclick="switchSubTab('boosters')" style="padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(188,154,79,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">Boosters</button>
+    <button id="subtab-trocas" onclick="switchSubTab('trocas')" style="display:none;padding:7px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.5px;border:0.5px solid rgba(188,154,79,.25);background:transparent;color:#9a8878;font-family:inherit;cursor:pointer">🔄 Trocas</button>
   </div>
   <div id="subtab-rotina-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px">Produtos para completar os passos da sua rotina</div>
   <div id="subtab-boosters-desc" style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none">Produtos para potencializar o que você já usa</div>
@@ -620,8 +620,8 @@ input[type="file"] { display:none; }
       <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Comprou novos produtos ou aparelhos? Refaça o onboarding para atualizar sua rotina.</p>
       <button class="btn-gold" onclick="atualizarProtocolo()">Atualizar minha rotina</button>
     </div>
-<button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
-    <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
+<button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
+    <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
 </div>
@@ -631,9 +631,9 @@ input[type="file"] { display:none; }
 <!-- SMART SHELF MODAL -->
 <div id="smart-shelf-modal" style="display:none;position:fixed;inset:0;background:rgba(61,32,16,.55);z-index:500;align-items:flex-end;justify-content:center;padding-bottom:0">
   <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:24px 20px 32px;position:relative">
-    <div style="width:40px;height:3px;background:rgba(212,168,83,.25);border-radius:2px;margin:0 auto 20px"></div>
+    <div style="width:40px;height:3px;background:rgba(188,154,79,.25);border-radius:2px;margin:0 auto 20px"></div>
     <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:6px">
-      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(212,168,83,.15),rgba(212,168,83,.08));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔍</div>
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(188,154,79,.15),rgba(188,154,79,.08));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🔍</div>
       <div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--dark)">Análise da sua prateleira</div>
         <div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5">A IA identificou produtos que podem trabalhar contra os seus objetivos de pele</div>
@@ -642,8 +642,8 @@ input[type="file"] { display:none; }
     <div id="smart-shelf-content" style="margin-top:16px"></div>
     <div id="smart-shelf-validade" style="display:none;margin-top:4px"></div>
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
-      <button id="btn-ver-trocas" onclick="irParaTrocas()" style="display:none;width:100%;padding:14px;background:linear-gradient(135deg,#D4A853,#b8923d);border:none;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.5px">🔄 Ver sugestões de troca</button>
-      <button onclick="fecharSmartShelf()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:12px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Ok, já vi — seguir para a rotina</button>
+      <button id="btn-ver-trocas" onclick="irParaTrocas()" style="display:none;width:100%;padding:14px;background:linear-gradient(135deg,#BC9A4F,#9a7a35);border:none;border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:.5px">🔄 Ver sugestões de troca</button>
+      <button onclick="fecharSmartShelf()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:12px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Ok, já vi — seguir para a rotina</button>
     </div>
   </div>
 </div>
@@ -730,7 +730,7 @@ function buildTierContent(s, tier, af) {
   var t = s[tier.key];
   if (!t || !t.produto) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:8px">Sem sugestão para este nível.</p>';
   // ── Smart affiliate links ────────────────────────────────────────────────
-  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
+  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(188,154,79,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
   // Search query: brand + product name
   var queryBase = (t.marca ? t.marca + ' ' : '') + (t.produto || '');
@@ -767,7 +767,7 @@ function buildTierContent(s, tier, af) {
            '</div>' +
            '<div style="font-size:15px;font-weight:500;color:var(--gold);white-space:nowrap;margin-left:8px">' + (t.preco || '') + '</div>' +
          '</div>' +
-         (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(212,168,83,.06);border-radius:8px;border-left:2px solid rgba(212,168,83,.3)">"' + t.descricao + '"</div>' : '') +
+         (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(188,154,79,.06);border-radius:8px;border-left:2px solid rgba(188,154,79,.3)">"' + t.descricao + '"</div>' : '') +
          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' + btns + '</div>' +
          _lojasFisicasHtml +
          (function() {
@@ -775,7 +775,7 @@ function buildTierContent(s, tier, af) {
            window[key] = t;
            return '<div style="display:flex;flex-direction:column;gap:8px">' +
              '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],false)" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">✓ Já tenho — adicionar à rotina</button>' +
-             '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],true)" style="width:100%;padding:11px;background:transparent;border:0.5px solid rgba(212,168,83,.4);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer">📦 Encomendei — a caminho</button>' +
+             '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],true)" style="width:100%;padding:11px;background:transparent;border:0.5px solid rgba(188,154,79,.4);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer">📦 Encomendei — a caminho</button>' +
            '</div>';
          })();
 }
@@ -802,7 +802,7 @@ function switchSugTab(tabsId, conteudoId, tiIdx) {
     var btns = tabsEl.querySelectorAll('button');
     btns.forEach(function(b, i) {
       var active = (i === tiIdx);
-      b.style.background    = active ? 'rgba(212,168,83,.08)' : 'transparent';
+      b.style.background    = active ? 'rgba(188,154,79,.08)' : 'transparent';
       b.style.color         = active ? 'var(--gold)' : 'var(--muted)';
       b.style.borderBottom  = active ? '2px solid var(--gold)' : '2px solid transparent';
     });
@@ -892,9 +892,9 @@ function renderApp() {
     prodEl.innerHTML = '';
     (protocolo.produtos_identificados || []).forEach(function(p, i) {
       var div = document.createElement('div');
-      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(212,168,83,.12);border-radius:10px;margin-bottom:8px';
+      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:0.5px solid rgba(188,154,79,.12);border-radius:10px;margin-bottom:8px';
       div.innerHTML =
-        '<div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
+        '<div style="width:32px;height:32px;border-radius:50%;background:rgba(188,154,79,.1);border:1px solid rgba(188,154,79,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--gold);flex-shrink:0">'+(i+1)+'</div>' +
         '<div style="font-size:14px;font-weight:500;color:var(--dark);flex:1">' + p + '</div>';
       prodEl.appendChild(div);
     });
@@ -1002,8 +1002,8 @@ async function converterListaParaSugestoes(listaCompras) {
 
   // Loading state
   sugEl.innerHTML =
-    '<div style="display:flex;align-items:center;gap:12px;padding:20px 16px;background:rgba(212,168,83,.06);border-radius:10px">' +
-      '<div style="width:20px;height:20px;border:2px solid rgba(212,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>' +
+    '<div style="display:flex;align-items:center;gap:12px;padding:20px 16px;background:rgba(188,154,79,.06);border-radius:10px">' +
+      '<div style="width:20px;height:20px;border:2px solid rgba(188,154,79,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0"></div>' +
       '<div style="font-size:13px;color:var(--gold)">Enriquecendo suas sugestões com a IA...</div>' +
     '</div>';
 
@@ -1042,7 +1042,7 @@ async function converterListaParaSugestoes(listaCompras) {
       var nome  = (parts[0] || s).trim();
       var resto = parts.slice(1).join('—').trim();
       var div   = document.createElement('div');
-      div.style.cssText = 'background:#fff;border:0.5px solid rgba(212,168,83,.12);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px';
+      div.style.cssText = 'background:#fff;border:0.5px solid rgba(188,154,79,.12);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px';
       div.innerHTML =
         '<div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div>' +
         '<div>' +
@@ -1065,7 +1065,7 @@ async function adicionarSugestaoRotina(produto, pendente) {
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.4);z-index:300;display:flex;align-items:center;justify-content:center';
   overlay.innerHTML =
     '<div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center">' +
-      '<div style="width:36px;height:36px;border:2px solid rgba(212,168,83,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
+      '<div style="width:36px;height:36px;border:2px solid rgba(188,154,79,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>' +
       '<div style="font-size:14px;font-weight:500;color:var(--dark);margin-bottom:6px">' + (pendente ? 'Reservando na rotina...' : 'Integrando à sua rotina...') + '</div>' +
       '<div style="font-size:12px;color:var(--muted)">A IA está encontrando o melhor lugar para ' + nomeFull + '</div>' +
     '</div>';
@@ -1216,12 +1216,12 @@ function renderSugestoes() {
       // Build card HTML
       var icone = s.icone || '🧴';
       var html =
-        '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.18);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+        '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(188,154,79,.18);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
 
           // ── Cabeçalho (clicável para expand/collapse)
           '<div id="hdr-'+bodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
             '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
-              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
+              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(188,154,79,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
               '<div style="flex:1">' +
                 '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
                 '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
@@ -1232,14 +1232,14 @@ function renderSugestoes() {
           '</div>' +
 
           // ── Corpo (expandível)
-          '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
+          '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(188,154,79,.12)">' +
 
             // Tabs
-            '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
+            '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(188,154,79,.12)">' +
               tiers.map(function(t, ti){
                 return '<button data-tabs="'+tabsId+'" data-cont="'+conteudoId+'" data-ti="'+ti+'" ' +
                   'onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" ' +
-                  'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(212,168,83,.08)':'transparent') + ';' +
+                  'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(188,154,79,.08)':'transparent') + ';' +
                   'color:' + (ti===0?'var(--gold)':'var(--muted)') + ';cursor:pointer;' +
                   'border-bottom:2px solid ' + (ti===0?'var(--gold)':'transparent') + ';' +
                   'font-family:inherit;transition:all .15s" data-ti="'+ti+'">' +
@@ -1267,9 +1267,9 @@ function renderSugestoes() {
     if (upgrades.length > 0 && subTab !== 'rotina') {
       sugEl.insertAdjacentHTML('beforeend',
         '<div style="margin:20px 0 8px;display:flex;align-items:center;gap:8px">' +
-          '<div style="flex:1;height:0.5px;background:rgba(212,168,83,.2)"></div>' +
+          '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.2)"></div>' +
           '<span style="font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:500;text-transform:uppercase">⬆ Upgrades</span>' +
-          '<div style="flex:1;height:0.5px;background:rgba(212,168,83,.2)"></div>' +
+          '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.2)"></div>' +
         '</div>'
       );
       upgrades.forEach(function(u, ui) {
@@ -1283,10 +1283,10 @@ function renderSugestoes() {
           { key:'premium',       emoji:'💎', label:'Premium' }
         ];
         var upgHtml =
-          '<div id="'+uCardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.25);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+          '<div id="'+uCardId+'" style="background:var(--surface);border:0.5px solid rgba(188,154,79,.25);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
             '<div id="hdr-'+uBodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
               '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
-                '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (u.icone || '⬆️') + '</div>' +
+                '<div style="width:36px;height:36px;border-radius:50%;background:rgba(188,154,79,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (u.icone || '⬆️') + '</div>' +
                 '<div style="flex:1">' +
                   '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (u.melhoria || '') + '</div>' +
                   '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (u.motivo || '') + '</div>' +
@@ -1294,10 +1294,10 @@ function renderSugestoes() {
               '</div>' +
               '<div id="'+uCardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
             '</div>' +
-            '<div id="'+uBodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
-              '<div id="'+uTabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
+            '<div id="'+uBodyId+'" style="display:none;border-top:0.5px solid rgba(188,154,79,.12)">' +
+              '<div id="'+uTabsId+'" style="display:flex;border-bottom:0.5px solid rgba(188,154,79,.12)">' +
                 tiers.map(function(t,ti){
-                  return '<button data-tabs="'+uTabsId+'" data-cont="'+uContId+'" data-ti="'+ti+'" onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:'+(ti===0?'rgba(212,168,83,.08)':'transparent')+';color:'+(ti===0?'var(--gold)':'var(--muted)')+';cursor:pointer;border-bottom:2px solid '+(ti===0?'var(--gold)':'transparent')+';font-family:inherit;transition:all .15s">'+t.emoji+' '+t.label+'</button>';
+                  return '<button data-tabs="'+uTabsId+'" data-cont="'+uContId+'" data-ti="'+ti+'" onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:'+(ti===0?'rgba(188,154,79,.08)':'transparent')+';color:'+(ti===0?'var(--gold)':'var(--muted)')+';cursor:pointer;border-bottom:2px solid '+(ti===0?'var(--gold)':'transparent')+';font-family:inherit;transition:all .15s">'+t.emoji+' '+t.label+'</button>';
                 }).join('') +
               '</div>' +
               '<div id="'+uContId+'" style="padding:16px">' + buildTierContent(u, tiers[0], af) + '</div>' +
@@ -1861,9 +1861,9 @@ function renderSteps(steps, rotinaTipo) {
           '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px">'+(s.categoria||'')+'</div>' +
           (s.ativo_ideal ? '<div style="font-size:13px;font-style:italic;color:var(--muted);margin-bottom:6px">'+(s.ativo_ideal||'')+'</div>' : '') +
           '<div class="step-how">'+(s.como||'')+'</div>' +
-          '<div style="margin-top:10px;padding:10px 14px;background:rgba(212,168,83,.06);border-radius:8px;border:0.5px solid rgba(212,168,83,.15);display:flex;align-items:center;justify-content:space-between">' +
+          '<div style="margin-top:10px;padding:10px 14px;background:rgba(188,154,79,.06);border-radius:8px;border:0.5px solid rgba(188,154,79,.15);display:flex;align-items:center;justify-content:space-between">' +
             '<div style="font-size:11px;color:var(--muted)">Você ainda não tem este produto</div>' +
-            '<button onclick="irParaSugestoesRotina()" style="font-size:10px;letter-spacing:1px;color:var(--gold);border:0.5px solid rgba(212,168,83,.3);border-radius:20px;padding:4px 12px;background:transparent;font-family:inherit;cursor:pointer">Ver →</button>' +
+            '<button onclick="irParaSugestoesRotina()" style="font-size:10px;letter-spacing:1px;color:var(--gold);border:0.5px solid rgba(188,154,79,.3);border-radius:20px;padding:4px 12px;background:transparent;font-family:inherit;cursor:pointer">Ver →</button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -1900,9 +1900,9 @@ function renderSteps(steps, rotinaTipo) {
         '<div style="display:flex;align-items:center;gap:8px;margin-top:12px">' +
           (tempoSeg > 0 ?
             '<button data-uid="'+uid+'" data-seg="'+tempoSeg+'" onclick="iniciarTimer(this.dataset.uid,parseInt(this.dataset.seg))" style="display:flex;align-items:center;gap:5px;padding:8px 14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;color:#fff;cursor:pointer">▶ Iniciar timer</button>' : '') +
-          '<button data-uid="'+uid+'" onclick="marcarFeito(this.dataset.uid)" style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:transparent;border:0.5px solid rgba(212,168,83,.3);border-radius:8px;font-family:inherit;font-size:12px;color:var(--gold);cursor:pointer">✓ Feito</button>' +
+          '<button data-uid="'+uid+'" onclick="marcarFeito(this.dataset.uid)" style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;font-family:inherit;font-size:12px;color:var(--gold);cursor:pointer">✓ Feito</button>' +
         '</div>' +
-        '<div id="'+uid+'-timer" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(212,168,83,.08);border-radius:8px;text-align:center">' +
+        '<div id="'+uid+'-timer" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(188,154,79,.08);border-radius:8px;text-align:center">' +
           '<div id="'+uid+'-time" style="font-size:24px;font-weight:500;color:var(--gold);font-variant-numeric:tabular-nums">0:00</div>' +
           '<div style="font-size:11px;color:var(--muted);margin-top:2px">restante</div>' +
           '<button data-uid="'+uid+'" onclick="pararTimer(this.dataset.uid)" style="margin-top:8px;background:none;border:none;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline">parar</button>' +
@@ -1962,12 +1962,12 @@ function renderSubstituicoes(container) {
     ];
 
     var html =
-      '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(212,168,83,.2);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
+      '<div id="'+cardId+'" style="background:var(--surface);border:0.5px solid rgba(188,154,79,.2);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
 
         // Cabeçalho
         '<div id="hdr-'+bodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">' +
           '<div style="display:flex;align-items:flex-start;gap:12px;flex:1">' +
-            '<div style="width:36px;height:36px;border-radius:50%;background:rgba(212,168,83,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (s.icone||'🔄') + '</div>' +
+            '<div style="width:36px;height:36px;border-radius:50%;background:rgba(188,154,79,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (s.icone||'🔄') + '</div>' +
             '<div style="flex:1">' +
               '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + toTitleCase(s.produto_atual||'') + (s.marca_atual ? ' · ' + s.marca_atual : '') + '</div>' +
               '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.conflito||'') + '</div>' +
@@ -1978,12 +1978,12 @@ function renderSubstituicoes(container) {
         '</div>' +
 
         // Corpo expandível
-        '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(212,168,83,.12)">' +
-          '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(212,168,83,.12)">' +
+        '<div id="'+bodyId+'" style="display:none;border-top:0.5px solid rgba(188,154,79,.12)">' +
+          '<div id="'+tabsId+'" style="display:flex;border-bottom:0.5px solid rgba(188,154,79,.12)">' +
             tiers.map(function(t, ti) {
               return '<button data-tabs="'+tabsId+'" data-cont="'+contId+'" data-ti="'+ti+'" ' +
                 'onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" ' +
-                'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(212,168,83,.08)':'transparent') + ';' +
+                'style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:' + (ti===0?'rgba(188,154,79,.08)':'transparent') + ';' +
                 'color:' + (ti===0?'var(--gold)':'var(--muted)') + ';cursor:pointer;' +
                 'border-bottom:2px solid ' + (ti===0?'var(--gold)':'transparent') + ';' +
                 'font-family:inherit;transition:all .15s">' +
@@ -2014,7 +2014,7 @@ function mostrarSmartShelf() {
   var contentEl = document.getElementById('smart-shelf-content');
   if (contentEl && trocas.length) {
     contentEl.innerHTML = trocas.map(function(t) {
-      return '<div style="display:flex;gap:10px;padding:12px;background:rgba(212,168,83,.05);border-radius:10px;margin-bottom:8px;border:0.5px solid rgba(212,168,83,.15)">' +
+      return '<div style="display:flex;gap:10px;padding:12px;background:rgba(188,154,79,.05);border-radius:10px;margin-bottom:8px;border:0.5px solid rgba(188,154,79,.15)">' +
         '<span style="font-size:18px;flex-shrink:0">' + (t.icone||'🔄') + '</span>' +
         '<div>' +
           '<div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">' + toTitleCase(t.produto_atual||'') + '</div>' +
@@ -2031,7 +2031,7 @@ function mostrarSmartShelf() {
   if (validadeEl && alertas.length) {
     validadeEl.style.display = 'block';
     validadeEl.innerHTML =
-      '<div style="background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(212,168,83,.4);border-radius:10px;padding:12px 14px">' +
+      '<div style="background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:0.5px solid rgba(188,154,79,.4);border-radius:10px;padding:12px 14px">' +
       '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8a6020;margin-bottom:8px">⚠️ Verifique a validade</div>' +
       alertas.map(function(a) {
         return '<div style="font-size:12px;color:#7a5010;margin-bottom:6px;line-height:1.5">• <strong>' + (a.produto||'') + '</strong> — ' + (a.alerta||'') + '</div>';
@@ -2093,7 +2093,7 @@ function ativarProdutoPendente(uid) {
   // Toast de confirmação
   var nome = protocolo[tipoKey][stepIdx].produto || 'Produto';
   var toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(212,168,83,.35)';
+  toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(188,154,79,.35)';
   toast.textContent = '✓ ' + toTitleCase(nome) + ' activado na rotina!';
   document.body.appendChild(toast);
   setTimeout(function() { if (toast.parentNode) document.body.removeChild(toast); }, 3000);
@@ -2111,7 +2111,7 @@ function switchSubTab(tab) {
     if (!btn) return;
     btn.style.background = active ? 'var(--gold)' : 'transparent';
     btn.style.color = active ? '#fff' : '#9a8878';
-    btn.style.borderColor = active ? 'var(--gold)' : 'rgba(212,168,83,.25)';
+    btn.style.borderColor = active ? 'var(--gold)' : 'rgba(188,154,79,.25)';
   }
   styleBtn(btnR, tab === 'rotina');
   styleBtn(btnB, tab === 'boosters');
@@ -2305,7 +2305,7 @@ function renderPraia(p) {
 
   if (e.na_praia && e.na_praia.length) {
     html += `<div class="card">
-      <div class="card-title" style="color:#e0bc76"><span class="card-title-icon">🏖</span> Na Praia</div>
+      <div class="card-title" style="color:#d4b472"><span class="card-title-icon">🏖</span> Na Praia</div>
       <div class="step-list">${renderSteps(e.na_praia)}</div>
     </div>`;
   }
@@ -2429,19 +2429,19 @@ function mostrarModalNotificacoes() {
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.5);z-index:400;display:flex;align-items:flex-end';
   overlay.innerHTML =
     '<div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:28px 24px 48px">' +
-      '<div style="width:40px;height:3px;background:rgba(212,168,83,.2);border-radius:2px;margin:0 auto 20px"></div>' +
+      '<div style="width:40px;height:3px;background:rgba(188,154,79,.2);border-radius:2px;margin:0 auto 20px"></div>' +
       '<div style="font-family:var(--font-serif,serif);font-size:20px;font-style:italic;color:var(--gold);margin-bottom:6px">Lembretes de rotina</div>' +
       '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">Receba uma notificação nos horários da sua rotina</div>' +
       '<div style="margin-bottom:14px">' +
         '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">☀️ Rotina da manhã</div>' +
-        '<input type="time" id="notif-manha" value="'+manha+'" style="width:100%;padding:12px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+        '<input type="time" id="notif-manha" value="'+manha+'" style="width:100%;padding:12px;border:0.5px solid rgba(188,154,79,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
       '</div>' +
       '<div style="margin-bottom:24px">' +
         '<div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">🌙 Rotina da noite</div>' +
-        '<input type="time" id="notif-noite" value="'+noite+'" style="width:100%;padding:12px;border:0.5px solid rgba(212,168,83,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
+        '<input type="time" id="notif-noite" value="'+noite+'" style="width:100%;padding:12px;border:0.5px solid rgba(188,154,79,.25);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;color:var(--dark)">' +
       '</div>' +
       '<button onclick="ativarNotificacoes()" style="width:100%;padding:14px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer;margin-bottom:10px">Ativar lembretes</button>' +
-      (jaAtivo ? '<button onclick="desativarNotificacoes()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(212,168,83,.2);border-radius:8px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:10px">Desativar lembretes</button>' : '') +
+      (jaAtivo ? '<button onclick="desativarNotificacoes()" style="width:100%;padding:12px;background:transparent;border:0.5px solid rgba(188,154,79,.2);border-radius:8px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:10px">Desativar lembretes</button>' : '') +
       '<button onclick="fecharModalNotif()" style="width:100%;padding:12px;background:transparent;border:none;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer">Fechar</button>' +
     '</div>';
   document.body.appendChild(overlay);
@@ -2479,60 +2479,90 @@ async function compartilharProtocolo() {
     });
   }
   var nome  = protocolo.nome_cliente || user.nome || 'Eu';
-  var tipo  = protocolo.tipo_pele || '';
-  var score = protocolo.score_pele || '';
-  var tags  = (protocolo.tags || []).slice(0, 3);
+  var score = parseInt(protocolo.score_pele) || 0;
+  var tags  = (protocolo.tags || [])
+    .map(function(t){ return t.replace(/^anti([a-záàâãéêíóôõúç])/i,'anti-$1'); })
+    .filter(function(t){ return !/(oleosidade|poros|manchas|acne|brilho)/i.test(t); })
+    .slice(0, 4);
   var passosManha = (protocolo.rotina_manha || []).length;
   var passosNoite = (protocolo.rotina_noite || []).length;
 
+  // Status label + aspirational quote based on score
+  var statusLabel = score >= 91 ? 'Pele Radiante ✦' : score >= 71 ? 'Pele em Dia ✦' : score >= 41 ? 'Em Evolução ↑' : 'A Jornada Começa ✦';
+  var quote = score >= 91 ? 'A pele que sempre quiseste — construída passo a passo.'
+            : score >= 71 ? 'Consistência é o segredo mais bem guardado da beleza.'
+            : score >= 41 ? 'Cada passo, mais perto da pele que sempre quiseste.'
+            : 'A jornada mais bonita começa com um único passo.';
+
   mostrarToast('Gerando imagem...');
 
-  // Build share card HTML
   var card = document.createElement('div');
-  card.style.cssText = [
-    'position:fixed', 'left:-9999px', 'top:0',
-    'width:360px', 'background:#3D2010',
-    'font-family:Georgia,serif', 'overflow:hidden',
-    'border-radius:0', 'padding:0'
-  ].join(';');
+  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;background:#3D2010;font-family:Georgia,serif;overflow:hidden;border-radius:0;padding:0';
 
   card.innerHTML =
-    // Header dark
-    '<div style="background:linear-gradient(160deg,#3D2010,#2a1508);padding:36px 28px 28px">' +
-      '<div style="font-family:Georgia,serif;font-style:italic;font-size:15px;color:#e0bc76;letter-spacing:.5px;margin-bottom:6px">Hegai Skin</div>' +
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">' +
-        '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(201,169,122,.15);color:rgba(201,169,122,.8);border:0.5px solid rgba(201,169,122,.3);border-radius:20px;padding:2px 8px">versão beta</span>' +
-        '<span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,169,122,.4)">· Rotina Exclusiva</span>' +
+    // ── Header escuro ──────────────────────────────────────────────────────
+    '<div style="background:linear-gradient(160deg,#3D2010 0%,#2a1508 55%,#3a1e0a 100%);padding:40px 28px 32px;position:relative;overflow:hidden">' +
+      '<div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(188,154,79,.07)"></div>' +
+      '<div style="position:absolute;left:-20px;bottom:-10px;width:100px;height:100px;border-radius:50%;background:rgba(188,154,79,.05)"></div>' +
+      // Brand
+      '<div style="font-style:italic;font-size:13px;color:#BC9A4F;letter-spacing:2px;margin-bottom:22px">✦ Hegai Skin</div>' +
+      // Tagline
+      '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,194,162,.45);margin-bottom:8px">A minha jornada skincare</div>' +
+      // Name
+      '<div style="font-style:italic;font-size:30px;color:#FCFBF5;font-weight:400;line-height:1.1;margin-bottom:18px">' + nome + '</div>' +
+      // Status badge
+      '<div style="display:inline-flex;align-items:center;background:rgba(188,154,79,.18);border:0.5px solid rgba(188,154,79,.45);border-radius:20px;padding:5px 14px;margin-bottom:22px">' +
+        '<span style="font-size:11px;color:#d4b472;letter-spacing:1.5px;font-family:Raleway,sans-serif">' + statusLabel + '</span>' +
       '</div>' +
-      '<div style="font-family:Georgia,serif;font-size:24px;color:#FDF8F0;font-weight:400;margin-bottom:4px">Minha Rotina</div>' +
-      '<div style="font-family:Georgia,serif;font-size:26px;font-style:italic;color:#e0bc76;margin-bottom:6px">' + nome + '</div>' +
-      (tipo ? '<div style="font-size:12px;color:rgba(242,232,217,.55);letter-spacing:1px">' + tipo + '</div>' : '') +
-      (tags.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">' + tags.map(function(t){ return '<span style="padding:3px 10px;border:0.5px solid rgba(201,169,122,.25);border-radius:20px;font-size:10px;color:#e0bc76;font-family:Georgia,serif">' + t + '</span>'; }).join('') + '</div>' : '') +
+      // Separator
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">' +
+        '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.25)"></div>' +
+        '<span style="font-size:10px;color:rgba(188,154,79,.4)">✦</span>' +
+        '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.25)"></div>' +
+      '</div>' +
+      // Quote
+      '<div style="font-style:italic;font-size:13px;color:rgba(242,232,217,.6);line-height:1.7;padding-left:14px;border-left:2px solid rgba(188,154,79,.35)">' +
+        '"' + quote + '"' +
+      '</div>' +
     '</div>' +
-    // Stats light
-    '<div style="background:#FDF8F0;padding:24px 28px">' +
-      (score ? '<div style="margin-bottom:18px">' +
-        '<div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#D4A853;margin-bottom:8px">Estado da pele</div>' +
-        '<div style="height:6px;background:rgba(212,168,83,.15);border-radius:3px;overflow:hidden;margin-bottom:6px">' +
-          '<div style="height:100%;width:' + Math.min(score, 100) + '%;background:#D4A853;border-radius:3px"></div>' +
+    // ── Secção clara ──────────────────────────────────────────────────────
+    '<div style="background:#FCFBF5;padding:22px 28px 24px">' +
+      // Tags como objetivos
+      (tags.length ? (
+        '<div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:#BC9A4F;margin-bottom:9px;font-family:Raleway,sans-serif">✦ Os meus objetivos</div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">' +
+          tags.map(function(t){ return '<span style="padding:4px 12px;border:0.5px solid rgba(188,154,79,.3);border-radius:20px;font-size:11px;color:#7a6a5a;font-family:Raleway,sans-serif">' + t + '</span>'; }).join('') +
+        '</div>'
+      ) : '') +
+      // Progress bar
+      (score ? (
+        '<div style="margin-bottom:18px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">' +
+            '<div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:#BC9A4F;font-family:Raleway,sans-serif">Evolução da pele</div>' +
+            '<div style="font-size:12px;font-weight:600;color:#3D2010;font-family:Raleway,sans-serif">' + score + '<span style="font-size:10px;font-weight:400;color:#9a8878">/100</span></div>' +
+          '</div>' +
+          '<div style="height:5px;background:rgba(188,154,79,.12);border-radius:3px;overflow:hidden">' +
+            '<div style="height:100%;width:' + Math.min(score,100) + '%;background:linear-gradient(90deg,#BC9A4F,#d4b472);border-radius:3px"></div>' +
+          '</div>' +
+        '</div>'
+      ) : '') +
+      // Step counts
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">' +
+        '<div style="background:#fff;border:0.5px solid rgba(188,154,79,.18);border-radius:10px;padding:14px;text-align:center">' +
+          '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#BC9A4F;margin-bottom:5px;font-family:Raleway,sans-serif">Manhã</div>' +
+          '<div style="font-size:26px;font-weight:400;color:#3D2010;line-height:1">' + passosManha + '</div>' +
+          '<div style="font-size:10px;color:#9a8878;font-family:Raleway,sans-serif;margin-top:3px">passos diários</div>' +
         '</div>' +
-        '<div style="font-size:13px;font-weight:500;color:#3D2010">' + score + '/100</div>' +
-      '</div>' : '') +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">' +
-        '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:10px;padding:14px">' +
-          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#D4A853;margin-bottom:4px">Manhã</div>' +
-          '<div style="font-size:22px;font-weight:400;color:#3D2010">' + passosManha + '</div>' +
-          '<div style="font-size:11px;color:#9a8878">passos</div>' +
-        '</div>' +
-        '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:10px;padding:14px">' +
-          '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#D4A853;margin-bottom:4px">Noite</div>' +
-          '<div style="font-size:22px;font-weight:400;color:#3D2010">' + passosNoite + '</div>' +
-          '<div style="font-size:11px;color:#9a8878">passos</div>' +
+        '<div style="background:#fff;border:0.5px solid rgba(188,154,79,.18);border-radius:10px;padding:14px;text-align:center">' +
+          '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#BC9A4F;margin-bottom:5px;font-family:Raleway,sans-serif">Noite</div>' +
+          '<div style="font-size:26px;font-weight:400;color:#3D2010;line-height:1">' + passosNoite + '</div>' +
+          '<div style="font-size:10px;color:#9a8878;font-family:Raleway,sans-serif;margin-top:3px">passos diários</div>' +
         '</div>' +
       '</div>' +
-      '<div style="text-align:center;padding-top:4px">' +
-        '<div style="font-size:11px;color:#9a8878;margin-bottom:4px">Crie a sua rotina em</div>' +
-        '<div style="font-size:14px;font-weight:500;color:#D4A853;letter-spacing:.5px">hegaiskin.app</div>' +
+      // CTA
+      '<div style="background:linear-gradient(135deg,rgba(188,154,79,.1),rgba(188,154,79,.05));border:0.5px solid rgba(188,154,79,.25);border-radius:10px;padding:13px;text-align:center">' +
+        '<div style="font-size:9px;color:#9a8878;letter-spacing:1.5px;text-transform:uppercase;font-family:Raleway,sans-serif;margin-bottom:5px">Crie a sua rotina exclusiva em</div>' +
+        '<div style="font-size:15px;color:#BC9A4F;letter-spacing:1px;font-style:italic">hegaiskin.app</div>' +
       '</div>' +
     '</div>';
 
@@ -2567,7 +2597,7 @@ async function compartilharProtocolo() {
     if (document.body.contains(card)) document.body.removeChild(card);
     console.warn('html2canvas error:', e);
     // Fallback to text
-    var texto = 'Minha rotina foi criada pelo Hegai Skin versão beta!\n\n' + nome + '\nPele: ' + tipo + (score ? '\nScore: ' + score + '/100' : '') + '\n' + passosManha + ' passos de manhã · ' + passosNoite + ' à noite\n\nhegaiskin.app';
+    var texto = '✦ A minha jornada skincare\n\n' + nome + '\n' + statusLabel + (score ? ' · ' + score + '/100' : '') + '\n\n"' + quote + '"\n\n' + passosManha + ' passos manhã · ' + passosNoite + ' passos noite\n\nCrie a sua rotina exclusiva em hegaiskin.app';
     copiarTexto(texto);
   }
 }
@@ -2625,7 +2655,7 @@ function renderEvolucaoFotos() {
         '<div style="font-size:40px;margin-bottom:12px">📸</div>' +
         '<div style="font-size:15px;font-weight:500;color:var(--dark);margin-bottom:6px">Registre sua evolução</div>' +
         '<div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Tire uma foto agora e acompanhe sua transformação semana a semana</div>' +
-        '<div style="font-size:11px;color:var(--muted);background:rgba(212,168,83,.06);border:0.5px solid rgba(212,168,83,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
+        '<div style="font-size:11px;color:var(--muted);background:rgba(188,154,79,.06);border:0.5px solid rgba(188,154,79,.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.6;text-align:left">' +
           '🔒 <strong style="color:var(--dark)">Sua foto fica apenas neste dispositivo.</strong> Não é enviada, armazenada em servidores ou compartilhada com ninguém. Somente a análise textual da pele é processada pela IA.' +
         '</div>' +
         '<button onclick="tirarFotoEvolucao()" style="padding:12px 24px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;cursor:pointer">📷 Registrar semana 1</button>' +
@@ -2643,7 +2673,7 @@ function renderEvolucaoFotos() {
     var primeira = historico[0];
     var ultima   = historico[historico.length - 1];
     html +=
-      '<div style="background:#fff;border:0.5px solid rgba(212,168,83,.15);border-radius:12px;padding:16px;margin-bottom:16px">' +
+      '<div style="background:#fff;border:0.5px solid rgba(188,154,79,.15);border-radius:12px;padding:16px;margin-bottom:16px">' +
         '<div style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px">Sua transformação</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
           '<div style="text-align:center">' +
@@ -2658,8 +2688,8 @@ function renderEvolucaoFotos() {
           '</div>' +
         '</div>' +
       '</div>' +
-      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(212,168,83,.06);border-radius:8px;border-left:2px solid rgba(212,168,83,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
-      '<div style="font-size:11px;color:var(--muted);background:rgba(212,168,83,.04);border:0.5px solid rgba(212,168,83,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
+      (ultima.feedback ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(188,154,79,.06);border-radius:8px;border-left:2px solid rgba(188,154,79,.3);margin-bottom:12px">' + ultima.feedback + '</div>' : '') +
+      '<div style="font-size:11px;color:var(--muted);background:rgba(188,154,79,.04);border:0.5px solid rgba(188,154,79,.1);border-radius:8px;padding:10px 14px;margin-bottom:14px;line-height:1.5">' +
         '🔒 Suas fotos ficam <strong style="color:var(--dark)">apenas neste dispositivo</strong> — não são enviadas nem armazenadas em nenhum servidor.' +
       '</div>';
   }
