@@ -1934,7 +1934,7 @@ function renderSteps(steps, rotinaTipo) {
         '<div class="step-num" style="background:rgba(122,138,110,.12);color:#7a8a6e;font-size:16px">📦</div>' +
         '<div class="step-content">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
-            '<div class="step-product">'+toTitleCase(s.produto||s.nome||'')+'</div>' +
+            '<div class="step-product">'+toTitleCase(s.produto||s.nome||s.categoria||'')+'</div>' +
             '<span style="font-size:10px;background:rgba(122,138,110,.1);color:#7a8a6e;border:0.5px solid rgba(122,138,110,.35);border-radius:20px;padding:3px 8px;white-space:nowrap;flex-shrink:0">⏳ A caminho</span>' +
           '</div>' +
           '<div class="step-how" style="color:var(--muted)">'+( s.como||s.instrucao||'')+'</div>' +
@@ -1945,12 +1945,13 @@ function renderSteps(steps, rotinaTipo) {
       '</div>';
     }
 
-    _stepTexts[uid] = 'Passo '+(i+1)+'. '+toTitleCase(s.produto||s.nome||'')+'. '+(s.como||s.instrucao||'');
+    var _nomePasso = toTitleCase(s.produto||s.nome||s.categoria||'');
+    _stepTexts[uid] = 'Passo '+(i+1)+'. '+_nomePasso+'. '+(s.como||s.instrucao||'');
     return '<div class="step-item" id="'+uid+'">' +
       '<div class="step-num">'+(i+1)+'</div>' +
       '<div class="step-content">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
-          '<div class="step-product">'+ toTitleCase(s.produto||s.nome||'')+'</div>' +
+          '<div class="step-product">'+_nomePasso+'</div>' +
           (s.tempo ? '<span class="step-time" style="white-space:nowrap">'+s.tempo+'</span>' : '') +
         '</div>' +
         '<div class="step-how">'+(s.como||s.instrucao||'')+'</div>' +
