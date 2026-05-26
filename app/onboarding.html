@@ -885,7 +885,7 @@ input[type=file]{display:none}
       <div class="spin-t">Criando sua rotina<span class="dots"></span></div>
       <p class="spin-step" id="gen-step">Analisando · Passo 1 de 2</p>
       <p class="spin-s" id="gen-msg">Analisando sua pele e hábitos</p>
-      <p id="gen-patience" style="display:none;font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;max-width:240px;margin-left:auto;margin-right:auto">Com muitos produtos a IA leva até 1 minuto — não feche a página ☕</p>
+      <p id="gen-patience" style="display:none;font-size:11px;color:var(--muted);margin-top:16px;line-height:1.6;max-width:240px;margin-left:auto;margin-right:auto">Aguarde, em instantes iremos apresentar sua rotina personalizada ✨</p>
     </div>
     <div id="gen-error" style="display:none;padding:24px 20px;text-align:center">
       <div style="font-size:32px;margin-bottom:12px">⏱</div>
@@ -1282,13 +1282,21 @@ async function doAuth() {
   var pw = isLog ? (document.getElementById('log-pw')||{value:''}).value : (document.getElementById('inp-pw')||{value:''}).value;
   var err = isLog ? document.getElementById("auth-err-log") : document.getElementById("auth-err");
 
+  // Ocultar erro anterior
+  if (err) { err.style.display = 'none'; err.textContent = ''; }
+
   if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.style.display='block';} return; }
   if (!isLog && pw.length < 6) { if(err){err.textContent='Senha mínimo 6 caracteres.';err.style.display='block';} return; }
+
+  // Botão de loading
+  var btn = document.querySelector('#' + (isLog ? 'form-log' : 'form-new') + ' .btn');
+  var btnOrig = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Entrando...'; btn.style.opacity = '0.7'; }
 
   try {
     var user;
     if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
-    
+
     if (isLog) {
       var cred = await window._fbAuth.signInWithEmailAndPassword(email, pw);
       user = cred.user;
@@ -1301,7 +1309,7 @@ async function doAuth() {
         localStorage.setItem('sbp_ativo', 'true');
       }
     } else {
-      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.style.display='block';} return; }
+      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.style.display='block';} if(btn){btn.disabled=false;btn.textContent=btnOrig;btn.style.opacity='';} return; }
       var cred = await window._fbAuth.createUserWithEmailAndPassword(email, pw);
       user = cred.user;
       // Salvar perfil no Firestore
@@ -1311,13 +1319,13 @@ async function doAuth() {
         atualizacoes: { mes: '', usado: 0, limite: 3 }
       });
     }
-    
+
     window._currentUser = user;
     S.nome = nome || user.displayName || email.split('@')[0];
     S.email = email;
     localStorage.setItem('sbp_user', JSON.stringify({nome:S.nome, email:email, uid:user.uid}));
     localStorage.setItem('sbp_auth', user.uid);
-    
+
     // Se login e tem protocolo, vai direto
     if (isLog && localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
       window.location.href = 'protocolo.html';
@@ -1325,10 +1333,13 @@ async function doAuth() {
     }
     go('s-lgpd');
   } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = btnOrig; btn.style.opacity = ''; }
     var msg = e.code === 'auth/email-already-in-use' ? 'Este email já está cadastrado.' :
               e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
               e.code === 'auth/user-not-found' ? 'Conta não encontrada.' :
               e.code === 'auth/weak-password' ? 'Senha muito fraca (mínimo 6 caracteres).' :
+              e.code === 'auth/too-many-requests' ? 'Muitas tentativas. Aguarde alguns minutos.' :
+              e.code === 'auth/network-request-failed' ? 'Erro de conexão. Verifique a internet.' :
               'Erro: ' + e.message;
     if(err){err.textContent=msg;err.style.display='block';}
   }
