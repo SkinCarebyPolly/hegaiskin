@@ -1526,7 +1526,7 @@ function initEvolucao() {
     area.classList.add('has-photo');
     if (statusEl) {
       var _devEmail = 'pollianna.machado@joinusit.pt';
-      var _isdev = window._currentUser && window._currentUser.email === _devEmail;
+      var _isdev = (window._currentUser && window._currentUser.email === _devEmail) || (user && user.email === _devEmail);
       statusEl.innerHTML = `<span style="color:var(--gold)">✅ Foto registada em ${getMesLabel(mesAtual)}</span>` +
         (_isdev ? ' <button onclick="apagarFotoMes()" style="margin-left:10px;font-size:11px;color:var(--red);background:none;border:0.5px solid rgba(184,90,80,.3);border-radius:20px;padding:3px 10px;cursor:pointer;font-family:inherit">🗑 Apagar</button>' : '');
     }
