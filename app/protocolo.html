@@ -2024,6 +2024,7 @@ function renderSubstituicoes(container) {
 }
 
 function mostrarSmartShelf() {
+  if (protocolo.sem_produto) return;
   var trocas  = protocolo.sugestoes_substituicoes || [];
   var alertas = protocolo.alertas_validade || [];
   if (!trocas.length && !alertas.length) return;

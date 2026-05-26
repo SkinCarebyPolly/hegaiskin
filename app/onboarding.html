@@ -2490,7 +2490,7 @@ async function gerarProtocolo() {
     '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
     '• sugestoes_upgrade: EXATAMENTE 2 upgrades — produtos que elevariam a rotina ao próximo nível sem adicionar passos desnecessários (ex: booster vitamina C, retinol, péptidos, AHA noturno). Considere o tempo disponível (' + S.rotina + ') e os objetivos da pele. Sugira upgrades que cabem no tempo existente ou substituem um passo.\n' +
     '• sugestoes_substituicoes: APENAS produtos que a cliente JÁ TEM e contradizem diretamente seus objetivos de pele. Se todos compatíveis → retorne [].\n' +
-    '• alertas_validade: produtos sensíveis a luz, calor ou com prazo curto após abertos.';
+    '• alertas_validade: ' + (S.modoProd === 'zero' ? 'retorne [] — cliente não tem produtos próprios.' : 'APENAS produtos que a cliente realmente TEM e são sensíveis a luz, calor ou com prazo curto após abertos. Se cliente não tem produtos → retorne [].');
   var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere apenas os protocolos especiais.\n\n' +
     'PERFIL:\n' +
     '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
