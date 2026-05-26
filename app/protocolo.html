@@ -522,12 +522,18 @@ input[type="file"] { display:none; }
   <div class="card">
     <div class="card-title"><span class="card-title-icon">📷</span> Adicionar produto novo</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Comprou algo novo? Fotografe e a IA integra automaticamente no sua rotina.</p>
-    <div class="evo-photo-area" id="new-product-area" onclick="document.getElementById('new-product-input').click()">
-      <div class="evo-icon">📦</div>
-      <div class="evo-title">Fotografar produto novo</div>
-      <div class="evo-sub">A IA vai integrar ao sua rotina</div>
+    <div style="display:flex;gap:10px;margin-bottom:4px">
+      <button onclick="document.getElementById('new-product-camera').click()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 10px;background:rgba(188,154,79,.06);border:0.5px dashed rgba(188,154,79,.35);border-radius:12px;cursor:pointer;font-family:inherit">
+        <span style="font-size:24px">📷</span>
+        <span style="font-size:12px;font-weight:500;color:var(--dark)">Câmera</span>
+      </button>
+      <button onclick="document.getElementById('new-product-galeria').click()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 10px;background:rgba(188,154,79,.06);border:0.5px dashed rgba(188,154,79,.35);border-radius:12px;cursor:pointer;font-family:inherit">
+        <span style="font-size:24px">🖼️</span>
+        <span style="font-size:12px;font-weight:500;color:var(--dark)">Galeria</span>
+      </button>
     </div>
-    <input type="file" id="new-product-input" accept="image/*" onchange="addNewProduct(event)">
+    <input type="file" id="new-product-camera" accept="image/*" capture="environment" onchange="addNewProduct(event)">
+    <input type="file" id="new-product-galeria" accept="image/*" onchange="addNewProduct(event)">
     <div id="new-product-loading" style="display:none" class="ai-loading-bar">
       <div class="ai-mini-spinner"></div>
       <div class="ai-loading-text">Analisando e integrando ao sua rotina...</div>
