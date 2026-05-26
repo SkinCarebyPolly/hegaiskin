@@ -1076,9 +1076,11 @@ async function adicionarSugestaoRotina(produto, pendente) {
 
     var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos. Adicione o produto abaixo na rotina, no passo mais adequado.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
 
-    var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', prompt, 2000);
+    var raw = await geminiChat('Especialista em cosmetologia. Responde APENAS em JSON válido sem markdown.', prompt, 4000);
     var clean = raw.replace(/```json|```/g, '').trim();
-    var novaRotina = JSON.parse(clean);
+    var _ji = clean.indexOf('{'), _je = clean.lastIndexOf('}');
+    if (_ji === -1 || _je === -1) throw new Error('JSON não encontrado');
+    var novaRotina = JSON.parse(clean.substring(_ji, _je + 1));
 
     // Se for pendente, marca o passo recém-adicionado
     if (pendente) {
