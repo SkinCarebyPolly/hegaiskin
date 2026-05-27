@@ -1964,6 +1964,26 @@ function abrirGaleriaAparelhos() {
   if (inp) { inp.value = ''; inp.click(); }
 }
 
+function matchApar(tipo, nome, marca) {
+  var s = ((tipo||'') + ' ' + (nome||'') + ' ' + (marca||'')).toLowerCase();
+  if (s.indexOf('radiofrequen') >= 0 || s.indexOf('medicube') >= 0 || s.indexOf('newa') >= 0 || s.indexOf('tripollar') >= 0 || s.indexOf('age-r') >= 0 || s.indexOf('booster pro') >= 0) return 'Radiofrequência';
+  if (s.indexOf('microcorren') >= 0 || s.indexOf('microcurren') >= 0 || s.indexOf('nuface') >= 0) return 'Microcorrente';
+  if (s.indexOf('led') >= 0 || s.indexOf('desse') >= 0 || s.indexOf('currentbody') >= 0) return 'LED facial';
+  if (s.indexOf('ultrassom') >= 0 || s.indexOf('ultrasound') >= 0) return 'Ultrassom facial';
+  if (s.indexOf('sonic') >= 0 || s.indexOf('limpeza') >= 0 || s.indexOf('foreo') >= 0 || s.indexOf('anlan') >= 0 || s.indexOf('geske') >= 0) return 'Limpeza sônica';
+  if (s.indexOf('gua') >= 0 || s.indexOf('jade') >= 0 || s.indexOf('rolo') >= 0) return 'Gua sha / rolo';
+  if (s.indexOf('microagulh') >= 0 || s.indexOf('dermaroll') >= 0 || s.indexOf('dermapen') >= 0) return 'Microagulhamento';
+  return null;
+}
+function autoSelectApar(label) {
+  if (!label) return;
+  function simp(x){ return x.toLowerCase().replace(/[^a-z0-9 ]/g,''); }
+  document.querySelectorAll('#q3 .qopt').forEach(function(opt) {
+    var lbl = opt.querySelector('.qopt-lbl');
+    if (lbl && simp(lbl.textContent.trim()) === simp(label) && !opt.classList.contains('on')) togM(opt);
+  });
+}
+
 async function processarFotoAparelhos(input) {
   if (!input.files || !input.files.length) return;
   var status = document.getElementById('aparelho-ocr-status');
@@ -2006,36 +2026,9 @@ async function processarFotoAparelhos(input) {
       };
       // Auto-select matching checkboxes + preservar nome específico
       var extrasManual = [];
-      function normTipo(s) {
-        return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[\s\-]/g,'_');
-      }
-      function labelParaTipo(tipo, nome, marca) {
-        var t = normTipo(tipo);
-        var n = normTipo((nome||'') + ' ' + (marca||''));
-        if (t.includes('radiofrequen') || n.includes('medicube') || n.includes('newa') || n.includes('tripollar')) return 'Radiofrequência';
-        if (t.includes('led') || n.includes('desse') || n.includes('currentbody')) return 'LED facial';
-        if (t.includes('microcorrente') || n.includes('nuface')) return 'Microcorrente';
-        if (t.includes('ultrassom')) return 'Ultrassom facial';
-        if (t.includes('limpeza') || t.includes('sonic') || n.includes('foreo') || n.includes('anlan')) return 'Limpeza sônica';
-        if (t.includes('gua') || t.includes('rolo') || t.includes('jade')) return 'Gua sha / rolo';
-        if (t.includes('microagulh') || t.includes('dermaroll') || t.includes('dermapen')) return 'Microagulhamento';
-        // GESKE: multi-função → marca como limpeza sônica por padrão
-        if (n.includes('geske')) return 'Limpeza sônica';
-        return null;
-      }
       todosAparelhos.forEach(function(a) {
-        var label = labelParaTipo(a.tipo, a.nome, a.marca);
-        if (label) {
-          var opts = document.querySelectorAll('#q3 .qopt');
-          opts.forEach(function(opt) {
-            if (opt.querySelector('.qopt-lbl').textContent.trim() === label) {
-              if (!opt.classList.contains('on')) togM(opt);
-            }
-          });
-          if (a.nome) extrasManual.push(a);
-        } else if (a.nome) {
-          extrasManual.push(a);
-        }
+        autoSelectApar(matchApar(a.tipo, a.nome, a.marca));
+        if (a.nome) extrasManual.push(a);
       });
       // Salva aparelhos extras para passar ao prompt
       if (extrasManual.length > 0) {
@@ -2181,23 +2174,7 @@ async function ocrAparelho(input) {
       renderAparOCRList();
       if (status) status.style.display = 'none';
       // Auto-select checkbox correspondente
-      (function(tipo, nome) {
-        function nt(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[\s\-]/g,'_'); }
-        var t = nt(tipo), n = nt(nome);
-        var label = null;
-        if (t.includes('radiofrequen') || n.includes('medicube') || n.includes('newa') || n.includes('tripollar')) label = 'Radiofrequência';
-        else if (t.includes('led') || n.includes('desse') || n.includes('currentbody')) label = 'LED facial';
-        else if (t.includes('microcorrente') || n.includes('nuface')) label = 'Microcorrente';
-        else if (t.includes('ultrassom')) label = 'Ultrassom facial';
-        else if (t.includes('limpeza') || t.includes('sonic') || n.includes('foreo') || n.includes('anlan') || n.includes('geske')) label = 'Limpeza sônica';
-        else if (t.includes('gua') || t.includes('rolo') || t.includes('jade')) label = 'Gua sha / rolo';
-        else if (t.includes('microagulh') || t.includes('dermaroll')) label = 'Microagulhamento';
-        if (!label) return;
-        document.querySelectorAll('#q3 .qopt').forEach(function(opt) {
-          var lbl = opt.querySelector('.qopt-lbl');
-          if (lbl && lbl.textContent.trim() === label && !opt.classList.contains('on')) togM(opt);
-        });
-      })(result.tipo, result.aparelho);
+      autoSelectApar(matchApar(result.tipo, result.aparelho, ''));
     }
   } catch(e) {
     if (status) { status.textContent = '⚠️ Erro: ' + e.message; setTimeout(function(){ status.style.display='none'; }, 3000); }
