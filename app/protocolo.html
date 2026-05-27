@@ -2139,9 +2139,10 @@ function mostrarSmartShelf() {
   var trocas  = protocolo.sugestoes_substituicoes || [];
   var alertas = protocolo.alertas_validade || [];
   if (!trocas.length && !alertas.length) return;
-  var hoje = new Date().toISOString().substring(0,10);
-  if (localStorage.getItem('sbp_shelf_shown') === hoje) return;
-  localStorage.setItem('sbp_shelf_shown', hoje);
+  var agora = Date.now();
+  var ultima = parseInt(localStorage.getItem('sbp_shelf_shown') || '0');
+  if (agora - ultima < 7 * 24 * 60 * 60 * 1000) return;
+  localStorage.setItem('sbp_shelf_shown', agora);
 
   // Preencher conteúdo de incompatibilidades
   var contentEl = document.getElementById('smart-shelf-content');
