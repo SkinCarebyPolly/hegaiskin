@@ -170,6 +170,9 @@ input[type=file]{display:none}
             var atualizando = localStorage.getItem('sbp_atualizando');
             if (atualizando) {
               localStorage.removeItem('sbp_atualizando');
+              var w = document.getElementById('s-welcome');
+              if (w) w.style.display = 'none';
+              go('s-lgpd');
             } else if (!hasLocal) {
               try {
                 var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
