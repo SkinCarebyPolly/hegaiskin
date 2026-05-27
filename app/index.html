@@ -214,19 +214,17 @@ input[type=file]{display:none}
 </div>
 
 <!-- WELCOME -->
-<div class="scr" id="s-welcome" style="display:flex;padding:0;overflow:hidden">
-  <div style="position:relative;width:100%;min-height:100vh;display:flex;flex-direction:column">
-    <div style="position:absolute;inset:0;background:url(foto-polly-welcome.jpg) center top/cover no-repeat"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(245,237,224,0.45) 0%,rgba(237,224,204,0.65) 50%,rgba(232,213,187,0.94) 100%)"></div>
-    <div style="position:relative;z-index:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:60px 32px;max-width:480px;margin:0 auto;gap:56px">
-      <div style="text-align:center">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:#2a1508;letter-spacing:-1px;line-height:1">HegaiSkin</div>
-        <div style="font-size:9px;letter-spacing:6px;text-transform:uppercase;color:#BC9A4F;margin-top:8px">Personalized Skincare</div>
-      </div>
-      <div style="width:100%">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:#2a1508;text-align:center;margin-bottom:28px;line-height:1.5">Sua rotina de skincare<br>personalizada por IA</div>
-        <button onclick="goWelcomeLog()" style="width:100%;background:linear-gradient(135deg,#BC9A4F,#d4b472);border:none;border-radius:8px;padding:16px;font-family:'Raleway',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer">Entrar →</button>
-      </div>
+<div id="s-welcome" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;overflow:hidden">
+  <div style="position:absolute;inset:0;background:url(foto-polly-welcome.jpg) center top/cover no-repeat"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(245,237,224,0.40) 0%,rgba(237,224,204,0.60) 50%,rgba(232,213,187,0.92) 100%)"></div>
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px;gap:44px">
+    <div style="text-align:center">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:#2a1508;letter-spacing:-1px;line-height:1">HegaiSkin</div>
+      <div style="font-size:9px;letter-spacing:6px;text-transform:uppercase;color:#BC9A4F;margin-top:8px">Personalized Skincare</div>
+    </div>
+    <div style="width:100%;max-width:400px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:21px;font-style:italic;color:#2a1508;text-align:center;margin-bottom:24px;line-height:1.5">Sua rotina de skincare<br>personalizada por IA</div>
+      <button onclick="goWelcomeLog()" style="width:100%;background:linear-gradient(135deg,#BC9A4F,#d4b472);border:none;border-radius:8px;padding:16px;font-family:'Raleway',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer">Entrar →</button>
     </div>
   </div>
 </div>
@@ -1163,8 +1161,8 @@ function chkUpdate() {
 }
 
 
-function goWelcomeCad() { authTab('new'); go('s-cad'); }
-function goWelcomeLog() { authTab('log'); go('s-cad'); }
+function goWelcomeCad() { var w=document.getElementById('s-welcome'); if(w)w.style.display='none'; go('s-cad'); }
+function goWelcomeLog() { var w=document.getElementById('s-welcome'); if(w)w.style.display='none'; go('s-cad'); }
 
 function goLGPD() {
   var c1=document.getElementById("c1"),c2=document.getElementById("c2"),c3=document.getElementById("c3");
