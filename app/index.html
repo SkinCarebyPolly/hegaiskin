@@ -1390,7 +1390,7 @@ async function esqueceuSenha() {
   }
   try {
     await window._fbAuth.sendPasswordResetEmail(email);
-    alert('Email de redefinição enviado para ' + email + '. Verifique sua caixa de entrada.');
+    alert('Email enviado para ' + email + '.\n\nCaso não apareça na caixa de entrada, verifique a pasta de spam ou lixo eletrônico.');
   } catch(e) {
     var msg = e.code === 'auth/user-not-found' ? 'Email não encontrado.' :
               e.code === 'auth/invalid-email' ? 'Email inválido.' : 'Erro: ' + e.message;
