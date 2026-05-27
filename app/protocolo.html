@@ -2855,7 +2855,6 @@ function desativarNotificacoes() {
 
 // ── COMPARTILHAR PROTOCOLO ───────────────────────────────────────────────────
 async function compartilharProtocolo() {
-  // Lazy load html2canvas apenas quando necessário (1.4MB poupados no carregamento inicial)
   if (typeof html2canvas === 'undefined') {
     await new Promise(function(resolve, reject) {
       var s = document.createElement('script');
@@ -2864,17 +2863,13 @@ async function compartilharProtocolo() {
       document.head.appendChild(s);
     });
   }
-  var nome  = protocolo.nome_cliente || user.nome || 'Eu';
+  var nome  = protocolo.nome_cliente || perfil.nome || user.nome || 'Eu';
   var score = parseInt(protocolo.score_pele) || 0;
-  var tags  = (protocolo.tags || [])
-    .map(function(t){ return t.replace(/^anti([a-záàâãéêíóôõúç])/i,'anti-$1'); })
-    .filter(function(t){ return !/(oleosidade|poros|manchas|acne|brilho)/i.test(t); })
-    .slice(0, 4);
-  var passosManha = (protocolo.rotina_manha || []).length;
-  var passosNoite = (protocolo.rotina_noite || []).length;
+  var tipoPele = protocolo.tipo_pele || perfil.tipoPele || '';
+  var diagText = typeof protocolo.diagnostico === 'object'
+    ? Object.values(protocolo.diagnostico).join(' ')
+    : (protocolo.diagnostico || '');
 
-  // Status label + aspirational quote based on score
-  var statusLabel = score >= 91 ? 'Pele Radiante ✦' : score >= 71 ? 'Pele em Dia ✦' : score >= 41 ? 'Em Evolução ↑' : 'A Jornada Começa ✦';
   var quote = score >= 91 ? 'A pele que sempre quiseste — construída passo a passo.'
             : score >= 71 ? 'Consistência é o segredo mais bem guardado da beleza.'
             : score >= 41 ? 'Cada passo, mais perto da pele que sempre quiseste.'
@@ -2883,73 +2878,47 @@ async function compartilharProtocolo() {
   mostrarToast('Gerando imagem...');
 
   var card = document.createElement('div');
-  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;background:#3D2010;font-family:Georgia,serif;overflow:hidden;border-radius:0;padding:0';
+  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;font-family:Georgia,serif;overflow:hidden;border-radius:0;padding:0;background:#2a1508';
 
   card.innerHTML =
-    // ── Header escuro ──────────────────────────────────────────────────────
-    '<div style="background:linear-gradient(160deg,#3D2010 0%,#2a1508 55%,#3a1e0a 100%);padding:40px 28px 32px;position:relative;overflow:hidden">' +
-      '<div style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(188,154,79,.07)"></div>' +
-      '<div style="position:absolute;left:-20px;bottom:-10px;width:100px;height:100px;border-radius:50%;background:rgba(188,154,79,.05)"></div>' +
-      // Brand
-      '<div style="font-style:italic;font-size:13px;color:#BC9A4F;letter-spacing:2px;margin-bottom:22px">✦ Hegai Skin</div>' +
-      // Tagline
-      '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,194,162,.45);margin-bottom:8px">A minha jornada skincare</div>' +
-      // Name
-      '<div style="font-style:italic;font-size:30px;color:#FCFBF5;font-weight:400;line-height:1.1;margin-bottom:18px">' + nome + '</div>' +
-      // Status badge
-      '<div style="display:inline-flex;align-items:center;background:rgba(188,154,79,.18);border:0.5px solid rgba(188,154,79,.45);border-radius:20px;padding:5px 14px;margin-bottom:22px">' +
-        '<span style="font-size:11px;color:#d4b472;letter-spacing:1.5px;font-family:Raleway,sans-serif">' + statusLabel + '</span>' +
-      '</div>' +
-      // Separator
-      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">' +
+    // ── Header escuro ─────────────────────────────────────────────────────
+    '<div style="background:linear-gradient(160deg,#3D2010 0%,#2a1508 60%,#3a1e0a 100%);padding:36px 28px 30px;position:relative;overflow:hidden">' +
+      '<div style="position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(188,154,79,.06)"></div>' +
+      '<div style="position:absolute;left:-20px;bottom:-20px;width:120px;height:120px;border-radius:50%;background:rgba(188,154,79,.04)"></div>' +
+      // Brand line
+      '<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(188,154,79,.6);margin-bottom:22px">@HEGAISKIN</div>' +
+      // Welcome headline
+      '<div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(242,232,217,.4);margin-bottom:6px">Bem-vinda à</div>' +
+      '<div style="font-family:Georgia,serif;font-style:italic;font-size:34px;font-weight:400;color:#FCFBF5;line-height:1.1;margin-bottom:14px">sua rotina &#x1F338;</div>' +
+      // Divider with label
+      '<div style="display:flex;align-items:center;gap:10px">' +
         '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.25)"></div>' +
-        '<span style="font-size:10px;color:rgba(188,154,79,.4)">✦</span>' +
+        '<span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(188,154,79,.5)">rotina exclusiva</span>' +
         '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.25)"></div>' +
-      '</div>' +
-      // Quote
-      '<div style="font-style:italic;font-size:13px;color:rgba(242,232,217,.6);line-height:1.7;padding-left:14px;border-left:2px solid rgba(188,154,79,.35)">' +
-        '"' + quote + '"' +
       '</div>' +
     '</div>' +
-    // ── Secção clara ──────────────────────────────────────────────────────
-    '<div style="background:#FCFBF5;padding:22px 28px 24px">' +
-      // Tags como objetivos
-      (tags.length ? (
-        '<div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:#BC9A4F;margin-bottom:9px;font-family:Raleway,sans-serif">✦ Os meus objetivos</div>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px">' +
-          tags.map(function(t){ return '<span style="padding:4px 12px;border:0.5px solid rgba(188,154,79,.3);border-radius:20px;font-size:11px;color:#7a6a5a;font-family:Raleway,sans-serif">' + t + '</span>'; }).join('') +
+    // ── Análise personalizada ──────────────────────────────────────────────
+    '<div style="background:#FCFBF5;padding:26px 28px 28px">' +
+      // Section label
+      '<div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#BC9A4F;margin-bottom:14px">✦ Sua análise personalizada</div>' +
+      // Client name
+      '<div style="font-family:Georgia,serif;font-size:22px;font-weight:400;color:#3D2010;margin-bottom:14px;line-height:1.2">' + nome + '</div>' +
+      // Analysis text
+      (diagText ? '<div style="font-size:13px;color:#5a4a3a;line-height:1.8;margin-bottom:18px">' + diagText + '</div>' : '') +
+      // Skin type
+      (tipoPele ? (
+        '<div style="display:inline-flex;align-items:center;gap:8px;background:rgba(188,154,79,.08);border:0.5px solid rgba(188,154,79,.25);border-radius:20px;padding:6px 16px">' +
+          '<span style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(188,154,79,.7)">Tipo de pele</span>' +
+          '<span style="font-size:11px;color:#3D2010;font-weight:500">' + tipoPele + '</span>' +
         '</div>'
       ) : '') +
-      // Progress bar
-      (score ? (
-        '<div style="margin-bottom:18px">' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">' +
-            '<div style="font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:#BC9A4F;font-family:Raleway,sans-serif">Evolução da pele</div>' +
-            '<div style="font-size:12px;font-weight:600;color:#3D2010;font-family:Raleway,sans-serif">' + score + '<span style="font-size:10px;font-weight:400;color:#9a8878">/100</span></div>' +
-          '</div>' +
-          '<div style="height:5px;background:rgba(188,154,79,.12);border-radius:3px;overflow:hidden">' +
-            '<div style="height:100%;width:' + Math.min(score,100) + '%;background:linear-gradient(90deg,#BC9A4F,#d4b472);border-radius:3px"></div>' +
-          '</div>' +
-        '</div>'
-      ) : '') +
-      // Step counts
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">' +
-        '<div style="background:#fff;border:0.5px solid rgba(188,154,79,.18);border-radius:10px;padding:14px;text-align:center">' +
-          '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#BC9A4F;margin-bottom:5px;font-family:Raleway,sans-serif">Manhã</div>' +
-          '<div style="font-size:26px;font-weight:400;color:#3D2010;line-height:1">' + passosManha + '</div>' +
-          '<div style="font-size:10px;color:#9a8878;font-family:Raleway,sans-serif;margin-top:3px">passos diários</div>' +
-        '</div>' +
-        '<div style="background:#fff;border:0.5px solid rgba(188,154,79,.18);border-radius:10px;padding:14px;text-align:center">' +
-          '<div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#BC9A4F;margin-bottom:5px;font-family:Raleway,sans-serif">Noite</div>' +
-          '<div style="font-size:26px;font-weight:400;color:#3D2010;line-height:1">' + passosNoite + '</div>' +
-          '<div style="font-size:10px;color:#9a8878;font-family:Raleway,sans-serif;margin-top:3px">passos diários</div>' +
-        '</div>' +
+    '</div>' +
+    // ── Footer escuro com frase ────────────────────────────────────────────
+    '<div style="background:linear-gradient(135deg,#3D2010,#2a1508);padding:20px 28px 24px">' +
+      '<div style="font-style:italic;font-size:13px;color:rgba(242,232,217,.55);line-height:1.7;text-align:center;margin-bottom:14px">' +
+        '&ldquo;' + quote + '&rdquo;' +
       '</div>' +
-      // CTA
-      '<div style="background:linear-gradient(135deg,rgba(188,154,79,.1),rgba(188,154,79,.05));border:0.5px solid rgba(188,154,79,.25);border-radius:10px;padding:13px;text-align:center">' +
-        '<div style="font-size:9px;color:#9a8878;letter-spacing:1.5px;text-transform:uppercase;font-family:Raleway,sans-serif;margin-bottom:5px">Crie a sua rotina exclusiva em</div>' +
-        '<div style="font-size:15px;color:#BC9A4F;letter-spacing:1px;font-style:italic">hegaiskin.app</div>' +
-      '</div>' +
+      '<div style="text-align:center;font-size:11px;letter-spacing:1px;color:rgba(188,154,79,.6)">hegaiskin.com</div>' +
     '</div>';
 
   document.body.appendChild(card);
@@ -2958,7 +2927,7 @@ async function compartilharProtocolo() {
     var canvas = await html2canvas(card, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#3D2010',
+      backgroundColor: '#2a1508',
       logging: false
     });
     document.body.removeChild(card);
@@ -2974,7 +2943,6 @@ async function compartilharProtocolo() {
           if (e.name !== 'AbortError') baixarImagem(canvas);
         }
       } else {
-        // Fallback: download image
         baixarImagem(canvas);
       }
     }, 'image/png');
@@ -2982,8 +2950,7 @@ async function compartilharProtocolo() {
   } catch(e) {
     if (document.body.contains(card)) document.body.removeChild(card);
     console.warn('html2canvas error:', e);
-    // Fallback to text
-    var texto = '✦ A minha jornada skincare\n\n' + nome + '\n' + statusLabel + (score ? ' · ' + score + '/100' : '') + '\n\n"' + quote + '"\n\n' + passosManha + ' passos manhã · ' + passosNoite + ' passos noite\n\nCrie a sua rotina exclusiva em hegaiskin.app';
+    var texto = nome + '\n\n' + (diagText ? diagText + '\n\n' : '') + (tipoPele ? 'Tipo de pele: ' + tipoPele + '\n\n' : '') + '"' + quote + '"\n\nhegaiskin.com';
     copiarTexto(texto);
   }
 }
