@@ -225,8 +225,7 @@ input[type=file]{display:none}
       </div>
       <div style="width:100%">
         <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:#2a1508;text-align:center;margin-bottom:28px;line-height:1.5">Sua rotina de skincare<br>personalizada por IA</div>
-        <button onclick="goWelcomeCad()" style="width:100%;background:linear-gradient(135deg,#BC9A4F,#d4b472);border:none;border-radius:8px;padding:16px;font-family:'Raleway',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer;margin-bottom:10px">Fazer meu cadastro →</button>
-        <button onclick="goWelcomeLog()" style="width:100%;background:rgba(255,255,255,0.55);border:1px solid rgba(188,154,79,.4);border-radius:8px;padding:14px;font-family:'Raleway',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#2a1508;cursor:pointer">Já tenho conta</button>
+        <button onclick="goWelcomeLog()" style="width:100%;background:linear-gradient(135deg,#BC9A4F,#d4b472);border:none;border-radius:8px;padding:16px;font-family:'Raleway',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer">Entrar →</button>
       </div>
     </div>
   </div>
@@ -251,40 +250,14 @@ input[type=file]{display:none}
   </div>
 </div>
 
-<!-- 1: CADASTRO -->
+<!-- 1: LOGIN -->
 <div class="scr" id="s-cad">
   <div class="inner">
-    <div class="atabs">
-      <button class="atab on" id="auth-tab-new" onclick="authTab('new')">Nova conta</button>
-      <button class="atab off" id="auth-tab-log" onclick="authTab('log')">Já tenho conta</button>
-    </div>
-
-    <!-- Botão Google -->
-    <button onclick="doLoginGoogle()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:#fff;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;color:#333;cursor:pointer;margin-bottom:16px">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:18px;height:18px">
-      Continuar com Google
-    </button>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
-      <span style="font-size:11px;color:var(--muted)">ou</span>
-      <div style="flex:1;height:1px;background:rgba(201,169,122,0.2)"></div>
-    </div>
-
-    <div id="form-new">
-      <div class="badge">Bem-vinda</div>
-      <h1>Vamos criar<br><em>sua conta.</em></h1>
-      <div class="igrp"><label class="ilbl">Seu nome</label><input type="text" id="inp-nome" class="ifield" placeholder="Como quer ser chamada?"></div>
-      <div class="igrp"><label class="ilbl">Email</label><input type="email" id="inp-email" class="ifield" placeholder="seu@email.com"></div>
-      <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="inp-pw" class="ifield" placeholder="Mínimo 6 caracteres"><button class="peye" onclick="tgPw('inp-pw',this)" type="button">👁</button></div></div>
-      <button class="locbtn" id="locbtn" onclick="getLocation()"><span style="font-size:20px">📍</span><span id="loctxt">Permitir localização (clima da sua cidade)</span></button>
-      <div class="errmsg on" id="auth-err" style="display:none"></div>
-      <button class="btn" onclick="doAuth()">Criar minha conta →</button>
-    </div>
-    <div id="form-log" style="display:none">
+    <div id="form-log">
       <div class="badge">Bem-vinda de volta</div>
       <h1>Entre na<br><em>sua conta.</em></h1>
-      <div class="igrp"><label class="ilbl">Email</label><input type="email" id="log-email" class="ifield" placeholder="seu@email.com"></div>
-      <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="log-pw" class="ifield" placeholder="Sua senha"><button class="peye" onclick="tgPw('log-pw',this)" type="button">👁</button></div></div>
+      <div class="igrp"><label class="ilbl">Email</label><input type="email" id="log-email" class="ifield" placeholder="seu@email.com" autocomplete="email"></div>
+      <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="log-pw" class="ifield" placeholder="Sua senha" autocomplete="current-password"><button class="peye" onclick="tgPw('log-pw',this)" type="button">👁</button></div></div>
       <div class="errmsg" id="auth-err-log"></div>
       <button class="btn" onclick="doAuth()">Entrar →</button>
     </div>
@@ -1314,68 +1287,42 @@ async function doLoginGoogle() {
 }
 
 async function doAuth() {
-  var isLog = document.getElementById('form-log').style.display !== 'none';
-  var nome = (document.getElementById('inp-nome') || {value:''}).value.trim();
-  var email = isLog ? (document.getElementById('log-email')||{value:''}).value.trim() : (document.getElementById('inp-email')||{value:''}).value.trim();
-  var pw = isLog ? (document.getElementById('log-pw')||{value:''}).value : (document.getElementById('inp-pw')||{value:''}).value;
-  var err = isLog ? document.getElementById("auth-err-log") : document.getElementById("auth-err");
+  var email = (document.getElementById('log-email')||{value:''}).value.trim();
+  var pw = (document.getElementById('log-pw')||{value:''}).value;
+  var err = document.getElementById('auth-err-log');
 
-  // Ocultar erro anterior
   if (err) { err.style.display = 'none'; err.textContent = ''; }
-
   if (!email || !pw) { if(err){err.textContent='Preencha email e senha.';err.style.display='block';} return; }
-  if (!isLog && pw.length < 6) { if(err){err.textContent='Senha mínimo 6 caracteres.';err.style.display='block';} return; }
 
-  // Botão de loading
-  var btn = document.querySelector('#' + (isLog ? 'form-log' : 'form-new') + ' .btn');
+  var btn = document.querySelector('#form-log .btn');
   var btnOrig = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = 'Entrando...'; btn.style.opacity = '0.7'; }
 
   try {
-    var user;
     if (!window._fbAuth) throw new Error('Firebase não carregado. Recarregue a página.');
-
-    if (isLog) {
-      var cred = await window._fbAuth.signInWithEmailAndPassword(email, pw);
-      user = cred.user;
-      // Buscar protocolo no Firebase
-      var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
-      if (snap.exists) {
-        var dados = snap.data();
-        localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
-        localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
-        localStorage.setItem('sbp_ativo', 'true');
-      }
-    } else {
-      if (!nome) { if(err){err.textContent='Preencha seu nome.';err.style.display='block';} if(btn){btn.disabled=false;btn.textContent=btnOrig;btn.style.opacity='';} return; }
-      var cred = await window._fbAuth.createUserWithEmailAndPassword(email, pw);
-      user = cred.user;
-      // Salvar perfil no Firestore
-      await window._fbDb.collection('usuarios').doc(user.uid).set({
-        nome: nome, email: email, plano: 'mensal',
-        criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
-        atualizacoes: { mes: '', usado: 0, limite: 3 }
-      });
+    var cred = await window._fbAuth.signInWithEmailAndPassword(email, pw);
+    var user = cred.user;
+    var snap = await window._fbDb.collection('protocolos').doc(user.uid).get();
+    if (snap.exists) {
+      var dados = snap.data();
+      localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
+      localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
+      localStorage.setItem('sbp_ativo', 'true');
     }
-
     window._currentUser = user;
-    S.nome = nome || user.displayName || email.split('@')[0];
+    S.nome = user.displayName || email.split('@')[0];
     S.email = email;
     localStorage.setItem('sbp_user', JSON.stringify({nome:S.nome, email:email, uid:user.uid}));
     localStorage.setItem('sbp_auth', user.uid);
-
-    // Se login e tem protocolo, vai direto
-    if (isLog && localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
+    if (localStorage.getItem('sbp_protocolo') && localStorage.getItem('sbp_ativo')) {
       window.location.href = 'protocolo.html';
       return;
     }
     go('s-lgpd');
   } catch(e) {
     if (btn) { btn.disabled = false; btn.textContent = btnOrig; btn.style.opacity = ''; }
-    var msg = e.code === 'auth/email-already-in-use' ? 'Este email já está cadastrado.' :
-              e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
+    var msg = e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
               e.code === 'auth/user-not-found' ? 'Conta não encontrada.' :
-              e.code === 'auth/weak-password' ? 'Senha muito fraca (mínimo 6 caracteres).' :
               e.code === 'auth/too-many-requests' ? 'Muitas tentativas. Aguarde alguns minutos.' :
               e.code === 'auth/network-request-failed' ? 'Erro de conexão. Verifique a internet.' :
               'Erro: ' + e.message;
