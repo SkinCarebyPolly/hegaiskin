@@ -430,12 +430,6 @@ input[type="file"] { display:none; }
   </div>
 
   <div class="card">
-    <div class="card-title"><span class="card-title-icon">🌱</span> Fase de Adaptação</div>
-    <div id="content-adaptacao" class="alert alert-gold">
-      <div class="alert-title">Carregando...</div>
-    </div>
-  </div>
-  <div class="card">
     <div class="card-title"><span class="card-title-icon">📦</span> Produtos Identificados</div>
     <div id="content-produtos" class="step-list"></div>
   </div>
@@ -486,6 +480,7 @@ input[type="file"] { display:none; }
 
 <!-- ══ SEMANA ══ -->
 <div class="section" id="tab-semana">
+  <div id="content-adaptacao-semana" style="margin-bottom:4px"></div>
   <div class="card">
     <div class="card-title"><span class="card-title-icon">🗓</span> Cuidados da Semana</div>
     <div class="week-grid" id="content-semana"></div>
@@ -917,17 +912,43 @@ function renderApp() {
     }, 400);
   })();
 
-  // Adaptação
+  // Adaptação — renderiza como cartões de semana dentro da aba Semana
   try {
-    var faEl = document.getElementById('content-adaptacao');
+    var faEl = document.getElementById('content-adaptacao-semana');
     if (faEl && protocolo.fase_adaptacao) {
       var faVal = protocolo.fase_adaptacao;
       var faText = typeof faVal === 'string'
         ? faVal
-        : Object.entries(faVal).map(function(kv) { return '<strong>' + kv[0].replace(/_/g,' ') + ':</strong> ' + kv[1]; }).join('<br><br>');
-      faEl.innerHTML = '<div class="alert-title">⚠️ Leia antes de começar</div><div class="alert-text">' + faText.replace(/\n/g,'<br>') + '</div>';
-    } else if (faEl) {
-      faEl.innerHTML = '<div class="alert-text" style="color:var(--muted)">Siga a rotina normalmente nas primeiras semanas e observe como sua pele responde.</div>';
+        : Object.values(faVal).join(' ');
+      // Tenta separar por marcadores "Semana X —"
+      var partes = faText.split(/Semana\s+(\d+)\s*[—–\-]/i);
+      if (partes.length > 2) {
+        var html = '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 2px">🌱 Fase de Adaptação</div>';
+        for (var wi = 1; wi < partes.length; wi += 2) {
+          var wNum = partes[wi];
+          var wTxt = (partes[wi + 1] || '').trim();
+          // Extrai título: texto até primeiro ":" ou "."
+          var tMatch = wTxt.match(/^([^:.]+)[:.]?\s*/);
+          var wTitle = tMatch ? tMatch[1].trim() : '';
+          var wBody = tMatch ? wTxt.substring(tMatch[0].length).trim() : wTxt;
+          html +=
+            '<div style="background:rgba(188,154,79,.05);border:0.5px solid rgba(188,154,79,.2);border-radius:12px;padding:14px 16px;margin-bottom:10px">' +
+              '<div style="display:flex;align-items:center;gap:10px;margin-bottom:' + (wBody ? '8' : '0') + 'px">' +
+                '<div style="background:var(--gold);color:#fff;font-size:9px;font-weight:600;letter-spacing:1.5px;border-radius:20px;padding:3px 11px;flex-shrink:0">SEM. ' + wNum + '</div>' +
+                (wTitle ? '<div style="font-size:13px;font-weight:500;color:var(--dark);line-height:1.3">' + wTitle + '</div>' : '') +
+              '</div>' +
+              (wBody ? '<div style="font-size:13px;color:var(--muted);line-height:1.75">' + wBody + '</div>' : '') +
+            '</div>';
+        }
+        faEl.innerHTML = html;
+      } else {
+        // Fallback: bloco simples caso o texto não tenha marcadores de semana
+        faEl.innerHTML =
+          '<div style="background:rgba(188,154,79,.05);border:0.5px solid rgba(188,154,79,.2);border-radius:12px;padding:14px 16px;margin-bottom:10px">' +
+            '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">🌱 Fase de Adaptação</div>' +
+            '<div style="font-size:13px;color:var(--muted);line-height:1.75">' + faText.replace(/\n/g,'<br>') + '</div>' +
+          '</div>';
+      }
     }
   } catch(e) { console.warn('fase_adaptacao render error:', e); }
 
