@@ -258,6 +258,7 @@ input[type=file]{display:none}
       <div class="igrp"><label class="ilbl">Senha</label><div class="pwrap"><input type="password" id="log-pw" class="ifield" placeholder="Sua senha" autocomplete="current-password"><button class="peye" onclick="tgPw('log-pw',this)" type="button">👁</button></div></div>
       <div class="errmsg" id="auth-err-log"></div>
       <button class="btn" onclick="doAuth()">Entrar →</button>
+      <button type="button" onclick="esqueceuSenha()" style="width:100%;background:none;border:none;margin-top:14px;font-family:'Raleway',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;letter-spacing:1px">Esqueci minha senha</button>
     </div>
   </div>
 </div>
@@ -1378,6 +1379,24 @@ function doCadastro() {
   localStorage.setItem('sbp_auth', nome);
   document.getElementById('ok-cad').style.display = 'block';
   setTimeout(function(){ go('s-lgpd'); }, 900);
+}
+
+async function esqueceuSenha() {
+  var email = (document.getElementById('log-email') || {value:''}).value.trim();
+  if (!email) {
+    var err = document.getElementById('auth-err-log');
+    if (err) { err.textContent = 'Digite seu email acima primeiro.'; err.style.display = 'block'; }
+    return;
+  }
+  try {
+    await window._fbAuth.sendPasswordResetEmail(email);
+    alert('Email de redefinição enviado para ' + email + '. Verifique sua caixa de entrada.');
+  } catch(e) {
+    var msg = e.code === 'auth/user-not-found' ? 'Email não encontrado.' :
+              e.code === 'auth/invalid-email' ? 'Email inválido.' : 'Erro: ' + e.message;
+    var err = document.getElementById('auth-err-log');
+    if (err) { err.textContent = msg; err.style.display = 'block'; }
+  }
 }
 
 function doLogin() {
