@@ -2689,6 +2689,10 @@ async function confirmProto() {
   localStorage.setItem('sbp_protocolo', JSON.stringify(S.protocolo));
   localStorage.setItem('sbp_ativo', 'true');
   localStorage.setItem('sbp_perfil', JSON.stringify(perfil));
+  // Guardar data de início para calcular semana de adaptação
+  if (!localStorage.getItem('sbp_inicio')) {
+    localStorage.setItem('sbp_inicio', Date.now().toString());
+  }
   // Salvar no Firebase se logado
   try {
     var _u = window._currentUser || (window._fbAuth && window._fbAuth.currentUser);
