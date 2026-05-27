@@ -262,6 +262,21 @@ input[type=file]{display:none}
   </div>
 </div>
 
+<!-- 1b: NOME -->
+<div class="scr" id="s-nome">
+  <div class="inner">
+    <div class="badge">Bem-vinda</div>
+    <h1>Como você quer<br><em>ser chamada?</em></h1>
+    <p class="sub">Vamos personalizar sua experiência.</p>
+    <div class="igrp">
+      <label class="ilbl">Seu nome</label>
+      <input type="text" id="inp-nome-onb" class="ifield" placeholder="Como quer ser chamada?" autocomplete="given-name" autocapitalize="words">
+    </div>
+    <div class="errmsg" id="nome-err" style="display:none">Por favor, escreva seu nome.</div>
+    <button class="btn" onclick="goNome()">Continuar →</button>
+  </div>
+</div>
+
 <!-- 2: Q1 INCOMODOS -->
 <div class="scr" id="s-q1">
   <div class="inner">
@@ -1171,7 +1186,19 @@ function goLGPD() {
     if(btn){btn.style.animation="none";btn.offsetHeight;btn.style.animation="shake 0.4s ease";setTimeout(function(){btn.style.animation="";},400);}
     return;
   }
-  go("s-q1");
+  go("s-nome");
+}
+
+function goNome() {
+  var nome = (document.getElementById('inp-nome-onb') || {value:''}).value.trim();
+  var err = document.getElementById('nome-err');
+  if (!nome) { if(err){ err.style.display='block'; } return; }
+  if(err) err.style.display='none';
+  S.nome = nome;
+  var u = JSON.parse(localStorage.getItem('sbp_user') || '{}');
+  u.nome = nome;
+  localStorage.setItem('sbp_user', JSON.stringify(u));
+  go('s-q1');
 }
 
 
