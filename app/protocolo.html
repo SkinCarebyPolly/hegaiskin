@@ -664,6 +664,7 @@ input[type="file"] { display:none; }
     </div>
 <button onclick="compartilharProtocolo()" style="width:100%;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📤 Compartilhar minha rotina</button>
     <button onclick="mostrarModalNotificacoes()" style="width:100%;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔔 Lembretes de rotina</button>
+    <button onclick="alterarSenha()" style="width:100%;background:transparent;border:0.5px solid rgba(188,154,79,.3);border-radius:8px;padding:14px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">🔒 Alterar senha</button>
     <button class="btn-danger" onclick="fazerLogout()">Sair da conta</button>
   </div>
 </div>
@@ -3172,6 +3173,18 @@ function fazerLogout() {
   localStorage.removeItem('sbp_pais');
   if (window._fbAuth) window._fbAuth.signOut().catch(function(){});
   window.location.href = 'onboarding.html';
+}
+
+async function alterarSenha() {
+  var user = window._currentUser || (window._fbAuth && window._fbAuth.currentUser);
+  var email = (user && user.email) || (JSON.parse(localStorage.getItem('sbp_user') || '{}').email);
+  if (!email) { alert('Não foi possível identificar seu email. Faça login novamente.'); return; }
+  try {
+    await window._fbAuth.sendPasswordResetEmail(email);
+    alert('Email de redefinição enviado para ' + email + '. Verifique sua caixa de entrada.');
+  } catch(e) {
+    alert('Erro ao enviar email: ' + (e.message || e));
+  }
 }
 
 // -- SAFETY: nunca deixar o loading preso --
