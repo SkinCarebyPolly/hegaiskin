@@ -708,7 +708,7 @@ input[type="file"] { display:none; }
 var AFILIADOS = {
   BR: {
     amazon:       { url: 'https://www.amazon.com.br/s?k=',           tag: 'COLOQUE_TAG_BR', label: 'Amazon' },
-    farmacia:     { url: 'https://www.drogaraia.com.br/catalogsearch/result/?q=', tag: '',  label: 'Droga Raia' },
+    farmacia:     { url: 'https://www.drogariasvenancio.com.br/busca?q=', tag: '',  label: 'Drogaria Venancio' },
     mercadolivre: { url: 'https://lista.mercadolivre.com.br/',        tag: '',              label: 'Mercado Livre' }
   },
   PT: {
@@ -800,7 +800,7 @@ function buildTierContent(s, tier, af) {
   if (ysUrl)       btns += '<a href="' + ysUrl       + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label  + '</a>';
   if (notinoUrl)   btns += '<a href="' + notinoUrl   + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label    + '</a>';
   var _lojasFisicasHtml = af.farmacia
-    ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:10px">🏪 Encontre também em: <strong>Droga Raia</strong> · <strong>Bel Cosméticos</strong> · <strong>Sephora</strong></div>'
+    ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:6px">🏪 Encontre também em: <strong>Drogaria Venancio</strong> · <strong>Bel Cosméticos</strong> · <strong>Sephora</strong></div><div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">⚠️ Alguns produtos internacionais podem não estar disponíveis em farmácias nacionais ainda — consulte sempre o site da loja antes de ir.</div>'
     : '';
 
   return '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">' +
@@ -1054,7 +1054,7 @@ async function converterListaParaSugestoes(listaCompras) {
 
   var pais    = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
   var moeda   = pais === 'PT' ? 'euros (€)' : 'reais (R$)';
-  var mercado = pais === 'PT' ? 'Portugal (Notino, YesStyle, Amazon.es)' : 'Brasil (Droga Raia, Amazon, Mercado Livre)';
+  var mercado = pais === 'PT' ? 'Portugal (Notino, YesStyle, Amazon.es)' : 'Brasil (Drogaria Venancio, Amazon, Mercado Livre)';
 
   var listaTexto = listaCompras.join('\n');
 
