@@ -2701,12 +2701,11 @@ function renderEspinha(p) {
     </div></div>`;
   }
 
-  if (e.quando_dermato) {
-    html += `<div class="card"><div class="alert" style="margin:0;background:rgba(239,108,78,.06);border-left:3px solid #EF6C4E">
-      <div class="alert-title" style="color:#EF6C4E">🏥 Quando ir à Dermatologista</div>
-      <div class="alert-text">${e.quando_dermato}</div>
-    </div></div>`;
-  }
+  var _dermTxt = e.quando_dermato || 'Espinhas frequentes, profundas ou que deixam cicatrizes estão fora do âmbito cosmético — consulta uma dermatologista. A cosmetologia complementa, não substitui o acompanhamento médico.';
+  html += `<div class="card"><div class="alert" style="margin:0;background:rgba(239,108,78,.06);border-left:3px solid #EF6C4E">
+    <div class="alert-title" style="color:#EF6C4E">🏥 Quando ir à Dermatologista</div>
+    <div class="alert-text">${_dermTxt}</div>
+  </div></div>`;
 
   if (!html && p.protocolo_espinha && typeof p.protocolo_espinha === 'string') {
     html = `<div class="card"><div class="alert alert-gold" style="margin:0">

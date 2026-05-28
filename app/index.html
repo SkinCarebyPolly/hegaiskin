@@ -2543,21 +2543,21 @@ async function gerarProtocolo() {
     '- Gestante: '+S.gestante+'\n\n' +
     'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
     (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n\n' : '') +
-    'REGRAS CLÍNICAS OBRIGATÓRIAS — protocolo_espinha_detalhado:\n' +
-    'PREMISSA: Uma cosmetologista experiente SEMPRE diferencia o tipo de espinha antes de qualquer indicação. O tratamento é radicalmente diferente.\n\n' +
-    '• regra_ouro: UMA frase clara — a decisão mais importante que a cliente precisa tomar antes de qualquer produto (ex: "Antes de tudo: é espinha interna ou tem pus visível? A resposta muda tudo").\n' +
-    '• sos_tratamento: DIFERENCIE OBRIGATORIAMENTE por tipo:\n' +
-    '  – Espinha interna / cística (firme, sem pus visível, só inflamação): descreva o tratamento pontual com o produto mais indicado da lista (ex: dispositivo de microagulhas é OK aqui — descreva como). Se nenhum produto da lista for adequado, indique o ativo ideal sem inventar marca.\n' +
-    '  – Espinha com pústula (pus visível) ou aberta / machucada: PROIBIDO usar microagulhas, roller ou qualquer dispositivo de fricção — espalha bactérias e agrava a lesão. O padrão-ouro aqui é adesivo hidrocoloide (hydrocolloid patch) — absorve o exsudato, protege de UV e contaminação e acelera a cicatrização. Se a cliente não tiver na lista, indique como compra urgente (farmácia, barato).\n' +
-    '• ALERTA DISPOSITIVOS: Se a lista incluir qualquer aparelho com ponta, microagulhas, derma roller ou similar, o campo atencao DESSE produto DEVE conter: "Usar SOMENTE em espinhas internas sem pus. NUNCA sobre pústulas, feridas abertas ou espinhas com pus — risco real de espalhar bactérias e agravar a lesão."\n' +
-    '• manha e noite: produtos da rotina habitual que podem ser usados em dias com espinha ativa. Para cada um:\n' +
-    '  – Seguro normalmente (limpador suave, tônico sem ácido, hidratante, protetor solar, niacinamida) → atencao: ""\n' +
-    '  – Evitar zona da espinha (retinol, retinal, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
-    '  – Dispositivo com ponta/microagulha → atencao: "Somente em espinhas internas sem pus — NUNCA sobre pústulas ou pele aberta"\n' +
-    '  – Produto de risco moderado (álcool alto, fragrância forte) → atencao: "Evitar diretamente sobre a espinha inflamada"\n' +
-    '• proibidos: nomes EXATOS dos produtos da lista da cliente que são contraindicados em espinhas inflamadas: retinol/retinal concentrado, AHA/BHA em alta concentração, esfoliação mecânica, aparelhos de RF/ultrassom/calor sobre inflamação ativa.\n' +
-    '• aviso_gap_bha: Se a lista NÃO incluir nenhum produto com ácido salicílico / BHA → escreva 1 frase explicando que o BHA é o ativo padrão-ouro anti-acne (limpa o interior do poro onde a espinha se forma) e sugira adicionar um tônico ou sérum BHA 1-2% de farmácia, 1-2×/semana. Se JÁ tiver BHA na lista → campo vazio "".\n' +
-    '• quando_dermato: Se a cliente tem acne cística recorrente, nódulos profundos ou cicatrizes ativas → indique em 1 frase quando a cosmetologia não é suficiente e deve consultar dermatologista.\n' +
+    'REGRAS PARA protocolo_espinha_detalhado — ÂMBITO COSMÉTICO (não médico):\n' +
+    'IMPORTANTE: Este protocolo é orientação cosmética, não diagnóstico médico. Usa SEMPRE linguagem observacional que a própria cliente consegue avaliar sozinha (o que ela VÊ), nunca terminologia clínica (não usar "pústula", "nódulo", "acne cística", "lesão"). A responsável pela avaliação é a cliente — nós orientamos como usar os produtos dela.\n\n' +
+    '• regra_ouro: UMA frase prática — a observação visual que a cliente deve fazer antes de escolher o cuidado (ex: "Olha para a espinha: tem ponto branco/amarelo visível ou está só vermelha e dura por baixo da pele? Isso decide o que fazer").\n' +
+    '• sos_tratamento: Orienta o uso dos produtos cosméticos disponíveis com base no que a cliente OBSERVA visualmente. Usa linguagem simples:\n' +
+    '  – "Espinha vermelha e dura, sem nada na ponta" (interna): descreva o produto pontual mais adequado da lista (ex: dispositivo de microagulhas OK, sérum com ativo específico). Se nenhum produto da lista servir, sugere categoria cosmética OTC sem inventar marca.\n' +
+    '  – "Espinha com ponto branco/amarelo na ponta ou pele aberta/irritada": PROIBIDO usar microagulhas ou qualquer dispositivo — risco de piorar. Sugere adesivo hidrocoloide (farmácia, OTC, barato) — deixa absorver, protege e acelera a recuperação. Se a cliente não tiver, indica como produto a comprar.\n' +
+    '  – Termina SEMPRE com: "Se as espinhas forem frequentes, profundas ou deixarem cicatrizes, consulta uma dermatologista — a cosmetologia tem limites e ela vai além."\n' +
+    '• ALERTA DISPOSITIVOS: Se a lista incluir aparelho com ponta, microagulhas ou derma roller → campo atencao DESSE produto: "Só usar quando a espinha estiver vermelha e dura, SEM ponto visível na ponta. Com pus ou pele aberta, não usar — pode piorar."\n' +
+    '• manha e noite: produtos da rotina que podem ser usados em dias com espinha ativa. Para cada um:\n' +
+    '  – Seguro normalmente (limpador suave, hidratante, protetor solar, niacinamida) → atencao: ""\n' +
+    '  – Aplicar afastado da área vermelha (retinol, retinal, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
+    '  – Dispositivo com ponta → atencao: "Só quando a espinha estiver vermelha e dura, sem pus visível"\n' +
+    '• proibidos: nomes EXATOS dos produtos da lista contraindicados em dias de espinha ativa: retinol/retinal concentrado, AHA/BHA alto, esfoliação mecânica, aparelhos de calor/RF sobre pele inflamada.\n' +
+    '• aviso_gap_bha: Se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento cosmético 1-2×/semana (poro mais limpo = menos espinhas). Se JÁ tiver BHA → campo vazio "".\n' +
+    '• quando_dermato: SEMPRE presente — 1 frase amigável indicando que espinhas frequentes, profundas ou com cicatrizes saem do âmbito cosmético e precisam de dermatologista.\n' +
     'Retorne APENAS JSON válido:\n' +
     '{"protocolo_espinha":"resumo em 2 frases calorosas e diretas",' +
     '"protocolo_espinha_detalhado":{"regra_ouro":"frase de decisão inicial","sos_tratamento":"instrução diferenciada por tipo de espinha (interna vs pústula)","aviso_gap_bha":"frase sobre BHA ou vazio","quando_dermato":"frase ou vazio","manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"proibidos":["nome exato do produto ou ativo proibido"]},' +
