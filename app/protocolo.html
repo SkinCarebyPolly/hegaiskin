@@ -853,8 +853,12 @@ function buildTierContent(s, tier, af) {
   // ── Smart affiliate links ────────────────────────────────────────────────
   var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(188,154,79,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
-  // Search query: brand + product name
-  var queryBase = (t.marca ? t.marca + ' ' : '') + (t.produto || '');
+  // Search query: brand + product — avoid duplicating brand if already in product name
+  var _prodStr = t.produto || '';
+  var _marcaStr = t.marca || '';
+  var queryBase = (_marcaStr && _prodStr.toLowerCase().indexOf(_marcaStr.toLowerCase()) === -1)
+    ? _marcaStr + ' ' + _prodStr
+    : (_prodStr || _marcaStr);
   var queryEnc = encodeURIComponent(queryBase);
 
   // Amazon: beauty category + sort by reviews
