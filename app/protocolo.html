@@ -448,6 +448,11 @@ input[type="file"] { display:none; }
   <div id="rotina-hoje-header" style="padding:0 0 4px 0;margin-bottom:4px"></div>
   <!-- Cuidado extra do dia -->
   <div id="rotina-tratamento-dia" style="display:none"></div>
+  <!-- Toggle manhã / noite -->
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button id="toggle-manha" onclick="mostrarPeriodo('manha')" style="flex:1;padding:10px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:0.5px solid rgba(188,154,79,.4)">☀️ Manhã</button>
+    <button id="toggle-noite" onclick="mostrarPeriodo('noite')" style="flex:1;padding:10px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:0.5px solid rgba(188,154,79,.4)">🌙 Noite</button>
+  </div>
   <!-- Controles de áudio + Express toggle -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     <button id="toggle-voz" onclick="toggleAudio('voz')" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:0.5px solid rgba(188,154,79,.5);border-radius:20px;font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background .2s,color .2s">🔊 Voz</button>
@@ -461,22 +466,22 @@ input[type="file"] { display:none; }
   </div>
   <!-- Rotina completa -->
   <div id="rotina-completa">
-    <div class="card">
+    <div id="card-manha" class="card">
       <div class="card-title"><span class="card-title-icon">☀️</span> Manhã</div>
       <div class="step-list" id="content-manha"></div>
     </div>
-    <div class="card">
+    <div id="card-noite" class="card">
       <div class="card-title"><span class="card-title-icon">🌙</span> Noite</div>
       <div class="step-list" id="content-noite"></div>
     </div>
   </div>
   <!-- Rotina express (oculta por padrão) -->
   <div id="rotina-express" style="display:none">
-    <div class="card">
+    <div id="card-express-manha" class="card">
       <div class="card-title"><span class="card-title-icon">☀️</span> Manhã Express</div>
       <div class="step-list" id="content-express-manha"></div>
     </div>
-    <div class="card">
+    <div id="card-express-noite" class="card">
       <div class="card-title"><span class="card-title-icon">🌙</span> Noite Express</div>
       <div class="step-list" id="content-express-noite"></div>
     </div>
@@ -1047,6 +1052,9 @@ function renderApp() {
 
   // ── Sugestões em 3 tiers ──────────────────────────────────────────────
   try { renderSugestoes(); } catch(err) { console.warn('renderSugestoes:', err); }
+
+  // Inicializar toggle manhã/noite com base no horário
+  mostrarPeriodo(_periodoAtivo);
 }
 
 // ── Helper: Gemini para chamadas de texto ────────────────────────────────
@@ -2556,6 +2564,26 @@ function _getExpressSteps(periodo) {
   return filtered.length ? filtered : full.slice(0, 2);
 }
 
+var _periodoAtivo = new Date().getHours() < 14 ? 'manha' : 'noite';
+
+function mostrarPeriodo(periodo) {
+  _periodoAtivo = periodo;
+  var isManha = periodo === 'manha';
+  var isExpress = _expressAtivo;
+
+  // Atualizar botões toggle
+  var btnM = document.getElementById('toggle-manha');
+  var btnN = document.getElementById('toggle-noite');
+  if (btnM) { btnM.style.background = isManha ? 'var(--gold)' : 'transparent'; btnM.style.color = isManha ? '#fff' : 'var(--dark)'; }
+  if (btnN) { btnN.style.background = !isManha ? 'var(--gold)' : 'transparent'; btnN.style.color = !isManha ? '#fff' : 'var(--dark)'; }
+
+  // Mostrar/esconder cards
+  var cardM  = document.getElementById(isExpress ? 'card-express-manha' : 'card-manha');
+  var cardN  = document.getElementById(isExpress ? 'card-express-noite' : 'card-noite');
+  if (cardM) cardM.style.display = isManha ? 'block' : 'none';
+  if (cardN) cardN.style.display = !isManha ? 'block' : 'none';
+}
+
 function toggleExpress() {
   _expressAtivo = !_expressAtivo;
   var btn = document.getElementById('toggle-express');
@@ -2564,7 +2592,6 @@ function toggleExpress() {
   var express = document.getElementById('rotina-express');
 
   if (_expressAtivo) {
-    // Renderizar passos express
     var emEl = document.getElementById('content-express-manha');
     var enEl = document.getElementById('content-express-noite');
     if (emEl) emEl.innerHTML = renderSteps(_getExpressSteps('manha'), 'express-manha');
@@ -2580,6 +2607,7 @@ function toggleExpress() {
     if (banner) banner.style.display = 'none';
     if (btn) { btn.style.background = 'transparent'; btn.style.color = 'var(--gold)'; }
   }
+  mostrarPeriodo(_periodoAtivo);
 }
 
 function lerPasso(texto) {
