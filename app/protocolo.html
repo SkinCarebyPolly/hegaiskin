@@ -395,13 +395,19 @@ input[type="file"] { display:none; }
 <div id="daily-banner" style="display:none;padding:0 16px;margin-top:12px">
   <div id="daily-frase-card" style="display:none;background:linear-gradient(135deg,#3D2010,#5a3018);border-radius:12px;padding:14px 16px;margin-bottom:8px;position:relative">
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,180,140,.6);margin-bottom:6px">✨ Frase do dia</div>
-    <div id="daily-frase-txt" style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#f2e8d9;line-height:1.5"></div>
-    <button onclick="dispensarFraseDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.5);padding:0">×</button>
+    <div id="daily-frase-txt" style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#f2e8d9;line-height:1.5;padding-right:48px"></div>
+    <div style="display:flex;gap:8px;position:absolute;top:10px;right:12px">
+      <button onclick="compartilharFraseDia('frase')" style="background:rgba(212,180,140,.15);border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;color:rgba(212,180,140,.7)">📤</button>
+      <button onclick="dispensarFraseDia()" style="background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.5);padding:0">×</button>
+    </div>
   </div>
   <div id="daily-dica-card" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.3);border-radius:12px;padding:14px 16px;position:relative">
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px">💡 Dica do dia</div>
-    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6"></div>
-    <button onclick="dispensarDicaDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:0">×</button>
+    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6;padding-right:48px"></div>
+    <div style="display:flex;gap:8px;position:absolute;top:10px;right:12px">
+      <button onclick="compartilharFraseDia('dica')" style="background:rgba(188,154,79,.12);border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;color:var(--gold)">📤</button>
+      <button onclick="dispensarDicaDia()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:0">×</button>
+    </div>
   </div>
 </div>
 
@@ -2992,6 +2998,89 @@ async function compartilharProtocolo() {
     console.warn('html2canvas error:', e);
     var texto = nome + '\n\n' + (diagText ? diagText + '\n\n' : '') + (tipoPele ? 'Tipo de pele: ' + tipoPele + '\n\n' : '') + '"' + quote + '"\n\nhegaiskin.com';
     copiarTexto(texto);
+  }
+}
+
+async function compartilharFraseDia(tipo) {
+  if (typeof html2canvas === 'undefined') {
+    await new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  var texto = document.getElementById(tipo === 'frase' ? 'daily-frase-txt' : 'daily-dica-txt');
+  if (!texto || !texto.textContent.trim()) { mostrarToast('Nada para partilhar'); return; }
+  var conteudo = texto.textContent.trim();
+
+  var hoje = new Date();
+  var meses = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+  var dataStr = hoje.getDate() + ' · ' + meses[hoje.getMonth()] + ' · ' + hoje.getFullYear();
+  var label = tipo === 'frase' ? 'FRASE DO DIA' : 'DICA DO DIA';
+
+  // Parte 1: primeira metade do texto (dark), parte 2: segunda metade (gold italic)
+  var palavras = conteudo.split(' ');
+  var meio = Math.ceil(palavras.length / 2);
+  var linha1 = palavras.slice(0, meio).join(' ');
+  var linha2 = palavras.slice(meio).join(' ');
+
+  mostrarToast('Gerando card...');
+
+  var card = document.createElement('div');
+  // 9:16 story format
+  card.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;height:640px;font-family:Georgia,serif;overflow:hidden;background:#F7F1E8';
+
+  card.innerHTML =
+    // Fundo creme com gradiente suave no canto superior direito
+    '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#FDFAF5 0%,#F7F1E8 40%,#F0E8D8 100%)"></div>' +
+    '<div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle at top right,rgba(212,180,120,.18) 0%,transparent 70%)"></div>' +
+    '<div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;padding:28px 28px 24px">' +
+
+      // Top bar
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px">' +
+        '<div style="font-size:11px;letter-spacing:2.5px;color:#3D2010;font-weight:400">HEGAI<em style="font-style:italic">SKIN</em></div>' +
+        '<div style="font-size:10px;letter-spacing:1.5px;color:#BC9A4F">' + dataStr + '</div>' +
+      '</div>' +
+
+      // Label
+      '<div style="display:flex;align-items:center;gap:7px;margin-bottom:20px">' +
+        '<div style="width:6px;height:6px;border-radius:50%;background:#BC9A4F;flex-shrink:0"></div>' +
+        '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#BC9A4F">' + label + '</div>' +
+      '</div>' +
+
+      // Headline — linha1 escura + linha2 dourado itálico
+      '<div style="flex:1;display:flex;flex-direction:column;justify-content:center">' +
+        '<div style="font-size:32px;font-weight:400;color:#2a1508;line-height:1.15;margin-bottom:6px">' + linha1 + '</div>' +
+        '<div style="font-size:32px;font-weight:400;font-style:italic;color:#BC9A4F;line-height:1.15">' + linha2 + '</div>' +
+      '</div>' +
+
+      // Rodapé — card escuro
+      '<div style="background:#3D2010;border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">' +
+        '<div>' +
+          '<div style="font-size:8px;letter-spacing:2px;color:rgba(212,180,140,.5);text-transform:uppercase;margin-bottom:4px">Seu protocolo na</div>' +
+          '<div style="font-size:13px;letter-spacing:1.5px;color:#F5EDE0">HEGAI<em style="font-style:italic">SKIN</em></div>' +
+        '</div>' +
+        '<div style="font-size:9px;letter-spacing:1.5px;color:#BC9A4F;text-align:right">@HEGAISKIN →</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(card);
+  try {
+    var canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#F7F1E8', logging: false });
+    document.body.removeChild(card);
+    canvas.toBlob(async function(blob) {
+      if (!blob) { mostrarToast('Erro ao gerar imagem'); return; }
+      var file = new File([blob], 'hegaiskin-' + tipo + '.png', { type: 'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'HegaiSkin · ' + label }); }
+        catch(e) { if (e.name !== 'AbortError') baixarImagem(canvas); }
+      } else { baixarImagem(canvas); }
+    }, 'image/png');
+  } catch(e) {
+    if (document.body.contains(card)) document.body.removeChild(card);
+    mostrarToast('Erro ao gerar imagem');
   }
 }
 
