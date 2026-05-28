@@ -921,26 +921,18 @@ function renderApp() {
     }, 400);
   })();
 
-  // Banner de adaptação na Rotina — explicação do porquê, sem o texto detalhado
+  // Banner de adaptação — apenas para quem começa do zero (sem produtos)
   try {
     var bannerAdap = document.getElementById('banner-adaptacao');
-    if (bannerAdap && protocolo.fase_adaptacao) {
-      var inicio = parseInt(localStorage.getItem('sbp_inicio') || '0');
-      if (!inicio) return; // utilizadora antiga — não mostrar
-      var semanaAtual = Math.min(Math.ceil((Date.now() - inicio) / (7 * 24 * 60 * 60 * 1000)), 4);
-      if (semanaAtual < 1) semanaAtual = 1;
-      var faText = typeof protocolo.fase_adaptacao === 'string' ? protocolo.fase_adaptacao : Object.values(protocolo.fase_adaptacao).join(' ');
-      var totalSemanas = Math.floor(faText.split(/Semana\s+\d+\s*[—–\-]/i).length - 1) || 4;
-      if (semanaAtual <= totalSemanas) {
-        bannerAdap.innerHTML =
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
-            '<div style="background:var(--gold);color:#fff;font-size:9px;font-weight:600;letter-spacing:1px;border-radius:20px;padding:3px 11px;flex-shrink:0">🌱 SEMANA ' + semanaAtual + ' DE ADAPTAÇÃO</div>' +
-          '</div>' +
-          '<div style="font-size:13px;color:var(--dark);font-weight:500;margin-bottom:6px;line-height:1.5">Sua pele está a conhecer os novos produtos.</div>' +
-          '<div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px">A fase de adaptação existe para que a pele se ajuste gradualmente, sem sobrecargas nem reações. Introduzir tudo de uma vez pode irritar — por isso vamos devagar no início.</div>' +
-          '<div style="font-size:12px;color:var(--gold);font-weight:500">✦ Consulte a aba <strong>Semana</strong> para ver o que fazer esta semana. Após completar a adaptação, a rotina completa abaixo passa a ser a sua rotina diária.</div>';
-        bannerAdap.style.display = 'block';
-      }
+    if (bannerAdap && protocolo.sem_produto === true && protocolo.fase_adaptacao) {
+      bannerAdap.innerHTML =
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+          '<div style="background:var(--gold);color:#fff;font-size:9px;font-weight:600;letter-spacing:1px;border-radius:20px;padding:3px 11px;flex-shrink:0">🌱 FASE DE ADAPTAÇÃO</div>' +
+        '</div>' +
+        '<div style="font-size:13px;color:var(--dark);font-weight:500;margin-bottom:6px;line-height:1.5">Você está a iniciar a sua rotina do zero.</div>' +
+        '<div style="font-size:13px;color:var(--muted);line-height:1.7">A fase de adaptação existe para que a sua pele se ajuste gradualmente, sem sobrecargas nem reações. Não introduza tudo de uma vez — vá devagar e observe como a pele responde.</div>' +
+        '<div style="margin-top:10px;font-size:12px;color:var(--gold);font-weight:500">✦ Após completar a adaptação, a rotina completa abaixo passa a ser a sua rotina diária.</div>';
+      bannerAdap.style.display = 'block';
     }
   } catch(e) {}
 
