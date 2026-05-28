@@ -429,20 +429,20 @@ input[type="file"] { display:none; }
 <!-- FRASE + DICA DO DIA -->
 <div id="daily-banner" style="display:none;padding:0 16px;margin-top:12px">
   <div id="daily-frase-card" style="display:none;background:linear-gradient(135deg,#3D2010,#5a3018);border-radius:12px;padding:14px 16px;margin-bottom:8px;position:relative">
+    <button onclick="dispensarFraseDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.4);padding:4px;line-height:1">×</button>
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,180,140,.6);margin-bottom:6px">✨ Frase do dia</div>
-    <div id="daily-frase-txt" style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#f2e8d9;line-height:1.5;padding-right:48px"></div>
-    <div style="display:flex;gap:8px;position:absolute;top:10px;right:12px">
-      <button onclick="compartilharFraseDia('frase')" style="background:rgba(212,180,140,.15);border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;color:rgba(212,180,140,.7)">📤</button>
-      <button onclick="dispensarFraseDia()" style="background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.5);padding:0">×</button>
-    </div>
+    <div id="daily-frase-txt" style="font-family:'Raleway',sans-serif;font-size:15px;font-style:italic;color:#f2e8d9;line-height:1.5;padding-right:28px;margin-bottom:12px"></div>
+    <button onclick="compartilharFraseDia('frase')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(212,180,140,.15);border:1px solid rgba(212,180,140,.25);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:rgba(242,232,217,.85);cursor:pointer">
+      📤 Guardar e Partilhar
+    </button>
   </div>
   <div id="daily-dica-card" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.3);border-radius:12px;padding:14px 16px;position:relative">
+    <button onclick="dispensarDicaDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:4px;line-height:1">×</button>
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px">💡 Dica do dia</div>
-    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6;padding-right:48px"></div>
-    <div style="display:flex;gap:8px;position:absolute;top:10px;right:12px">
-      <button onclick="compartilharFraseDia('dica')" style="background:rgba(188,154,79,.12);border:none;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;color:var(--gold)">📤</button>
-      <button onclick="dispensarDicaDia()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:0">×</button>
-    </div>
+    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6;padding-right:28px;margin-bottom:12px"></div>
+    <button onclick="compartilharFraseDia('dica')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(188,154,79,.1);border:1px solid rgba(188,154,79,.3);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:var(--gold);cursor:pointer">
+      📤 Guardar e Partilhar
+    </button>
   </div>
 </div>
 
