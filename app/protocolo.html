@@ -1197,8 +1197,8 @@ async function converterListaParaSugestoes(listaCompras) {
   var promptConv =
     'Você é especialista em cosmetologia e conhecimento de produtos. Converta esta lista de cuidados em sugestões estruturadas.\n\n' +
     'LISTA:\n' + listaTexto + '\n\n' +
-    'PERFIL: tipo de pele=' + (perfil.tipoPele || 'não informado') + ', investimento=' + (perfil.investimento || 'não informado') + ', país=' + pais + '\n\n' +
-    'Para cada item da lista, crie uma entrada com 3 opções de produto REAL disponível em ' + mercado + ' com preços em ' + moeda + '.\n' +
+    'PERFIL: tipo de pele=' + (perfil.tipoPele || 'não informado') + ', investimento=' + (perfil.investimento || 'não informado') + ', país=' + pais + ', estilo/preferência=' + ((perfil.estiloProdutos && perfil.estiloProdutos.length) ? perfil.estiloProdutos.join(', ') : 'Sem preferência') + '\n\n' +
+    'Para cada item da lista, crie uma entrada com 3 opções de produto REAL disponível em ' + mercado + ' com preços em ' + moeda + '. IMPORTANTE: respeita o estilo/preferência de produto indicado no perfil ao escolher as marcas.\n' +
     'Retorne APENAS JSON válido sem markdown:\n' +
     '[{"falta":"NOME CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas por que ela precisa","economica":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"intermediaria":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"},"premium":{"produto":"nome comercial exato do produto","marca":"nome exato da marca","preco":"~X","descricao":"1 frase"}}]';
 

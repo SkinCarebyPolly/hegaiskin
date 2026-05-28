@@ -390,8 +390,27 @@ input[type=file]{display:none}
     <h1>Nível de<br><em>investimento?</em></h1>
     <p class="sub" style="margin-bottom:8px">Quanto você investe em skincare <strong>por mês no total</strong>, somando todos os produtos?</p>
     <div class="qopts" id="q4"></div>
-    <button class="btn" onclick="goValidate('s-q5','q4','single')">Continuar →</button>
+    <button class="btn" onclick="goValidate('s-q4b','q4','single')">Continuar →</button>
     <button class="btn2" onclick="go('s-q3')">← Voltar</button>
+  </div>
+</div>
+
+<!-- 5b: Q4B ESTILO DE PRODUTO -->
+<div class="scr" id="s-q4b">
+  <div class="inner">
+    <div class="badge">Questionário · Estilo</div>
+    <h1>Estilo de<br><em>produto?</em></h1>
+    <p class="sub">Que tipo de marca combina contigo? <span style="opacity:.7">(pode escolher mais de um)</span></p>
+    <div class="qopts" id="q4b">
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🇰🇷</span><div><div class="qopt-lbl">K-beauty</div><div class="qopt-sub">Produtos coreanos</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">💊</span><div><div class="qopt-lbl" id="q4b-farmacia-lbl">Farmácia / custo-benefício</div><div class="qopt-sub">Marcas acessíveis e comprovadas</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🌿</span><div><div class="qopt-lbl">Clean beauty</div><div class="qopt-sub">Ingredientes naturais / sem suspeitos</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon" id="q4b-nac-icon">🇧🇷</span><div><div class="qopt-lbl" id="q4b-nac-lbl">Nacionais</div><div class="qopt-sub" id="q4b-nac-sub">Marcas brasileiras</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">✨</span><div><div class="qopt-lbl">Premium / luxo</div><div class="qopt-sub">Marcas de prestígio e alta performance</div></div></div>
+      <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🌍</span><div><div class="qopt-lbl">Sem preferência</div><div class="qopt-sub">Qualquer marca que funcione bem</div></div></div>
+    </div>
+    <button class="btn" onclick="goValidate('s-q5','q4b','multi')">Continuar →</button>
+    <button class="btn2" onclick="go('s-q4')">← Voltar</button>
   </div>
 </div>
 
@@ -429,7 +448,7 @@ input[type=file]{display:none}
       <div class="qopt" style="flex:1" onclick="togS(this,'q5e')"><div class="qcirc"></div><div><div class="qopt-lbl">Não, resistente</div></div></div>
     </div>
     <button class="btn" onclick="goValidateHabitos('s-q6')">Continuar →</button>
-    <button class="btn2" onclick="go('s-q4')">← Voltar</button>
+    <button class="btn2" onclick="go('s-q4b')">← Voltar</button>
   </div>
 </div>
 
@@ -1059,7 +1078,18 @@ function configurarOrcamento(pais) {
 }
 
 // Roda ao carregar
-detectarPais().then(function(pais){ configurarOrcamento(pais); });
+detectarPais().then(function(pais){
+  configurarOrcamento(pais);
+  // Adaptar labels de estilo para PT
+  if (pais === 'PT') {
+    var nacIcon = document.getElementById('q4b-nac-icon');
+    var nacLbl  = document.getElementById('q4b-nac-lbl');
+    var nacSub  = document.getElementById('q4b-nac-sub');
+    if (nacIcon) nacIcon.textContent = '🇵🇹';
+    if (nacLbl)  nacLbl.textContent  = 'Nacionais / Europeias';
+    if (nacSub)  nacSub.textContent  = 'Marcas portuguesas e europeias';
+  }
+});
 
 const _a='sk-ant-api03-V', _b='gU93q4z1crUe6TnHbP1j';
 const _c='0l7Cxr3uJ529OOz_Wy6Nua2sEWG_PM', _d='tiPTlNCEj5pNJaXwrpJZHWuhJ6YtK2qy6pQ-K7aL6QAA';
@@ -2422,6 +2452,7 @@ async function gerarProtocolo() {
   S.tipoPele = getSel('q2')[0] || '';
   S.aparelhos = getSel('q3');
   S.investimento = getSel('q4')[0] || '';
+  S.estiloProdutos = getSel('q4b') || [];
   S.sol = getSel('q5a')[0] || '';
   S.sono = getSel('q5b')[0] || '';
   S.estresse = getSel('q5c')[0] || '';
@@ -2516,6 +2547,7 @@ async function gerarProtocolo() {
     '- País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+'\n' +
     '- Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
     '- Orçamento mensal total: '+S.investimento+'\n' +
+    '- Estilo/preferência de produto: '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência definida')+'\n' +
     '- Tempo de rotina: '+S.rotina+'\n' +
     '- Sol: '+S.sol+' | Sono: '+S.sono+' | Estresse: '+S.estresse+'\n' +
     '- Água: '+S.agua+' | Sensibilidade: '+S.sensibilidade+'\n' +
@@ -2557,6 +2589,7 @@ async function gerarProtocolo() {
     '  – NOME: usa o nome EXATO em PORTUGUÊS como aparece no site da loja (ex: "Simple Gel de Limpeza Suave 350g", NUNCA "Amino Acid Gentle Cleanser"). Se o produto tiver variantes (Suave/Profunda, 30ml/50ml, dia/noite), especifica QUAL variante recomendar e inclui no nome.\n' +
     '  – PREÇO: valor REALISTA para ' + (window._sbpPais==='PT'?'lojas portuguesas (Notino, YesStyle, Farmácias PT) em 2025 — preços em €. Referência: produto econômico ~€5-25, intermédio ~€25-70, premium €70+. NUNCA sugira €3 para um produto que custa €20+':'farmácias e lojas brasileiras em 2025 — preços em R$. Referência: produto econômico de farmácia custa ~R$30-80, intermediário ~R$80-200, premium ~R$200+. NUNCA sugira R$28 para um produto que custa R$70+') + '.\n' +
     '  – MARCA: nome exato como aparece na embalagem (ex: "Simple", não "Simple Kind to Skin"). Ao sugerir produtos nos 3 tiers, PRIORIZE marcas e linhas que a usuária já usa.\n' +
+    '  – ESTILO: a cliente indicou preferência por "'+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência')+'" — PRIORIZA marcas e linhas que se encaixam nesse estilo. Ex: se K-beauty, prefere marcas como COSRX, Some By Mi, Beauty of Joseon, Axis-Y. Se Farmácia/custo-benefício, prefere Simple, CeraVe, La Roche-Posay, Nívea. Se Nacionais, prefere Água de Cheiro, Océane, Vult, Dermachem, Nívea BR, Neutrogena BR. Se Clean beauty, prefere marcas sem fragrance, parabenos, álcool. Se Premium, prefere The Ordinary, Drunk Elephant, Paula\'s Choice, Tatcha.\n' +
     '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
     '• sugestoes_upgrade: EXATAMENTE 2 upgrades — produtos que elevariam a rotina ao próximo nível sem adicionar passos desnecessários (ex: booster vitamina C, retinol, péptidos, AHA noturno). Considere o tempo disponível (' + S.rotina + ') e os objetivos da pele. Sugira upgrades que cabem no tempo existente ou substituem um passo.\n' +
     '• sugestoes_substituicoes: APENAS produtos que a cliente JÁ TEM e contradizem diretamente seus objetivos de pele. Se todos compatíveis → retorne [].\n' +
@@ -2723,6 +2756,7 @@ async function confirmProto() {
     incomodos: S.incomodos,
     aparelhos: S.aparelhos,
     investimento: S.investimento,
+    estiloProdutos: S.estiloProdutos || [],
       pais: window._sbpPais || 'BR',
       sem_produto: S.modoProd === 'zero',
     rotina: S.rotina,
