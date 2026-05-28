@@ -361,7 +361,6 @@ input[type="file"] { display:none; }
               protocolo = dados.protocolo || {};
               perfil    = dados.perfil    || {};
               renderApp();
-              setTimeout(buscarImagensSugestoes, 500);
               setTimeout(mostrarSmartShelf, 800);
             } else {
               window.location.href = 'onboarding.html';
@@ -857,7 +856,6 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
     if (tabId === 'evolucao') initEvolucao();
     if (tabId === 'sugestoes') {
       renderSugestoes();
-      setTimeout(buscarImagensSugestoes, 300);
     }
   });
 });
@@ -868,8 +866,6 @@ document.querySelectorAll('.tab[data-tab]').forEach(btn => {
 function buildTierContent(s, tier, af) {
   var t = s[tier.key];
   if (!t || !t.produto) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:8px">Sem sugestão para este nível.</p>';
-  // ── Smart affiliate links ────────────────────────────────────────────────
-  var btnStyle = 'display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:0.5px solid rgba(188,154,79,.25);border-radius:8px;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--dark);font-family:inherit;text-decoration:none;flex:1';
 
   // Search query: brand + product — avoid duplicating brand if already in product name
   var _prodStr = t.produto || '';
@@ -879,63 +875,33 @@ function buildTierContent(s, tier, af) {
     : (_prodStr || _marcaStr);
   var queryEnc = encodeURIComponent(queryBase);
 
-  // Google Shopping — links diretos com fotos dos produtos
   var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
   var googleShopUrl = 'https://www.google.com' + (_pais === 'PT' ? '.pt' : '.br') + '/search?tbm=shop&q=' + queryEnc;
 
-  // Amazon: beauty category + sort by reviews
-  var amazonTag = af.amazon && af.amazon.tag && af.amazon.tag !== 'COLOQUE_TAG_BR' && af.amazon.tag !== 'COLOQUE_TAG_ES' ? '&tag=' + af.amazon.tag : '';
-  var amazonUrl = af.amazon ? af.amazon.url + queryEnc + '&i=beauty&s=review-rank' + amazonTag : null;
-
-  // Farmácia (BR) or YesStyle (PT)
-  var ysTag = af.yesstyle && af.yesstyle.tag && af.yesstyle.tag !== 'COLOQUE_TAG_YESSTYLE' ? '&ref=' + af.yesstyle.tag : '';
-  var ysUrl = af.yesstyle ? af.yesstyle.url + queryEnc + ysTag : null;
-
-  // Mercado Livre / Notino
-  var mlUrl      = af.mercadolivre ? af.mercadolivre.url + encodeURIComponent(queryBase) : null;
-  var notinoUrl  = af.notino ? af.notino.url + queryEnc : null;
-
-  var btns = '';
-  // Google Shopping sempre primeiro
-  btns += '<a href="' + googleShopUrl + '" target="_blank" style="' + btnStyle + ';border-color:rgba(66,133,244,.3);color:#1a73e8">🔍 Google Shopping</a>';
-  if (amazonUrl) btns += '<a href="' + amazonUrl + '" target="_blank" style="' + btnStyle + '">🛒 ' + af.amazon.label + '</a>';
-  if (mlUrl)     btns += '<a href="' + mlUrl     + '" target="_blank" style="' + btnStyle + '">🟡 ' + af.mercadolivre.label + '</a>';
-  if (ysUrl)     btns += '<a href="' + ysUrl     + '" target="_blank" style="' + btnStyle + '">🌿 ' + af.yesstyle.label + '</a>';
-  if (notinoUrl) btns += '<a href="' + notinoUrl + '" target="_blank" style="' + btnStyle + '">✨ ' + af.notino.label + '</a>';
-
-  var _lojasFisicasHtml = af.farmacia
-    ? '<div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:6px">🏪 Encontre também em: <strong>Drogaria Venancio</strong> · <strong>Bel Cosméticos</strong> · <strong>Sephora</strong></div><div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5">⚠️ Alguns produtos internacionais podem não estar disponíveis em farmácias nacionais ainda — consulte sempre o site da loja antes de ir.</div>'
-    : '';
-
-  // ID único para a foto
-  var imgId = 'prod-img-' + (window._sbpImgCount = (window._sbpImgCount||0)+1);
+  var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
+  window[key] = t;
 
   return (
-    // ── Cabeçalho: foto + info ──
-    '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">' +
-      '<div id="' + imgId + '" data-nome="' + queryBase.replace(/"/g,'') + '" style="flex-shrink:0;width:72px;height:72px;border-radius:10px;background:rgba(188,154,79,.08);border:0.5px solid rgba(188,154,79,.2);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden">🧴</div>' +
-      '<div style="flex:1;min-width:0">' +
-        '<div style="font-size:15px;font-weight:500;color:var(--dark);line-height:1.3">' + (t.produto || '') + '</div>' +
-        '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + (t.marca || '') + '</div>' +
-        '<div style="font-size:15px;font-weight:500;color:var(--gold);margin-top:4px">' + (t.preco || '') + '</div>' +
+    // ── Nome + marca + preço ──
+    '<div style="margin-bottom:14px">' +
+      '<div style="font-size:15px;font-weight:500;color:var(--dark);line-height:1.4;margin-bottom:3px">' + (t.produto || '') + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">' +
+        '<div style="font-size:12px;color:var(--muted);letter-spacing:.3px">' + (t.marca || '') + '</div>' +
+        '<div style="font-size:14px;font-weight:600;color:var(--gold);white-space:nowrap">' + (t.preco || '') + '</div>' +
       '</div>' +
     '</div>' +
-    // ── Botão copiar nome ──
-    '<button onclick="copiarNomeProduto(this,\'' + (queryBase).replace(/'/g,"\\'") + '\')" style="width:100%;padding:8px 12px;background:rgba(188,154,79,.07);border:0.5px dashed rgba(188,154,79,.4);border-radius:8px;font-family:inherit;font-size:11px;color:var(--muted);cursor:pointer;text-align:left;margin-bottom:10px;display:flex;align-items:center;gap:6px">' +
-      '<span style="font-size:14px">📋</span>' +
-      '<span>Copiar nome exato para pesquisar na loja</span>' +
-    '</button>' +
-    (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:14px;padding:10px 12px;background:rgba(188,154,79,.06);border-radius:8px;border-left:2px solid rgba(188,154,79,.3)">"' + t.descricao + '"</div>' : '') +
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' + btns + '</div>' +
-    _lojasFisicasHtml +
-    (function() {
-      var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
-      window[key] = t;
-      return '<div style="display:flex;flex-direction:column;gap:8px">' +
-        '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],false)" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:#fff;cursor:pointer">✓ Já tenho — adicionar à rotina</button>' +
-        '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],true)" style="width:100%;padding:11px;background:transparent;border:0.5px solid rgba(188,154,79,.4);border-radius:8px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:1px;color:var(--gold);cursor:pointer">📦 Encomendei — a caminho</button>' +
-      '</div>';
-    })()
+    // ── Descrição ──
+    (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:16px;padding:10px 14px;background:rgba(188,154,79,.05);border-radius:10px;border-left:2px solid rgba(188,154,79,.35)">' + t.descricao + '</div>' : '') +
+    // ── Botão Google Shopping ──
+    '<a href="' + googleShopUrl + '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:rgba(188,154,79,.08);border:1px solid rgba(188,154,79,.25);border-radius:12px;font-family:inherit;font-size:13px;font-weight:500;color:var(--dark);text-decoration:none;margin-bottom:12px;box-sizing:border-box;letter-spacing:.3px">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+      'Buscar no Google Shopping' +
+    '</a>' +
+    // ── Ações ──
+    '<div style="display:flex;flex-direction:column;gap:8px">' +
+      '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],false)" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.8px;color:#fff;cursor:pointer">✓ Já tenho — adicionar à rotina</button>' +
+      '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],true)" style="width:100%;padding:11px;background:transparent;border:1px solid rgba(188,154,79,.3);border-radius:10px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.8px;color:var(--gold);cursor:pointer">📦 Encomendei — a caminho</button>' +
+    '</div>'
   );
 }
 
@@ -2039,79 +2005,6 @@ function getTratamentoEmoji(dow) {
 }
 
 
-// ══ BUSCAR IMAGEM PRODUTO ══
-async function buscarImagemProduto(nomeProduto, imgId) {
-  var el = document.getElementById(imgId);
-  if (!el) return;
-  var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
-
-  // 1) Open Beauty Facts — gratuita, sem API key, funciona para PT e BR
-  try {
-    var q = encodeURIComponent(nomeProduto);
-    var resp = await fetch('https://world.openbeautyfacts.org/cgi/search.pl?search_terms=' + q + '&json=1&action=process&fields=product_name,image_front_url,image_url&page_size=3&search_simple=1');
-    if (resp.ok) {
-      var data = await resp.json();
-      var item = data.products && data.products.find(function(p) { return p.image_front_url || p.image_url; });
-      if (item) {
-        var imgUrl = (item.image_front_url || item.image_url || '').replace('http:', 'https:');
-        if (imgUrl) {
-          el.innerHTML = '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.innerHTML=\'<span style=&quot;font-size:28px&quot;>🧴</span>\'" alt="' + nomeProduto + '">';
-          return;
-        }
-      }
-    }
-  } catch(e) {}
-
-  // 2) Fallback Mercado Livre para BR
-  if (_pais !== 'BR') return;
-  try {
-    var query = encodeURIComponent(nomeProduto);
-    var resp2 = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=' + query + '&limit=1');
-    if (!resp2.ok) return;
-    var data2 = await resp2.json();
-    var item2 = data2.results && data2.results[0];
-    if (item2 && item2.thumbnail) {
-      var imgUrl2 = item2.thumbnail.replace('http:', 'https:').replace('-I.jpg', '-O.jpg');
-      el.innerHTML = '<img src="' + imgUrl2 + '" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.innerHTML=\'<span style=&quot;font-size:28px&quot;>🧴</span>\'" alt="' + nomeProduto + '">';
-    }
-  } catch(e) {}
-}
-
-function copiarNomeProduto(btn, nome) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(nome).then(function() {
-      var orig = btn.innerHTML;
-      btn.innerHTML = '<span style="font-size:14px">✅</span><span>Copiado! Cole na pesquisa da loja</span>';
-      btn.style.borderColor = 'rgba(100,180,100,.5)';
-      btn.style.color = '#3a7a3a';
-      setTimeout(function() { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2500);
-    }).catch(function() { _copiarFallback(btn, nome); });
-  } else {
-    _copiarFallback(btn, nome);
-  }
-}
-function _copiarFallback(btn, nome) {
-  var ta = document.createElement('textarea');
-  ta.value = nome; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.focus(); ta.select();
-  try { document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta);
-  var orig = btn.innerHTML;
-  btn.innerHTML = '<span style="font-size:14px">✅</span><span>Copiado!</span>';
-  setTimeout(function() { btn.innerHTML = orig; }, 2000);
-}
-
-async function buscarImagensSugestoes() {
-  var items = document.querySelectorAll('[id^="prod-img-"]');
-  for (var i = 0; i < items.length; i++) {
-    var id = items[i].id;
-    var nome = items[i].getAttribute('data-nome');
-    if (nome) {
-      await buscarImagemProduto(nome, id);
-      await new Promise(r => setTimeout(r, 300));
-    }
-  }
-}
 
 
 // ══ RENDER STEPS (global) ══
@@ -3564,7 +3457,6 @@ if (protocolo && Object.keys(protocolo).length > 0) {
   // Tem dados locais — renderiza sempre, mesmo offline ou sem auth
   renderApp();
   _atualizarToggleUI();
-  setTimeout(buscarImagensSugestoes, 500);
   setTimeout(mostrarSmartShelf, 800);
   setTimeout(mostrarAvisoFilhos, 1500);
   setTimeout(iniciarConteudoDiario, 2000);
