@@ -416,10 +416,13 @@ input[type="file"] { display:none; }
     <h1 class="hero-name">Skincare <em id="hero-nome"></em></h1>
     <p class="hero-sub" id="hero-tipo" style="display:none"></p>
     <div class="hero-tags" id="hero-tags"></div>
-    <button onclick="compartilharFraseDia('frase')" style="margin-top:16px;display:inline-flex;align-items:center;gap:7px;background:rgba(139,103,37,.12);border:1.5px solid rgba(139,103,37,.6);border-radius:10px;padding:10px 18px;font-family:'Raleway',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#6b4d0f;cursor:pointer">
-      <span style="font-size:13px">✦</span> Frase do dia
-      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-    </button>
+    <div id="hero-frase-wrap" style="display:none;margin-top:18px;background:rgba(139,103,37,.08);border:1px solid rgba(139,103,37,.35);border-radius:12px;padding:12px 14px 12px 16px;position:relative;max-width:360px">
+      <div style="font-family:'Raleway',sans-serif;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(100,72,10,.6);margin-bottom:6px">✦ Frase do dia</div>
+      <div id="hero-frase-txt" style="font-family:'Raleway',sans-serif;font-size:13px;font-style:italic;color:#3D2010;line-height:1.55;padding-right:32px"></div>
+      <button onclick="compartilharFraseDia('frase')" title="Partilhar frase" style="position:absolute;top:10px;right:10px;background:rgba(139,103,37,.12);border:1px solid rgba(139,103,37,.4);border-radius:8px;padding:6px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b4d0f">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -2297,11 +2300,16 @@ async function iniciarConteudoDiario() {
   var hoje = _hojeStr();
   var dia = _diaDoAno();
 
-  // Frase do dia — só popula o texto (card partilhado via botão no hero, não na tab)
+  // Frase do dia — mostra no hero e popula o texto (sem card na tab)
   var fraseCard = document.getElementById('daily-frase-card');
   var fraseTxt = document.getElementById('daily-frase-txt');
-  if (fraseTxt && stored.frases.length) {
-    fraseTxt.textContent = stored.frases[dia % stored.frases.length];
+  var heroFraseTxt = document.getElementById('hero-frase-txt');
+  var heroFraseWrap = document.getElementById('hero-frase-wrap');
+  if (stored.frases.length) {
+    var fraseTexto = stored.frases[dia % stored.frases.length];
+    if (fraseTxt) fraseTxt.textContent = fraseTexto;
+    if (heroFraseTxt) heroFraseTxt.textContent = fraseTexto;
+    if (heroFraseWrap) heroFraseWrap.style.display = 'block';
   }
 
   // Dica do dia
