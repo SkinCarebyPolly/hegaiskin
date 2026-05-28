@@ -283,6 +283,24 @@ input[type=file]{display:none}
   </div>
 </div>
 
+<!-- LOC: Localização -->
+<div class="scr" id="s-loc">
+  <div class="inner">
+    <div class="badge">Personalização</div>
+    <h1>Onde você<br><em>mora?</em></h1>
+    <p class="sub">Clima e região influenciam diretamente na sua rotina de skincare.</p>
+    <button class="locbtn" id="locbtn" onclick="getLocation()">
+      <span style="font-size:22px">📍</span>
+      <div>
+        <div style="font-weight:600;color:#333">Usar minha localização</div>
+        <div id="loctxt" style="font-size:12px;margin-top:2px">Toque para ativar</div>
+      </div>
+    </button>
+    <button class="btn" onclick="go('s-q1')">Continuar →</button>
+    <button class="btn2" onclick="go('s-nome')">← Voltar</button>
+  </div>
+</div>
+
 <!-- 2: Q1 INCOMODOS -->
 <div class="scr" id="s-q1">
   <div class="inner">
@@ -299,6 +317,7 @@ input[type=file]{display:none}
       <div class="qopt multi" onclick="togM(this)"><div class="qcirc"></div><span class="qopt-icon">🔥</span><div><div class="qopt-lbl">Vermelhidão e sensibilidade</div></div></div>
     </div>
     <button class="btn" onclick="goValidate('s-q2','q1','multi')">Continuar →</button>
+    <button class="btn2" onclick="go('s-loc')">← Voltar</button>
   </div>
 </div>
 
@@ -983,7 +1002,7 @@ input[type=file]{display:none}
       </p>
 
       <button class="btn" onclick="confirmProto()">Ver minha rotina completa →</button>
-      <button class="btn2" onclick="go('s-q1')" style="margin-top:10px">← Refazer questionário</button>
+      <button class="btn2" onclick="go('s-loc')" style="margin-top:10px">← Refazer questionário</button>
     </div>
   </div>
 </div>
@@ -1238,7 +1257,7 @@ function goNome() {
   var u = JSON.parse(localStorage.getItem('sbp_user') || '{}');
   u.nome = nome;
   localStorage.setItem('sbp_user', JSON.stringify(u));
-  go('s-q1');
+  go('s-loc');
 }
 
 
@@ -2578,6 +2597,8 @@ async function gerarProtocolo() {
     '"score_pele":72,' +
     '"produtos_identificados":["nome do produto 1","nome do produto 2"]}' +    '\n\nANÁLISE OBRIGATÓRIA:\n' +
     '• tags: máximo 6 tags descritivas em minúsculas COM HÍFEN onde necessário. Exemplos corretos: "anti-manchas", "anti-idade", "oleosidade", "acne", "K-beauty", "alta tecnologia", "hidratação". NUNCA escreva palavras coladas sem hífen.\n' +
+    '• QUALIDADE DO CAMPO "como": NUNCA use instruções genéricas como "aplique o produto no rosto". Cada instrução deve ter: quantidade exata (ex: "2-3 gotas", "grão de arroz", "1 pump"), técnica de aplicação (ex: "massageie em movimentos circulares ascendentes por 30 segundos", "patting suave com as pontas dos dedos"), e dica personalizada para o perfil (ex: "concentre nas bochechas onde você tem mais ressecamento"). Tom caloroso, como uma amiga experiente que está do seu lado — use "você" e seja encorajadora.\n' +
+    '• fase_adaptacao: detalhe semana a semana com instruções CONCRETAS de como introduzir cada produto. Semana 1 = produtos base apenas. Semana 2 = adiciona ativos mais suaves. Semana 3 = rotina quase completa. Semana 4 = rotina completa com todos os ativos. Mencione o NOME do produto em cada semana.\n' +
     '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.';
   var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere os protocolos especiais E as sugestões de produtos.\n\n' +
     'PERFIL:\n' +
