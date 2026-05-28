@@ -436,28 +436,28 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="config">⚙️ Config</button>
 </div>
 
-<!-- FRASE + DICA DO DIA -->
-<div id="daily-banner" style="display:none;padding:0 16px;margin-top:12px">
-  <div id="daily-frase-card" style="display:none;background:linear-gradient(135deg,#3D2010,#5a3018);border-radius:12px;padding:14px 16px;margin-bottom:8px;position:relative">
-    <button onclick="dispensarFraseDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.4);padding:4px;line-height:1">×</button>
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,180,140,.6);margin-bottom:6px">✨ Frase do dia</div>
-    <div id="daily-frase-txt" style="font-family:'Raleway',sans-serif;font-size:15px;font-style:italic;color:#f2e8d9;line-height:1.5;padding-right:28px;margin-bottom:12px"></div>
-    <button onclick="compartilharFraseDia('frase')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(212,180,140,.15);border:1px solid rgba(212,180,140,.25);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:rgba(242,232,217,.85);cursor:pointer">
-      📤 Guardar e Partilhar
-    </button>
-  </div>
-  <div id="daily-dica-card" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.3);border-radius:12px;padding:14px 16px;position:relative">
-    <button onclick="dispensarDicaDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:4px;line-height:1">×</button>
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px">💡 Dica do dia</div>
-    <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6;padding-right:28px;margin-bottom:12px"></div>
-    <button onclick="compartilharFraseDia('dica')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(188,154,79,.1);border:1px solid rgba(188,154,79,.3);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:var(--gold);cursor:pointer">
-      📤 Guardar e Partilhar
-    </button>
-  </div>
-</div>
-
 <!-- ══ ADAPTAÇÃO ══ -->
 <div class="section active" id="tab-adaptacao">
+
+  <!-- FRASE + DICA DO DIA (só no Início) -->
+  <div id="daily-banner" style="display:none;padding:0 0 4px">
+    <div id="daily-frase-card" style="display:none;background:linear-gradient(135deg,#3D2010,#5a3018);border-radius:12px;padding:14px 16px;margin-bottom:8px;position:relative">
+      <button onclick="dispensarFraseDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:rgba(212,180,140,.4);padding:4px;line-height:1">×</button>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,180,140,.6);margin-bottom:6px">✨ Frase do dia</div>
+      <div id="daily-frase-txt" style="font-family:'Raleway',sans-serif;font-size:15px;font-style:italic;color:#f2e8d9;line-height:1.5;padding-right:28px;margin-bottom:12px"></div>
+      <button onclick="compartilharFraseDia('frase')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(212,180,140,.15);border:1px solid rgba(212,180,140,.25);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:rgba(242,232,217,.85);cursor:pointer">
+        📤 Guardar e Partilhar
+      </button>
+    </div>
+    <div id="daily-dica-card" style="display:none;background:linear-gradient(135deg,#fdf3e0,#fdf8f0);border:1px solid rgba(188,154,79,.3);border-radius:12px;padding:14px 16px;position:relative">
+      <button onclick="dispensarDicaDia()" style="position:absolute;top:10px;right:12px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:4px;line-height:1">×</button>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:6px">💡 Dica do dia</div>
+      <div id="daily-dica-txt" style="font-size:13px;color:var(--dark);line-height:1.6;padding-right:28px;margin-bottom:12px"></div>
+      <button onclick="compartilharFraseDia('dica')" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:rgba(188,154,79,.1);border:1px solid rgba(188,154,79,.3);border-radius:8px;padding:9px 0;font-family:inherit;font-size:12px;letter-spacing:1px;color:var(--gold);cursor:pointer">
+        📤 Guardar e Partilhar
+      </button>
+    </div>
+  </div>
 
   <!-- BARRA DE SAÚDE -->
   <div class="card" id="skin-score-card" style="display:none">
@@ -551,7 +551,19 @@ input[type="file"] { display:none; }
 
 <!-- ══ ESPINHA ══ -->
 <div class="section" id="tab-espinha">
-  <div id="content-espinha-root"></div>
+  <!-- Topo fixo (regra + SOS) -->
+  <div id="content-espinha-top"></div>
+  <!-- Sub-tabs Manhã / Noite -->
+  <div id="espinha-subtabs-wrap" style="display:none;margin-bottom:12px">
+    <div style="display:flex;gap:8px;background:rgba(188,154,79,.06);border-radius:10px;padding:4px">
+      <button id="esp-tab-manha" onclick="switchEspinhaTab('manha')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.5px;border:none;background:var(--gold);color:#fff;font-family:inherit;cursor:pointer;transition:all .2s">☀️ Manhã</button>
+      <button id="esp-tab-noite" onclick="switchEspinhaTab('noite')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.5px;border:none;background:transparent;color:var(--muted);font-family:inherit;cursor:pointer;transition:all .2s">🌙 Noite</button>
+    </div>
+  </div>
+  <div id="content-espinha-manha" style="display:block"></div>
+  <div id="content-espinha-noite" style="display:none"></div>
+  <!-- Rodapé fixo (proibidos + alertas) -->
+  <div id="content-espinha-bottom"></div>
 </div>
 
 <!-- ══ PRAIA ══ -->
@@ -561,6 +573,16 @@ input[type="file"] { display:none; }
 
 <!-- ══ MAKE ══ -->
 <div class="section" id="tab-make">
+  <!-- Sub-tabs Manhã / Noite -->
+  <div id="make-subtabs-wrap" style="display:none;margin-bottom:12px">
+    <div style="display:flex;gap:8px;background:rgba(188,154,79,.06);border-radius:10px;padding:4px">
+      <button id="make-tab-manha" onclick="switchMakeTab('manha')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.5px;border:none;background:var(--gold);color:#fff;font-family:inherit;cursor:pointer;transition:all .2s">☀️ Manhã</button>
+      <button id="make-tab-noite" onclick="switchMakeTab('noite')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.5px;border:none;background:transparent;color:var(--muted);font-family:inherit;cursor:pointer;transition:all .2s">🌙 Noite</button>
+    </div>
+  </div>
+  <div id="content-make-manha" style="display:block"></div>
+  <div id="content-make-noite" style="display:none"></div>
+  <!-- fallback para o root legacy -->
   <div id="content-make-root"></div>
 </div>
 
@@ -2693,71 +2715,82 @@ function marcarFeito(uid) {
 
 
 // ══ RENDER ESPINHA ══
+function switchEspinhaTab(tab) {
+  var isManha = tab === 'manha';
+  document.getElementById('content-espinha-manha').style.display = isManha ? 'block' : 'none';
+  document.getElementById('content-espinha-noite').style.display = isManha ? 'none' : 'block';
+  var btnM = document.getElementById('esp-tab-manha');
+  var btnN = document.getElementById('esp-tab-noite');
+  btnM.style.background = isManha ? 'var(--gold)' : 'transparent';
+  btnM.style.color = isManha ? '#fff' : 'var(--muted)';
+  btnN.style.background = isManha ? 'transparent' : 'var(--gold)';
+  btnN.style.color = isManha ? 'var(--muted)' : '#fff';
+}
+
 function renderEspinha(p) {
-  const root = document.getElementById('content-espinha-root');
-  if (!root) return;
-  // Support legacy format where protocolo_espinha was the structured object
   var legacy = p.protocolo_espinha && typeof p.protocolo_espinha === 'object' ? p.protocolo_espinha : null;
   const e = p.protocolo_espinha_detalhado || legacy || {};
 
-  let html = '';
-
+  // ── Topo: Regra de Ouro + SOS ───────────────────────────────────────────
+  var topHtml = '';
   if (e.regra_ouro) {
-    html += `<div class="card"><div class="alert alert-gold" style="margin:0">
+    topHtml += `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">🚨 Regra de Ouro</div>
       <div class="alert-text">${e.regra_ouro}</div>
     </div></div>`;
   }
-
   if (e.sos_tratamento) {
-    html += `<div class="card">
+    topHtml += `<div class="card">
       <div class="card-title"><span class="card-title-icon">⏱</span> SOS — Tratamento Pontual</div>
       <div class="alert alert-gold" style="margin:0"><div class="alert-text">${e.sos_tratamento.replace(/\n/g,'<br>')}</div></div>
     </div>`;
   }
 
-  if (e.manha && e.manha.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#f4a261"><span class="card-title-icon">☀️</span> Manhã com Espinha</div>
-      <div class="step-list">${renderSteps(e.manha)}</div>
-    </div>`;
-  }
+  // ── Manhã ───────────────────────────────────────────────────────────────
+  var manhaHtml = e.manha && e.manha.length
+    ? `<div class="card"><div class="step-list">${renderSteps(e.manha)}</div></div>`
+    : '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhum passo de manhã definido.</p></div>';
 
-  if (e.noite && e.noite.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite com Espinha</div>
-      <div class="step-list">${renderSteps(e.noite)}</div>
-    </div>`;
-  }
+  // ── Noite ───────────────────────────────────────────────────────────────
+  var noiteHtml = e.noite && e.noite.length
+    ? `<div class="card"><div class="step-list">${renderSteps(e.noite)}</div></div>`
+    : '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhum passo de noite definido.</p></div>';
 
+  // ── Rodapé: Proibidos + alertas ─────────────────────────────────────────
+  var botHtml = '';
   if (e.proibidos && e.proibidos.length) {
-    html += `<div class="card">
+    botHtml += `<div class="card">
       <div class="card-title"><span class="card-title-icon">🚫</span> Proibido nos dias de espinha</div>
       ${e.proibidos.map(x => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--muted);line-height:1.6"><span>❌</span><span>${x}</span></div>`).join('')}
     </div>`;
   }
-
   if (e.aviso_gap_bha) {
-    html += `<div class="card"><div class="alert" style="margin:0;background:rgba(188,154,79,.08);border-left:3px solid #BC9A4F">
+    botHtml += `<div class="card"><div class="alert" style="margin:0;background:rgba(188,154,79,.08);border-left:3px solid #BC9A4F">
       <div class="alert-title" style="color:#BC9A4F">💡 Activo em Falta — BHA</div>
       <div class="alert-text">${e.aviso_gap_bha}</div>
     </div></div>`;
   }
-
-  var _dermTxt = e.quando_dermato || 'Espinhas frequentes, profundas ou que deixam cicatrizes estão fora do âmbito cosmético — consulta uma dermatologista. A cosmetologia complementa, não substitui o acompanhamento médico.';
-  html += `<div class="card"><div class="alert" style="margin:0;background:rgba(239,108,78,.06);border-left:3px solid #EF6C4E">
+  var _dermTxt = e.quando_dermato || 'Espinhas frequentes, profundas ou que deixam cicatrizes estão fora do âmbito cosmético — consulta uma dermatologista.';
+  botHtml += `<div class="card"><div class="alert" style="margin:0;background:rgba(239,108,78,.06);border-left:3px solid #EF6C4E">
     <div class="alert-title" style="color:#EF6C4E">🏥 Quando ir à Dermatologista</div>
     <div class="alert-text">${_dermTxt}</div>
   </div></div>`;
 
-  if (!html && p.protocolo_espinha && typeof p.protocolo_espinha === 'string') {
-    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
+  // Legacy fallback
+  if (!topHtml && p.protocolo_espinha && typeof p.protocolo_espinha === 'string') {
+    topHtml = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">🚨 Protocolo de Emergência</div>
       <div class="alert-text">${p.protocolo_espinha.replace(/\n/g,'<br>')}</div>
     </div></div>`;
   }
 
-  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Protocolo não disponível</div></div></div>';
+  var hasSubTabs = (e.manha && e.manha.length) || (e.noite && e.noite.length);
+  document.getElementById('content-espinha-top').innerHTML = topHtml;
+  document.getElementById('content-espinha-manha').innerHTML = manhaHtml;
+  document.getElementById('content-espinha-noite').innerHTML = noiteHtml;
+  document.getElementById('content-espinha-bottom').innerHTML = botHtml;
+  document.getElementById('espinha-subtabs-wrap').style.display = hasSubTabs ? 'block' : 'none';
+  switchEspinhaTab('manha');
 }
 
 // ══ RENDER PRAIA ══
@@ -2816,52 +2849,70 @@ function renderPraia(p) {
 }
 
 // ══ RENDER MAKE ══
+function switchMakeTab(tab) {
+  var isManha = tab === 'manha';
+  document.getElementById('content-make-manha').style.display = isManha ? 'block' : 'none';
+  document.getElementById('content-make-noite').style.display = isManha ? 'none' : 'block';
+  var btnM = document.getElementById('make-tab-manha');
+  var btnN = document.getElementById('make-tab-noite');
+  btnM.style.background = isManha ? 'var(--gold)' : 'transparent';
+  btnM.style.color = isManha ? '#fff' : 'var(--muted)';
+  btnN.style.background = isManha ? 'transparent' : 'var(--gold)';
+  btnN.style.color = isManha ? 'var(--muted)' : '#fff';
+}
+
 function renderMake(p) {
-  const root = document.getElementById('content-make-root');
-  if (!root) return;
   var legacyMake = p.dicas_maquiagem && typeof p.dicas_maquiagem === 'object' ? p.dicas_maquiagem : null;
   const e = p.dicas_maquiagem_detalhado || legacyMake || {};
 
-
-
-  let html = '';
-
+  // ── Manhã: Preparo + Aplicação ───────────────────────────────────────────
+  var manhaHtml = '';
   if (e.preparo && e.preparo.length) {
-    html += `<div class="card">
+    manhaHtml += `<div class="card">
       <div class="card-title" style="color:#f4a261"><span class="card-title-icon">✨</span> Preparo da Pele — 15 min antes</div>
       <div class="step-list">${renderSteps(e.preparo)}</div>
     </div>`;
   }
-
   if (e.aplicacao && e.aplicacao.length) {
-    html += `<div class="card">
+    manhaHtml += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💄</span> Aplicação sem Pilling</div>
       <div class="step-list">${renderSteps(e.aplicacao)}</div>
     </div>`;
   }
+  if (!manhaHtml) manhaHtml = '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhuma dica de manhã disponível.</p></div>';
 
+  // ── Noite: Remoção + Dicas Extras ────────────────────────────────────────
+  var noiteHtml = '';
   if (e.remocao && e.remocao.length) {
-    html += `<div class="card">
+    noiteHtml += `<div class="card">
       <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Remoção — Dupla Limpeza</div>
       <div class="step-list">${renderSteps(e.remocao)}</div>
     </div>`;
   }
-
   if (e.dicas_extras && e.dicas_extras.length) {
-    html += `<div class="card">
+    noiteHtml += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💡</span> Dicas Extras</div>
       ${e.dicas_extras.map(d => `<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(201,169,122,0.08);font-size:13px;color:var(--muted);line-height:1.6"><span>✨</span><span>${d}</span></div>`).join('')}
     </div>`;
   }
+  if (!noiteHtml) noiteHtml = '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhuma dica de noite disponível.</p></div>';
 
-  if (!html && p.dicas_maquiagem && typeof p.dicas_maquiagem === 'string') {
-    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
+  // Legacy fallback no root
+  var rootEl = document.getElementById('content-make-root');
+  if (!e.preparo && !e.aplicacao && !e.remocao && p.dicas_maquiagem && typeof p.dicas_maquiagem === 'string') {
+    if (rootEl) rootEl.innerHTML = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">💄 Skincare + Maquiagem</div>
       <div class="alert-text">${p.dicas_maquiagem.replace(/\n/g,'<br>')}</div>
     </div></div>`;
+    document.getElementById('make-subtabs-wrap').style.display = 'none';
+    return;
   }
+  if (rootEl) rootEl.innerHTML = '';
 
-  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Dicas não disponíveis</div></div></div>';
+  document.getElementById('content-make-manha').innerHTML = manhaHtml;
+  document.getElementById('content-make-noite').innerHTML = noiteHtml;
+  document.getElementById('make-subtabs-wrap').style.display = 'block';
+  switchMakeTab('manha');
 }
 
 
