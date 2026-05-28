@@ -2308,8 +2308,13 @@ async function iniciarConteudoDiario() {
 
   // Gerar se não existir, versão antiga (< 25 itens) ou versão do prompt desatualizada
   if (!stored || !stored.dicas || !stored.frases || stored.dicas.length < 25 || (stored._v || 0) < 2) {
-    stored = await gerarConteudoDiario();
-    if (!stored) return;
+    var generated = await gerarConteudoDiario();
+    if (generated) {
+      stored = generated;
+    } else if (!stored || !stored.frases || !stored.frases.length) {
+      return; // Sem nenhum conteúdo — API falhou e não há cache
+    }
+    // Se a API falhou mas há conteúdo antigo em cache, continua com ele
   }
 
   var hoje = _hojeStr();
