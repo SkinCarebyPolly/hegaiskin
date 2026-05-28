@@ -2557,8 +2557,8 @@ var _stepTexts = {};
 
 // ── Preferências de áudio (persistidas) ─────────────────────────────────────
 var _audioPrefs = (function() {
-  try { return JSON.parse(localStorage.getItem('sbp_audio') || '{"voz":true}'); }
-  catch(e) { return {voz:true}; }
+  try { return JSON.parse(localStorage.getItem('sbp_audio') || '{"voz":false}'); }
+  catch(e) { return {voz:false}; }
 })();
 function _salvarAudioPrefs() {
   try { localStorage.setItem('sbp_audio', JSON.stringify(_audioPrefs)); } catch(e) {}
