@@ -2543,9 +2543,16 @@ async function gerarProtocolo() {
     '- Gestante: '+S.gestante+'\n\n' +
     'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
     (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n\n' : '') +
+    'REGRAS PARA protocolo_espinha_detalhado:\n' +
+    '• manha e noite: lista os produtos da rotina que podem ser usados em dias com espinha ativa. Para cada produto, avalie:\n' +
+    '  – Se pode ser aplicado normalmente (ex: limpador suave, tônico sem ácido, hidratante, protetor solar) → atencao: ""\n' +
+    '  – Se deve EVITAR a área da espinha mas pode ser usado no resto do rosto (ex: retinol, exfoliante, vitamina C concentrada, AHA/BHA em baixa concentração) → atencao: "Aplicar evitando a área com espinha ativa"\n' +
+    '  – Se deve ser usado com muita leveza na zona inflamada (ex: ativo com niacinamida, sérum calmante) → atencao: "Aplicar com leveza, evitando pressão sobre a espinha"\n' +
+    '• proibidos: produtos/ingredientes TOTALMENTE contraindicados nos dias de espinha inflamada — inclua QUALQUER produto da lista da cliente que contenha retinol/retinal em concentração significativa, AHA/BHA em concentração alta, esfoliação física/mecânica, álcool desnat., fragrâncias fortes ou calor (aparelhos de RF ou ultrassom sobre inflamação). Liste pelo nome exato do produto, não apenas o ingrediente.\n' +
+    '• sos_tratamento: o que aplicar SOMENTE em cima da espinha (pontual) — ex: ácido salicílico puro, tea tree, benzoíla peroxida, ou o produto específico da lista que sirva para isso.\n' +
     'Retorne APENAS JSON válido:\n' +
-    '{"protocolo_espinha":"resumo",' +
-    '"protocolo_espinha_detalhado":{"regra_ouro":"regra","sos_tratamento":"cuidado pontual","manha":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"nome","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
+    '{"protocolo_espinha":"resumo em 2 frases",' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"regra de ouro para dias com espinha","sos_tratamento":"tratamento pontual direto na espinha","manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"proibidos":["nome exato do produto ou ingrediente proibido"]},' +
     '"protocolo_praia":"resumo",' +
     '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
     '"dicas_maquiagem":"resumo",' +
