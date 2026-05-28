@@ -921,38 +921,26 @@ function renderApp() {
     }, 400);
   })();
 
-  // Banner de adaptação na Rotina — mostra o texto da semana atual
+  // Banner de adaptação na Rotina — explicação do porquê, sem o texto detalhado
   try {
     var bannerAdap = document.getElementById('banner-adaptacao');
     if (bannerAdap && protocolo.fase_adaptacao) {
-      var faVal = protocolo.fase_adaptacao;
-      var faText = typeof faVal === 'string' ? faVal : Object.values(faVal).join(' ');
-      // Só mostrar se tiver data de início guardada (utilizadoras novas)
       var inicio = parseInt(localStorage.getItem('sbp_inicio') || '0');
       if (!inicio) return; // utilizadora antiga — não mostrar
       var semanaAtual = Math.min(Math.ceil((Date.now() - inicio) / (7 * 24 * 60 * 60 * 1000)), 4);
       if (semanaAtual < 1) semanaAtual = 1;
-      // Extrair texto da semana atual
-      var partes = faText.split(/Semana\s+(\d+)\s*[—–\-]/i);
-      var textoSemana = '';
-      for (var bi = 1; bi < partes.length; bi += 2) {
-        if (parseInt(partes[bi]) === semanaAtual) {
-          textoSemana = (partes[bi + 1] || '').trim();
-          textoSemana = textoSemana.charAt(0).toUpperCase() + textoSemana.slice(1);
-          break;
-        }
-      }
-      var totalSemanas = Math.floor(partes.length / 2);
+      var faText = typeof protocolo.fase_adaptacao === 'string' ? protocolo.fase_adaptacao : Object.values(protocolo.fase_adaptacao).join(' ');
+      var totalSemanas = Math.floor(faText.split(/Semana\s+\d+\s*[—–\-]/i).length - 1) || 4;
       if (semanaAtual <= totalSemanas) {
-        // Ainda em adaptação — mostrar banner com texto da semana
         bannerAdap.innerHTML =
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
-            '<div style="background:var(--gold);color:#fff;font-size:9px;font-weight:600;letter-spacing:1px;border-radius:20px;padding:3px 11px;flex-shrink:0">SEM. ' + semanaAtual + ' DE ADAPTAÇÃO</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+            '<div style="background:var(--gold);color:#fff;font-size:9px;font-weight:600;letter-spacing:1px;border-radius:20px;padding:3px 11px;flex-shrink:0">🌱 SEMANA ' + semanaAtual + ' DE ADAPTAÇÃO</div>' +
           '</div>' +
-          '<div style="font-size:13px;color:var(--muted);line-height:1.7">' + (textoSemana || faText.trim()) + '</div>';
+          '<div style="font-size:13px;color:var(--dark);font-weight:500;margin-bottom:6px;line-height:1.5">Sua pele está a conhecer os novos produtos.</div>' +
+          '<div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px">A fase de adaptação existe para que a pele se ajuste gradualmente, sem sobrecargas nem reações. Introduzir tudo de uma vez pode irritar — por isso vamos devagar no início.</div>' +
+          '<div style="font-size:12px;color:var(--gold);font-weight:500">✦ Consulte a aba <strong>Semana</strong> para ver o que fazer esta semana. Após completar a adaptação, a rotina completa abaixo passa a ser a sua rotina diária.</div>';
         bannerAdap.style.display = 'block';
       }
-      // Se já passou de todas as semanas de adaptação, não mostrar o banner
     }
   } catch(e) {}
 
