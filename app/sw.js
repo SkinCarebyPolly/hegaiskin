@@ -1,5 +1,5 @@
-// Hegai Skin — Service Worker v10
-const CACHE = 'hegai-v10';
+// Hegai Skin — Service Worker v11
+const CACHE = 'hegai-v11';
 const SHELL = [
   './',
   './onboarding.html',
@@ -7,7 +7,15 @@ const SHELL = [
   './chat.html',
   './manifest.json',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './fonts/Raleway-Light.ttf',
+  './fonts/Raleway-Regular.ttf',
+  './fonts/Raleway-Italic.ttf',
+  './fonts/Raleway-Medium.ttf',
+  './fonts/Raleway-SemiBold.ttf',
+  './fonts/Raleway-SemiBoldItalic.ttf',
+  './fonts/EdhanMartine.ttf',
+  './logo-hegaiskin.png'
 ];
 
 // Install: pré-cache do app shell
