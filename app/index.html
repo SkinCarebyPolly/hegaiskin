@@ -2739,7 +2739,7 @@ async function confirmProto() {
   try {
     var _u = window._currentUser || (window._fbAuth && window._fbAuth.currentUser);
     if (_u && window._fbDb) {
-      await window._fbDb.collection('protocolos').doc(_u.uid).set({protocolo: S.protocolo, perfil: perfil, atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()});
+      await window._fbDb.collection('protocolos').doc(_u.uid).set({protocolo: S.protocolo, perfil: perfil, foto_rosto: S.fotoRosto || '', atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()});
     }
   } catch(e) {
     console.error('Firebase save error:', e);

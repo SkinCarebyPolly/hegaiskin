@@ -354,6 +354,7 @@ input[type="file"] { display:none; }
               localStorage.setItem('sbp_protocolo', JSON.stringify(dados.protocolo));
               localStorage.setItem('sbp_perfil', JSON.stringify(dados.perfil || {}));
               localStorage.setItem('sbp_ativo', 'true');
+              if (dados.foto_rosto) localStorage.setItem('sbp_foto_rosto', dados.foto_rosto);
               // Atualiza variáveis em memória e renderiza sem reload
               protocolo = dados.protocolo || {};
               perfil    = dados.perfil    || {};
@@ -365,6 +366,18 @@ input[type="file"] { display:none; }
             }
           }
           // Se já tem dados locais, o init block já chamou renderApp() — nada a fazer
+          // Backfill: se foto_rosto está local mas não no Firebase, sincroniza
+          else {
+            var localFoto = localStorage.getItem('sbp_foto_rosto');
+            if (localFoto && window._fbDb) {
+              try {
+                var snapChk = await window._fbDb.collection('protocolos').doc(user.uid).get();
+                if (snapChk.exists && !snapChk.data().foto_rosto) {
+                  window._fbDb.collection('protocolos').doc(user.uid).set({ foto_rosto: localFoto }, { merge: true });
+                }
+              } catch(e) {}
+            }
+          }
         } catch(e) { console.error('Firebase load error:', e); }
       }
     });
