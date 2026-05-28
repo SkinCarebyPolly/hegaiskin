@@ -1,5 +1,5 @@
-// Hegai Skin — Service Worker v9
-const CACHE = 'hegai-v9';
+// Hegai Skin — Service Worker v10
+const CACHE = 'hegai-v10';
 const SHELL = [
   './',
   './onboarding.html',
