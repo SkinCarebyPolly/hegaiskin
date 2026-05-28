@@ -927,9 +927,10 @@ function renderApp() {
     if (bannerAdap && protocolo.fase_adaptacao) {
       var faVal = protocolo.fase_adaptacao;
       var faText = typeof faVal === 'string' ? faVal : Object.values(faVal).join(' ');
-      // Calcular semana atual com base na data de início
+      // Só mostrar se tiver data de início guardada (utilizadoras novas)
       var inicio = parseInt(localStorage.getItem('sbp_inicio') || '0');
-      var semanaAtual = inicio ? Math.min(Math.ceil((Date.now() - inicio) / (7 * 24 * 60 * 60 * 1000)), 4) : 1;
+      if (!inicio) return; // utilizadora antiga — não mostrar
+      var semanaAtual = Math.min(Math.ceil((Date.now() - inicio) / (7 * 24 * 60 * 60 * 1000)), 4);
       if (semanaAtual < 1) semanaAtual = 1;
       // Extrair texto da semana atual
       var partes = faText.split(/Semana\s+(\d+)\s*[—–\-]/i);
