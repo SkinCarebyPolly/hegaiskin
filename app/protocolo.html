@@ -2594,7 +2594,8 @@ function irParaSugestoesRotina() {
 function parseTempoSeg(tempoStr) {
   if (!tempoStr) return 0;
   var m = tempoStr.match(/(\d+)\s*min/i);
-  var s = tempoStr.match(/(\d+)\s*s/i);
+  // \b para não capturar "s" no meio de palavras (ex: "massagem", "sunscreen")
+  var s = tempoStr.match(/(\d+)\s*seg\b/i) || tempoStr.match(/(\d+)\s*s\b(?!ec|eg|un|il)/i);
   return (m ? parseInt(m[1]) * 60 : 0) + (s ? parseInt(s[1]) : 0);
 }
 
@@ -2697,28 +2698,57 @@ function lerPasso(texto) {
   window.speechSynthesis.speak(utt);
 }
 
+var _timerStart = {}; // Date.now() quando o timer foi iniciado
+var _timerDur   = {}; // duração total em segundos
+
 function iniciarTimer(uid, segundos) {
   if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
   var timerEl = document.getElementById(uid + '-timer');
   var timeEl  = document.getElementById(uid + '-time');
   if (!timerEl || !timeEl) return;
   timerEl.style.display = 'block';
-  var restante = segundos;
-  timeEl.textContent = formatTimer(restante);
+  _timerStart[uid] = Date.now();
+  _timerDur[uid]   = segundos;
+  timeEl.textContent = formatTimer(segundos);
   lerPasso(_stepTexts[uid] || '');
+  // Usa Date.now() para ser preciso mesmo com throttling do iOS Safari
   _timers[uid] = setInterval(function() {
-    restante--;
+    var elapsed  = Math.floor((Date.now() - _timerStart[uid]) / 1000);
+    var restante = Math.max(0, _timerDur[uid] - elapsed);
     timeEl.textContent = formatTimer(restante);
     if (restante <= 0) {
       clearInterval(_timers[uid]);
       delete _timers[uid];
+      delete _timerStart[uid];
+      delete _timerDur[uid];
       timeEl.textContent = '✓ Concluído';
     }
-  }, 1000);
+  }, 500);
 }
+
+// Quando o ecrã volta ao foco (iOS Safari ressuscita a tab), atualiza todos os timers ativos
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState !== 'visible') return;
+  Object.keys(_timers).forEach(function(uid) {
+    var timeEl = document.getElementById(uid + '-time');
+    if (!timeEl || !_timerStart[uid]) return;
+    var elapsed  = Math.floor((Date.now() - _timerStart[uid]) / 1000);
+    var restante = Math.max(0, _timerDur[uid] - elapsed);
+    timeEl.textContent = formatTimer(restante);
+    if (restante <= 0) {
+      clearInterval(_timers[uid]);
+      delete _timers[uid];
+      delete _timerStart[uid];
+      delete _timerDur[uid];
+      timeEl.textContent = '✓ Concluído';
+    }
+  });
+});
 
 function pararTimer(uid) {
   if (_timers[uid]) { clearInterval(_timers[uid]); delete _timers[uid]; }
+  delete _timerStart[uid];
+  delete _timerDur[uid];
   var timerEl = document.getElementById(uid + '-timer');
   if (timerEl) timerEl.style.display = 'none';
 }
