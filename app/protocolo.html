@@ -1284,6 +1284,9 @@ async function adicionarSugestaoRotina(produto, pendente) {
 
     document.body.removeChild(overlay);
 
+    // Regenera espinha/praia/make em background se os protocolos ainda estiverem vazios
+    _regenerarProtocolosSeNecessario();
+
     var toast = document.createElement('div');
     toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.15)';
 
@@ -1311,6 +1314,55 @@ async function adicionarSugestaoRotina(produto, pendente) {
     document.body.removeChild(overlay);
     alert('Não foi possível integrar o produto agora. Tente novamente.');
   }
+}
+
+async function _regenerarProtocolosSeNecessario() {
+  // Só regenera se espinha/praia/make ainda têm manha/noite vazios
+  var espinhaManha = (protocolo.protocolo_espinha_detalhado || {}).manha || [];
+  var makePreparo  = (protocolo.dicas_maquiagem_detalhado || {}).preparo || [];
+  var temProdsRotina = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+    .some(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; });
+
+  if (!temProdsRotina) return; // Ainda não tem produto real activo
+  if (espinhaManha.length > 0 && makePreparo.length > 0) return; // Já estão preenchidos
+
+  // Produtos activos na rotina
+  var prodsActivos = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+    .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
+    .map(function(s) { return s.produto; });
+
+  var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  var prompt = 'Especialista em cosmetologia. A cliente acabou de adicionar produtos à rotina. Regenera os protocolos especiais com os produtos reais.\n\n' +
+    'PERFIL: Tipo de pele: '+(perfil.tipoPele||'')+'| Incomodos: '+(perfil.incomodos||[]).join(', ')+'| Gestante: '+(perfil.gestante||'Não')+'\n' +
+    'PRODUTOS NA ROTINA: '+prodsActivos.join(', ')+'\n\n' +
+    'REGRAS: usa APENAS os produtos listados acima. Tom amigável. Retorne APENAS JSON válido:\n' +
+    '{"protocolo_espinha":"resumo 2 frases",' +
+    '"protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"","quando_dermato":"frase",' +
+    '"manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],' +
+    '"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],"proibidos":[]},' +
+    '"protocolo_praia":"resumo",' +
+    '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
+    '"dicas_maquiagem":"resumo",' +
+    '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}}';
+
+  try {
+    var raw = await geminiChat('Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.', prompt, 4000);
+    var clean = raw.replace(/```json|```/g,'').trim();
+    var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
+    if (ji === -1 || je === -1) return;
+    var atualizado = JSON.parse(clean.substring(ji, je+1));
+    Object.assign(protocolo, atualizado);
+    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+    if (window._currentUser && window._fbDb) {
+      window._fbDb.collection('protocolos').doc(window._currentUser.uid).set({ protocolo: protocolo }, { merge: true });
+    }
+    // Toast discreto
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(61,32,16,.85);color:#fff;padding:10px 18px;border-radius:20px;font-size:12px;z-index:400;white-space:nowrap';
+    t.textContent = '✓ Guias espinha, praia e make actualizados';
+    document.body.appendChild(t);
+    setTimeout(function() { if (t.parentNode) document.body.removeChild(t); }, 3000);
+  } catch(e) {}
 }
 
 function _ehEssencial(s) {
