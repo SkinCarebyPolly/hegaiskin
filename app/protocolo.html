@@ -1315,42 +1315,33 @@ async function adicionarSugestaoRotina(produto, pendente) {
 }
 
 
-function _ehEssencial(s) {
-  var nome = ((s.falta || '') + ' ' + (s.categoria || '')).toLowerCase();
-  return /limpador|cleanser|protetor|sunscreen|hidratante|moistur|creme\s*(dia|noite)|b[áa]sico/.test(nome);
-}
-
 function renderSugestoes() {
   var sugEl = document.getElementById('content-sugestoes');
   if (!sugEl) return;
 
-  var semProd    = protocolo.sem_produto === true;
-  var trocas     = protocolo.sugestoes_substituicoes || [];
-  var temTrocas  = trocas.length > 0;
+  var trocas    = protocolo.sugestoes_substituicoes || [];
+  var temTrocas = trocas.length > 0;
 
-  // Classificar sugestões: essenciais (limpador, protetor, hidratante) vs extras (boosters)
-  var _todasSug     = protocolo.sugestoes || [];
-  var _sugEssenciais = semProd
-    ? (protocolo.sugestoes_rotina || _todasSug)
-    : _todasSug.filter(_ehEssencial);
-  var _sugBoosters  = semProd ? [] : _todasSug.filter(function(s){ return !_ehEssencial(s); });
-  var temEssenciais = _sugEssenciais.length > 0;
+  // Rotina = protocolo.sugestoes | Boosters = protocolo.sugestoes_upgrade
+  var _sugRotina   = protocolo.sugestoes || [];
+  var _sugBoosters = protocolo.sugestoes_upgrade || [];
+  var temRotina    = _sugRotina.length > 0;
 
-  var subTab = window._subTabAtivo || (temEssenciais ? 'rotina' : 'boosters');
+  var subTab = window._subTabAtivo || (temRotina ? 'rotina' : (_sugBoosters.length ? 'boosters' : 'rotina'));
 
   // Mostrar / ocultar subtabs conforme contexto
   var btnR = document.getElementById('subtab-rotina');
   var btnT = document.getElementById('subtab-trocas');
-  if (btnR) btnR.style.display = temEssenciais ? 'inline-block' : 'none';
+  if (btnR) btnR.style.display = temRotina ? 'inline-block' : 'none';
   var descR = document.getElementById('subtab-rotina-desc');
-  if (descR) descR.style.display = (subTab === 'rotina' && temEssenciais) ? 'block' : 'none';
+  if (descR) descR.style.display = (subTab === 'rotina' && temRotina) ? 'block' : 'none';
   if (btnT) btnT.style.display = temTrocas ? 'inline-block' : 'none';
 
   // Renderizar banner de alertas de validade
   renderAlertasValidade();
 
   if (!window._subTabAtivo) {
-    window._subTabAtivo = temEssenciais ? 'rotina' : 'boosters';
+    window._subTabAtivo = temRotina ? 'rotina' : (_sugBoosters.length ? 'boosters' : 'rotina');
     switchSubTab(window._subTabAtivo);
     return;
   }
@@ -1362,7 +1353,7 @@ function renderSugestoes() {
     return;
   }
 
-  var sugestoes = subTab === 'rotina' ? _sugEssenciais : _sugBoosters;
+  var sugestoes = subTab === 'rotina' ? _sugRotina : _sugBoosters;
   var listaCompras = protocolo.lista_compras || [];
   var af           = getAfiliados();
   sugEl.innerHTML  = '';
@@ -1402,7 +1393,7 @@ function renderSugestoes() {
             '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
               '<div style="width:36px;height:36px;border-radius:50%;background:rgba(188,154,79,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + icone + '</div>' +
               '<div style="flex:1">' +
-                '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || '') + '</div>' +
+                '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (s.falta || s.melhoria || '') + '</div>' +
                 '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (s.motivo || '') + '</div>' +
                 (subTab !== 'rotina' && _rotinaCheio ? '<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 8px;background:rgba(255,193,7,.12);border-radius:20px;font-size:10px;color:#b8860b;font-weight:500">⏱ Pode exigir ajuste no tempo da sua rotina</div>' : '') +
               '</div>' +
@@ -1444,55 +1435,8 @@ function renderSugestoes() {
   } else if (listaCompras.length > 0) {
     // Converter lista_compras antiga para sugestoes ricas via IA
     converterListaParaSugestoes(listaCompras);
-  } else if ((protocolo.sugestoes_upgrade || []).length === 0 || subTab === 'rotina') {
+  } else {
     sugEl.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px">As sugestões aparecerão aqui após gerar sua rotina.</p>';
-  }
-
-  // Upgrades — renderizar no tab Boosters independentemente de ter sugestoes base
-  var upgrades = protocolo.sugestoes_upgrade || [];
-  if (upgrades.length > 0 && subTab !== 'rotina') {
-    if (sugestoes.length > 0) {
-      sugEl.insertAdjacentHTML('beforeend',
-        '<div style="margin:20px 0 8px;display:flex;align-items:center;gap:8px">' +
-          '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.2)"></div>' +
-          '<span style="font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:500;text-transform:uppercase">⬆ Upgrades</span>' +
-          '<div style="flex:1;height:0.5px;background:rgba(188,154,79,.2)"></div>' +
-        '</div>'
-      );
-    }
-    upgrades.forEach(function(u, ui) {
-      var uCardId = 'upg-card-' + ui;
-      var uBodyId = 'upg-body-' + ui;
-      var uTabsId = 'upg-tabs-' + ui;
-      var uContId = 'upg-cont-' + ui;
-      var tiers = [
-        { key:'economica',     emoji:'💚', label:'Econômica' },
-        { key:'intermediaria', emoji:'💛', label:'Intermediária' },
-        { key:'premium',       emoji:'💎', label:'Premium' }
-      ];
-      var upgHtml =
-        '<div id="'+uCardId+'" style="background:var(--surface);border:0.5px solid rgba(188,154,79,.25);border-radius:12px;margin-bottom:12px;overflow:hidden">' +
-          '<div id="hdr-'+uBodyId+'" onclick="toggleSug(this.id.replace(\'hdr-\',\'\'))" style="padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px">' +
-            '<div style="display:flex;align-items:center;gap:12px;flex:1">' +
-              '<div style="width:36px;height:36px;border-radius:50%;background:rgba(188,154,79,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">' + (u.icone || '⬆️') + '</div>' +
-              '<div style="flex:1">' +
-                '<div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:3px">' + (u.melhoria || '') + '</div>' +
-                '<div style="font-size:12px;color:var(--muted);line-height:1.4">' + (u.motivo || '') + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div id="'+uCardId+'-chevron" style="font-size:12px;color:var(--muted);flex-shrink:0;transition:transform .2s">▼</div>' +
-          '</div>' +
-          '<div id="'+uBodyId+'" style="display:none;border-top:0.5px solid rgba(188,154,79,.12)">' +
-            '<div id="'+uTabsId+'" style="display:flex;border-bottom:0.5px solid rgba(188,154,79,.12)">' +
-              tiers.map(function(t,ti){
-                return '<button data-tabs="'+uTabsId+'" data-cont="'+uContId+'" data-ti="'+ti+'" onclick="switchSugTab(this.dataset.tabs,this.dataset.cont,parseInt(this.dataset.ti))" style="flex:1;padding:10px 4px;font-size:11px;font-weight:500;border:none;background:'+(ti===0?'rgba(188,154,79,.08)':'transparent')+';color:'+(ti===0?'var(--gold)':'var(--muted)')+';cursor:pointer;border-bottom:2px solid '+(ti===0?'var(--gold)':'transparent')+';font-family:inherit;transition:all .15s">'+t.emoji+' '+t.label+'</button>';
-              }).join('') +
-            '</div>' +
-            '<div id="'+uContId+'" style="padding:16px">' + buildTierContent(u, tiers[0], af) + '</div>' +
-          '</div>' +
-        '</div>';
-      sugEl.insertAdjacentHTML('beforeend', upgHtml);
-    });
   }
 
   // Config
