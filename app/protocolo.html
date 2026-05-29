@@ -1259,6 +1259,12 @@ async function adicionarSugestaoRotina(produto, pendente) {
     // Actualiza e guarda
     if (novaRotina.rotina_manha) protocolo.rotina_manha = novaRotina.rotina_manha;
     if (novaRotina.rotina_noite) protocolo.rotina_noite = novaRotina.rotina_noite;
+    // Limpa flag sem_produto quando a rotina passa a ter produtos reais
+    if (protocolo.sem_produto === true) {
+      var _temProdReal = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+        .some(function(s) { return s.produto && s.produto !== 'null'; });
+      if (_temProdReal) protocolo.sem_produto = false;
+    }
     localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
 
     // Sincroniza com Firestore se disponível
