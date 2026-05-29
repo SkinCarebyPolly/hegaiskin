@@ -1035,14 +1035,14 @@ function renderApp() {
   // Rotina manhã
   var manhaEl = document.getElementById('content-manha');
   if (manhaEl) {
-    var manhaSteps = protocolo.sem_produto === true ? renderRotinaSemProduto() : renderSteps(protocolo.rotina_manha, 'manha');
+    var manhaSteps = renderSteps(protocolo.rotina_manha, 'manha');
     manhaEl.innerHTML = manhaSteps || renderRotinaVazia();
   }
 
   // Rotina noite
   var noiteEl = document.getElementById('content-noite');
   if (noiteEl) {
-    var noiteSteps = protocolo.sem_produto === true ? renderRotinaSemProduto() : renderSteps(protocolo.rotina_noite, 'noite');
+    var noiteSteps = renderSteps(protocolo.rotina_noite, 'noite');
     noiteEl.innerHTML = noiteSteps || renderRotinaVazia();
   }
 

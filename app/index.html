@@ -2684,8 +2684,8 @@ async function gerarProtocolo() {
           '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
           '- Orçamento mensal: '+S.investimento+' | País: '+(_p2pais?'Portugal':'Brasil')+' | Moeda: '+_p2cur+'\n' +
           '- Estilo/preferência: '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência definida')+'\n\n' +
-          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\n' : '') +
-          'PRODUTOS DISPONÍVEIS (o que a cliente já tem):\n' + (prodListaLimitada || '(nenhum)') + '\n\n' +
+          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\nIMPORTANTE MODO SEM PRODUTOS: Nos protocolos espinha, praia e maquiagem: os campos "manha" e "noite" devem ser [] (array vazio) — ela ainda não tem produtos reais. Em sos_tratamento e regra_ouro usa orientações genéricas sem citar marcas. Em dicas_maquiagem_detalhado.preparo usa também [] — sem produtos específicos.\n\n' : '') +
+          'PRODUTOS DISPONÍVEIS (o que a cliente já tem):\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
           (_rotinaProds.length ? 'JÁ INCLUÍDOS NA ROTINA GERADA (não sugerir como faltante):\n' + _rotinaProds.join(', ') + '\n\n' : '') +
           (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n\n' : '') +
           'REGRAS PARA protocolo_espinha_detalhado — ÂMBITO COSMÉTICO (não médico):\n' +
