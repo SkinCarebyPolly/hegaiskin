@@ -1282,6 +1282,12 @@ async function adicionarSugestaoRotina(produto, pendente) {
     if (manhaEl) manhaEl.innerHTML = renderSteps(protocolo.rotina_manha, 'manha');
     if (noiteEl) noiteEl.innerHTML = renderSteps(protocolo.rotina_noite, 'noite');
 
+    // Disparar regeneração silenciosa de espinha+make (só para quem tem produtos)
+    if (protocolo.sem_produto === false) {
+      clearTimeout(window._regenerTimer);
+      window._regenerTimer = setTimeout(_regenerarEspinhaMake, 4000);
+    }
+
     document.body.removeChild(overlay);
 
 
@@ -1806,6 +1812,31 @@ async function addNewProduct(e) {
       if (!prod || !prod.nome) {
         openModal('⚠️ Não identificado', 'Tente uma foto mais nítida do rótulo', '<p style="font-size:13px;color:var(--muted);line-height:1.6">Certifique-se que o nome do produto está bem visível e iluminado.</p>');
         return;
+      }
+
+      // Alerta gestante: verificar ingredientes restritos no produto identificado
+      var _ehGest = protocolo.gestante && protocolo.gestante.indexOf('Não') === -1 && protocolo.gestante !== '';
+      if (_ehGest) {
+        var _restritos = ['retinol','retinal','vitamina a','ácido salicílico','acido salicilico','salicylic','bha','aha','glicólico','glicolico','glycolic','mandélico','mandelico','peróxido de benzoíla','benzoyl peroxide','tretinoína','tretinoin'];
+        var _prodCheck = ((prod.nome || '') + ' ' + (prod.ativo || '')).toLowerCase();
+        var _encontrados = _restritos.filter(function(r) { return _prodCheck.indexOf(r) !== -1; });
+        if (_encontrados.length > 0) {
+          var _continuar = await new Promise(function(resolve) {
+            var _m = document.createElement('div');
+            _m.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px';
+            _m.innerHTML = '<div style="background:#fff;border-radius:20px;padding:28px 24px;max-width:340px;width:100%;text-align:center">' +
+              '<div style="font-size:28px;margin-bottom:12px">⚠️</div>' +
+              '<div style="font-size:16px;font-weight:600;color:#c0392b;margin-bottom:8px">Ingrediente restrito na gestação</div>' +
+              '<div style="font-size:13px;color:#555;margin-bottom:16px;line-height:1.6">Este produto contém <strong>' + _encontrados.join(', ') + '</strong>, contraindicado durante a gestação/amamentação.<br><br>Consulte o seu médico/obstetra antes de usar.</div>' +
+              '<button id="_gestOCRCont" style="width:100%;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:10px">Entendido — Adicionar mesmo assim</button>' +
+              '<button id="_gestOCRCanc" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,.12);border-radius:10px;font-family:inherit;font-size:13px;color:#666;cursor:pointer">Cancelar</button>' +
+            '</div>';
+            document.body.appendChild(_m);
+            document.getElementById('_gestOCRCont').onclick = function() { document.body.removeChild(_m); resolve(true); };
+            document.getElementById('_gestOCRCanc').onclick = function() { document.body.removeChild(_m); resolve(false); };
+          });
+          if (!_continuar) return;
+        }
       }
 
       // Integrar na rotina via Gemini
@@ -2817,6 +2848,70 @@ function renderMake(p) {
   switchMakeTab('manha');
 }
 
+
+// ── REGENERAR ESPINHA + MAKE (background silencioso) ────────────────────────
+async function _regenerarEspinhaMake() {
+  if (protocolo.sem_produto !== false) return;
+  var prodsAtivos = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+    .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
+    .map(function(s) { return s.produto; });
+  if (!prodsAtivos.length) return;
+
+  var pais    = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  var moeda   = pais === 'PT' ? '€' : 'R$';
+  var ehGest  = protocolo.gestante && protocolo.gestante.indexOf('Não') === -1 && protocolo.gestante !== '';
+  var listaProd = prodsAtivos.join(', ');
+
+  var prompt = 'Especialista em cosmetologia. Com base no perfil abaixo e na lista de produtos da cliente, gere APENAS os campos protocolo_espinha_detalhado e dicas_maquiagem_detalhado.\n\n' +
+    'PERFIL:\n' +
+    '- Tipo de pele: ' + (protocolo.tipo_pele || 'não informado') + '\n' +
+    '- Incomodos: ' + ((perfil && perfil.incomodos && perfil.incomodos.length) ? perfil.incomodos.join(', ') : 'não informado') + '\n' +
+    '- Gestante: ' + (protocolo.gestante || 'Não') + '\n' +
+    (ehGest ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA mencionar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA, AHA acima de 5%, Ácido Glicólico acima de 5%, Ácido Mandélico concentrado, Peróxido de Benzoíla. Campo aviso_gap_bha SEMPRE vazio "".\n\n' : '') +
+    'PRODUTOS QUE A CLIENTE TEM (usa os nomes EXATOS na ordem de aplicação):\n' + listaProd + '\n\n' +
+    'REGRAS protocolo_espinha_detalhado:\n' +
+    '• manha e noite: usa os NOMES EXATOS dos produtos acima na ordem de aplicação. Se um passo não tiver produto correspondente, usa categoria sem marca.\n' +
+    '• ESPINHA COMPLETO: regra_ouro, sos_tratamento, manha (mín. 3 passos), noite (mín. 3 passos), proibidos (mín. 2 itens), quando_dermato, aviso_gap_bha. NUNCA arrays vazios.\n' +
+    'REGRAS dicas_maquiagem_detalhado:\n' +
+    '• preparo (mín. 4 passos): usa os produtos EXATOS da cliente na ordem limpeza→tônico→sérum→hidratante→protetor.\n' +
+    '• aplicacao (mín. 3 passos): técnica anti-pilling sem marca.\n' +
+    '• remocao (mín. 2 passos): dupla limpeza com produtos da cliente ou categoria.\n' +
+    '• dicas_extras: mín. 3 dicas ao tipo de pele.\n' +
+    '• MAKE COMPLETO: preparo, aplicacao e remocao nunca vazios.\n' +
+    'Retorne APENAS JSON:\n' +
+    '{"protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"' + (ehGest ? '' : 'frase ou vazio') + '","quando_dermato":"frase","manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
+    '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome exato","como":"instrução","tempo":"X min","dica":"truque"}],"aplicacao":[{"produto":"tipo","como":"técnica","dica":"truque"}],"remocao":[{"produto":"nome exato","como":"instrução","tempo":"X min"}],"dicas_extras":["dica personalizada"]}}';
+
+  try {
+    var raw = await geminiChat('Especialista em skincare. Retorna APENAS JSON válido sem markdown.', prompt, 6000);
+    var clean = raw.replace(/```json|```/g, '').trim();
+    var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
+    if (ji === -1 || je === -1) return;
+    var res = JSON.parse(clean.substring(ji, je + 1));
+
+    var mudou = false;
+    if (res.protocolo_espinha_detalhado) {
+      protocolo.protocolo_espinha_detalhado = res.protocolo_espinha_detalhado;
+      mudou = true;
+    }
+    if (res.dicas_maquiagem_detalhado) {
+      protocolo.dicas_maquiagem_detalhado = res.dicas_maquiagem_detalhado;
+      mudou = true;
+    }
+
+    if (mudou) {
+      localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+      if (window._currentUser && window._fbDb) {
+        try { window._fbDb.collection('protocolos').doc(window._currentUser.uid).set({ protocolo: protocolo }, { merge: true }); } catch(e) {}
+      }
+      try { renderEspinha(protocolo); } catch(e) {}
+      try { renderMake(protocolo); } catch(e) {}
+      mostrarToast('✦ Guias espinha e make atualizados com seus produtos');
+    }
+  } catch(e) {
+    console.warn('_regenerarEspinhaMake:', e);
+  }
+}
 
 // ── NOTIFICAÇÕES PUSH ────────────────────────────────────────────────────────
 async function pedirPermissaoNotificacao() {
