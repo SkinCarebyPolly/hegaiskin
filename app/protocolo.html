@@ -447,7 +447,7 @@ input[type="file"] { display:none; }
   <button class="tab" data-tab="rotina">✨ Rotina</button>
   <button class="tab" data-tab="semana">🗓 Semana</button>
   <button class="tab" data-tab="espinha">🔴 SOS Espinha</button>
-  <button class="tab" data-tab="praia">🏖 Praia</button>
+
   <button class="tab" data-tab="make">💄 Make</button>
   <button class="tab" data-tab="evolucao">📸 Evolução</button>
   <button class="tab" data-tab="polly">✦ Polly</button>
@@ -584,10 +584,6 @@ input[type="file"] { display:none; }
   <div id="content-espinha-bottom"></div>
 </div>
 
-<!-- ══ PRAIA ══ -->
-<div class="section" id="tab-praia">
-  <div id="content-praia-root"></div>
-</div>
 
 <!-- ══ MAKE ══ -->
 <div class="section" id="tab-make">
@@ -1103,8 +1099,6 @@ function renderApp() {
   // ══ ESPINHA ══
   try { renderEspinha(protocolo); } catch(err) { console.warn('renderEspinha:', err); }
 
-  // ══ PRAIA ══
-  try { renderPraia(protocolo); } catch(err) { console.warn('renderPraia:', err); }
 
   // ══ MAKE ══
   try { renderMake(protocolo); } catch(err) { console.warn('renderMake:', err); }
@@ -1284,15 +1278,6 @@ async function adicionarSugestaoRotina(produto, pendente) {
 
     document.body.removeChild(overlay);
 
-    // Marca flag se a lista de produtos mudou em relação à última geração dos guias
-    var _prodsNaRotina = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
-      .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
-      .map(function(s) { return s.produto; });
-    var _prodsGerados = protocolo._prodsProtocolos || [];
-    if (_prodsNaRotina.slice().sort().join('|') !== _prodsGerados.slice().sort().join('|')) {
-      protocolo._protocolosDesatualizados = true;
-      localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
-    }
 
     var toast = document.createElement('div');
     toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.15)';
@@ -1323,71 +1308,6 @@ async function adicionarSugestaoRotina(produto, pendente) {
   }
 }
 
-async function _atualizarGuias(btn) {
-  if (btn) { btn.disabled = true; btn.textContent = 'A actualizar…'; }
-  await _regenerarProtocolosSeNecessario();
-}
-
-async function _regenerarProtocolosSeNecessario() {
-  // Produtos activos na rotina
-  var prodsActivos = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
-    .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
-    .map(function(s) { return s.produto; });
-
-  if (!prodsActivos.length) return; // Ainda não tem produto real activo
-
-  // Só chama Gemini se a lista de produtos mudou desde a última geração
-  var prodsAntes = (protocolo._prodsProtocolos || []).slice().sort().join('|');
-  var prodsAgora = prodsActivos.slice().sort().join('|');
-  if (prodsAntes === prodsAgora) {
-    // Produtos iguais — limpar flag sem pagar chamada
-    delete protocolo._protocolosDesatualizados;
-    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
-    try { renderEspinha(protocolo); } catch(e) {}
-    try { renderPraia(protocolo); } catch(e) {}
-    try { renderMake(protocolo); } catch(e) {}
-    return;
-  }
-
-  var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
-  var prompt = 'Especialista em cosmetologia. A cliente acabou de adicionar produtos à rotina. Regenera os protocolos especiais com os produtos reais.\n\n' +
-    'PERFIL: Tipo de pele: '+(perfil.tipoPele||'')+'| Incomodos: '+(perfil.incomodos||[]).join(', ')+'| Gestante: '+(perfil.gestante||'Não')+'\n' +
-    'PRODUTOS NA ROTINA: '+prodsActivos.join(', ')+'\n\n' +
-    'REGRAS: usa APENAS os produtos listados acima. Tom amigável. Retorne APENAS JSON válido:\n' +
-    '{"protocolo_espinha":"resumo 2 frases",' +
-    '"protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"","quando_dermato":"frase",' +
-    '"manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],' +
-    '"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":""}],"proibidos":[]},' +
-    '"protocolo_praia":"resumo",' +
-    '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
-    '"dicas_maquiagem":"resumo",' +
-    '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}}';
-
-  try {
-    var raw = await geminiChat('Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.', prompt, 4000);
-    var clean = raw.replace(/```json|```/g,'').trim();
-    var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
-    if (ji === -1 || je === -1) return;
-    var atualizado = JSON.parse(clean.substring(ji, je+1));
-    Object.assign(protocolo, atualizado);
-    protocolo._prodsProtocolos = prodsActivos; // guarda lista usada para evitar re-chamadas
-    delete protocolo._protocolosDesatualizados;
-    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
-    if (window._currentUser && window._fbDb) {
-      window._fbDb.collection('protocolos').doc(window._currentUser.uid).set({ protocolo: protocolo }, { merge: true });
-    }
-    // Re-render tabs so banner disappears and real content shows
-    try { renderEspinha(protocolo); } catch(e) {}
-    try { renderPraia(protocolo); } catch(e) {}
-    try { renderMake(protocolo); } catch(e) {}
-    // Toast discreto
-    var t = document.createElement('div');
-    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(61,32,16,.85);color:#fff;padding:10px 18px;border-radius:20px;font-size:12px;z-index:400;white-space:nowrap';
-    t.textContent = '✓ Guias espinha, praia e make actualizados';
-    document.body.appendChild(t);
-    setTimeout(function() { if (t.parentNode) document.body.removeChild(t); }, 3000);
-  } catch(e) {}
-}
 
 function _ehEssencial(s) {
   var nome = ((s.falta || '') + ' ' + (s.categoria || '')).toLowerCase();
@@ -2810,22 +2730,13 @@ function switchEspinhaTab(tab) {
   btnN.style.color = isManha ? 'var(--muted)' : '#fff';
 }
 
-function _bannerAtualizarGuias() {
-  return '<div style="background:rgba(188,154,79,.1);border:1px solid rgba(188,154,79,.4);border-radius:14px;padding:14px 16px;margin-bottom:12px">' +
-    '<div style="font-size:13px;color:var(--text);line-height:1.5;margin-bottom:10px">' +
-    '<strong style="color:var(--gold)">Produtos adicionados!</strong> Actualize os guias espinha, praia e make com os seus produtos reais.' +
-    '</div>' +
-    '<button onclick="_atualizarGuias(this)" style="width:100%;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">' +
-    'Actualizar guias agora →' +
-    '</button></div>';
-}
 
 function renderEspinha(p) {
   var legacy = p.protocolo_espinha && typeof p.protocolo_espinha === 'object' ? p.protocolo_espinha : null;
   const e = p.protocolo_espinha_detalhado || legacy || {};
 
   // ── Topo: Regra de Ouro + SOS ───────────────────────────────────────────
-  var topHtml = p._protocolosDesatualizados ? _bannerAtualizarGuias() : '';
+  var topHtml = '';
   if (e.regra_ouro) {
     topHtml += `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">🚨 Regra de Ouro</div>
@@ -2886,59 +2797,6 @@ function renderEspinha(p) {
   switchEspinhaTab('manha');
 }
 
-// ══ RENDER PRAIA ══
-function renderPraia(p) {
-  const root = document.getElementById('content-praia-root');
-  if (!root) return;
-  var legacyPraia = p.protocolo_praia && typeof p.protocolo_praia === 'object' ? p.protocolo_praia : null;
-  const e = p.protocolo_praia_detalhado || legacyPraia || {};
-
-  let html = p._protocolosDesatualizados ? _bannerAtualizarGuias() : '';
-
-  if (e.regra_ouro) {
-    html += `<div class="card"><div class="alert alert-gold" style="margin:0">
-      <div class="alert-title">☀️ Regra de Ouro</div>
-      <div class="alert-text">${e.regra_ouro}</div>
-    </div></div>`;
-  }
-
-  if (e.vespera && e.vespera.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Véspera à Noite</div>
-      <div class="step-list">${renderSteps(e.vespera)}</div>
-    </div>`;
-  }
-
-  if (e.manha && e.manha.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#f4a261"><span class="card-title-icon">☀️</span> Manhã — Antes de Sair</div>
-      <div class="step-list">${renderSteps(e.manha)}</div>
-    </div>`;
-  }
-
-  if (e.na_praia && e.na_praia.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#d4b472"><span class="card-title-icon">🏖</span> Na Praia</div>
-      <div class="step-list">${renderSteps(e.na_praia)}</div>
-    </div>`;
-  }
-
-  if (e.pos_praia && e.pos_praia.length) {
-    html += `<div class="card">
-      <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Noite Pós-Praia — SOS Início da jornada</div>
-      <div class="step-list">${renderSteps(e.pos_praia)}</div>
-    </div>`;
-  }
-
-  if (!html && p.protocolo_praia && typeof p.protocolo_praia === 'string') {
-    html = `<div class="card"><div class="alert alert-gold" style="margin:0">
-      <div class="alert-title">☀️ Rotina Praia</div>
-      <div class="alert-text">${p.protocolo_praia.replace(/\n/g,'<br>')}</div>
-    </div></div>`;
-  }
-
-  root.innerHTML = html || '<div class="card"><div class="alert alert-gold" style="margin:0"><div class="alert-title">Protocolo não disponível</div></div></div>';
-}
 
 // ══ RENDER MAKE ══
 function switchMakeTab(tab) {
@@ -2992,15 +2850,14 @@ function renderMake(p) {
   // Legacy fallback no root
   var rootEl = document.getElementById('content-make-root');
   if (!e.preparo && !e.aplicacao && !e.remocao && p.dicas_maquiagem && typeof p.dicas_maquiagem === 'string') {
-    if (rootEl) rootEl.innerHTML = (p._protocolosDesatualizados ? _bannerAtualizarGuias() : '') +
-      `<div class="card"><div class="alert alert-gold" style="margin:0">
+    if (rootEl) rootEl.innerHTML = `<div class="card"><div class="alert alert-gold" style="margin:0">
       <div class="alert-title">💄 Skincare + Maquiagem</div>
       <div class="alert-text">${p.dicas_maquiagem.replace(/\n/g,'<br>')}</div>
     </div></div>`;
     document.getElementById('make-subtabs-wrap').style.display = 'none';
     return;
   }
-  if (rootEl) rootEl.innerHTML = p._protocolosDesatualizados ? _bannerAtualizarGuias() : '';
+  if (rootEl) rootEl.innerHTML = '';
 
   document.getElementById('content-make-manha').innerHTML = manhaHtml;
   document.getElementById('content-make-noite').innerHTML = noiteHtml;
