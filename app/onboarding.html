@@ -2518,23 +2518,40 @@ async function gerarProtocolo() {
         var m = {'retinol':'Retinol','retinal':'Retinal','vitamina a ':'Vitamina A','ácido salicílico':'Ácido Salicílico','acido salicilico':'Ácido Salicílico','salicylic':'Ácido Salicílico','bha':'BHA','aha':'AHA','glicólico':'Ácido Glicólico','glicolico':'Ácido Glicólico','glycolic':'Ácido Glicólico','mandélico':'Ácido Mandélico','mandelico':'Ácido Mandélico','peróxido de benzoíla':'Peróxido de Benzoíla','benzoyl peroxide':'Peróxido de Benzoíla','tretinoína':'Tretinoína','tretinoin':'Tretinoína'};
         return m[r] || r;
       }))].join(', ');
-      var _ok = await new Promise(function(resolve) {
+      // Tela 1: aviso dos ingredientes
+      var _passouT1 = await new Promise(function(resolve) {
         var modal = document.createElement('div');
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
         modal.innerHTML =
           '<div style="background:#fff;border-radius:20px;padding:28px 24px;max-width:360px;width:100%">' +
-            '<div style="font-size:28px;text-align:center;margin-bottom:12px">⚠️</div>' +
+            '<div style="font-size:32px;text-align:center;margin-bottom:12px">⚠️</div>' +
             '<div style="font-size:16px;font-weight:700;color:#c0392b;text-align:center;margin-bottom:10px">Atenção — Gravidez/Amamentação</div>' +
-            '<div style="font-size:13px;color:#444;line-height:1.6;margin-bottom:6px">Detectamos produtos com ingredientes <strong>não recomendados</strong> na gravidez ou amamentação:</div>' +
-            '<div style="background:#fdf3f3;border:1px solid #f5c6cb;border-radius:10px;padding:10px 14px;font-size:13px;color:#c0392b;font-weight:600;margin-bottom:12px">' + _flagNomes + '</div>' +
-            '<div style="font-size:12px;color:#666;line-height:1.5;margin-bottom:18px">A rotina será adaptada para evitar estes ativos. <strong>Consulte sempre o seu médico ou obstetra</strong> antes de usar qualquer produto cosmético.</div>' +
-            '<button id="_grav-ok" style="width:100%;background:#c0392b;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Entendido — Continuar</button>' +
+            '<div style="font-size:13px;color:#444;line-height:1.6;margin-bottom:6px">Detectamos produtos na sua lista com ingredientes <strong>não recomendados</strong> na gravidez ou amamentação:</div>' +
+            '<div style="background:#fdf3f3;border:1px solid #f5c6cb;border-radius:10px;padding:10px 14px;font-size:13px;color:#c0392b;font-weight:600;margin-bottom:14px">' + _flagNomes + '</div>' +
+            '<div style="font-size:12px;color:#666;line-height:1.5;margin-bottom:18px">A rotina será adaptada para evitar estes ativos. Mas antes de continuar, é muito importante que você confirme com seu médico.</div>' +
+            '<button id="_grav-avancar" style="width:100%;background:#c0392b;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px">Entendido — quero continuar</button>' +
+            '<button id="_grav-cancelar" style="width:100%;background:transparent;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:13px;font-size:13px;color:#666;cursor:pointer;font-family:inherit">Voltar e editar meus produtos</button>' +
           '</div>';
         document.body.appendChild(modal);
-        document.getElementById('_grav-ok').addEventListener('click', function() {
-          document.body.removeChild(modal);
-          resolve(true);
-        });
+        document.getElementById('_grav-avancar').addEventListener('click', function() { document.body.removeChild(modal); resolve(true); });
+        document.getElementById('_grav-cancelar').addEventListener('click', function() { document.body.removeChild(modal); resolve(false); });
+      });
+      if (!_passouT1) return;
+
+      // Tela 2: confirmação médica obrigatória
+      await new Promise(function(resolve) {
+        var modal2 = document.createElement('div');
+        modal2.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+        modal2.innerHTML =
+          '<div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%">' +
+            '<div style="font-size:40px;text-align:center;margin-bottom:14px">🏥</div>' +
+            '<div style="font-size:17px;font-weight:700;color:#2c3e50;text-align:center;margin-bottom:14px">Consulte seu médico antes de usar</div>' +
+            '<div style="font-size:13px;color:#555;line-height:1.75;margin-bottom:16px">Durante a gestação e amamentação, qualquer produto com estes ativos <strong>deve ser avaliado pelo seu médico ou obstetra</strong> antes do uso — mesmo os de venda livre.<br><br>A Polly vai adaptar sua rotina para proteger você e o bebê, mas a avaliação médica é insubstituível. 🤱</div>' +
+            '<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px 14px;font-size:12px;color:#795548;line-height:1.5;margin-bottom:18px">⚕️ <strong>Lembre-se:</strong> a presença de um produto na sua lista não autoriza o uso. Confirme sempre com seu profissional de saúde.</div>' +
+            '<button id="_grav-conf" style="width:100%;background:#2c3e50;color:#fff;border:none;border-radius:12px;padding:14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Entendido — vou consultar meu médico antes de usar</button>' +
+          '</div>';
+        document.body.appendChild(modal2);
+        document.getElementById('_grav-conf').addEventListener('click', function() { document.body.removeChild(modal2); resolve(); });
       });
     }
   }
