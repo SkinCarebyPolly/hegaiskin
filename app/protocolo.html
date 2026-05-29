@@ -1284,8 +1284,12 @@ async function adicionarSugestaoRotina(produto, pendente) {
 
     document.body.removeChild(overlay);
 
-    // Marca protocolos especiais como desactualizados (sem chamada automática)
-    if (protocolo.sem_produto === true || !(protocolo.protocolo_espinha_detalhado || {}).manha?.length) {
+    // Marca flag se a lista de produtos mudou em relação à última geração dos guias
+    var _prodsNaRotina = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+      .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
+      .map(function(s) { return s.produto; });
+    var _prodsGerados = protocolo._prodsProtocolos || [];
+    if (_prodsNaRotina.slice().sort().join('|') !== _prodsGerados.slice().sort().join('|')) {
       protocolo._protocolosDesatualizados = true;
       localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
     }
@@ -1321,23 +1325,29 @@ async function adicionarSugestaoRotina(produto, pendente) {
 
 async function _atualizarGuias(btn) {
   if (btn) { btn.disabled = true; btn.textContent = 'A actualizar…'; }
-  await _regenerarProtocolosSeNecessario(true);
+  await _regenerarProtocolosSeNecessario();
 }
 
-async function _regenerarProtocolosSeNecessario(forcar) {
-  // Só regenera se espinha/praia/make ainda têm manha/noite vazios
-  var espinhaManha = (protocolo.protocolo_espinha_detalhado || {}).manha || [];
-  var makePreparo  = (protocolo.dicas_maquiagem_detalhado || {}).preparo || [];
-  var temProdsRotina = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
-    .some(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; });
-
-  if (!temProdsRotina) return; // Ainda não tem produto real activo
-  if (!forcar && espinhaManha.length > 0 && makePreparo.length > 0) return; // Já estão preenchidos
-
+async function _regenerarProtocolosSeNecessario() {
   // Produtos activos na rotina
   var prodsActivos = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
     .filter(function(s) { return s.produto && s.produto !== 'null' && !s.pendente; })
     .map(function(s) { return s.produto; });
+
+  if (!prodsActivos.length) return; // Ainda não tem produto real activo
+
+  // Só chama Gemini se a lista de produtos mudou desde a última geração
+  var prodsAntes = (protocolo._prodsProtocolos || []).slice().sort().join('|');
+  var prodsAgora = prodsActivos.slice().sort().join('|');
+  if (prodsAntes === prodsAgora) {
+    // Produtos iguais — limpar flag sem pagar chamada
+    delete protocolo._protocolosDesatualizados;
+    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+    try { renderEspinha(protocolo); } catch(e) {}
+    try { renderPraia(protocolo); } catch(e) {}
+    try { renderMake(protocolo); } catch(e) {}
+    return;
+  }
 
   var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
   var prompt = 'Especialista em cosmetologia. A cliente acabou de adicionar produtos à rotina. Regenera os protocolos especiais com os produtos reais.\n\n' +
@@ -1360,6 +1370,7 @@ async function _regenerarProtocolosSeNecessario(forcar) {
     if (ji === -1 || je === -1) return;
     var atualizado = JSON.parse(clean.substring(ji, je+1));
     Object.assign(protocolo, atualizado);
+    protocolo._prodsProtocolos = prodsActivos; // guarda lista usada para evitar re-chamadas
     delete protocolo._protocolosDesatualizados;
     localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
     if (window._currentUser && window._fbDb) {
