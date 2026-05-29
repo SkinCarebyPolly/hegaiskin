@@ -2604,6 +2604,7 @@ async function gerarProtocolo() {
     'PERFIL:\n' +
     '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
     '- Gestante: '+S.gestante+' | Objetivo: '+S.objetivo+'\n' +
+    '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
     '- Orçamento mensal: '+S.investimento+' | País: '+(window._sbpPais==='PT'?'Portugal':'Brasil')+' | Moeda: '+(window._sbpPais==='PT'?'€':'R$')+'\n' +
     '- Estilo/preferência: '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência definida')+'\n\n' +
     'PRODUTOS DISPONÍVEIS:\n' + prodListaLimitada + '\n\n' +
