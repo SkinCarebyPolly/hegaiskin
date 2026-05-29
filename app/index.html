@@ -2507,6 +2507,38 @@ async function gerarProtocolo() {
     S.fotosProds = _fotosBase64;
   }
 
+  // Alerta gestante: verificar se tem produtos com ingredientes restritos
+  var _ehGestante = S.gestante && S.gestante.indexOf('Não') === -1 && S.gestante !== '';
+  if (_ehGestante && S.prodTxt) {
+    var _restritosGrav = ['retinol','retinal','vitamina a ','ácido salicílico','acido salicilico','salicylic','bha','aha','glicólico','glicolico','glycolic','mandélico','mandelico','peróxido de benzoíla','benzoyl peroxide','tretinoína','tretinoin'];
+    var _prodTxtLow = S.prodTxt.toLowerCase();
+    var _flagrados = _restritosGrav.filter(function(r){ return _prodTxtLow.indexOf(r) !== -1; });
+    if (_flagrados.length > 0) {
+      var _flagNomes = [...new Set(_flagrados.map(function(r){
+        var m = {'retinol':'Retinol','retinal':'Retinal','vitamina a ':'Vitamina A','ácido salicílico':'Ácido Salicílico','acido salicilico':'Ácido Salicílico','salicylic':'Ácido Salicílico','bha':'BHA','aha':'AHA','glicólico':'Ácido Glicólico','glicolico':'Ácido Glicólico','glycolic':'Ácido Glicólico','mandélico':'Ácido Mandélico','mandelico':'Ácido Mandélico','peróxido de benzoíla':'Peróxido de Benzoíla','benzoyl peroxide':'Peróxido de Benzoíla','tretinoína':'Tretinoína','tretinoin':'Tretinoína'};
+        return m[r] || r;
+      }))].join(', ');
+      var _ok = await new Promise(function(resolve) {
+        var modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(61,32,16,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+        modal.innerHTML =
+          '<div style="background:#fff;border-radius:20px;padding:28px 24px;max-width:360px;width:100%">' +
+            '<div style="font-size:28px;text-align:center;margin-bottom:12px">⚠️</div>' +
+            '<div style="font-size:16px;font-weight:700;color:#c0392b;text-align:center;margin-bottom:10px">Atenção — Gravidez/Amamentação</div>' +
+            '<div style="font-size:13px;color:#444;line-height:1.6;margin-bottom:6px">Detectamos produtos com ingredientes <strong>não recomendados</strong> na gravidez ou amamentação:</div>' +
+            '<div style="background:#fdf3f3;border:1px solid #f5c6cb;border-radius:10px;padding:10px 14px;font-size:13px;color:#c0392b;font-weight:600;margin-bottom:12px">' + _flagNomes + '</div>' +
+            '<div style="font-size:12px;color:#666;line-height:1.5;margin-bottom:18px">A rotina será adaptada para evitar estes ativos. <strong>Consulte sempre o seu médico ou obstetra</strong> antes de usar qualquer produto cosmético.</div>' +
+            '<button id="_grav-ok" style="width:100%;background:#c0392b;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Entendido — Continuar</button>' +
+          '</div>';
+        document.body.appendChild(modal);
+        document.getElementById('_grav-ok').addEventListener('click', function() {
+          document.body.removeChild(modal);
+          resolve(true);
+        });
+      });
+    }
+  }
+
   go('s-gen');
 
   // Gemini analisa foto do rosto
@@ -2684,10 +2716,10 @@ async function gerarProtocolo() {
           '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
           '- Orçamento mensal: '+S.investimento+' | País: '+(_p2pais?'Portugal':'Brasil')+' | Moeda: '+_p2cur+'\n' +
           '- Estilo/preferência: '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência definida')+'\n\n' +
-          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\nIMPORTANTE MODO SEM PRODUTOS: Nos protocolos espinha, praia e maquiagem: os campos "manha" e "noite" devem ser [] (array vazio) — ela ainda não tem produtos reais. Em sos_tratamento e regra_ouro usa orientações genéricas sem citar marcas. Em dicas_maquiagem_detalhado.preparo usa também [] — sem produtos específicos.\n\n' : '') +
+          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\n' : '') +
           'PRODUTOS DISPONÍVEIS (o que a cliente já tem):\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
           (_rotinaProds.length ? 'JÁ INCLUÍDOS NA ROTINA GERADA (não sugerir como faltante):\n' + _rotinaProds.join(', ') + '\n\n' : '') +
-          (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n\n' : '') +
+          (S.gestante !== 'Não' ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA sugerir nem mencionar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA (qualquer concentração), AHA acima de 5%, Ácido Glicólico acima de 5%, Ácido Mandélico concentrado, Peróxido de Benzoíla concentrado. Qualquer dúvida sobre um produto → orienta a consultar o médico/obstetra antes de usar.\n\n' : '') +
           'REGRAS PARA protocolo_espinha_detalhado — ÂMBITO COSMÉTICO (não médico):\n' +
           'IMPORTANTE: Este protocolo é orientação cosmética, não diagnóstico médico. Usa SEMPRE linguagem observacional que a própria cliente consegue avaliar sozinha (o que ela VÊ), nunca terminologia clínica (não usar "pústula", "nódulo", "acne cística", "lesão"). A responsável pela avaliação é a cliente — nós orientamos como usar os produtos dela.\n\n' +
           '• regra_ouro: UMA frase prática — a observação visual que a cliente deve fazer antes de escolher o cuidado (ex: "Olha para a espinha: tem ponto branco/amarelo visível ou está só vermelha e dura por baixo da pele? Isso decide o que fazer").\n' +
@@ -2696,31 +2728,40 @@ async function gerarProtocolo() {
           '  – "Espinha com ponto branco/amarelo na ponta ou pele aberta/irritada": PROIBIDO usar microagulhas ou qualquer dispositivo — risco de piorar. Sugere adesivo hidrocoloide (farmácia, OTC, barato) — deixa absorver, protege e acelera a recuperação. Se a cliente não tiver, indica como produto a comprar.\n' +
           '  – Termina SEMPRE com: "Se as espinhas forem frequentes, profundas ou deixarem cicatrizes, consulta uma dermatologista — a cosmetologia tem limites e ela vai além."\n' +
           '• ALERTA DISPOSITIVOS: Se a lista incluir aparelho com ponta, microagulhas ou derma roller → campo atencao DESSE produto: "Só usar quando a espinha estiver vermelha e dura, SEM ponto visível na ponta. Com pus ou pele aberta, não usar — pode piorar."\n' +
-          '• manha e noite: produtos da rotina que podem ser usados em dias com espinha ativa. Para cada um:\n' +
+          '• manha e noite: usa CATEGORIAS + ATIVO, NUNCA marcas ou nomes específicos (ex: "Limpador suave (SLS-free)", "Protetor solar FPS50+", "Hidratante com ceramidas", "Sérum de niacinamida"). Este guia deve funcionar independentemente dos produtos que a cliente compre. Para cada passo:\n' +
           '  – Seguro normalmente (limpador suave, hidratante, protetor solar, niacinamida) → atencao: ""\n' +
-          '  – Aplicar afastado da área vermelha (retinol, retinal, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
+          '  – Ativo a evitar na área da espinha (retinol, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
           '  – Dispositivo com ponta → atencao: "Só quando a espinha estiver vermelha e dura, sem pus visível"\n' +
-          '• proibidos: nomes EXATOS dos produtos da lista contraindicados em dias de espinha ativa: retinol/retinal concentrado, AHA/BHA alto, esfoliação mecânica, aparelhos de calor/RF sobre pele inflamada.\n' +
-          '• aviso_gap_bha: Se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento cosmético 1-2×/semana (poro mais limpo = menos espinhas). Se JÁ tiver BHA → campo vazio "".\n' +
+          '• proibidos: categorias/ativos contraindicados em dias de espinha ativa, sem marcas (ex: "Retinol/retinal concentrado", "AHA/BHA alto", "Esfoliação mecânica").\n' +
+          '• aviso_gap_bha: Se GESTANTE/AMAMENTANDO → campo SEMPRE vazio "" (BHA/ácido salicílico é contraindicado na gravidez em qualquer concentração). Para não-gestantes: se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento 1-2×/semana. Se JÁ tiver BHA → campo vazio "".\n' +
           '• quando_dermato: SEMPRE presente — 1 frase amigável indicando que espinhas frequentes, profundas ou com cicatrizes saem do âmbito cosmético e precisam de dermatologista.\n' +
+          '• ESPINHA COMPLETO: todos os campos obrigatórios — regra_ouro, sos_tratamento, manha (mínimo 3 passos), noite (mínimo 3 passos), proibidos (mínimo 2 itens), quando_dermato. NUNCA retornar arrays vazios nos campos manha e noite.\n' +
+          'REGRAS PARA dicas_maquiagem_detalhado — SEM MARCAS:\n' +
+          '• preparo (OBRIGATÓRIO, mínimo 4 passos): a skincare routine que a cliente deve fazer 15-20 min ANTES de aplicar maquiagem, na ordem correcta. Passos típicos: 1) Limpador suave, 2) Tônico/essência hidratante, 3) Sérum (se usar), 4) Hidratante leve, 5) Protetor solar. Usa categorias + ativo SEM marca. Campo "dica" = truque de aplicação para a maquiagem durar mais (ex: "Espere absorver completamente antes de aplicar a base").\n' +
+          '• aplicacao (mínimo 3 passos): técnica anti-pilling e anti-caroço para aplicar base, corretivo e pó. Usa tipos de make sem marca (ex: "Base fluida leve", "Pó translúcido fixador"). Campo "dica" = truque para duração/acabamento.\n' +
+          '• remocao (mínimo 2 passos): dupla limpeza para remoção completa sem agredir a pele. Categorias sem marca.\n' +
+          '• dicas_extras: mínimo 3 dicas personalizadas ao tipo de pele e incomodos dela (ex: para pele oleosa: como evitar brilho sob a make).\n' +
+          '• MAKE COMPLETO: nunca retornar arrays vazios — preparo, aplicacao e remocao são sempre obrigatórios.\n' +
           'Retorne APENAS JSON válido:\n' +
           '{"protocolo_espinha":"resumo em 2 frases calorosas e diretas",' +
-          '"protocolo_espinha_detalhado":{"regra_ouro":"frase de decisão inicial","sos_tratamento":"instrução diferenciada por tipo de espinha (interna vs pústula)","aviso_gap_bha":"frase sobre BHA ou vazio","quando_dermato":"frase ou vazio","manha":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"noite":[{"produto":"nome exato","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"proibidos":["nome exato do produto ou ativo proibido"]},' +
-          '"protocolo_praia":"resumo",' +
-          '"protocolo_praia_detalhado":{"regra_ouro":"regra","vespera":[{"produto":"nome","como":"instrução","tempo":"X min"}],"manha":[{"produto":"nome","como":"instrução","tempo":"X min"}],"na_praia":[{"produto":"nome","como":"instrução","tempo":"quando"}],"pos_praia":[{"produto":"nome","como":"instrução","tempo":"X min"}]},' +
+          '"protocolo_espinha_detalhado":{"regra_ouro":"frase de decisão inicial","sos_tratamento":"instrução diferenciada por tipo de espinha (interna vs pústula)","aviso_gap_bha":"frase sobre BHA ou vazio","quando_dermato":"frase ou vazio","manha":[{"produto":"categoria+ativo sem marca (ex: Limpador suave SLS-free)","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"noite":[{"produto":"categoria+ativo sem marca (ex: Hidratante com ceramidas)","como":"instrução","tempo":"X min","atencao":"vazio ou aviso específico"}],"proibidos":["categoria ou ativo proibido (ex: Retinol concentrado)"]},' +
           '"dicas_maquiagem":"resumo",' +
-          '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"nome","como":"instrução","tempo":"X min","dica":""}],"aplicacao":[{"produto":"make","como":"técnica","dica":""}],"remocao":[{"produto":"nome","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}},' +
-          '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome EXATO em português","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"}}],' +
-          '"sugestoes_substituicoes":[{"produto_atual":"nome exato da cliente","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz o objetivo","motivo":"benefício da troca","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"}}],' +
-          '"sugestoes_upgrade":[{"melhoria":"título curto","icone":"emoji","motivo":"1-2 frases","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"1 frase"}}],' +
+          '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"categoria+ativo sem marca (ex: Limpador suave)","como":"instrução de aplicação","tempo":"X min","dica":"truque para make durar mais"}],"aplicacao":[{"produto":"tipo de make sem marca (ex: Base fluida leve)","como":"técnica anti-pilling","dica":"truque de acabamento"}],"remocao":[{"produto":"categoria sem marca (ex: Óleo de limpeza)","como":"instrução de remoção","tempo":"X min"}],"dicas_extras":["dica personalizada ao tipo de pele"]}},' +
+          '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases ligando a categoria ao perfil dela: por que ESTE ativo faz falta para o SEU tipo de pele e objetivos","economica":{"produto":"nome EXATO em português","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
+          '"sugestoes_substituicoes":[{"produto_atual":"nome exato da cliente","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz o objetivo","motivo":"benefício concreto da troca para o perfil dela","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
+          '"sugestoes_upgrade":[{"melhoria":"título curto do upgrade","icone":"emoji","motivo":"1-2 frases explicando que melhoria concreta este ativo traz à rotina atual dela e por que é o próximo passo lógico","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
           '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
           (S.filhosPequenos ? '"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}' : '"aviso_filhos":[]}') +
           '\n\nREGRAS PARA SUGESTÕES:\n' +
           '• sugestoes: liste TODAS as categorias essenciais AUSENTES da rotina e dos produtos da cliente (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). NÃO sugerir o que já está em "JÁ INCLUÍDOS NA ROTINA". Orçamento: '+S.investimento+'. Disponível em '+(_p2pais?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$')+'.\n' +
+          '  – MOTIVO: obrigatório personalizado. Liga a categoria ao perfil: tipo de pele, incomodos e objetivo. Ex: "Sua pele oleosa com poros dilatados precisa de um limpador com ácido salicílico para dissolver o excesso de sebo sem agredir a barreira." NUNCA genérico como "é importante ter um limpador".\n' +
+          '  – DESCRICAO por tier: explica o que AQUELE produto específico faz e o que o diferencia dos outros tiers. Econômica: "melhor custo-benefício para começar". Intermediária: diferencial concreto vs econômica (concentração, textura, resultado). Premium: justificativa do preço (tecnologia, ingrediente exclusivo, eficácia clínica).\n' +
           '  – NOME: usa o nome EXATO em português como aparece na loja. Especifica variante (Suave/Profunda, 30ml/50ml) quando existir.\n' +
           '  – PREÇO: valor REALISTA. '+(_p2pais?'Econômico ~€5-25, intermédio ~€25-70, premium €70+. NUNCA sugira €3 para produto que custa €20+':'Econômico ~R$30-80, intermédio ~R$80-200, premium ~R$200+. NUNCA sugira R$28 para produto que custa R$70+')+'.\n' +
           '  – ESTILO: cliente prefere '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'sem preferência')+'. K-beauty→COSRX/Some By Mi/Beauty of Joseon. Farmácia→CeraVe/La Roche-Posay/Simple. Nacionais→Água de Cheiro/Océane/Vult. Clean beauty→sem fragrance/parabenos. Premium→Drunk Elephant/Paula\'s Choice.\n' +
           '• sugestoes_upgrade: EXATAMENTE 2 upgrades que elevariam a rotina (ex: booster vitamina C, retinol, péptidos, AHA noturno). Compatível com orçamento e tempo disponível.\n' +
+          '  – MOTIVO upgrade: explica que melhoria concreta este ativo traz à rotina ATUAL dela e por que é o próximo passo lógico. Ex: "A niacinamida que você já usa controla o brilho, mas um sérum de vitamina C pela manhã vai atacar diretamente as manchas que você quer eliminar — com resultado visível em 4-6 semanas."\n' +
+          '  – DESCRICAO upgrade por tier: mesmo critério das sugestoes — econômica=custo-benefício, intermediária=diferencial concreto, premium=justificativa do preço.\n' +
           '• sugestoes_substituicoes: APENAS produtos da cliente que contradizem seus objetivos. Se compatíveis → []. Se sem produtos → [].\n' +
           '• alertas_validade: '+(S.modoProd === 'zero' ? '[] — cliente sem produtos.' : 'produtos sensíveis a luz/calor ou prazo curto. Se nenhum → [].')+'\n' +
           (S.filhosPequenos ? '• aviso_filhos: produtos com ativos perigosos para crianças <6 anos (retinol→30min, AHA/BHA→20min, vit.C→10min, óleos essenciais→30min). Se nenhum → [].' : '• aviso_filhos: [].');
