@@ -2687,7 +2687,7 @@ async function gerarProtocolo() {
           (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\n' : '') +
           'PRODUTOS DISPONÍVEIS (o que a cliente já tem):\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
           (_rotinaProds.length ? 'JÁ INCLUÍDOS NA ROTINA GERADA (não sugerir como faltante):\n' + _rotinaProds.join(', ') + '\n\n' : '') +
-          (S.gestante !== 'Não' ? 'GESTANTE: NUNCA Retinol, AHA/BHA>5%, Ácido Salicílico, Vitamina A.\n\n' : '') +
+          (S.gestante !== 'Não' ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA sugerir nem mencionar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA (qualquer concentração), AHA acima de 5%, Ácido Glicólico acima de 5%, Ácido Mandélico concentrado, Peróxido de Benzoíla concentrado. Qualquer dúvida sobre um produto → orienta a consultar o médico/obstetra antes de usar.\n\n' : '') +
           'REGRAS PARA protocolo_espinha_detalhado — ÂMBITO COSMÉTICO (não médico):\n' +
           'IMPORTANTE: Este protocolo é orientação cosmética, não diagnóstico médico. Usa SEMPRE linguagem observacional que a própria cliente consegue avaliar sozinha (o que ela VÊ), nunca terminologia clínica (não usar "pústula", "nódulo", "acne cística", "lesão"). A responsável pela avaliação é a cliente — nós orientamos como usar os produtos dela.\n\n' +
           '• regra_ouro: UMA frase prática — a observação visual que a cliente deve fazer antes de escolher o cuidado (ex: "Olha para a espinha: tem ponto branco/amarelo visível ou está só vermelha e dura por baixo da pele? Isso decide o que fazer").\n' +
@@ -2701,7 +2701,7 @@ async function gerarProtocolo() {
           '  – Ativo a evitar na área da espinha (retinol, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
           '  – Dispositivo com ponta → atencao: "Só quando a espinha estiver vermelha e dura, sem pus visível"\n' +
           '• proibidos: categorias/ativos contraindicados em dias de espinha ativa, sem marcas (ex: "Retinol/retinal concentrado", "AHA/BHA alto", "Esfoliação mecânica").\n' +
-          '• aviso_gap_bha: Se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento cosmético 1-2×/semana (poro mais limpo = menos espinhas). Se JÁ tiver BHA → campo vazio "".\n' +
+          '• aviso_gap_bha: Se GESTANTE/AMAMENTANDO → campo SEMPRE vazio "" (BHA/ácido salicílico é contraindicado na gravidez em qualquer concentração). Para não-gestantes: se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento 1-2×/semana. Se JÁ tiver BHA → campo vazio "".\n' +
           '• quando_dermato: SEMPRE presente — 1 frase amigável indicando que espinhas frequentes, profundas ou com cicatrizes saem do âmbito cosmético e precisam de dermatologista.\n' +
           'Retorne APENAS JSON válido:\n' +
           '{"protocolo_espinha":"resumo em 2 frases calorosas e diretas",' +
