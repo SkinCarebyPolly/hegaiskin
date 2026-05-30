@@ -1106,6 +1106,11 @@ function renderApp() {
   // ── Sugestões em 3 tiers ──────────────────────────────────────────────
   try { renderSugestoes(); } catch(err) { console.warn('renderSugestoes:', err); }
 
+  // Migração silenciosa: regenera sugestões via Claude para usuárias antigas (Gemini)
+  if (!protocolo._sugestoes_migradas) {
+    setTimeout(_migrarSugestoesClaude, 3000);
+  }
+
   // Inicializar toggle manhã/noite com base no horário
   mostrarPeriodo(_periodoAtivo);
 }
@@ -2929,6 +2934,88 @@ async function _regenerarEspinhaMake() {
     }
   } catch(e) {
     console.warn('_regenerarEspinhaMake:', e);
+  }
+}
+
+// ── MIGRAÇÃO SILENCIOSA DE SUGESTÕES PARA CLAUDE ────────────────────────────
+async function _migrarSugestoesClaude() {
+  if (protocolo._sugestoes_migradas) return;
+
+  var pais   = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
+  var isPT   = pais === 'PT';
+  var cur    = isPT ? '€' : 'R$';
+  var inv    = (perfil && perfil.investimento) || protocolo.investimento || '';
+  var estilo = (perfil && perfil.estiloProdutos && perfil.estiloProdutos.length) ? perfil.estiloProdutos.join(', ') : 'sem preferência';
+  var incom  = (perfil && perfil.incomodos && perfil.incomodos.length) ? perfil.incomodos.join(', ') : 'não informado';
+  var obj    = (perfil && perfil.objetivo) || protocolo.objetivo || '';
+  var ehGest = protocolo.gestante && protocolo.gestante.indexOf('Não') === -1 && protocolo.gestante !== '';
+  var filhos = protocolo.filhos_pequenos || false;
+
+  var _rotPrds = (protocolo.rotina_manha || []).concat(protocolo.rotina_noite || [])
+    .filter(function(s) { return s.produto && s.produto !== 'null'; })
+    .map(function(s) { return s.produto; });
+  var _prdList = (protocolo.produtos_identificados || _rotPrds).join(', ') || '(não informado)';
+  var _semProd = protocolo.sem_produto === true;
+
+  var prompt = 'Especialista sênior em cosmetologia. Com base no perfil abaixo, gere APENAS os campos de sugestões de produtos.\n\n' +
+    'PERFIL:\n' +
+    '- Tipo de pele: ' + (protocolo.tipo_pele || perfil.tipoPele || 'não informado') + '\n' +
+    '- Incomodos: ' + incom + '\n' +
+    '- Objetivo: ' + obj + '\n' +
+    '- Gestante: ' + (protocolo.gestante || 'Não') + '\n' +
+    '- Orçamento: ' + inv + ' | País: ' + (isPT ? 'Portugal' : 'Brasil') + ' | Moeda: ' + cur + '\n' +
+    '- Estilo/preferência: ' + estilo + '\n' +
+    (_semProd ? 'CLIENTE SEM PRODUTOS — sugestoes deve cobrir todas as categorias essenciais.\n' : '') +
+    'PRODUTOS QUE TEM: ' + _prdList + '\n' +
+    (_rotPrds.length ? 'JÁ NA ROTINA (não sugerir como faltante): ' + _rotPrds.join(', ') + '\n' : '') +
+    (ehGest ? 'GESTANTE — NUNCA sugerir Retinol, Retinal, Vitamina A, BHA, AHA>5%, Ácido Salicílico.\n' : '') + '\n' +
+    'REGRAS sugestoes: categorias AUSENTES dos produtos + rotina. Motivo personalizado ao perfil. Preços realistas (' + (isPT ? 'ec ~€5-25, int ~€25-70, prem €70+' : 'ec ~R$30-80, int ~R$80-200, prem ~R$200+') + '). Estilo: ' + estilo + '. K-beauty→COSRX/Some By Mi. Farmácia→CeraVe/La Roche-Posay. Clean→sem fragrance. Premium→Drunk Elephant/Paula\'s Choice.\n' +
+    'REGRAS sugestoes_upgrade: EXATAMENTE 2 upgrades. REGRA CRÍTICA: os 3 tiers de cada upgrade DEVEM ser da MESMA categoria do campo "melhoria" — se melhoria="Sérum de Vitamina C", todos os 3 tiers são séruns de vitamina C. NUNCA misturar categorias.\n' +
+    'REGRAS sugestoes_substituicoes: apenas produtos que contradizem o objetivo. Se compatíveis → [].\n' +
+    'Retorne APENAS JSON:\n' +
+    '{"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"diferencial concreto"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"justificativa do preço"}}],' +
+    '"sugestoes_substituicoes":[{"produto_atual":"nome","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz","motivo":"benefício da troca","economica":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"diferencial"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"justificativa"}}],' +
+    '"sugestoes_upgrade":[{"melhoria":"título do upgrade","icone":"emoji","motivo":"melhoria concreta e próximo passo lógico","economica":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"diferencial"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~' + cur + 'X","descricao":"justificativa"}}],' +
+    '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
+    (filhos ? '"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}' : '"aviso_filhos":[]}');
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 8000,
+        system: 'Especialista em cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await resp.json();
+    var raw = (data.content && data.content[0] && data.content[0].text) || '';
+    var clean = raw.replace(/```json|```/g, '').trim();
+    var ji = clean.indexOf('{'), je = clean.lastIndexOf('}');
+    if (ji === -1 || je === -1) throw new Error('JSON não encontrado');
+    var res = JSON.parse(clean.substring(ji, je + 1));
+
+    if (res.sugestoes)              protocolo.sugestoes = res.sugestoes;
+    if (res.sugestoes_substituicoes) protocolo.sugestoes_substituicoes = res.sugestoes_substituicoes;
+    if (res.sugestoes_upgrade)      protocolo.sugestoes_upgrade = res.sugestoes_upgrade;
+    if (res.alertas_validade)       protocolo.alertas_validade = res.alertas_validade;
+    if (res.aviso_filhos)           protocolo.aviso_filhos = res.aviso_filhos;
+    protocolo._sugestoes_migradas = true;
+
+    localStorage.setItem('sbp_protocolo', JSON.stringify(protocolo));
+    if (window._currentUser && window._fbDb) {
+      try { window._fbDb.collection('protocolos').doc(window._currentUser.uid).set({ protocolo: protocolo }, { merge: true }); } catch(e) {}
+    }
+    try { renderSugestoes(); } catch(e) {}
+  } catch(e) {
+    console.warn('_migrarSugestoesClaude:', e);
   }
 }
 

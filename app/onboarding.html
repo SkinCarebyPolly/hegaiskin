@@ -2845,7 +2845,8 @@ async function confirmProto() {
       sem_produto: S.modoProd === 'zero',
     rotina: S.rotina,
     gestante: S.gestante,
-    filhos_pequenos: S.filhosPequenos
+    filhos_pequenos: S.filhosPequenos,
+    _sugestoes_migradas: true
   };
   // Salvar local sempre
   localStorage.setItem('sbp_protocolo', JSON.stringify(S.protocolo));
