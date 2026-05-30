@@ -2644,11 +2644,34 @@ async function gerarProtocolo() {
     '"rotina_express_noite":[{"passo":1,"produto":"nome","como":"instrução curta","icone":"emoji","tempo":"X min"}],' +
     '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
     '"score_pele":72,' +
-    '"produtos_identificados":["nome do produto 1","nome do produto 2"]}' +    '\n\nANÁLISE OBRIGATÓRIA:\n' +
+    '"produtos_identificados":["nome do produto 1","nome do produto 2"],' +
+    (function(){var _c=window._sbpPais==='PT';var _cur=_c?'€':'R$';return(
+    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases ligando a categoria ao perfil dela: por que ESTE ativo faz falta para o SEU tipo de pele e objetivos","economica":{"produto":"nome EXATO em português","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
+    '"sugestoes_substituicoes":[{"produto_atual":"nome exato da cliente","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz o objetivo","motivo":"benefício concreto da troca para o perfil dela","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
+    '"sugestoes_upgrade":[{"melhoria":"título curto do upgrade","icone":"emoji","motivo":"1-2 frases explicando que melhoria concreta este ativo traz à rotina atual dela e por que é o próximo passo lógico","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
+    '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
+    (S.filhosPequenos?'"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}':'"aviso_filhos":[]}')
+    );})() +
+    '\n\nANÁLISE OBRIGATÓRIA:\n' +
     '• tags: máximo 6 tags descritivas em minúsculas COM HÍFEN onde necessário. Exemplos corretos: "anti-manchas", "anti-idade", "oleosidade", "acne", "K-beauty", "alta tecnologia", "hidratação". NUNCA escreva palavras coladas sem hífen.\n' +
     '• QUALIDADE DO CAMPO "como": NUNCA use instruções genéricas como "aplique o produto no rosto". Cada instrução deve ter: quantidade exata (ex: "2-3 gotas", "grão de arroz", "1 pump"), técnica de aplicação (ex: "massageie em movimentos circulares ascendentes por 30 segundos", "patting suave com as pontas dos dedos"), e dica personalizada para o perfil (ex: "concentre nas bochechas onde você tem mais ressecamento"). Tom caloroso, como uma amiga experiente que está do seu lado — use "você" e seja encorajadora.\n' +
     '• fase_adaptacao: detalhe semana a semana com instruções CONCRETAS de como introduzir cada produto. Semana 1 = produtos base apenas. Semana 2 = adiciona ativos mais suaves. Semana 3 = rotina quase completa. Semana 4 = rotina completa com todos os ativos. Mencione o NOME do produto em cada semana.\n' +
-    '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.';
+    '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
+    (function(){var _c=window._sbpPais==='PT';var _cur=_c?'€':'R$';return(
+    '\n• sugestoes: liste TODAS as categorias essenciais AUSENTES dos produtos da cliente E da rotina que você acaba de gerar. Orçamento: '+S.investimento+'. Disponível em '+(_c?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$')+'.\n' +
+    '  – MOTIVO: obrigatório personalizado ao perfil. Liga a categoria ao tipo de pele, incomodos e objetivo. NUNCA genérico.\n' +
+    '  – DESCRICAO por tier: econômica=custo-benefício; intermediária=diferencial concreto vs econômica; premium=justificativa do preço.\n' +
+    '  – NOME: nome EXATO em português como aparece na loja. Especifica variante quando existir.\n' +
+    '  – PREÇO realista: '+(_c?'econômico ~€5-25, intermédio ~€25-70, premium €70+':'econômico ~R$30-80, intermédio ~R$80-200, premium ~R$200+')+'.\n' +
+    '  – ESTILO: cliente prefere '+(S.estiloProdutos.length?S.estiloProdutos.join(', '):'sem preferência')+'. K-beauty→COSRX/Some By Mi/Beauty of Joseon. Farmácia→CeraVe/La Roche-Posay/Simple. Nacionais→Água de Cheiro/Océane/Vult. Clean beauty→sem fragrance/parabenos. Premium→Drunk Elephant/Paula\'s Choice.\n' +
+    (S.gestante !== 'Não' ? '  – GESTANTE: nunca sugerir Retinol, BHA, AHA>5%, Vitamina A, Ácido Salicílico.\n' : '') +
+    '• sugestoes_upgrade: EXATAMENTE 2 upgrades que elevariam a rotina (ex: booster vitamina C, retinol, péptidos, AHA noturno). Compatível com orçamento.\n' +
+    '  – REGRA CRÍTICA: os 3 tiers de CADA upgrade DEVEM ser produtos da EXATA mesma categoria do campo "melhoria". Se melhoria="Sérum de Vitamina C" → todos os 3 tiers são séruns de vitamina C. NUNCA misturar categorias.\n' +
+    '  – MOTIVO upgrade: melhoria concreta que este ativo traz à rotina atual e por que é o próximo passo lógico.\n' +
+    '• sugestoes_substituicoes: APENAS produtos da cliente que contradizem seus objetivos. Se compatíveis → [].\n' +
+    '• alertas_validade: '+(S.modoProd==='zero'?'[] — cliente sem produtos.':'produtos sensíveis a luz/calor ou prazo curto. Se nenhum → [].')+'\n' +
+    (S.filhosPequenos?'• aviso_filhos: produtos com ativos perigosos para crianças <6 anos (retinol→30min, AHA/BHA→20min, vit.C→10min, óleos essenciais→30min). Se nenhum → [].':'• aviso_filhos: [].')
+    );})();
 
 
 
@@ -2670,7 +2693,7 @@ async function gerarProtocolo() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 8000,
+        max_tokens: 16000,
         system: system1,
         messages: [{role: 'user', content: claudeParts}]
       })
@@ -2726,77 +2749,45 @@ async function gerarProtocolo() {
         });
         var _p2pais = window._sbpPais === 'PT';
         var _p2cur  = _p2pais ? '€' : 'R$';
-        var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere os protocolos especiais E as sugestões de produtos.\n\n' +
+        var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere APENAS os protocolos especiais de espinha e maquiagem.\n\n' +
           'PERFIL:\n' +
           '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
           '- Gestante: '+S.gestante+' | Objetivo: '+S.objetivo+'\n' +
           '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
-          '- Orçamento mensal: '+S.investimento+' | País: '+(_p2pais?'Portugal':'Brasil')+' | Moeda: '+_p2cur+'\n' +
-          '- Estilo/preferência: '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'Sem preferência definida')+'\n\n' +
-          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — está a começar do zero. Sugestoes deve listar TODAS as categorias essenciais para construir uma rotina completa.\n\n' : '') +
-          'PRODUTOS DISPONÍVEIS (o que a cliente já tem):\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
-          (_rotinaProds.length ? 'JÁ INCLUÍDOS NA ROTINA GERADA (não sugerir como faltante):\n' + _rotinaProds.join(', ') + '\n\n' : '') +
-          (S.gestante !== 'Não' ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA sugerir nem mencionar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA (qualquer concentração), AHA acima de 5%, Ácido Glicólico acima de 5%, Ácido Mandélico concentrado, Peróxido de Benzoíla concentrado. Qualquer dúvida sobre um produto → orienta a consultar o médico/obstetra antes de usar.\n\n' : '') +
-          'REGRAS PARA protocolo_espinha_detalhado — ÂMBITO COSMÉTICO (não médico):\n' +
-          'IMPORTANTE: Este protocolo é orientação cosmética, não diagnóstico médico. Usa SEMPRE linguagem observacional que a própria cliente consegue avaliar sozinha (o que ela VÊ), nunca terminologia clínica (não usar "pústula", "nódulo", "acne cística", "lesão"). A responsável pela avaliação é a cliente — nós orientamos como usar os produtos dela.\n\n' +
-          '• regra_ouro: UMA frase prática — a observação visual que a cliente deve fazer antes de escolher o cuidado (ex: "Olha para a espinha: tem ponto branco/amarelo visível ou está só vermelha e dura por baixo da pele? Isso decide o que fazer").\n' +
-          '• sos_tratamento: Orienta o uso dos produtos cosméticos disponíveis com base no que a cliente OBSERVA visualmente. Usa linguagem simples:\n' +
-          '  – "Espinha vermelha e dura, sem nada na ponta" (interna): descreva o produto pontual mais adequado da lista (ex: dispositivo de microagulhas OK, sérum com ativo específico). Se nenhum produto da lista servir, sugere categoria cosmética OTC sem inventar marca.\n' +
-          '  – "Espinha com ponto branco/amarelo na ponta ou pele aberta/irritada": PROIBIDO usar microagulhas ou qualquer dispositivo — risco de piorar. Sugere adesivo hidrocoloide (farmácia, OTC, barato) — deixa absorver, protege e acelera a recuperação. Se a cliente não tiver, indica como produto a comprar.\n' +
-          '  – Termina SEMPRE com: "Se as espinhas forem frequentes, profundas ou deixarem cicatrizes, consulta uma dermatologista — a cosmetologia tem limites e ela vai além."\n' +
-          '• ALERTA DISPOSITIVOS: Se a lista incluir aparelho com ponta, microagulhas ou derma roller → campo atencao DESSE produto: "Só usar quando a espinha estiver vermelha e dura, SEM ponto visível na ponta. Com pus ou pele aberta, não usar — pode piorar."\n' +
+          'PRODUTOS DISPONÍVEIS:\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
+          (S.gestante !== 'Não' ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA citar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA, AHA acima de 5%. Campo aviso_gap_bha SEMPRE vazio "".\n\n' : '') +
+          'REGRAS protocolo_espinha_detalhado (âmbito cosmético, não médico):\n' +
+          '• Linguagem observacional — o que a cliente VÊ, nunca terminologia clínica.\n' +
+          '• regra_ouro: 1 frase de decisão visual.\n' +
+          '• sos_tratamento: orienta pelo que a cliente observa. Termina com frase sobre dermatologista.\n' +
           (S.modoProd === 'zero'
-            ? '• manha e noite: usa CATEGORIAS + ATIVO sem marca (ex: "Limpador suave SLS-free", "Protetor solar FPS50+", "Hidratante com ceramidas"). Guia genérico que serve para qualquer produto que ela compre. NUNCA cites marcas.\n'
-            : '• manha e noite: usa os NOMES EXATOS dos produtos da lista da cliente, na ordem de aplicação da rotina dela. Se um passo não tiver produto correspondente na lista, usa categoria + ativo sem marca.\n') +
-          '  – Seguro normalmente (limpador suave, hidratante, protetor solar, niacinamida) → atencao: ""\n' +
-          '  – Ativo a evitar na área da espinha (retinol, vitamina C concentrada, AHA/BHA) → atencao: "Aplicar EVITANDO a área com espinha ativa"\n' +
-          '  – Dispositivo com ponta → atencao: "Só quando a espinha estiver vermelha e dura, sem pus visível"\n' +
-          '• proibidos: ' + (S.modoProd === 'zero' ? 'categorias/ativos contraindicados (ex: "Retinol/retinal concentrado", "AHA/BHA alto").' : 'nomes EXATOS dos produtos da cliente contraindicados em dias de espinha ativa (retinol, AHA/BHA alto, esfoliação mecânica). Inclui também categorias gerais contraindicadas.') + '\n' +
-          '• aviso_gap_bha: Se GESTANTE/AMAMENTANDO → campo SEMPRE vazio "" (BHA/ácido salicílico é contraindicado na gravidez em qualquer concentração). Para não-gestantes: se a lista NÃO tiver produto com ácido salicílico/BHA → 1 frase sugerindo um tônico BHA 1-2% de farmácia como complemento 1-2×/semana. Se JÁ tiver BHA → campo vazio "".\n' +
-          '• quando_dermato: SEMPRE presente — 1 frase amigável indicando que espinhas frequentes, profundas ou com cicatrizes saem do âmbito cosmético e precisam de dermatologista.\n' +
-          '• ESPINHA COMPLETO: todos os campos obrigatórios — regra_ouro, sos_tratamento, manha (mínimo 3 passos), noite (mínimo 3 passos), proibidos (mínimo 2 itens), quando_dermato. NUNCA retornar arrays vazios nos campos manha e noite.\n' +
-          'REGRAS PARA dicas_maquiagem_detalhado:\n' +
-          '• preparo (OBRIGATÓRIO, mínimo 4 passos): skincare 15-20 min ANTES da make, na ordem correcta. ' + (S.modoProd === 'zero' ? 'Usa categorias + ativo SEM marca (ex: "Limpador suave", "Protetor solar FPS50+").' : 'Usa os produtos EXATOS da cliente na ordem de aplicação (limpeza → tônico → sérum → hidratante → protetor). Se faltar algum passo, usa categoria sem marca.') + ' Campo "dica" = truque para a make durar mais.\n' +
-          '• aplicacao (mínimo 3 passos): técnica anti-pilling para base, corretivo e pó. Tipos de make sem marca (ex: "Base fluida leve"). Campo "dica" = truque de acabamento.\n' +
-          '• remocao (mínimo 2 passos): dupla limpeza completa. ' + (S.modoProd === 'zero' ? 'Categorias sem marca.' : 'Usa produtos da lista da cliente. Se não tiver produto de remoção, sugere categoria.') + '\n' +
-          '• dicas_extras: mínimo 3 dicas personalizadas ao tipo de pele e incomodos dela.\n' +
-          '• MAKE COMPLETO: nunca retornar arrays vazios — preparo, aplicacao e remocao são sempre obrigatórios.\n' +
-          'Retorne APENAS JSON válido:\n' +
-          '{"protocolo_espinha":"resumo em 2 frases calorosas e diretas",' +
-          '"protocolo_espinha_detalhado":{"regra_ouro":"frase de decisão inicial","sos_tratamento":"instrução diferenciada por tipo de espinha","aviso_gap_bha":"frase sobre BHA ou vazio","quando_dermato":"frase","manha":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo sem marca' : 'nome exato do produto') + '","como":"instrução","tempo":"X min","atencao":"vazio ou aviso"}],"noite":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo sem marca' : 'nome exato do produto') + '","como":"instrução","tempo":"X min","atencao":"vazio ou aviso"}],"proibidos":["' + (S.modoProd === 'zero' ? 'categoria ou ativo' : 'nome do produto ou ativo') + '"]},' +
+            ? '• manha/noite: categorias + ativo sem marca.\n'
+            : '• manha/noite: nomes EXATOS dos produtos da lista na ordem da rotina. Se faltar passo, usa categoria.\n') +
+          '• proibidos: ' + (S.modoProd === 'zero' ? 'categorias/ativos contraindicados.' : 'nomes EXATOS dos produtos contraindicados + categorias gerais.') + '\n' +
+          '• aviso_gap_bha: ' + (S.gestante !== 'Não' ? 'SEMPRE vazio "".' : 'Se NÃO tiver BHA → 1 frase sugerindo tônico BHA 1-2%. Se JÁ tiver → vazio "".') + '\n' +
+          '• ESPINHA COMPLETO: regra_ouro, sos_tratamento, manha (mín. 3), noite (mín. 3), proibidos (mín. 2), quando_dermato. NUNCA arrays vazios.\n' +
+          'REGRAS dicas_maquiagem_detalhado:\n' +
+          '• preparo (mín. 4 passos): skincare 15-20 min antes. ' + (S.modoProd === 'zero' ? 'Categorias sem marca.' : 'Produtos EXATOS da cliente na ordem limpeza→tônico→sérum→hidratante→protetor.') + '\n' +
+          '• aplicacao (mín. 3): técnica anti-pilling sem marca.\n' +
+          '• remocao (mín. 2): dupla limpeza. ' + (S.modoProd === 'zero' ? 'Categorias.' : 'Produtos da cliente ou categoria.') + '\n' +
+          '• dicas_extras: mín. 3 dicas ao tipo de pele.\n' +
+          '• MAKE COMPLETO: preparo, aplicacao e remocao nunca vazios.\n' +
+          'Retorne APENAS JSON:\n' +
+          '{"protocolo_espinha":"resumo 2 frases",' +
+          '"protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"' + (S.gestante !== 'Não' ? '' : 'frase ou vazio') + '","quando_dermato":"frase","manha":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
           '"dicas_maquiagem":"resumo",' +
-          '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo sem marca' : 'nome exato do produto') + '","como":"instrução","tempo":"X min","dica":"truque make"}],"aplicacao":[{"produto":"tipo de make sem marca","como":"técnica anti-pilling","dica":"truque acabamento"}],"remocao":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria sem marca' : 'nome do produto ou categoria') + '","como":"instrução","tempo":"X min"}],"dicas_extras":["dica personalizada"]}},' +
-          '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases ligando a categoria ao perfil dela: por que ESTE ativo faz falta para o SEU tipo de pele e objetivos","economica":{"produto":"nome EXATO em português","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-          '"sugestoes_substituicoes":[{"produto_atual":"nome exato da cliente","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz o objetivo","motivo":"benefício concreto da troca para o perfil dela","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-          '"sugestoes_upgrade":[{"melhoria":"título curto do upgrade","icone":"emoji","motivo":"1-2 frases explicando que melhoria concreta este ativo traz à rotina atual dela e por que é o próximo passo lógico","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_p2cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-          '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
-          (S.filhosPequenos ? '"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}' : '"aviso_filhos":[]}') +
-          '\n\nREGRAS PARA SUGESTÕES:\n' +
-          '• sugestoes: liste TODAS as categorias essenciais AUSENTES da rotina e dos produtos da cliente (limpador facial, protetor solar, hidratante, sérum, esfoliante, etc). NÃO sugerir o que já está em "JÁ INCLUÍDOS NA ROTINA". Orçamento: '+S.investimento+'. Disponível em '+(_p2pais?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$')+'.\n' +
-          '  – MOTIVO: obrigatório personalizado. Liga a categoria ao perfil: tipo de pele, incomodos e objetivo. Ex: "Sua pele oleosa com poros dilatados precisa de um limpador com ácido salicílico para dissolver o excesso de sebo sem agredir a barreira." NUNCA genérico como "é importante ter um limpador".\n' +
-          '  – DESCRICAO por tier: explica o que AQUELE produto específico faz e o que o diferencia dos outros tiers. Econômica: "melhor custo-benefício para começar". Intermediária: diferencial concreto vs econômica (concentração, textura, resultado). Premium: justificativa do preço (tecnologia, ingrediente exclusivo, eficácia clínica).\n' +
-          '  – NOME: usa o nome EXATO em português como aparece na loja. Especifica variante (Suave/Profunda, 30ml/50ml) quando existir.\n' +
-          '  – PREÇO: valor REALISTA. '+(_p2pais?'Econômico ~€5-25, intermédio ~€25-70, premium €70+. NUNCA sugira €3 para produto que custa €20+':'Econômico ~R$30-80, intermédio ~R$80-200, premium ~R$200+. NUNCA sugira R$28 para produto que custa R$70+')+'.\n' +
-          '  – ESTILO: cliente prefere '+(S.estiloProdutos.length ? S.estiloProdutos.join(', ') : 'sem preferência')+'. K-beauty→COSRX/Some By Mi/Beauty of Joseon. Farmácia→CeraVe/La Roche-Posay/Simple. Nacionais→Água de Cheiro/Océane/Vult. Clean beauty→sem fragrance/parabenos. Premium→Drunk Elephant/Paula\'s Choice.\n' +
-          '• sugestoes_upgrade: EXATAMENTE 2 upgrades que elevariam a rotina (ex: booster vitamina C, retinol, péptidos, AHA noturno). Compatível com orçamento e tempo disponível.\n' +
-          '  – REGRA CRÍTICA DE COERÊNCIA: os 3 tiers (econômica/intermediária/premium) de CADA entrada devem ser produtos da EXATA mesma categoria do campo "melhoria". Se melhoria="Sérum de Vitamina C", os 3 tiers DEVEM ser séruns de vitamina C — NUNCA hidratantes, tônicos, cremes ou outro tipo. Cada tier = opção diferente do MESMO produto. VERIFICAR antes de retornar.\n' +
-          '  – MOTIVO upgrade: explica que melhoria concreta este ativo traz à rotina ATUAL dela e por que é o próximo passo lógico. Ex: "A niacinamida que você já usa controla o brilho, mas um sérum de vitamina C pela manhã vai atacar diretamente as manchas que você quer eliminar — com resultado visível em 4-6 semanas."\n' +
-          '  – DESCRICAO upgrade por tier: mesmo critério das sugestoes — econômica=custo-benefício, intermediária=diferencial concreto, premium=justificativa do preço.\n' +
-          '• sugestoes_substituicoes: APENAS produtos da cliente que contradizem seus objetivos. Se compatíveis → []. Se sem produtos → [].\n' +
-          '• alertas_validade: '+(S.modoProd === 'zero' ? '[] — cliente sem produtos.' : 'produtos sensíveis a luz/calor ou prazo curto. Se nenhum → [].')+'\n' +
-          (S.filhosPequenos ? '• aviso_filhos: produtos com ativos perigosos para crianças <6 anos (retinol→30min, AHA/BHA→20min, vit.C→10min, óleos essenciais→30min). Se nenhum → [].' : '• aviso_filhos: [].');
+          '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min","dica":"truque"}],"aplicacao":[{"produto":"tipo","como":"técnica","dica":"truque"}],"remocao":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}}';
 
 
-    // ── CHAMADA 2: Protocolos especiais + Sugestões ────────────────────────
+    // ── CHAMADA 2: Protocolos especiais espinha + make (Gemini) ───────────────
     document.getElementById('gen-step').textContent = 'Finalizando · Passo 2 de 2';
-    document.getElementById('gen-msg').textContent = 'Criando guias e sugestões...';
+    document.getElementById('gen-msg').textContent = 'Criando guias de espinha e maquiagem...';
     setProgress(70, '70%');
     try {
-      // Chamada 2 via Gemini (mais rápido e barato para protocolos especiais + sugestões)
       var raw2 = await geminiChat(
         'Especialista em skincare e cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
         prompt2_base,
-        12000
+        8000
       );
       var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
       try {
