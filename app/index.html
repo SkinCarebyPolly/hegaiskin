@@ -2644,34 +2644,12 @@ async function gerarProtocolo() {
     '"rotina_express_noite":[{"passo":1,"produto":"nome","como":"instrução curta","icone":"emoji","tempo":"X min"}],' +
     '"semana":{"seg_qui":"tratamento+instrução","ter_sex":"tratamento+instrução","qua_sab":"tratamento+instrução","dom":"descanso+instrução"},' +
     '"score_pele":72,' +
-    '"produtos_identificados":["nome do produto 1","nome do produto 2"],' +
-    (function(){var _c=window._sbpPais==='PT';var _cur=_c?'€':'R$';return(
-    '"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases ligando a categoria ao perfil dela: por que ESTE ativo faz falta para o SEU tipo de pele e objetivos","economica":{"produto":"nome EXATO em português","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-    '"sugestoes_substituicoes":[{"produto_atual":"nome exato da cliente","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz o objetivo","motivo":"benefício concreto da troca para o perfil dela","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-    '"sugestoes_upgrade":[{"melhoria":"título curto do upgrade","icone":"emoji","motivo":"1-2 frases explicando que melhoria concreta este ativo traz à rotina atual dela e por que é o próximo passo lógico","economica":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"o que este produto faz + por que é o melhor custo-benefício para começar"},"intermediaria":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"diferencial em relação à opção econômica: formulação, concentração ou resultado superior"},"premium":{"produto":"nome EXATO","marca":"nome exato","preco":"~'+_cur+'X","descricao":"justificativa do preço: tecnologia exclusiva, ingrediente diferenciado ou eficácia comprovada"}}],' +
-    '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
-    (S.filhosPequenos?'"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}':'"aviso_filhos":[]}')
-    );})() +
+    '"produtos_identificados":["nome do produto 1","nome do produto 2"]}' +
     '\n\nANÁLISE OBRIGATÓRIA:\n' +
     '• tags: máximo 6 tags descritivas em minúsculas COM HÍFEN onde necessário. Exemplos corretos: "anti-manchas", "anti-idade", "oleosidade", "acne", "K-beauty", "alta tecnologia", "hidratação". NUNCA escreva palavras coladas sem hífen.\n' +
     '• QUALIDADE DO CAMPO "como": NUNCA use instruções genéricas como "aplique o produto no rosto". Cada instrução deve ter: quantidade exata (ex: "2-3 gotas", "grão de arroz", "1 pump"), técnica de aplicação (ex: "massageie em movimentos circulares ascendentes por 30 segundos", "patting suave com as pontas dos dedos"), e dica personalizada para o perfil (ex: "concentre nas bochechas onde você tem mais ressecamento"). Tom caloroso, como uma amiga experiente que está do seu lado — use "você" e seja encorajadora.\n' +
     '• fase_adaptacao: detalhe semana a semana com instruções CONCRETAS de como introduzir cada produto. Semana 1 = produtos base apenas. Semana 2 = adiciona ativos mais suaves. Semana 3 = rotina quase completa. Semana 4 = rotina completa com todos os ativos. Mencione o NOME do produto em cada semana.\n' +
-    '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.\n' +
-    (function(){var _c=window._sbpPais==='PT';var _cur=_c?'€':'R$';return(
-    '\n• sugestoes: liste TODAS as categorias essenciais AUSENTES dos produtos da cliente E da rotina que você acaba de gerar. Orçamento: '+S.investimento+'. Disponível em '+(_c?'Portugal (Notino, YesStyle, Amazon.es) — preços em €':'Brasil (Amazon, Mercado Livre, Sephora BR) — preços em R$')+'.\n' +
-    '  – MOTIVO: obrigatório personalizado ao perfil. Liga a categoria ao tipo de pele, incomodos e objetivo. NUNCA genérico.\n' +
-    '  – DESCRICAO por tier: econômica=custo-benefício; intermediária=diferencial concreto vs econômica; premium=justificativa do preço.\n' +
-    '  – NOME: nome EXATO em português como aparece na loja. Especifica variante quando existir.\n' +
-    '  – PREÇO realista: '+(_c?'econômico ~€5-25, intermédio ~€25-70, premium €70+':'econômico ~R$30-80, intermédio ~R$80-200, premium ~R$200+')+'.\n' +
-    '  – ESTILO: cliente prefere '+(S.estiloProdutos.length?S.estiloProdutos.join(', '):'sem preferência')+'. K-beauty→COSRX/Some By Mi/Beauty of Joseon. Farmácia→CeraVe/La Roche-Posay/Simple. Nacionais→Água de Cheiro/Océane/Vult. Clean beauty→sem fragrance/parabenos. Premium→Drunk Elephant/Paula\'s Choice.\n' +
-    (S.gestante !== 'Não' ? '  – GESTANTE: nunca sugerir Retinol, BHA, AHA>5%, Vitamina A, Ácido Salicílico.\n' : '') +
-    '• sugestoes_upgrade: EXATAMENTE 2 upgrades que elevariam a rotina (ex: booster vitamina C, retinol, péptidos, AHA noturno). Compatível com orçamento.\n' +
-    '  – REGRA CRÍTICA: os 3 tiers de CADA upgrade DEVEM ser produtos da EXATA mesma categoria do campo "melhoria". Se melhoria="Sérum de Vitamina C" → todos os 3 tiers são séruns de vitamina C. NUNCA misturar categorias.\n' +
-    '  – MOTIVO upgrade: melhoria concreta que este ativo traz à rotina atual e por que é o próximo passo lógico.\n' +
-    '• sugestoes_substituicoes: APENAS produtos da cliente que contradizem seus objetivos. Se compatíveis → [].\n' +
-    '• alertas_validade: '+(S.modoProd==='zero'?'[] — cliente sem produtos.':'produtos sensíveis a luz/calor ou prazo curto. Se nenhum → [].')+'\n' +
-    (S.filhosPequenos?'• aviso_filhos: produtos com ativos perigosos para crianças <6 anos (retinol→30min, AHA/BHA→20min, vit.C→10min, óleos essenciais→30min). Se nenhum → [].':'• aviso_filhos: [].')
-    );})();
+    '• rotina_express_manha / rotina_express_noite: máximo 3 passos ESSENCIAIS que nunca devem ser saltados num dia de preguiça. Manhã: limpeza + protetor solar obrigatórios (+ sérum principal se muito rápido). Noite: limpeza + hidratante/ativo principal. Sem aparelhos, sem máscaras, sem opcionais.';
 
 
 
@@ -2681,7 +2659,7 @@ async function gerarProtocolo() {
     // Claude — geração da rotina principal
     var claudeParts = [{"type":"text","text":prompt1}];
     var controller = new AbortController();
-    var timeoutId = setTimeout(function() { controller.abort(); }, 180000);
+    var timeoutId = setTimeout(function() { controller.abort(); }, 300000);
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       signal: controller.signal,
       method: 'POST',
@@ -2693,7 +2671,7 @@ async function gerarProtocolo() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 16000,
+        max_tokens: 8000,
         system: system1,
         messages: [{role: 'user', content: claudeParts}]
       })
@@ -2749,58 +2727,76 @@ async function gerarProtocolo() {
         });
         var _p2pais = window._sbpPais === 'PT';
         var _p2cur  = _p2pais ? '€' : 'R$';
-        var prompt2_base = 'Especialista em cosmetologia. Com base neste perfil, gere APENAS os protocolos especiais de espinha e maquiagem.\n\n' +
+
+        // ── PROMPT 2a: Sugestões (Claude) ──────────────────────────────────
+        var prompt_sug = 'Especialista sênior em cosmetologia. Com base no perfil e produtos abaixo, gere APENAS as sugestões de produtos.\n\n' +
+          'PERFIL:\n' +
+          '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
+          '- Objetivo: '+S.objetivo+' | Gestante: '+S.gestante+'\n' +
+          '- Orçamento: '+S.investimento+' | País: '+(_p2pais?'Portugal':'Brasil')+' | Moeda: '+_p2cur+'\n' +
+          '- Estilo/preferência: '+(S.estiloProdutos.length?S.estiloProdutos.join(', '):'sem preferência')+'\n\n' +
+          (S.modoProd === 'zero' ? 'CLIENTE SEM PRODUTOS — sugestoes deve cobrir todas as categorias essenciais.\n\n' : '') +
+          'PRODUTOS QUE TEM:\n' + (prodListaLimitada || '(nenhum)') + '\n' +
+          (_rotinaProds.length ? 'JÁ NA ROTINA (não sugerir): ' + _rotinaProds.join(', ') + '\n' : '') +
+          (S.gestante !== 'Não' ? '\nGESTANTE — NUNCA sugerir Retinol, Retinal, Vitamina A, BHA, AHA>5%, Ácido Salicílico.\n' : '') +
+          '\nREGRAS sugestoes: categorias AUSENTES da rotina/produtos. Motivo personalizado ao perfil. Preços realistas (' + (_p2pais ? 'ec ~€5-25, int ~€25-70, prem €70+' : 'ec ~R$30-80, int ~R$80-200, prem ~R$200+') + '). Estilo: ' + (S.estiloProdutos.length?S.estiloProdutos.join(', '):'sem preferência') + '. K-beauty→COSRX/Some By Mi. Farmácia→CeraVe/La Roche-Posay. Premium→Drunk Elephant/Paula\'s Choice.\n' +
+          'REGRAS sugestoes_upgrade: EXATAMENTE 2 upgrades. REGRA CRÍTICA: os 3 tiers de cada upgrade DEVEM ser da MESMA categoria do "melhoria" — se melhoria="Sérum de Vitamina C", todos os 3 tiers são séruns de vitamina C. NUNCA misturar categorias.\n' +
+          'REGRAS sugestoes_substituicoes: apenas produtos que contradizem o objetivo. Se compatíveis → [].\n' +
+          'Retorne APENAS JSON:\n' +
+          '{"sugestoes":[{"falta":"CATEGORIA","icone":"emoji","motivo":"1-2 frases personalizadas","economica":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"diferencial concreto"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"justificativa do preço"}}],' +
+          '"sugestoes_substituicoes":[{"produto_atual":"nome","marca_atual":"marca","icone":"🔄","falta":"o que deveria fazer","conflito":"por que contradiz","motivo":"benefício da troca","economica":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"diferencial"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"justificativa"}}],' +
+          '"sugestoes_upgrade":[{"melhoria":"título do upgrade","icone":"emoji","motivo":"melhoria concreta e próximo passo lógico","economica":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"custo-benefício"},"intermediaria":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"diferencial"},"premium":{"produto":"nome EXATO","marca":"marca","preco":"~'+_p2cur+'X","descricao":"justificativa"}}],' +
+          '"alertas_validade":[{"produto":"nome","alerta":"1 frase"}],' +
+          (S.filhosPequenos?'"aviso_filhos":[{"produto":"nome","ativo":"ativo","tempo_antes":"X min","aviso":"frase"}]}':'"aviso_filhos":[]}');
+
+        // ── PROMPT 2b: Espinha + Make (Gemini) ─────────────────────────────
+        var prompt_espinha_make = 'Especialista em cosmetologia. Com base neste perfil, gere APENAS os protocolos de espinha e maquiagem.\n\n' +
           'PERFIL:\n' +
           '- Tipo de pele: '+S.tipoPele+' | Incomodos: '+(S.incomodos.join(', ')||'não informado')+'\n' +
           '- Gestante: '+S.gestante+' | Objetivo: '+S.objetivo+'\n' +
-          '- Cidade/Clima: '+(S.cidade||'não informado')+'\n' +
-          'PRODUTOS DISPONÍVEIS:\n' + (prodListaLimitada || '(nenhum — cliente sem produtos)') + '\n\n' +
-          (S.gestante !== 'Não' ? 'GESTANTE/AMAMENTANDO — REGRA ABSOLUTA: NUNCA citar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA, AHA acima de 5%. Campo aviso_gap_bha SEMPRE vazio "".\n\n' : '') +
-          'REGRAS protocolo_espinha_detalhado (âmbito cosmético, não médico):\n' +
-          '• Linguagem observacional — o que a cliente VÊ, nunca terminologia clínica.\n' +
-          '• regra_ouro: 1 frase de decisão visual.\n' +
-          '• sos_tratamento: orienta pelo que a cliente observa. Termina com frase sobre dermatologista.\n' +
-          (S.modoProd === 'zero'
-            ? '• manha/noite: categorias + ativo sem marca.\n'
-            : '• manha/noite: nomes EXATOS dos produtos da lista na ordem da rotina. Se faltar passo, usa categoria.\n') +
-          '• proibidos: ' + (S.modoProd === 'zero' ? 'categorias/ativos contraindicados.' : 'nomes EXATOS dos produtos contraindicados + categorias gerais.') + '\n' +
-          '• aviso_gap_bha: ' + (S.gestante !== 'Não' ? 'SEMPRE vazio "".' : 'Se NÃO tiver BHA → 1 frase sugerindo tônico BHA 1-2%. Se JÁ tiver → vazio "".') + '\n' +
-          '• ESPINHA COMPLETO: regra_ouro, sos_tratamento, manha (mín. 3), noite (mín. 3), proibidos (mín. 2), quando_dermato. NUNCA arrays vazios.\n' +
-          'REGRAS dicas_maquiagem_detalhado:\n' +
-          '• preparo (mín. 4 passos): skincare 15-20 min antes. ' + (S.modoProd === 'zero' ? 'Categorias sem marca.' : 'Produtos EXATOS da cliente na ordem limpeza→tônico→sérum→hidratante→protetor.') + '\n' +
-          '• aplicacao (mín. 3): técnica anti-pilling sem marca.\n' +
-          '• remocao (mín. 2): dupla limpeza. ' + (S.modoProd === 'zero' ? 'Categorias.' : 'Produtos da cliente ou categoria.') + '\n' +
-          '• dicas_extras: mín. 3 dicas ao tipo de pele.\n' +
-          '• MAKE COMPLETO: preparo, aplicacao e remocao nunca vazios.\n' +
+          'PRODUTOS DISPONÍVEIS:\n' + (prodListaLimitada || '(nenhum)') + '\n\n' +
+          (S.gestante !== 'Não' ? 'GESTANTE — NUNCA citar Retinol, Retinal, Vitamina A, Ácido Salicílico, BHA, AHA>5%. aviso_gap_bha SEMPRE vazio "".\n\n' : '') +
+          'REGRAS protocolo_espinha_detalhado: linguagem observacional, nunca clínica. manha/noite: ' + (S.modoProd === 'zero' ? 'categorias sem marca.' : 'nomes EXATOS dos produtos na ordem da rotina.') + ' ESPINHA COMPLETO: manha (mín. 3), noite (mín. 3), proibidos (mín. 2). NUNCA arrays vazios.\n' +
+          'REGRAS dicas_maquiagem_detalhado: preparo (mín. 4) com ' + (S.modoProd === 'zero' ? 'categorias.' : 'produtos EXATOS limpeza→tônico→sérum→hidratante→protetor.') + ' aplicacao (mín. 3) anti-pilling. remocao (mín. 2). dicas_extras (mín. 3). MAKE COMPLETO: nunca arrays vazios.\n' +
           'Retorne APENAS JSON:\n' +
-          '{"protocolo_espinha":"resumo 2 frases",' +
-          '"protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"' + (S.gestante !== 'Não' ? '' : 'frase ou vazio') + '","quando_dermato":"frase","manha":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
-          '"dicas_maquiagem":"resumo",' +
-          '"dicas_maquiagem_detalhado":{"preparo":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min","dica":"truque"}],"aplicacao":[{"produto":"tipo","como":"técnica","dica":"truque"}],"remocao":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}}';
+          '{"protocolo_espinha":"resumo 2 frases","protocolo_espinha_detalhado":{"regra_ouro":"frase","sos_tratamento":"instrução","aviso_gap_bha":"' + (S.gestante !== 'Não' ? '' : 'frase ou vazio') + '","quando_dermato":"frase","manha":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"noite":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria+ativo' : 'nome exato') + '","como":"instrução","tempo":"X min","atencao":""}],"proibidos":["item"]},' +
+          '"dicas_maquiagem":"resumo","dicas_maquiagem_detalhado":{"preparo":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min","dica":"truque"}],"aplicacao":[{"produto":"tipo","como":"técnica","dica":"truque"}],"remocao":[{"produto":"' + (S.modoProd === 'zero' ? 'categoria' : 'nome exato') + '","como":"instrução","tempo":"X min"}],"dicas_extras":["dica"]}}';
 
-
-    // ── CHAMADA 2: Protocolos especiais espinha + make (Gemini) ───────────────
+    // ── CHAMADAS 2a + 2b: Claude (sugestões) + Gemini (espinha+make) em paralelo ──
     document.getElementById('gen-step').textContent = 'Finalizando · Passo 2 de 2';
-    document.getElementById('gen-msg').textContent = 'Criando guias de espinha e maquiagem...';
+    document.getElementById('gen-msg').textContent = 'Personalizando sugestões e guias...';
     setProgress(70, '70%');
     try {
-      var raw2 = await geminiChat(
-        'Especialista em skincare e cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.',
-        prompt2_base,
-        8000
-      );
-      var clean2 = raw2.replace(/```json/gi,'').replace(/```/g,'').trim();
-      try {
-        var parsed2 = JSON.parse(clean2);
-        Object.assign(S.protocolo, parsed2);
-      } catch(e) {
-        var j2s = clean2.indexOf('{'); var j2e = clean2.lastIndexOf('}');
-        if (j2s !== -1 && j2e !== -1) {
-          try { Object.assign(S.protocolo, JSON.parse(clean2.substring(j2s,j2e+1))); } catch(e2) {}
-        }
-      }
+      var _results = await Promise.allSettled([
+        // 2a: Claude — sugestões
+        (async function() {
+          var _rc = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': getKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+            body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, system: 'Especialista em cosmetologia. Responde EXCLUSIVAMENTE em JSON válido sem texto fora do JSON.', messages: [{ role: 'user', content: prompt_sug }] })
+          });
+          var _dc = await _rc.json();
+          var _rawc = (_dc.content && _dc.content[0] && _dc.content[0].text) || '';
+          var _cc = _rawc.replace(/```json|```/g,'').trim();
+          var _jsc = _cc.indexOf('{'), _jec = _cc.lastIndexOf('}');
+          if (_jsc === -1) throw new Error('sem JSON');
+          return JSON.parse(_cc.substring(_jsc, _jec+1));
+        })(),
+        // 2b: Gemini — espinha + make
+        (async function() {
+          var _rawg = await geminiChat('Especialista em skincare. Responde EXCLUSIVAMENTE em JSON válido.', prompt_espinha_make, 8000);
+          var _cg = _rawg.replace(/```json|```/g,'').trim();
+          var _jsg = _cg.indexOf('{'), _jeg = _cg.lastIndexOf('}');
+          if (_jsg === -1) throw new Error('sem JSON');
+          return JSON.parse(_cg.substring(_jsg, _jeg+1));
+        })()
+      ]);
+      _results.forEach(function(r) {
+        if (r.status === 'fulfilled' && r.value) Object.assign(S.protocolo, r.value);
+        else if (r.status === 'rejected') console.warn('Chamada paralela falhou:', r.reason);
+      });
     } catch(e) {
-      console.warn('Chamada 2 falhou (não crítico):', e.message);
+      console.warn('Chamadas 2 falharam (não crítico):', e.message);
     }
 
     setProgress(100, 'Pronto!');
@@ -2825,7 +2821,7 @@ async function gerarProtocolo() {
     document.getElementById('gen-error').style.display = 'block';
     var isTimeout = e.name === 'AbortError' || (e.message && e.message.toLowerCase().indexOf('abort') !== -1);
     document.getElementById('gen-error-msg').textContent = isTimeout
-      ? 'A IA demorou mais de 2 minutos. Isso acontece quando há muitos produtos. Tente novamente — costuma funcionar na segunda tentativa.'
+      ? 'A IA demorou mais de 5 minutos. Isso pode acontecer com muitos produtos ou conexão lenta. Tente novamente — costuma funcionar na segunda tentativa.'
       : 'Erro: ' + e.message + '. Verifique a conexão e tente novamente.';
   }
 }
