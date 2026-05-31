@@ -872,7 +872,7 @@ function buildTierContent(s, tier, af) {
   var queryEnc = encodeURIComponent(queryBase);
 
   var _pais = (perfil && perfil.pais) || localStorage.getItem('sbp_pais') || 'BR';
-  var googleShopUrl = 'https://www.google.com' + (_pais === 'PT' ? '.pt' : '.br') + '/search?tbm=shop&q=' + queryEnc;
+  var googleShopUrl = (_pais === 'PT' ? 'https://www.google.pt' : 'https://www.google.com.br') + '/search?tbm=shop&q=' + queryEnc;
 
   var key = '_sbpProd' + (window._sbpProdCount = (window._sbpProdCount||0)+1);
   window[key] = t;
