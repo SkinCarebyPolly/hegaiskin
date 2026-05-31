@@ -724,6 +724,20 @@ input[type="file"] { display:none; }
     </div>
   </div>
   <div class="card">
+    <div class="card-title"><span class="card-title-icon">📍</span> Localização</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Usada para personalizar sugestões de produtos ao seu clima e mercado local.</div>
+    <div id="cfg-cidade-atual" style="font-size:13px;color:var(--gold);font-weight:500;margin-bottom:14px;min-height:18px"></div>
+    <button onclick="_cfgDetectarLoc()" id="cfg-loc-btn" style="width:100%;padding:12px;background:rgba(188,154,79,.08);border:1px solid rgba(188,154,79,.25);border-radius:10px;font-family:inherit;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;margin-bottom:10px">📡 Detectar automaticamente</button>
+    <div id="cfg-loc-manual" style="display:none">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5">📵 GPS não disponível. Digite sua cidade manualmente:</div>
+      <div style="display:flex;gap:8px">
+        <input id="cfg-cidade-input" type="text" placeholder="Ex: Lisboa, Porto, Braga..." style="flex:1;padding:11px 14px;border:1px solid rgba(188,154,79,.3);border-radius:10px;font-family:inherit;font-size:13px;color:var(--dark);background:#fff;outline:none">
+        <button onclick="_cfgSalvarCidade()" style="padding:11px 16px;background:var(--gold);border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;color:#fff;cursor:pointer">Salvar</button>
+      </div>
+    </div>
+    <div id="cfg-loc-status" style="font-size:12px;color:var(--muted);margin-top:8px;min-height:16px"></div>
+  </div>
+  <div class="card">
     <div class="card-title"><span class="card-title-icon">💬</span> Suporte & FAQ</div>
     <div style="margin-bottom:16px">
       <div style="background:rgba(201,169,122,0.06);border:1px solid rgba(201,169,122,0.18);border-radius:10px;padding:14px 16px;margin-bottom:10px">
@@ -889,10 +903,10 @@ function buildTierContent(s, tier, af) {
     // ── Descrição ──
     (t.descricao ? '<div style="font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:16px;padding:10px 14px;background:rgba(188,154,79,.05);border-radius:10px;border-left:2px solid rgba(188,154,79,.35)">' + t.descricao + '</div>' : '') +
     // ── Botão Google Shopping ──
-    '<a href="' + googleShopUrl + '" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:rgba(188,154,79,.08);border:1px solid rgba(188,154,79,.25);border-radius:12px;font-family:inherit;font-size:13px;font-weight:500;color:var(--dark);text-decoration:none;margin-bottom:12px;box-sizing:border-box;letter-spacing:.3px">' +
+    '<button onclick="(function(u){var w=window.open(u,\'_blank\');if(!w||w.closed)window.location.href=u;})(\''+googleShopUrl+'\')" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:rgba(188,154,79,.08);border:1px solid rgba(188,154,79,.25);border-radius:12px;font-family:inherit;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;margin-bottom:12px;box-sizing:border-box;letter-spacing:.3px">' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
       'Buscar no Google Shopping' +
-    '</a>' +
+    '</button>' +
     // ── Ações ──
     '<div style="display:flex;flex-direction:column;gap:8px">' +
       '<button data-key="' + key + '" onclick="adicionarSugestaoRotina(window[this.dataset.key],false)" style="width:100%;padding:11px;background:var(--gold);border:none;border-radius:10px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.8px;color:#fff;cursor:pointer">✓ Já tenho — adicionar à rotina</button>' +
