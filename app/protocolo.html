@@ -2843,13 +2843,13 @@ function renderMake(p) {
   if (e.preparo && e.preparo.length) {
     manhaHtml += `<div class="card">
       <div class="card-title" style="color:#f4a261"><span class="card-title-icon">✨</span> Preparo da Pele — 15 min antes</div>
-      <div class="step-list">${renderSteps(e.preparo)}</div>
+      <div class="step-list">${renderSteps(e.preparo, 'mk-prep')}</div>
     </div>`;
   }
   if (e.aplicacao && e.aplicacao.length) {
     manhaHtml += `<div class="card">
       <div class="card-title"><span class="card-title-icon">💄</span> Aplicação sem Pilling</div>
-      <div class="step-list">${renderSteps(e.aplicacao)}</div>
+      <div class="step-list">${renderSteps(e.aplicacao, 'mk-aplic')}</div>
     </div>`;
   }
   if (!manhaHtml) manhaHtml = '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhuma dica de manhã disponível.</p></div>';
@@ -2859,7 +2859,7 @@ function renderMake(p) {
   if (e.remocao && e.remocao.length) {
     noiteHtml += `<div class="card">
       <div class="card-title" style="color:#7b9cbf"><span class="card-title-icon">🌙</span> Remoção — Dupla Limpeza</div>
-      <div class="step-list">${renderSteps(e.remocao)}</div>
+      <div class="step-list">${renderSteps(e.remocao, 'mk-remoc')}</div>
     </div>`;
   }
   if (e.dicas_extras && e.dicas_extras.length) {
