@@ -1239,7 +1239,7 @@ async function adicionarSugestaoRotina(produto, pendente) {
       rotina_noite: protocolo.rotina_noite || []
     });
 
-    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos.\n\nTAREFA: Insira o PRODUTO NOVO na posição correta da rotina. IMPORTANTE: mantenha todos os outros passos exatamente como estão — mesmos nomes, mesmas instruções, mesma ordem. Apenas insira o produto novo no lugar certo e renumere os passos.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
+    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos.\n\nTAREFA: Insira o PRODUTO NOVO na posição correta da rotina. Você pode reordenar passos existentes se necessário para a ordem correta de aplicação. PROIBIDO: renomear produtos existentes, alterar instruções existentes, adicionar ou remover produtos que já estavam na rotina.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
 
     var _claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
