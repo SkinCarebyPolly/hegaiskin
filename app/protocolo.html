@@ -2775,12 +2775,12 @@ function renderEspinha(p) {
 
   // ── Manhã ───────────────────────────────────────────────────────────────
   var manhaHtml = e.manha && e.manha.length
-    ? `<div class="card"><div class="step-list">${renderSteps(e.manha)}</div></div>`
+    ? `<div class="card"><div class="step-list">${renderSteps(e.manha, 'esp-manha')}</div></div>`
     : '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhum passo de manhã definido.</p></div>';
 
   // ── Noite ───────────────────────────────────────────────────────────────
   var noiteHtml = e.noite && e.noite.length
-    ? `<div class="card"><div class="step-list">${renderSteps(e.noite)}</div></div>`
+    ? `<div class="card"><div class="step-list">${renderSteps(e.noite, 'esp-noite')}</div></div>`
     : '<div class="card"><p style="font-size:13px;color:var(--muted)">Nenhum passo de noite definido.</p></div>';
 
   // ── Rodapé: Proibidos + alertas ─────────────────────────────────────────
