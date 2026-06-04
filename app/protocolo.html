@@ -934,7 +934,8 @@ function switchSugTab(tabsId, conteudoId, tiIdx) {
   if (!contEl) return;
   // Find the sugestao object from the card index
   var si = parseInt(conteudoId.replace('sug-cont-', ''));
-  var sugestoes = protocolo.sugestoes || [];
+  var _subTab = window._subTabAtivo || 'rotina';
+  var sugestoes = _subTab === 'boosters' ? (protocolo.sugestoes_upgrade || []) : (protocolo.sugestoes || []);
   var s = sugestoes[si];
   if (!s) return;
   var af = getAfiliados();
