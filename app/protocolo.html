@@ -1236,12 +1236,14 @@ async function adicionarSugestaoRotina(produto, pendente) {
   document.body.appendChild(overlay);
 
   try {
+    var _rotinaOrigManha = JSON.parse(JSON.stringify(protocolo.rotina_manha || []));
+    var _rotinaOrigNoite = JSON.parse(JSON.stringify(protocolo.rotina_noite || []));
     var rotinaAtual = JSON.stringify({
       rotina_manha: protocolo.rotina_manha || [],
       rotina_noite: protocolo.rotina_noite || []
     });
 
-    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos.\n\nTAREFA: Insira o PRODUTO NOVO na posição correta da rotina. Você pode reordenar passos existentes se necessário para a ordem correta de aplicação. PROIBIDO: renomear produtos existentes, alterar instruções existentes, adicionar ou remover produtos que já estavam na rotina.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
+    var prompt = 'Você é especialista em cosmetologia com profundo conhecimento de ingredientes e ordem de aplicação de produtos.\n\nTAREFA: Insira o PRODUTO NOVO na posição correta da rotina. Você pode reordenar passos existentes se necessário para a ordem correta de aplicação. PROIBIDO: renomear produtos existentes (produto != null), alterar instruções existentes, adicionar ou remover produtos que já estavam na rotina. Passos com produto=null são PLACEHOLDERS — se o produto novo pertence àquela categoria, substitua o placeholder pelo produto novo.\n\nPRODUTO NOVO: ' + nomeFull + '\nDESCRIÇÃO: ' + (produto.descricao||'') + '\n\nROTINA ATUAL:\n' + rotinaAtual + '\n\nRetorne APENAS JSON: {\"rotina_manha\":[{\"passo\":1,\"produto\":\"nome real ou null\",\"categoria\":\"tipo de produto (ex: Gel de Limpeza)\",\"como\":\"instrução\",\"icone\":\"emoji\",\"tempo\":\"X min\"}],\"rotina_noite\":[...]}';
 
     var _claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1264,6 +1266,25 @@ async function adicionarSugestaoRotina(produto, pendente) {
     var _ji = clean.indexOf('{'), _je = clean.lastIndexOf('}');
     if (_ji === -1 || _je === -1) throw new Error('JSON não encontrado');
     var novaRotina = JSON.parse(clean.substring(_ji, _je + 1));
+
+    // Restaurar categoria/ativo_ideal da rotina original para passos sem produto real
+    var _origMap = { rotina_manha: _rotinaOrigManha, rotina_noite: _rotinaOrigNoite };
+    ['rotina_manha', 'rotina_noite'].forEach(function(k) {
+      if (!novaRotina[k]) return;
+      novaRotina[k].forEach(function(step) {
+        var semProduto = !step.produto || step.produto === 'null';
+        if (!semProduto) return;
+        // Tentar encontrar step original com mesma posição ou categoria
+        var orig = (_origMap[k] || []).find(function(o) {
+          return o.passo === step.passo || (o.categoria && step.categoria && o.categoria === step.categoria);
+        });
+        if (!orig) orig = (_origMap[k] || [])[novaRotina[k].indexOf(step)];
+        if (orig) {
+          if (!step.categoria && orig.categoria) step.categoria = orig.categoria;
+          if (!step.ativo_ideal && orig.ativo_ideal) step.ativo_ideal = orig.ativo_ideal;
+        }
+      });
+    });
 
     // Se for pendente, marca o passo recém-adicionado
     if (pendente) {
