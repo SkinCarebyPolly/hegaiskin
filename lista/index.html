@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HegaiSkin — Lista de Espera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #3D2010;
+    --gold: #D4A853;
+    --cream: #FDF8F0;
+    --sage: #AAB29A;
+    --white: #FAFAFA;
+    --dark-soft: #4A2A18;
+    --gold-soft: #E5C786;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  .bg-texture {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(212,168,83,0.08), transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(170,178,154,0.10), transparent 45%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 40px; animation: fadeUp 0.8s ease; }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+  .brand span { font-style: italic; color: var(--gold); }
+  .tagline {
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+  .divider {
+    width: 50px; height: 2px;
+    background: var(--gold);
+    margin: 28px auto;
+    border-radius: 2px;
+  }
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .intro-text {
+    font-size: 0.98rem;
+    color: var(--dark-soft);
+    opacity: 0.85;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .scarcity {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 18px;
+    background: rgba(212,168,83,0.15);
+    border: 1px solid var(--gold);
+    border-radius: 30px;
+    font-size: 0.82rem;
+    color: var(--dark);
+    font-weight: 500;
+  }
+
+  /* FORM */
+  .form-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: 0 8px 40px rgba(61,32,16,0.08);
+    margin-top: 36px;
+    animation: fadeUp 1s ease;
+  }
+  .field { margin-bottom: 26px; }
+  .field-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+  .field-label .req { color: var(--gold); }
+  .field-hint {
+    font-size: 0.78rem;
+    color: var(--dark-soft);
+    opacity: 0.6;
+    margin-bottom: 10px;
+    margin-top: -4px;
+  }
+  input[type="text"], input[type="email"], input[type="tel"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid rgba(170,178,154,0.4);
+    border-radius: 14px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.95rem;
+    color: var(--dark);
+    background: var(--cream);
+    transition: all 0.25s ease;
+  }
+  input::placeholder { color: rgba(61,32,16,0.35); }
+  input:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(212,168,83,0.12);
+  }
+
+  /* CHIP OPTIONS */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    padding: 11px 18px;
+    border: 1.5px solid rgba(170,178,154,0.5);
+    border-radius: 30px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--cream);
+    user-select: none;
+    font-weight: 500;
+  }
+  .chip:hover { border-color: var(--gold-soft); transform: translateY(-1px); }
+  .chip.selected {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(212,168,83,0.3);
+  }
+
+  /* BINARY (sim/nao) */
+  .binary { display: flex; gap: 12px; }
+  .binary .chip { flex: 1; text-align: center; }
+
+  /* CONSENT */
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    background: rgba(170,178,154,0.1);
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .consent-box {
+    width: 24px; height: 24px;
+    border: 2px solid var(--sage);
+    border-radius: 7px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-top: 1px;
+  }
+  .consent.checked .consent-box {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .consent-box svg { opacity: 0; transition: opacity 0.2s; }
+  .consent.checked .consent-box svg { opacity: 1; }
+  .consent-text { font-size: 0.85rem; color: var(--dark-soft); }
+  .consent-text a { color: var(--gold); text-decoration: underline; cursor: pointer; }
+
+  /* SUBMIT */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--gold) 0%, #C49640 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(212,168,83,0.35);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(212,168,83,0.45); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeUp 0.6s ease;
+  }
+  .success.show { display: block; }
+  .success-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+  }
+  .success h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .success p {
+    color: var(--dark-soft);
+    margin-bottom: 28px;
+    font-size: 0.98rem;
+  }
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 28px;
+    background: #25D366;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 18px rgba(37,211,102,0.3);
+  }
+  .wa-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,211,102,0.4); }
+  .skip-link {
+    display: block;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--sage);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* MODAL LGPD */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(61,32,16,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px 28px;
+    max-width: 460px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  .modal p { font-size: 0.88rem; color: var(--dark-soft); margin-bottom: 12px; }
+  .modal-close {
+    margin-top: 16px;
+    padding: 12px 24px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .error-msg {
+    display: none;
+    background: rgba(192,57,43,0.1);
+    color: #C0392B;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .error-msg.show { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .loading-spin {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="bg-texture"></div>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header" id="header">
+    <div class="brand">Hegai<span>Skin</span></div>
+    <div class="tagline">Personalized Skincare</div>
+    <div class="divider"></div>
+    <h1 class="intro-title">Entre para a lista de espera</h1>
+    <p class="intro-text">Estamos construindo algo inédito para a sua pele. As primeiras a entrar terão acesso antecipado e condição especial de lançamento.</p>
+    <div class="scarcity">✨ Vagas limitadas no Early Access</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="formCard">
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="field">
+      <label class="field-label">Nome <span class="req">*</span></label>
+      <input type="text" id="nome" placeholder="Seu nome">
+    </div>
+
+    <div class="field">
+      <label class="field-label">WhatsApp <span class="req">*</span></label>
+      <input type="tel" id="whatsapp" placeholder="(00) 00000-0000 ou +351...">
+    </div>
+
+    <div class="field">
+      <label class="field-label">E-mail <span class="req">*</span></label>
+      <input type="email" id="email" placeholder="seu@email.com">
+    </div>
+
+    <div class="field">
+      <label class="field-label">Instagram</label>
+      <input type="text" id="instagram" placeholder="@seuperfil">
+    </div>
+
+    <div class="field">
+      <label class="field-label">O que mais te incomoda hoje? <span class="req">*</span></label>
+      <div class="field-hint">Escolha o que mais pesa pra você</div>
+      <div class="chips" id="dorChips">
+        <div class="chip" data-value="acne">Acne</div>
+        <div class="chip" data-value="manchas">Manchas</div>
+        <div class="chip" data-value="oleosidade">Oleosidade</div>
+        <div class="chip" data-value="ressecamento">Ressecamento</div>
+        <div class="chip" data-value="sensibilidade">Sensibilidade</div>
+        <div class="chip" data-value="textura">Textura</div>
+        <div class="chip" data-value="nao_sei">Não sei identificar</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Você tem produtos de skincare parados em casa?</label>
+      <div class="binary" id="produtosParados">
+        <div class="chip" data-value="sim">Sim, vários 🙈</div>
+        <div class="chip" data-value="alguns">Alguns</div>
+        <div class="chip" data-value="nao">Não</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Você sabe a ordem certa da sua rotina?</label>
+      <div class="binary" id="ordemRotina">
+        <div class="chip" data-value="sim">Sei bem</div>
+        <div class="chip" data-value="mais_ou_menos">Mais ou menos</div>
+        <div class="chip" data-value="nao">Não faço ideia</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="consent" id="consent">
+        <div class="consent-box">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="consent-text">
+          Aceito receber comunicações sobre o lançamento da HegaiSkin e concordo com a <a id="lgpdLink">política de privacidade</a>. <span class="req">*</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Garantir minha vaga</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success" id="success">
+    <div class="success-icon">🤍</div>
+    <h2>Você está na lista!</h2>
+    <p>Sua vaga no Early Access está garantida. Em breve você recebe novidades em primeira mão — e a condição especial de lançamento.</p>
+    <a href="https://chat.whatsapp.com/CK5ASAh0k7t1e3nt6zsube" class="wa-btn" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.3A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1112 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5c.1-.1.1-.3 0-.4l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.5a1 1 0 00-.7.3c-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1 0-.1-.2-.2-.4-.3z"/></svg>
+      Entrar no grupo Minha Skin
+    </a>
+    <span class="skip-link" onclick="document.getElementById('success').scrollIntoView()">Agora não, obrigada</span>
+  </div>
+
+</div>
+
+<!-- MODAL LGPD -->
+<div class="modal-overlay" id="lgpdModal">
+  <div class="modal">
+    <h3>Política de Privacidade</h3>
+    <p>A HegaiSkin coleta seu nome, WhatsApp, e-mail e Instagram para te avisar sobre o lançamento e oferecer condições especiais de Early Access.</p>
+    <p>Seus dados são armazenados com segurança e nunca serão vendidos ou compartilhados com terceiros para fins de marketing externo.</p>
+    <p>Você pode solicitar a exclusão dos seus dados a qualquer momento entrando em contato conosco. Ao se inscrever, você concorda com o uso descrito acima, conforme a LGPD (Lei Geral de Proteção de Dados).</p>
+    <button class="modal-close" id="modalClose">Entendi</button>
+  </div>
+</div>
+
+<script>
+  // ⚠️ SUBSTITUIR pela URL do Apps Script da planilha da LISTA DE ESPERA
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJWHfXoIWkLySX_CCiPlgkohd4KL2Cu_-gQc9F68_8Fxqo77IuIbWlvn4LN9zzmOQE/exec';
+
+  let selectedDor = null;
+  let produtosParados = null;
+  let ordemRotina = null;
+  let consentGiven = false;
+
+  // Dor — single select
+  document.querySelectorAll('#dorChips .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#dorChips .chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      selectedDor = chip.dataset.value;
+    });
+  });
+
+  // Produtos parados
+  document.querySelectorAll('#produtosParados .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#produtosParados .chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      produtosParados = chip.dataset.value;
+    });
+  });
+
+  // Ordem rotina
+  document.querySelectorAll('#ordemRotina .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#ordemRotina .chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      ordemRotina = chip.dataset.value;
+    });
+  });
+
+  // Consent
+  const consentEl = document.getElementById('consent');
+  consentEl.addEventListener('click', (e) => {
+    if (e.target.id === 'lgpdLink') return;
+    consentGiven = !consentGiven;
+    consentEl.classList.toggle('checked', consentGiven);
+  });
+
+  // LGPD modal
+  document.getElementById('lgpdLink').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('lgpdModal').classList.add('show');
+  });
+  document.getElementById('modalClose').addEventListener('click', () => {
+    document.getElementById('lgpdModal').classList.remove('show');
+  });
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => el.classList.remove('show'), 4000);
+  }
+
+  function validEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // Submit
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const nome = document.getElementById('nome').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const instagram = document.getElementById('instagram').value.trim();
+
+    if (!nome) return showError('Por favor, preencha seu nome.');
+    if (!whatsapp) return showError('Por favor, preencha seu WhatsApp.');
+    if (!email || !validEmail(email)) return showError('Por favor, coloque um e-mail válido.');
+    if (!selectedDor) return showError('Conta pra gente o que mais te incomoda.');
+    if (!consentGiven) return showError('Para entrar na lista, é preciso aceitar receber as comunicações.');
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spin"></span>';
+
+    const data = {
+      tipo: 'lista_espera',
+      timestamp: new Date().toISOString(),
+      nome, whatsapp, email, instagram,
+      dor_principal: selectedDor,
+      produtos_parados: produtosParados || '',
+      sabe_ordem: ordemRotina || '',
+      consentimento: 'sim'
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      // no-cors não retorna status legível — assumimos sucesso
+      document.getElementById('header').style.display = 'none';
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('success').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = 'Garantir minha vaga';
+      showError('Algo deu errado. Tenta de novo em instantes.');
+    }
+  });
+</script>
+</body>
+</html>
