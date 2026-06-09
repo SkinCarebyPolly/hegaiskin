@@ -2167,8 +2167,10 @@ async function geminiVision(b64, prompt, maxTokens) {
   clearTimeout(tid);
   var data = await resp.json();
   if (data.error) throw new Error(data.error.message || 'Erro Gemini');
-  var text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  return text.replace(/```json|```/g, '').trim();
+  var _parts = (data.candidates?.[0]?.content?.parts) || [];
+  var _part = _parts.filter(function(x) { return !x.thought; }).pop() || _parts[_parts.length - 1] || {};
+  var text = (_part.text || '').replace(/```json|```/g, '').trim();
+  return text;
 }
 
 async function geminiChat(system, userMsg, maxTokens) {
