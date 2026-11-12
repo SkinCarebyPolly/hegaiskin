@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fcfbf5">
+<title>Rotina personalizada da loja — piloto</title>
+<style>
+:root{--ink:#3d2010;--gold:#bc9a4f;--cream:#fcfbf5;--paper:#fff;--muted:#74685f;--line:#e7dfd4;--sage:#aab29a;--alert:#fff5e4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.55 Arial,sans-serif}
+header{background:#f3eadc;padding:22px 20px;border-bottom:1px solid var(--line)}
+header .wrap,main{max-width:960px;margin:0 auto}
+.brand{font:italic 22px Georgia,serif;color:var(--gold)}
+h1,h2,h3,p{margin-top:0}
+h1{font:32px/1.15 Georgia,serif;margin:8px 0}
+.lede{color:var(--muted);max-width:720px;margin:0}
+main{padding:22px 16px 60px}
+.notice{background:var(--alert);border:1px solid #ecd8b1;border-radius:12px;padding:14px 16px;margin-bottom:20px;color:#60481f}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 4px 18px #3d20100a}
+.card h2{font:24px Georgia,serif;margin-bottom:6px}
+.helper{color:var(--muted);font-size:13px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:700}
+input,select,textarea{width:100%;font:inherit;border:1px solid #cfc3b6;border-radius:9px;background:#fff;padding:11px 12px;color:var(--ink)}
+textarea{min-height:78px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid #d5bb7e;border-color:var(--gold)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+button,.button{border:0;border-radius:9px;background:var(--ink);color:white;padding:11px 16px;font-weight:700;font-size:14px;cursor:pointer}
+button.secondary{background:#f7f2e9;color:var(--ink);border:1px solid var(--line)}
+button.gold{background:var(--gold);color:#24170d}
+button:disabled{opacity:.5;cursor:not-allowed}
+.product{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#fffdf9}
+.product-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.product-top strong{font:18px Georgia,serif}
+.photo-preview{max-width:120px;max-height:100px;object-fit:cover;border-radius:8px;display:none;margin-top:8px}
+.small{font-size:12px;color:var(--muted)}
+#result{display:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tabs button{background:#f7f2e9;color:var(--ink);border:1px solid var(--line)}
+.tabs button.active{background:var(--ink);color:#fff}
+.routine{display:none}
+.routine.active{display:block}
+.step{padding:14px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border:0}
+.step h3{font-size:16px;margin:0 0 4px}
+.pill{display:inline-block;background:#f1eadc;border-radius:30px;padding:3px 9px;font-size:11px;margin-left:6px}
+.claim{background:#f7f5ef;border-left:3px solid var(--sage);padding:10px 12px;margin-top:8px;font-size:13px}
+.summary{background:#f8f4ec;border-radius:12px;padding:14px 16px}
+.footer{color:var(--muted);font-size:12px;text-align:center;margin-top:20px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}h1{font-size:27px}.card{padding:16px}}
+@media print{
+ body{background:#fff;font-size:12px}
+ header{padding:12px 0;background:#fff}
+ main{max-width:none;padding:0}
+ .notice,#intake,.tabs,.actions,.footer,.no-print{display:none!important}
+ #result{display:block!important}
+ .card{box-shadow:none;border:0;padding:0}
+ .routine{display:block!important;page-break-inside:avoid;margin:12px 0;border-top:1px solid #bbb;padding-top:8px}
+ .routine h2{font-size:18px}
+ .step{padding:7px 0}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap">
+  <div class="brand" id="brandName">Rotina personalizada</div>
+  <h1>Uma rotina pensada para você</h1>
+  <p class="lede">Registre as informações da cliente, os produtos comprados e confira uma proposta de rotina em quatro versões.</p>
+ </div>
+</header>
+<main>
+ <div class="notice no-print"><strong>Protótipo local para avaliação.</strong> Os dados ficam apenas nesta aba e não são enviados nem salvos. Fechar a página apaga o conteúdo. Não use dados reais de clientes nesta versão. A identificação por foto, o scanner automatizado, os QR codes e o armazenamento privado ainda precisam ser conectados.</div>
+ <section id="intake">
+  <div class="card">
+   <h2>1. Perfil informado</h2>
+   <p class="helper">As respostas são autorrelatadas. A foto é apenas um registro nesta versão; não fazemos diagnóstico nem análise automática da pele.</p>
+   <div class="grid">
+    <div class="field"><label for="clientName">Nome da cliente</label><input id="clientName" autocomplete="off" placeholder="Ex.: Ana"></div>
+    <div class="field"><label for="skinType">Tipo de pele percebido</label><select id="skinType"><option value="">Selecione</option><option>Seca</option><option>Oleosa</option><option>Mista</option><option>Normal</option><option>Não sei</option></select></div>
+    <div class="field"><label for="sensitivity">Sensibilidade percebida</label><select id="sensitivity"><option value="">Selecione</option><option>Sem sensibilidade percebida</option><option>Às vezes fica sensível</option><option>Costuma ficar sensível</option><option>Não sei</option></select></div>
+    <div class="field"><label for="goal">Objetivo principal</label><select id="goal"><option value="">Selecione</option><option>Hidratação</option><option>Oleosidade</option><option>Uniformidade do tom</option><option>Textura</option><option>Conforto da pele</option><option>Rotina básica</option></select></div>
+    <div class="field full"><label for="restrictions">Observações e restrições informadas</label><textarea id="restrictions" placeholder="Ex.: produto que já irritou, preferência ou orientação relevante. Evite registrar dados desnecessários."></textarea></div>
+    <div class="field full"><label for="skinPhoto">Foto opcional da pele (somente prévia local)</label><input id="skinPhoto" type="file" accept="image/*" capture="user"><img class="photo-preview" id="skinPreview" alt="Prévia da foto da pele"><span class="small">A imagem não é enviada nem entra no PDF neste protótipo.</span></div>
+   </div>
+  </div>
+  <div class="card">
+   <h2>2. Produtos comprados</h2>
+   <p class="helper">Digite ou confirme o nome exatamente como aparece na embalagem. Copie modo de uso e benefícios da fonte oficial do fabricante.</p>
+   <div id="products"></div>
+   <div class="actions"><button class="secondary" id="addProduct" type="button">Adicionar produto comprado</button></div>
+  </div>
+  <div class="actions"><button class="gold" id="makeRoutine" type="button">Montar e revisar rotina</button></div>
+ </section>
+ <section id="result">
+  <div class="card">
+   <div class="summary" id="profileSummary"></div>
+   <div class="tabs no-print" role="tablist">
+    <button class="active" data-tab="am-full">Manhã completa</button><button data-tab="am-fast">Manhã expressa</button><button data-tab="pm-full">Noite completa</button><button data-tab="pm-fast">Noite expressa</button>
+   </div>
+   <div id="routines"></div>
+   <div class="actions no-print"><button class="gold" id="printRoutine" type="button">Imprimir / salvar em PDF</button><button class="secondary" id="editRoutine" type="button">Editar informações</button></div>
+  </div>
+  <p class="footer">Revise a rotina e as informações dos produtos antes de compartilhar. Use alegações e instruções conferidas nas fontes oficiais.</p>
+ </section>
+</main>
+<script>
+(function(){
+ const productsEl=document.getElementById('products');
+ let productCount=0;
+ const categoryLabels={cleanser:'Limpeza',toner:'Tônico / essência',serum:'Sérum',moisturizer:'Hidratante',sunscreen:'Protetor solar',other:'Outro'};
+ const h=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function addProduct(){
+  const n=++productCount, box=document.createElement('div'); box.className='product'; box.dataset.product=String(n);
+  box.innerHTML='<div class="product-top"><strong>Produto comprado</strong><button type="button" class="secondary remove">Remover</button></div><div class="grid">'+
+   '<div class="field"><label>Nome exato na embalagem</label><input class="p-name" placeholder="Marca + nome do produto"></div>'+
+   '<div class="field"><label>Categoria</label><select class="p-category"><option value="serum">Sérum</option><option value="moisturizer">Hidratante</option><option value="cleanser">Limpeza</option><option value="toner">Tônico / essência</option><option value="sunscreen">Protetor solar</option><option value="other">Outro</option></select></div>'+
+   '<div class="field"><label>Quando usar, conforme fabricante</label><select class="p-time"><option value="both">Manhã e noite</option><option value="am">Somente manhã</option><option value="pm">Somente noite</option><option value="review">Confirmar antes de encaixar</option></select></div>'+
+   '<div class="field"><label>Foto opcional da embalagem</label><input class="p-photo" type="file" accept="image/*" capture="environment"><img class="photo-preview" alt="Prévia do produto"></div>'+
+   '<div class="field full"><label>Como usar (fonte do fabricante)</label><textarea class="p-use" placeholder="Ex.: quantidade e frequência indicadas pelo fabricante"></textarea></div>'+
+   '<div class="field full"><label>Benefícios descritos pelo fabricante</label><textarea class="p-benefit" placeholder="Use a descrição oficial; não acrescente promessas próprias."></textarea></div>'+
+   '<div class="field full"><label>Link da fonte oficial</label><input class="p-source" type="url" placeholder="https://..."></div></div>';
+  productsEl.appendChild(box);
+  box.querySelector('.remove').addEventListener('click',()=>{box.remove()});
+  box.querySelector('.p-photo').addEventListener('change',e=>preview(e.target,box.querySelector('img')));
+ }
+ function preview(input,img){
+  const file=input.files&&input.files[0]; if(!file)return;
+  if(!file.type.startsWith('image/'))return;
+  const reader=new FileReader(); reader.onload=()=>{img.src=reader.result;img.style.display='block'}; reader.readAsDataURL(file);
+ }
+ document.getElementById('skinPhoto').addEventListener('change',e=>preview(e.target,document.getElementById('skinPreview')));
+ document.getElementById('addProduct').addEventListener('click',addProduct);
+ document.getElementById('printRoutine').addEventListener('click',()=>window.print());
+ document.getElementById('editRoutine').addEventListener('click',()=>{document.getElementById('result').style.display='none';document.getElementById('intake').style.display='block';window.scrollTo({top:0,behavior:'smooth'})});
+ document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.routine').forEach(r=>r.classList.toggle('active',r.id===btn.dataset.tab));
+ }));
+ function getProducts(){
+  return [...productsEl.querySelectorAll('.product')].map(box=>({
+   name:box.querySelector('.p-name').value.trim(),category:box.querySelector('.p-category').value,time:box.querySelector('.p-time').value,
+   use:box.querySelector('.p-use').value.trim(),benefit:box.querySelector('.p-benefit').value.trim(),source:box.querySelector('.p-source').value.trim()
+  })).filter(p=>p.name);
+ }
+ function productStep(p){
+  let body='<p>'+h(categoryLabels[p.category]||'Produto comprado')+' · <strong>'+h(p.name)+'</strong></p>';
+  if(p.use)body+='<div class="claim"><strong>Como usar:</strong> '+h(p.use)+'</div>';
+  if(p.benefit)body+='<div class="claim"><strong>Informação do fabricante:</strong> '+h(p.benefit)+(p.source?' <a href="'+h(p.source)+'" target="_blank" rel="noopener">Ver fonte</a>':'')+'</div>';
+  else if(p.source)body+='<div class="claim"><a href="'+h(p.source)+'" target="_blank" rel="noopener">Fonte oficial do produto</a></div>';
+  return {title:categoryLabels[p.category]||'Produto comprado',body,real:true};
+ }
+ function generic(title,desc){return {title,body:'<p>'+h(desc)+'</p>',real:false}}
+ function productsFor(cat,time){return getProducts().filter(p=>p.category===cat&&(p.time===time||p.time==='both'))}
+ function choose(cat,time){const found=productsFor(cat,time);return found.length?found.map(productStep):[generic(categoryLabels[cat]||'Etapa da rotina','Etapa genérica — produto não comprado nesta loja.')]}
+ function compose(kind){
+  const am=kind.startsWith('am'),fast=kind.endsWith('fast'),time=am?'am':'pm';
+  const steps=[generic('Limpeza','Use um produto de limpeza adequado ao perfil informado, se já fizer parte da rotina.')];
+  if(!fast)steps.push(...choose('toner',time));
+  steps.push(...choose('serum',time));
+  if(am){
+   steps.push(...choose('moisturizer',time));
+   steps.push(...choose('sunscreen','am'));
+  }else{
+   steps.push(...choose('moisturizer',time));
+  }
+  return steps.map((s,i)=>'<div class="step"><h3>'+String(i+1).padStart(2,'0')+'. '+h(s.title)+(s.real?'<span class="pill">comprado</span>':'<span class="pill">genérico</span>')+'</h3>'+s.body+'</div>').join('');
+ }
+ document.getElementById('makeRoutine').addEventListener('click',()=>{
+  const name=document.getElementById('clientName').value.trim();
+  if(!name){document.getElementById('clientName').focus();alert('Informe o nome da cliente para montar a rotina.');return}
+  const profile={skinType:document.getElementById('skinType').value||'não informado',sensitivity:document.getElementById('sensitivity').value||'não informada',goal:document.getElementById('goal').value||'não informado',notes:document.getElementById('restrictions').value.trim()};
+  document.getElementById('profileSummary').innerHTML='<strong>Rotina de '+h(name)+'</strong><br>Perfil autorrelatado: '+h(profile.skinType)+' · Sensibilidade: '+h(profile.sensitivity)+' · Objetivo: '+h(profile.goal)+(profile.notes?'<br>Observações informadas: '+h(profile.notes):'')+'<p class="small">Resumo baseado nas respostas da cliente; não é diagnóstico. Confirme compatibilidade e horários antes de entregar.</p>';
+  document.getElementById('routines').innerHTML=['am-full','am-fast','pm-full','pm-fast'].map((id,i)=>{
+   const titles=['Manhã completa','Manhã expressa','Noite completa','Noite expressa'];
+   return '<section class="routine '+(i===0?'active':'')+'" id="'+id+'"><h2>'+titles[i]+'</h2>'+compose(id)+'</section>';
+  }).join('');
+  document.getElementById('intake').style.display='none';document.getElementById('result').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+ });
+ addProduct();
+})();
+</script>
+</body>
+</html>
