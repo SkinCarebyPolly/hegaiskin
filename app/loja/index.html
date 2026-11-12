@@ -98,6 +98,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
  <section id="result">
   <div class="card">
    <div class="summary" id="profileSummary"></div>
+   <div class="claim" id="purchasedSummary"></div>
    <div class="tabs no-print" role="tablist">
     <button class="active" data-tab="am-full">Manhã completa</button><button data-tab="am-fast">Manhã expressa</button><button data-tab="pm-full">Noite completa</button><button data-tab="pm-fast">Noite expressa</button>
    </div>
@@ -172,8 +173,11 @@ button:disabled{opacity:.5;cursor:not-allowed}
  document.getElementById('makeRoutine').addEventListener('click',()=>{
   const name=document.getElementById('clientName').value.trim();
   if(!name){document.getElementById('clientName').focus();alert('Informe o nome da cliente para montar a rotina.');return}
+  const purchased=getProducts();
+  if(!purchased.length){alert('Adicione pelo menos um produto comprado para montar a rotina.');return}
   const profile={skinType:document.getElementById('skinType').value||'não informado',sensitivity:document.getElementById('sensitivity').value||'não informada',goal:document.getElementById('goal').value||'não informado',notes:document.getElementById('restrictions').value.trim()};
   document.getElementById('profileSummary').innerHTML='<strong>Rotina de '+h(name)+'</strong><br>Perfil autorrelatado: '+h(profile.skinType)+' · Sensibilidade: '+h(profile.sensitivity)+' · Objetivo: '+h(profile.goal)+(profile.notes?'<br>Observações informadas: '+h(profile.notes):'')+'<p class="small">Resumo baseado nas respostas da cliente; não é diagnóstico. Confirme compatibilidade e horários antes de entregar.</p>';
+  document.getElementById('purchasedSummary').innerHTML='<strong>Produtos comprados e informações informadas</strong><ul>'+purchased.map(p=>'<li><strong>'+h(p.name)+'</strong> — '+h(categoryLabels[p.category]||'Outro')+(p.time==='review'?' · horário a confirmar':'')+(p.use?'<br><span class="small">Como usar: '+h(p.use)+'</span>':'')+(p.benefit?'<br><span class="small">Fabricante: '+h(p.benefit)+'</span>':'')+(p.source?'<br><span class="small">Fonte: '+h(p.source)+'</span>':'')).join('')+'</ul><p class="small">Confira a embalagem e a fonte oficial antes de entregar. Itens com horário pendente não são encaixados automaticamente.</p>';
   document.getElementById('routines').innerHTML=['am-full','am-fast','pm-full','pm-fast'].map((id,i)=>{
    const titles=['Manhã completa','Manhã expressa','Noite completa','Noite expressa'];
    return '<section class="routine '+(i===0?'active':'')+'" id="'+id+'"><h2>'+titles[i]+'</h2>'+compose(id)+'</section>';
