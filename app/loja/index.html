@@ -171,6 +171,17 @@ button.secondary{background:#fff;color:#985f6b;border-color:#e5cfd4}
 .field>label{color:#985965;font-weight:700}
 .card h2,.result-heading h2,.delivery-intro h2{color:#925d68}
 .product-top strong{color:#925d68}
+
+/* Respostas, consentimentos e controles no mesmo tom rosado */
+input:not([type=checkbox]),select,textarea{color:#895762}
+input::placeholder,textarea::placeholder{color:#b98b94;opacity:1}
+select option{color:#895762;background:#fff}
+.field .small,.field>label.small{color:#995e6b}
+input[type=checkbox]{appearance:none;-webkit-appearance:none;width:17px!important;height:17px!important;min-width:17px;border:1.5px solid #c1848d;border-radius:5px;background:#fff;vertical-align:middle;cursor:pointer;display:inline-grid;place-content:center;padding:0;margin:0 6px 0 0;flex:0 0 auto}
+input[type=checkbox]:checked{background:#b77f86;border-color:#b77f86}
+input[type=checkbox]:checked::after{content:"";width:7px;height:4px;border:2px solid white;border-top:0;border-right:0;transform:rotate(-45deg);margin-top:-2px}
+input[type=checkbox]:focus-visible{outline:3px solid #b77f8640;outline-offset:2px}
+input[type=checkbox]:hover{border-color:#985965}
 </style>
 </head>
 <body>
