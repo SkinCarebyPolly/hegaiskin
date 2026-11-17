@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#fcfbf5">
 <title>Sua rotina personalizada — piloto</title>
 <style>
-:root{--ink:#3d2010;--gold:#bc9a4f;--cream:#fcfbf5;--paper:#fff;--muted:#74685f;--line:#e7dfd4;--sage:#aab29a;--alert:#fff5e4}
+:root{--ink:#433b35;--gold:#958b68;--rose:#b77f86;--rose-dark:#9d6873;--cream:#f4f2e8;--paper:#fffdf8;--muted:#756e67;--line:#e7ddd3;--sage:#b5aa8c;--alert:#fbf0ec}
 *{box-sizing:border-box}
 body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.55 Arial,sans-serif}
 header{background:#f3eadc;padding:22px 20px;border-bottom:1px solid var(--line)}
@@ -62,18 +62,88 @@ button:disabled{opacity:.5;cursor:not-allowed}
  .routine h2{font-size:18px}
  .step{padding:7px 0}
 }
+
+/* Identidade AYA & Co. — direção visual baseada nas referências fornecidas */
+body{background:var(--cream);color:var(--ink);font-family:Arial,sans-serif;letter-spacing:.01em}
+header{background:linear-gradient(115deg,#f4f2e8 5%,#f7e9e5 58%,#f4f2e8 100%);padding:22px 20px 0;border-bottom:1px solid #dfd3c8;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:340px;height:340px;border:1px solid #b77f862b;border-radius:50%;right:-115px;top:72px;box-shadow:0 0 0 22px #b77f860a,0 0 0 50px #b77f8608;pointer-events:none}
+header .wrap,main{max-width:1040px;margin:0 auto}
+.hero{position:relative;z-index:1}
+.brand-bar{display:flex;align-items:center;gap:14px;min-height:76px;border-bottom:1px solid #bcae9b55;padding-bottom:16px}
+.brand-logo{width:76px;height:74px;object-fit:cover;border-radius:16px;background:var(--cream);box-shadow:0 7px 22px #473a2912}
+.brand-copy{display:flex;flex-direction:column;gap:4px}
+.brand{font:italic 26px Georgia,serif;color:var(--rose-dark);letter-spacing:.01em}
+.brand-caption{font-size:9px;letter-spacing:.22em;color:var(--gold);font-weight:700}
+.secure-chip{margin-left:auto;border:1px solid #b6aa8a5e;border-radius:30px;padding:9px 13px;font-size:9px;letter-spacing:.12em;color:#736c54;background:#fbfaf4aa}
+.secure-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#a69a70;margin-right:6px}
+.hero-copy{padding:42px 0 35px;max-width:680px}
+.eyebrow{display:block;color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.2em;margin-bottom:10px}
+.hero h1{font:48px/1.04 Georgia,serif;letter-spacing:-.035em;margin:9px 0 16px;color:#4a403b}
+.hero h1 em{font-weight:400;color:var(--rose-dark)}
+.lede{font-size:16px;line-height:1.7;color:var(--muted);max-width:600px}
+.journey{border-top:1px solid #bcae9b55;display:flex;align-items:center;gap:14px;padding:17px 2px 19px;font-size:11px;color:#685f58;letter-spacing:.035em}
+.journey b{color:var(--rose-dark);margin-right:5px;font:italic 16px Georgia,serif}
+.journey i{height:1px;flex:1;background:linear-gradient(90deg,#b77f8640,#958b6840);max-width:70px}
+main{padding:26px 16px 64px;max-width:1040px}
+.notice{border-color:#e7d4cd;background:#fbf0ec;border-radius:15px;box-shadow:0 7px 22px #48342c08;font-size:13px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:21px;padding:24px;margin:18px 0;box-shadow:0 12px 34px #48392d0a}
+.card h2{font:27px/1.15 Georgia,serif;color:#4b3e3a}
+.helper{line-height:1.65}
+input,select,textarea{border-color:#dfd4ca;border-radius:12px;background:#fffefa;padding:12px 13px}
+input:focus,select:focus,textarea:focus{outline:3px solid #b77f8626;border-color:var(--rose)}
+button,.button{border-radius:12px;background:var(--rose-dark);padding:12px 17px;letter-spacing:.025em;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+button:hover,.button:hover{transform:translateY(-1px);box-shadow:0 7px 18px #9d68732d}
+button.gold{background:var(--gold);color:#fffdf7}
+button.secondary{background:#fffaf5;color:var(--rose-dark);border:1px solid #d9c5c2}
+.product{background:#fffdfa;border:1px solid #e8ddd3;border-radius:16px;padding:17px}
+.product-top strong{font:19px Georgia,serif;color:#68534f}
+.tabs button{border-radius:30px;padding:10px 15px}
+.tabs button.active{background:var(--rose-dark);border-color:var(--rose-dark)}
+.summary{background:#f8f3e9;border:1px solid #e9e0d2;border-radius:16px}
+.claim{background:#f8f5ed;border-left-color:var(--gold);border-radius:0 11px 11px 0}
+.pill{background:#f5e7e5;color:#805c61}
+.step{border-bottom-color:#ece4db;padding:16px 0}
+.footer{letter-spacing:.03em}
+.result-heading{margin-bottom:18px}
+.result-heading .eyebrow{margin-bottom:8px}
+.result-heading h2{margin:0 0 15px;font-size:31px}
+.delivery-card{background:linear-gradient(145deg,#fffdf8,#f9f3eb);overflow:hidden;position:relative}
+.delivery-intro{max-width:660px}
+.delivery-intro h2{font-size:32px;margin:3px 0 9px}
+.delivery-intro p{color:var(--muted);line-height:1.7;margin:0 0 22px}
+.delivery-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.delivery-step{border:1px solid #e7dcd0;border-radius:15px;padding:16px;background:#fffefa}
+.delivery-step span{display:block;font:italic 20px Georgia,serif;color:var(--rose);margin-bottom:12px}
+.delivery-step strong{font:18px Georgia,serif;color:#514540}
+.delivery-step p{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 0}
+.email-preview{display:flex;align-items:center;gap:13px;border:1px solid #e7dcd0;border-radius:15px;padding:14px 16px;margin-top:16px;background:#f4f2e8}
+.mail-icon{width:40px;height:40px;border-radius:50%;background:#fffdf8;color:var(--rose-dark);display:grid;place-items:center;font-size:19px}
+.email-preview div:nth-child(2){display:flex;flex-direction:column;gap:4px;min-width:0}
+.email-preview div:nth-child(2) span{font-size:9px;letter-spacing:.14em;color:var(--gold);font-weight:700}
+.email-preview strong{font-size:14px;overflow-wrap:anywhere;color:#514540}
+.preview-badge{margin-left:auto;border:1px solid #b7aa8a;border-radius:30px;padding:6px 9px;color:#817656;font-size:9px;letter-spacing:.11em;font-weight:700;white-space:nowrap}
+.delivery-footnote{font-size:11px;color:#786f65;line-height:1.6;margin-top:13px}
+@media(max-width:640px){header{padding:16px 16px 0}.brand-logo{width:62px;height:60px}.brand{font-size:23px}.brand-caption{font-size:8px;letter-spacing:.15em}.secure-chip{font-size:0;padding:10px}.secure-dot{margin:0}.hero-copy{padding:32px 0 25px}.hero h1{font-size:39px}.journey{gap:8px;font-size:9px;line-height:1.3}.journey b{font-size:13px;margin-right:2px}.journey i{max-width:20px}.delivery-steps{grid-template-columns:1fr}.delivery-step{display:grid;grid-template-columns:34px 1fr;column-gap:8px}.delivery-step span{grid-row:1/3;margin:0}.delivery-step p{margin-top:4px}.email-preview{padding:11px}.preview-badge{font-size:8px}.card{padding:19px}}
+
 </style>
 </head>
 <body>
 <header>
- <div class="wrap">
-  <div class="brand" id="brandName">Rotina personalizada</div>
-  <h1>Uma rotina pensada para você</h1>
-  <p class="lede">Responda algumas perguntas, confirme os produtos que comprou e veja uma rotina feita para você — no seu celular.</p>
+ <div class="wrap hero">
+  <div class="brand-bar">
+   <img class="brand-logo" src="data:image/webp;base64,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" alt="Logotipo AYA & Co.">
+   <div class="brand-copy"><div class="brand" id="brandName">AYA &amp; Co.</div><div class="brand-caption">BELEZA • CUIDADO • EXPERIÊNCIA</div></div>
+   <div class="secure-chip"><span class="secure-dot"></span> SUA ROTINA, COM CUIDADO</div>
+  </div>
+  <div class="hero-copy"><span class="eyebrow">UM RITUAL PENSADO PARA VOCÊ</span>
+   <h1>Seu cuidado começa<br><em>com a sua pele.</em></h1>
+   <p class="lede">Responda algumas perguntas, confirme os produtos que levou e receba uma rotina personalizada para acompanhar você todos os dias.</p>
+  </div>
+  <div class="journey" aria-label="Etapas para receber sua rotina"><span><b>01</b> Conte sobre sua pele</span><i></i><span><b>02</b> Confirme seus produtos</span><i></i><span><b>03</b> Acesse sua rotina digital</span></div>
  </div>
 </header>
 <main>
- <div class="notice no-print"><strong>Protótipo local para avaliação.</strong> Esta é uma demonstração: nada é enviado, salvo ou compartilhado. QR individual, envio por e-mail, catálogo da loja e armazenamento seguro ainda precisam ser conectados. Use apenas os dados fictícios do exemplo.</div>
+ <div class="notice no-print"><strong>Prévia de demonstração.</strong> O fluxo de e-mail e acesso individual é ilustrativo. Nenhum dado é enviado ou salvo nesta versão.</div>
  <section id="intake">
   <div class="card">
    <h2>1. Conte sobre sua pele</h2>
@@ -99,16 +169,27 @@ button:disabled{opacity:.5;cursor:not-allowed}
   <div class="actions"><button class="secondary" id="loadDemo" type="button">Carregar exemplo</button><button class="gold" id="makeRoutine" type="button">Montar e revisar rotina</button></div>
  </section>
  <section id="result">
-  <div class="card">
+  <div class="card result-card">
+   <div class="result-heading"><span class="eyebrow">SEU PERFIL DE CUIDADO</span><h2>Uma rotina que respeita o seu ritmo</h2></div>
    <div class="summary" id="profileSummary"></div>
    <div class="claim" id="purchasedSummary"></div>
    <div class="tabs no-print" role="tablist">
     <button class="active" data-tab="am-full">Manhã completa</button><button data-tab="am-fast">Manhã expressa</button><button data-tab="pm-full">Noite completa</button><button data-tab="pm-fast">Noite expressa</button>
    </div>
    <div id="routines"></div>
-   <div class="actions no-print"><button class="gold" id="printRoutine" type="button">Imprimir / salvar em PDF</button><button class="secondary" id="editRoutine" type="button">Editar informações</button></div>
+   <div class="actions no-print"><button class="gold" id="printRoutine" type="button">Salvar uma cópia em PDF</button><button class="secondary" id="editRoutine" type="button">Editar respostas</button></div>
   </div>
-  <p class="footer">Revise a rotina e as informações dos produtos antes de compartilhar. Use alegações e instruções conferidas nas fontes oficiais.</p>
+  <div class="card delivery-card no-print">
+   <div class="delivery-intro"><span class="eyebrow">COMO VOCÊ VAI RECEBER</span><h2>Sua rotina vai com você.</h2><p>Na versão final, ela fica disponível numa página privada, feita para abrir no celular. Você recebe o acesso por e-mail e pode guardar nos favoritos ou na tela inicial.</p></div>
+   <div class="delivery-steps">
+    <div class="delivery-step"><span>01</span><strong>Confirme no caixa</strong><p>A loja associa à sua compra os produtos que você levou.</p></div>
+    <div class="delivery-step"><span>02</span><strong>Receba seu acesso</strong><p>Um e-mail traz o botão para abrir sua rotina individual.</p></div>
+    <div class="delivery-step"><span>03</span><strong>Volte quando quiser</strong><p>Use o link salvo. O PDF fica disponível como cópia opcional.</p></div>
+   </div>
+   <div class="email-preview"><div class="mail-icon">✉</div><div><span>DESTINO DO E-MAIL DE DEMONSTRAÇÃO</span><strong id="deliveryEmail">—</strong></div><span class="preview-badge">SIMULAÇÃO</span></div>
+   <div class="delivery-footnote">O QR pode ser impresso no cartão da loja para iniciar o questionário ou voltar à página. No celular, o link do e-mail é o acesso mais simples. Esta prévia ainda não envia o e-mail, não gera QR individual nem armazena a rotina.</div>
+  </div>
+  <p class="footer">AYA &amp; Co. · Rotina de cuidado personalizada · Revise as informações dos produtos antes de compartilhar.</p>
  </section>
 </main>
 <script>
@@ -213,6 +294,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
   else if(day==='balanced'&&wash==='comfortable')inferred='perfil possivelmente equilibrado';
   const profile={skinType:inferred,sensitivity:document.getElementById('sensitivity').value||'não informada',goal:document.getElementById('goal').value||'não informado',notes:document.getElementById('restrictions').value.trim()};
   document.getElementById('profileSummary').innerHTML='<strong>Rotina de '+h(name)+'</strong><br>Perfil cosmético provável: '+h(profile.skinType)+' · Reação percebida: '+h(profile.sensitivity)+' · Objetivo: '+h(profile.goal)+(profile.notes?'<br>Observações informadas: '+h(profile.notes):'')+'<p class="small">Estimativa baseada nas respostas, não é certeza nem diagnóstico. Revise a rotina e confirme compatibilidade e horários antes de usar.</p>';
+  document.getElementById('deliveryEmail').textContent=email;
   document.getElementById('purchasedSummary').innerHTML='<strong>Produtos comprados e informações informadas</strong><ul>'+purchased.map(p=>'<li><strong>'+h(p.name)+'</strong> — '+h(categoryLabels[p.category]||'Outro')+(p.time==='review'?' · horário a confirmar':'')+(p.use?'<br><span class="small">Como usar: '+h(p.use)+'</span>':'')+(p.benefit?'<br><span class="small">Fabricante: '+h(p.benefit)+'</span>':'')+(p.source?'<br><span class="small">Fonte: '+h(p.source)+'</span>':'')).join('')+'</ul><p class="small">Confira a embalagem e a fonte oficial antes de entregar. Itens com horário pendente não são encaixados automaticamente.</p>';
   document.getElementById('routines').innerHTML=['am-full','am-fast','pm-full','pm-fast'].map((id,i)=>{
    const titles=['Manhã completa','Manhã expressa','Noite completa','Noite expressa'];
