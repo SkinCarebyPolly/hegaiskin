@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fcfbf5">
-<title>Rotina personalizada da loja — piloto</title>
+<title>Sua rotina personalizada — piloto</title>
 <style>
 :root{--ink:#3d2010;--gold:#bc9a4f;--cream:#fcfbf5;--paper:#fff;--muted:#74685f;--line:#e7dfd4;--sage:#aab29a;--alert:#fff5e4}
 *{box-sizing:border-box}
@@ -69,27 +69,31 @@ button:disabled{opacity:.5;cursor:not-allowed}
  <div class="wrap">
   <div class="brand" id="brandName">Rotina personalizada</div>
   <h1>Uma rotina pensada para você</h1>
-  <p class="lede">Registre as informações da cliente, os produtos comprados e confira uma proposta de rotina em quatro versões.</p>
+  <p class="lede">Responda algumas perguntas, confirme os produtos que comprou e veja uma rotina feita para você — no seu celular.</p>
  </div>
 </header>
 <main>
- <div class="notice no-print"><strong>Protótipo local para avaliação.</strong> Os dados ficam apenas nesta aba e não são enviados nem salvos. Fechar a página apaga o conteúdo. Não use dados reais de clientes nesta versão. A identificação por foto, o scanner automatizado, os QR codes e o armazenamento privado ainda precisam ser conectados.</div>
+ <div class="notice no-print"><strong>Protótipo local para avaliação.</strong> Esta é uma demonstração: nada é enviado, salvo ou compartilhado. QR individual, envio por e-mail, catálogo da loja e armazenamento seguro ainda precisam ser conectados. Use apenas os dados fictícios do exemplo.</div>
  <section id="intake">
   <div class="card">
-   <h2>1. Perfil informado</h2>
-   <p class="helper">As respostas são autorrelatadas. A foto é apenas um registro nesta versão; não fazemos diagnóstico nem análise automática da pele.</p>
+   <h2>1. Conte sobre sua pele</h2>
+   <p class="helper">Suas respostas ajudam a estimar um perfil cosmético provável. Não existe confirmação definitiva por questionário ou selfie e isto não substitui orientação profissional.</p>
    <div class="grid">
-    <div class="field"><label for="clientName">Nome da cliente</label><input id="clientName" autocomplete="off" placeholder="Ex.: Ana"></div>
-    <div class="field"><label for="skinType">Tipo de pele percebido</label><select id="skinType"><option value="">Selecione</option><option>Seca</option><option>Oleosa</option><option>Mista</option><option>Normal</option><option>Não sei</option></select></div>
-    <div class="field"><label for="sensitivity">Sensibilidade percebida</label><select id="sensitivity"><option value="">Selecione</option><option>Sem sensibilidade percebida</option><option>Às vezes fica sensível</option><option>Costuma ficar sensível</option><option>Não sei</option></select></div>
-    <div class="field"><label for="goal">Objetivo principal</label><select id="goal"><option value="">Selecione</option><option>Hidratação</option><option>Oleosidade</option><option>Uniformidade do tom</option><option>Textura</option><option>Conforto da pele</option><option>Rotina básica</option></select></div>
+    <div class="field"><label for="clientName">Como podemos chamar você?</label><input id="clientName" autocomplete="given-name" placeholder="Ex.: Ana"></div>
+    <div class="field"><label for="clientEmail">Seu e-mail para receber o acesso</label><input id="clientEmail" type="email" autocomplete="email" placeholder="voce@email.com"></div>
+    <div class="field"><label for="washBehavior">Logo depois de lavar o rosto, sem passar produto, sua pele...</label><select id="washBehavior"><option value="">Selecione</option><option value="tight">fica repuxando ou desconfortável</option><option value="comfortable">fica confortável</option><option value="shiny">já parece brilhosa/oleosa</option><option value="unsure">não sei / nunca reparei</option></select></div>
+    <div class="field"><label for="dayBehavior">Ao longo do dia, costuma...</label><select id="dayBehavior"><option value="">Selecione</option><option value="oily_all">ficar brilhosa em várias áreas</option><option value="tzone">brilhar mais na testa, nariz e queixo</option><option value="dry">ficar seca ou repuxada</option><option value="balanced">continuar confortável e equilibrada</option><option value="variable">variar bastante / não sei</option></select></div>
+    <div class="field"><label for="sensitivity">Como sua pele reage a produtos novos?</label><select id="sensitivity"><option value="">Selecione</option><option>Geralmente não fica sensível</option><option>Às vezes fica sensível</option><option>Costuma ficar sensível</option><option>Não sei</option></select></div>
+    <div class="field"><label for="goal">Seu principal objetivo agora</label><select id="goal"><option value="">Selecione</option><option>Hidratação</option><option>Oleosidade</option><option>Uniformidade do tom</option><option>Textura</option><option>Conforto da pele</option><option>Rotina básica</option></select></div>
     <div class="field full"><label for="restrictions">Observações e restrições informadas</label><textarea id="restrictions" placeholder="Ex.: produto que já irritou, preferência ou orientação relevante. Evite registrar dados desnecessários."></textarea></div>
-    <div class="field full"><label for="skinPhoto">Foto opcional da pele (somente prévia local)</label><input id="skinPhoto" type="file" accept="image/*" capture="user"><img class="photo-preview" id="skinPreview" alt="Prévia da foto da pele"><span class="small">A imagem não é enviada nem entra no PDF neste protótipo.</span></div>
+    <div class="field full"><label for="skinPhoto">Selfie opcional da pele</label><input id="skinPhoto" type="file" accept="image/*" capture="user"><img class="photo-preview" id="skinPreview" alt="Prévia da selfie"><label class="small"><input id="photoConsent" type="checkbox" style="width:auto"> Concordo que a loja use esta foto somente para preparar minha rotina. Na versão final, a finalidade e o prazo de exclusão serão informados.</label><span class="small">A selfie é opcional e não será analisada nesta demonstração.</span></div>
+    <div class="field full"><label for="restrictions">Alguma preferência ou produto que costuma irritar sua pele? (opcional)</label><textarea id="restrictions" placeholder="Não informe diagnóstico ou dados que não sejam necessários para preparar sua rotina."></textarea></div>
+    <div class="field full"><label class="small"><input id="dataConsent" type="checkbox" style="width:auto"> Concordo que a loja use minhas respostas e meu e-mail para preparar e enviar esta rotina personalizada.</label></div>
    </div>
   </div>
   <div class="card">
    <h2>2. Produtos comprados</h2>
-   <p class="helper">Digite ou confirme o nome exatamente como aparece na embalagem. Copie modo de uso e benefícios da fonte oficial do fabricante.</p>
+   <p class="helper">Na versão final, os itens serão associados à compra pela loja. Aqui, confirme os nomes da embalagem e use apenas instruções e benefícios conferidos em fonte oficial.</p>
    <div id="products"></div>
    <div class="actions"><button class="secondary" id="addProduct" type="button">Adicionar produto comprado</button></div>
   </div>
@@ -137,10 +141,13 @@ button:disabled{opacity:.5;cursor:not-allowed}
  document.getElementById('addProduct').addEventListener('click',addProduct);
  document.getElementById('loadDemo').addEventListener('click',()=>{
   document.getElementById('clientName').value='Cliente de demonstração';
-  document.getElementById('skinType').value='Mista';
+  document.getElementById('clientEmail').value='cliente.demo@example.com';
+  document.getElementById('washBehavior').value='comfortable';
+  document.getElementById('dayBehavior').value='tzone';
   document.getElementById('sensitivity').value='Às vezes fica sensível';
   document.getElementById('goal').value='Hidratação';
-  document.getElementById('restrictions').value='Dados fictícios para visualizar o fluxo. Revisar observações antes de usar com clientes.';
+  document.getElementById('restrictions').value='Dados fictícios para visualizar o fluxo.';
+  document.getElementById('dataConsent').checked=true;
   productsEl.innerHTML='';
   addProduct(); addProduct();
   const cards=productsEl.querySelectorAll('.product');
@@ -196,8 +203,17 @@ button:disabled{opacity:.5;cursor:not-allowed}
   if(!name){document.getElementById('clientName').focus();alert('Informe o nome da cliente para montar a rotina.');return}
   const purchased=getProducts();
   if(!purchased.length){alert('Adicione pelo menos um produto comprado para montar a rotina.');return}
-  const profile={skinType:document.getElementById('skinType').value||'não informado',sensitivity:document.getElementById('sensitivity').value||'não informada',goal:document.getElementById('goal').value||'não informado',notes:document.getElementById('restrictions').value.trim()};
-  document.getElementById('profileSummary').innerHTML='<strong>Rotina de '+h(name)+'</strong><br>Perfil autorrelatado: '+h(profile.skinType)+' · Sensibilidade: '+h(profile.sensitivity)+' · Objetivo: '+h(profile.goal)+(profile.notes?'<br>Observações informadas: '+h(profile.notes):'')+'<p class="small">Resumo baseado nas respostas da cliente; não é diagnóstico. Confirme compatibilidade e horários antes de entregar.</p>';
+  const email=document.getElementById('clientEmail').value.trim();
+  if(!email||!document.getElementById('dataConsent').checked){alert('Informe seu e-mail e aceite o uso das respostas para preparar e enviar a rotina.');return}
+  if(document.getElementById('skinPhoto').files.length&&!document.getElementById('photoConsent').checked){alert('Para anexar a selfie, marque o consentimento específico. Você também pode continuar sem enviar foto.');return}
+  const wash=document.getElementById('washBehavior').value, day=document.getElementById('dayBehavior').value;
+  let inferred='perfil ainda inconclusivo';
+  if(day==='oily_all'||(wash==='shiny'&&day!=='dry'))inferred='tendência à oleosidade';
+  else if(day==='tzone')inferred='possível perfil misto';
+  else if(wash==='tight'||day==='dry')inferred='tendência ao ressecamento';
+  else if(day==='balanced'&&wash==='comfortable')inferred='perfil possivelmente equilibrado';
+  const profile={skinType:inferred,sensitivity:document.getElementById('sensitivity').value||'não informada',goal:document.getElementById('goal').value||'não informado',notes:document.getElementById('restrictions').value.trim()};
+  document.getElementById('profileSummary').innerHTML='<strong>Rotina de '+h(name)+'</strong><br>Perfil cosmético provável: '+h(profile.skinType)+' · Reação percebida: '+h(profile.sensitivity)+' · Objetivo: '+h(profile.goal)+(profile.notes?'<br>Observações informadas: '+h(profile.notes):'')+'<p class="small">Estimativa baseada nas respostas, não é certeza nem diagnóstico. Revise a rotina e confirme compatibilidade e horários antes de usar.</p>';
   document.getElementById('purchasedSummary').innerHTML='<strong>Produtos comprados e informações informadas</strong><ul>'+purchased.map(p=>'<li><strong>'+h(p.name)+'</strong> — '+h(categoryLabels[p.category]||'Outro')+(p.time==='review'?' · horário a confirmar':'')+(p.use?'<br><span class="small">Como usar: '+h(p.use)+'</span>':'')+(p.benefit?'<br><span class="small">Fabricante: '+h(p.benefit)+'</span>':'')+(p.source?'<br><span class="small">Fonte: '+h(p.source)+'</span>':'')).join('')+'</ul><p class="small">Confira a embalagem e a fonte oficial antes de entregar. Itens com horário pendente não são encaixados automaticamente.</p>';
   document.getElementById('routines').innerHTML=['am-full','am-fast','pm-full','pm-fast'].map((id,i)=>{
    const titles=['Manhã completa','Manhã expressa','Noite completa','Noite expressa'];
