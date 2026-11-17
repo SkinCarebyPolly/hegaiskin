@@ -182,6 +182,15 @@ input[type=checkbox]:checked{background:#b77f86;border-color:#b77f86}
 input[type=checkbox]:checked::after{content:"";width:7px;height:4px;border:2px solid white;border-top:0;border-right:0;transform:rotate(-45deg);margin-top:-2px}
 input[type=checkbox]:focus-visible{outline:3px solid #b77f8640;outline-offset:2px}
 input[type=checkbox]:hover{border-color:#985965}
+
+/* Ajuste final dos tons dos textos auxiliares e do seletor de foto */
+:root{--ink:#80515b;--muted:#9b727b}
+body{color:#80515b}
+.lede,.helper,.small,.footer,.delivery-footnote,.delivery-step p,.claim,.summary{color:#9b727b}
+.step h3,.delivery-step strong,.email-preview strong,.card h2,.result-heading h2,.delivery-intro h2{color:#8c5864}
+input[type=file]{color:#9b6671}
+input[type=file]::file-selector-button,input[type=file]::-webkit-file-upload-button{background:#f8e9ec;color:#965d68;border:1px solid #d5a1a8;border-radius:9px;padding:8px 12px;margin-right:10px;font:inherit;cursor:pointer}
+input[type=file]::file-selector-button:hover{background:#f2dfe3}
 </style>
 </head>
 <body>
