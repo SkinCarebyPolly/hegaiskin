@@ -1,4 +1,4 @@
-# Rotinas personalizadas da loja — escopo inicial
+# Rotinas personalizadas da loja — escopo revisado
 
 ## Objetivo
 
@@ -6,21 +6,26 @@ Adaptar a base web do Hegai beta para que uma loja de skincare entregue a cada c
 
 ## Decisão de produto
 
-- A cliente acessa a experiência por um QR code que abre uma página privada e personalizada no navegador.
-- A rotina é montada uma vez a partir de regras e modelos aprovados. A interface permite alternar entre manhã/noite e rotina completa/expressa.
-- Um PDF pode ser baixado ou impresso como cópia portátil.
-- Não será gerado um HTML independente para cada cliente. A aplicação hospedada apresenta os dados daquela cliente por um link individual.
-- O uso do scanner e da identificação por foto deve ser opcional e acompanhado de confirmação humana.
+A entrega principal será uma página web responsiva, com aparência de miniapp e acesso pelo navegador do celular. A cliente alterna entre manhã completa, manhã expressa, noite completa e noite expressa. Um PDF bonito e imprimível pode existir como opção de backup, mas não será a experiência principal: a página é mais agradável para navegar e permite corrigir e atualizar uma rotina sem gerar outro arquivo.
 
-## Fluxo do MVP
+O fluxo recomendado:
 
-1. A loja cria o atendimento, informa o nome da cliente e associa os produtos comprados a partir do catálogo.
-2. A cliente abre o QR/link e responde perguntas curtas sobre tipo de pele percebido, sensibilidade, objetivos e restrições relevantes.
-3. A cliente pode fazer uma captura orientada da pele e fotografar os produtos. A identificação sugerida por foto/OCR deve ser confirmada antes de usar o produto na rotina.
-4. A aplicação apresenta um resumo cosmético do perfil, sem linguagem de diagnóstico.
-5. O gerador aplica regras de segurança e encaixa os produtos confirmados em quatro rotinas: manhã completa, manhã expressa, noite completa e noite expressa.
-6. Os produtos comprados aparecem com nome real, modo de uso e benefícios aprovados do fabricante. Etapas sem produto comprado usam rótulos genéricos (por exemplo, limpeza, hidratante ou protetor solar).
-7. A cliente recebe um link individual e pode salvar/baixar o PDF.
+1. No caixa, a loja associa os produtos comprados à cliente pelo SKU/código do catálogo e envia um QR impresso ou link por WhatsApp/e-mail. O QR abre o questionário inicial.
+2. A cliente preenche nome e e-mail, responde sobre objetivos e comportamento da pele após a lavagem e ao longo do dia, informa sensibilidade percebida e restrições relevantes. O resultado será apresentado como **perfil cosmético provável**, nunca como certeza ou diagnóstico.
+3. A selfie é opcional, com consentimento separado. A cliente confirma os produtos identificados a partir da compra; se não houver integração com o caixa, pode fotografar a embalagem, escanear código de barras ou colar um link. Qualquer leitura automática precisa de confirmação humana.
+4. A rotina é preparada e revisada. A cliente recebe um e-mail com botão direto para abrir a página pessoal. Um QR do link pode ser incluído no cartão impresso da loja ou no próprio painel; para quem já está no celular, o botão do e-mail é mais fácil que escanear um QR na mesma tela.
+5. A página permite adicionar à tela inicial do celular e oferece “Salvar/Imprimir como PDF” como alternativa portátil.
+
+Não será gerado um HTML independente por cliente. A aplicação hospedada apresenta a rotina de cada cliente em um endereço individual aleatório, sem nome ou e-mail na URL. O link deve ser revogável e protegido por token; política de validade, armazenamento e exclusão será definida antes de usar dados reais.
+
+## Fluxo do piloto
+
+1. A loja associa os produtos à venda por SKU/código de barras. Sem integração ao caixa, a cliente informa ou fotografa os produtos e confirma o nome reconhecido.
+2. A cliente abre o QR/link, responde ao questionário e dá consentimentos separados para respostas e selfie opcional.
+3. As respostas estimam um perfil provável por regras transparentes. Se respostas conflitarem ou faltarem, o perfil fica “inconclusivo” e a rotina usa orientações conservadoras.
+4. A loja revisa a rotina e as informações dos produtos antes de liberá-la.
+5. A página oferece quatro abas (manhã completa, manhã expressa, noite completa e noite expressa); nomes reais e instruções aprovadas para os itens comprados; etapas genéricas para o que não foi comprado.
+6. A cliente recebe e-mail com link direto e pode guardar o acesso nos favoritos/tela inicial. PDF é opcional.
 
 ## Catálogo de produtos
 
@@ -46,8 +51,8 @@ Para o piloto, o painel deve permitir:
 
 ## Privacidade e segurança
 
-- Mostrar consentimento claro e finalidade antes de coletar respostas ou imagens.
-- Coletar somente os dados necessários; não guardar fotos por padrão após a análise.
+- Apresentar aviso claro e consentimento para respostas e, separadamente, para cada tipo de imagem antes da coleta.
+- Coletar somente os dados necessários. Selfie opcional; não guardar imagens por padrão depois da revisão.
 - Usar identificador aleatório no link, sem nome, e-mail ou descrição da pele na URL.
 - Limitar o acesso à cliente e à equipe autorizada, com opção de revogar o link.
 - Definir retenção e exclusão antes do piloto.
@@ -68,10 +73,15 @@ Captura de fotos e OCR com confirmação da cliente/equipe; fila para produtos q
 ### Fase 3 — automação da loja
 Integração com vendas/estoque, emissão automática do QR e métricas de uso.
 
+## Recomendação de entrega
+
+Página web/PWA como produto principal, com link individual enviado por e-mail e QR impresso como atalho de entrada/retorno. PDF gerado da mesma página pode ser disponibilizado para imprimir ou guardar. Essa combinação mantém o conteúdo bonito e navegável, sem exigir um arquivo HTML baixável por cliente nem depender do leitor de PDF do celular.
+
 ## Pontos a decidir antes de abrir para clientes
 
 - Nome e identidade visual da loja.
+- Loja/plataforma de vendas e como identificar os SKUs comprados.
 - Quantos atendimentos serão feitos no piloto e por quais funcionárias.
-- Se o QR será iniciado pela loja ou enviado depois que a cliente responder ao questionário.
-- Prazo de retenção e canal de atendimento para pedidos de exclusão.
+- Prazo de validade do link, retenção e canal para pedidos de exclusão.
 - Quais categorias e produtos entram no primeiro catálogo.
+- Confirmar aviso de privacidade e base legal com orientação apropriada antes do piloto.
