@@ -93,7 +93,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
    <div id="products"></div>
    <div class="actions"><button class="secondary" id="addProduct" type="button">Adicionar produto comprado</button></div>
   </div>
-  <div class="actions"><button class="gold" id="makeRoutine" type="button">Montar e revisar rotina</button></div>
+  <div class="actions"><button class="secondary" id="loadDemo" type="button">Carregar exemplo</button><button class="gold" id="makeRoutine" type="button">Montar e revisar rotina</button></div>
  </section>
  <section id="result">
   <div class="card">
@@ -135,6 +135,27 @@ button:disabled{opacity:.5;cursor:not-allowed}
  }
  document.getElementById('skinPhoto').addEventListener('change',e=>preview(e.target,document.getElementById('skinPreview')));
  document.getElementById('addProduct').addEventListener('click',addProduct);
+ document.getElementById('loadDemo').addEventListener('click',()=>{
+  document.getElementById('clientName').value='Cliente de demonstração';
+  document.getElementById('skinType').value='Mista';
+  document.getElementById('sensitivity').value='Às vezes fica sensível';
+  document.getElementById('goal').value='Hidratação';
+  document.getElementById('restrictions').value='Dados fictícios para visualizar o fluxo. Revisar observações antes de usar com clientes.';
+  productsEl.innerHTML='';
+  addProduct(); addProduct();
+  const cards=productsEl.querySelectorAll('.product');
+  cards[0].querySelector('.p-name').value='Sérum demonstrativo — substituir pelo produto real';
+  cards[0].querySelector('.p-category').value='serum';
+  cards[0].querySelector('.p-time').value='both';
+  cards[0].querySelector('.p-use').value='Exemplo: substituir pelas instruções confirmadas na embalagem ou fonte oficial.';
+  cards[0].querySelector('.p-benefit').value='Texto demonstrativo. Não é uma alegação de fabricante.';
+  cards[1].querySelector('.p-name').value='Hidratante demonstrativo — substituir pelo produto real';
+  cards[1].querySelector('.p-category').value='moisturizer';
+  cards[1].querySelector('.p-time').value='both';
+  cards[1].querySelector('.p-use').value='Exemplo: substituir pelas instruções confirmadas na embalagem ou fonte oficial.';
+  cards[1].querySelector('.p-benefit').value='Texto demonstrativo. Não é uma alegação de fabricante.';
+  document.getElementById('intake').scrollIntoView({behavior:'smooth'});
+ });
  document.getElementById('printRoutine').addEventListener('click',()=>window.print());
  document.getElementById('editRoutine').addEventListener('click',()=>{document.getElementById('result').style.display='none';document.getElementById('intake').style.display='block';window.scrollTo({top:0,behavior:'smooth'})});
  document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{
